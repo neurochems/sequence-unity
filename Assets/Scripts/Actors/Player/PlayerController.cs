@@ -17,12 +17,12 @@ public class PlayerController : MonoBehaviour {
 
 	private Rigidbody rb;
 
-	private PlayerStateManager psm;
+	private UIManager uim;
 
 	void Start() {
 		// init components
 		rb = GetComponent<Rigidbody> ();
-		psm = GetComponent<PlayerStateManager> ();
+		uim = GetComponent<UIManager> ();
 
 		if (godMode) {
 			sprintSpeed = 20;
@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour {
 
 	void FixedUpdate() {
 		// input
-		if (!psm.uI.GetComponent<StartOptions>().inMainMenu) {
+		if (!uim.uI.GetComponent<StartOptions>().inMainMenu) {
 			// how fast moveDir increases
 			moveDir.x += (Input.GetAxisRaw ("Horizontal") / smoothingFactor);
 			moveDir.z += (Input.GetAxisRaw ("Vertical") / smoothingFactor);

@@ -1,10 +1,20 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Particle\ParticleStateManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Actors\Particle\States\ShellParticleState.cs">
     <Files>
-      <File FileName="Assets\Scripts\Player\PlayerStateManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Player\OrthoSmoothFollow.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Particle\ParticleStateManager.cs" Line="78" Column="48" NotebookId="1" />
+      <File FileName="Assets\Scripts\Actors\Player\PlayerStatePattern.cs" Line="40" Column="48" />
+      <File FileName="Assets\Scripts\Actors\Particle\ParticleStatePattern.cs" Line="328" Column="14" />
+      <File FileName="Assets\Scripts\Actors\Player\States\PhotonPlayerState.cs" Line="30" Column="107" />
+      <File FileName="Assets\Scripts\Actors\Player\States\ElectronPlayerState.cs" Line="4" Column="50" />
+      <File FileName="Assets\Scripts\Actors\Player\States\Electron2PlayerState.cs" Line="109" Column="67" />
+      <File FileName="Assets\Scripts\Actors\Player\States\ShellPlayerState.cs" Line="112" Column="83" />
+      <File FileName="Assets\Scripts\Actors\Player\States\Shell2PlayerState.cs" Line="87" Column="87" />
+      <File FileName="Assets\Scripts\Actors\Player\States\DeadPlayerState.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Actors\Player\States\AtomPlayerState.cs" Line="110" Column="98" />
+      <File FileName="Assets\Scripts\Actors\Player\States\Atom2PlayerState.cs" Line="49" Column="1" />
+      <File FileName="Assets\Scripts\Actors\SpawnParticle.cs" Line="80" Column="71" />
+      <File FileName="Assets\Scripts\Actors\Particle\States\ShellParticleState.cs" Line="54" Column="6" />
+      <File FileName="Assets\Scripts\Actors\Particle\States\ElectronParticleState.cs" Line="19" Column="5" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

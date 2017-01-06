@@ -7,14 +7,14 @@ public class FauxGravityAttractor : MonoBehaviour {
 
 	public float gravity = -10;
 
-	private Rigidbody rb;
+	//private Rigidbody rb;
 
 	//private float photonRadius = 100.2f;
 	//private float electronRadius = 101.0f;
 	//private float shellRadius = 102.4f;
 
 	void Start() {
-		rb = GetComponent<Rigidbody>();
+		//rb = GetComponent<Rigidbody>();
 	}
 
 	public void Attract(Transform body) {
@@ -31,6 +31,6 @@ public class FauxGravityAttractor : MonoBehaviour {
 		Quaternion targetRotation = Quaternion.FromToRotation(bodyUp, gravityUp) * body.rotation;
 
 		// rotate body
-		body.rotation = Quaternion.Slerp(body.rotation,targetRotation, 50 * Time.deltaTime);
+		body.rotation = Quaternion.Slerp(body.rotation, targetRotation, 50 * Time.deltaTime);
 	}
 }

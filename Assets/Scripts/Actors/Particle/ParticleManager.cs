@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ParticleStateManager : MonoBehaviour {
+public class ParticleManager : MonoBehaviour {
 
 	// movement/physics variables
 	public float moveSpeed = 7;
@@ -20,18 +20,18 @@ public class ParticleStateManager : MonoBehaviour {
 
 	// particle state management
 	public float evol = 0.0f;
-	public int nEvol = 0;
+	//public int nEvol = 0;
 	public ParticleState initState;																							// init particle state
 	public ParticleState currentState, previousState;																		// current particle state
 	private bool isAtInit = true;																							// if particle was initialized at a particular state
 																															// state change parameters
 	private float /*deathThreshold, */photonThreshold, electronThreshold, electron2Threshold, shellThreshold, shell2Threshold, atomThreshold, atom2Threshold;	
 	private float previousEvol = 0.0f, currentEvol = 0.0f;
-	private int previousNEvol, currentNEvol;
+	//private int previousNEvol, currentNEvol;
 	private bool evolving = false, devolving = false, dead = false;
 
 	private bool coreScale = true, coreColour = true;																		// core state checkers
-	private bool shellActive = false, shellChange = false;																	// shell state checkers
+	private bool shellChange = false;																	// shell state checkers
 	private bool nucleusState = false, nucleusColour = true;																// nucleus state checkers
 
 
@@ -71,27 +71,27 @@ public class ParticleStateManager : MonoBehaviour {
 		// init state
 		if (initState == ParticleState.Photon) {
 			evol = 0.0f;																	// evolution start
-			nEvol = 0;																			// set fn to 0n
+			//nEvol = 0;																			// set fn to 0n
 			rb.mass = 0.25f;																	// set mass
 		} else if (initState == ParticleState.Electron) {
 			evol = 1.0f;
-			nEvol = 1;																			// set fn to 1n
+			//nEvol = 1;																			// set fn to 1n
 			rb.mass = 0.5f;																		// set mass
 		} else if (initState == ParticleState.Electron2) {
 			evol = 1.5f;
-			nEvol = 2;																			// set fn to 2n
+			// nEvol = 2;																			// set fn to 2n
 			rb.mass = 0.75f;																	// set mass
 		} else if (initState == ParticleState.Shell) {
 			evol = 2.0f;
-			nEvol = 3;																			// set fn to 3n
+			// nEvol = 3;																			// set fn to 3n
 			rb.mass = 0.5f;																		// set mass
 		} else if (initState == ParticleState.Shell2) {
 			evol = 3.0f;
-			nEvol = 4;																			// set fn to 4n
+			// nEvol = 4;																			// set fn to 4n
 			rb.mass = 0.75f;																	// set mass
 		} else if (initState == ParticleState.Atom) {
 			evol = 5.0f;
-			nEvol = 5;																			// set fn to 5n
+			// nEvol = 5;																			// set fn to 5n
 			rb.mass = 1.0f;																		// set mass
 		}
 
@@ -158,7 +158,7 @@ public class ParticleStateManager : MonoBehaviour {
 
 			// checks for INCOMING TRIGGERS (ANIMATIONS & STATE TRANSITION INTERACTIONS)
 			if ((currentEvol < electronThreshold) && (previousState == ParticleState.Shell2) && devolving) {			// if FROM SHELL2 and devolving
-				nEvol = 0;																									// set fn to 0n
+				// nEvol = 0;																									// set fn to 0n
 				gameObject.tag = "Photon";																					// set gameobject tag
 				rb.mass = 0.2f;																								// set mass
 				CoreToWhite();																								// CORE: return to idle white
@@ -168,7 +168,7 @@ public class ParticleStateManager : MonoBehaviour {
 				devolving = false;																							// reset devolving trigger
 			} 
 			else if ((currentEvol < electronThreshold) && (previousState == ParticleState.Shell) && devolving) {		// if FROM SHELL and devolving
-				nEvol = 0;																									// set fn to 0
+				// nEvol = 0;																									// set fn to 0
 				gameObject.tag = "Photon";																					// set gameobject tag
 				rb.mass = 0.2f;																								// set mass
 				CoreToPhoton ();																							// CORE: shrink to photon size, fade to white
@@ -177,7 +177,7 @@ public class ParticleStateManager : MonoBehaviour {
 				devolving = false;																							// reset devolving trigger
 			} 
 			else if ((currentEvol < electronThreshold) && (previousState == ParticleState.Electron2) && devolving) {	// if FROM ELECTRON2 and devolving
-				nEvol = 0;																									// set fn to 0
+				// nEvol = 0;																									// set fn to 0
 				gameObject.tag = "Photon";																					// set gameobject tag
 				rb.mass = 0.2f;																								// set mass
 				CoreToPhoton ();																							// CORE: shrink to photon size, fade to white
@@ -185,7 +185,7 @@ public class ParticleStateManager : MonoBehaviour {
 				devolving = false;																							// reset devolving trigger
 			} 
 			else if ((currentEvol < electronThreshold) && (previousState == ParticleState.Electron) && devolving) {		// if FROM ELECTRON and devolving
-				nEvol = 0;																									// set fn to 0
+				// nEvol = 0;																									// set fn to 0
 				gameObject.tag = "Photon";																					// set gameobject tag
 				rb.mass = 0.2f;																								// set mass
 				CoreToPhoton ();																							// CORE: shrink to photon size, fade to white
@@ -200,7 +200,7 @@ public class ParticleStateManager : MonoBehaviour {
 			else if (currentEvol >= electronThreshold) {															// if evol electron
 				evolving = true;																						// evolving trigger
 				previousEvol = currentEvol;																				// previous evol value last frame
-				previousNEvol = currentNEvol;																			// previous nEvol value last frame
+				// previousNEvol = currentNEvol;																			// previous // nEvol value last frame
 				SetCurrentState (ParticleState.Electron);																// evolve to shell state
 			}
 
@@ -220,14 +220,14 @@ public class ParticleStateManager : MonoBehaviour {
 
 			// checks on INCOMING TRIGGERS (ANIMATIONS & STATE TRANSITION INTERACTIONS)
 			if ((currentEvol >= electronThreshold) && evolving) {														// if FROM PHOTON and evolving
-				nEvol += 1;																									// increase fn
+				// nEvol += 1;																									// increase fn
 				gameObject.tag = "Electron";																				// set gameobject tag
 				rb.mass = 0.5f;																								// set mass
 				CoreToElectron ();																							// CORE: grow to electron size, is white
 				evolving = false;																							// reset devolving trigger
 			} 
 			else if ((currentEvol < electron2Threshold) && (previousState == ParticleState.Atom2) && devolving) {		// if FROM ATOM2 and devolving
-				nEvol -= 5;																									// set fn to 0n
+				// nEvol -= 5;																									// set fn to 0n
 				gameObject.tag = "Electron";																				// set gameobject tag
 				rb.mass = 0.5f;																								// set mass
 				ShellShrink ();																								// SHELL: shrink
@@ -235,14 +235,14 @@ public class ParticleStateManager : MonoBehaviour {
 				devolving = false;																							// reset devolving trigger
 			} 
 			else if ((currentEvol < electron2Threshold) && (previousState == ParticleState.Atom) && devolving) {		// if FROM ATOM and devolving
-				nEvol -= 4;																									// set fn to 0n
+				// nEvol -= 4;																									// set fn to 0n
 				gameObject.tag = "Electron";																				// set gameobject tag
 				rb.mass = 0.5f;																								// set mass
 				ShellShrink ();																								// SHELL: shrink
 				devolving = false;																							// reset devolving trigger
 			} 
 			else if ((currentEvol < electron2Threshold) && (previousState == ParticleState.Shell2) && devolving) {		// if FROM SHELL2 and devolving
-				nEvol -= 3;																									// set fn to 0n
+				// nEvol -= 3;																									// set fn to 0n
 				gameObject.tag = "Electron";																				// set gameobject tag
 				rb.mass = 0.5f;																								// set mass
 				CoreToWhite ();																								// CORE: fade to white
@@ -250,7 +250,7 @@ public class ParticleStateManager : MonoBehaviour {
 				devolving = false;																							// reset devolving trigger
 			} 
 			else if ((currentEvol < electron2Threshold) && (previousState == ParticleState.Shell) && devolving) {		// if FROM SHELL and devolving
-				nEvol -= 2;																									// set fn to 0
+				// nEvol -= 2;																									// set fn to 0
 				gameObject.tag = "Electron";																				// set gameobject tag
 				rb.mass = 0.5f;																								// set mass
 				CoreToWhite ();																								// CORE: fade to white
@@ -259,7 +259,7 @@ public class ParticleStateManager : MonoBehaviour {
 				devolving = false;																							// reset devolving trigger
 			} 
 			else if ((currentEvol < electron2Threshold) && (previousState == ParticleState.Electron2) && devolving) {	// if FROM ELECTRON2 and devolving
-				nEvol -= 1;																									// decrease fn
+				// nEvol -= 1;																									// decrease fn
 				gameObject.tag = "Electron";																				// set gameobject tag
 				rb.mass = 0.5f;																								// set mass
 				NucleusToWhite ();																							// NUCLEUS: fade out to white
@@ -280,7 +280,7 @@ public class ParticleStateManager : MonoBehaviour {
 			else if (evol >= electron2Threshold) {																// if evol electron2
 				evolving = true;																						// evolving trigger
 				previousEvol = currentEvol;																				// previous evol value last frame
-				previousNEvol = currentNEvol;																			// previous nEvol value last frame
+				// previousNEvol = currentNEvol;																			// previous // nEvol value last frame
 				SetCurrentState (ParticleState.Electron2);																// evolve to electron2 state
 			}
 
@@ -301,21 +301,21 @@ public class ParticleStateManager : MonoBehaviour {
 
 			// checks for INCOMING (ANIMATIONS & STATE TRANSITION INTERACTIONS)
 			if ((currentEvol >= electron2Threshold) && evolving) {														// if FROM ELECTRON and evolving
-				nEvol += 1;																									// increase fn
+				// nEvol += 1;																									// increase fn
 				gameObject.tag = "Electron2";																				// set gameobject tag
 				rb.mass = 0.75f;																							// set mass
 				NucleusEnable ();																							// NUCLEUS: enable, fade in to black
 				evolving = false;																							// reset evolving trigger
 			} 
 			else if ((currentEvol < shellThreshold) && (previousState == ParticleState.Atom2) && devolving) {			// if FROM ATOM2 and devolving
-				nEvol -= 4;																									// decrease fn
+				// nEvol -= 4;																									// decrease fn
 				gameObject.tag = "Electron2";																				// set gameobject tag
 				rb.mass = 0.75f;																							// set mass
 				ShellShrink ();																								// SHELL: shrink
 				devolving = false;																							// reset devolving trigger
 			} 
 			else if ((currentEvol < shellThreshold) && (previousState == ParticleState.Atom) && devolving) {			// if FROM ATOM and devolving
-				nEvol -= 3;																									// decrease fn
+				// nEvol -= 3;																									// decrease fn
 				gameObject.tag = "Electron2";																				// set gameobject tag
 				rb.mass = 0.75f;																							// set mass
 				ShellShrink ();																								// SHELL: shrink
@@ -323,7 +323,7 @@ public class ParticleStateManager : MonoBehaviour {
 				devolving = false;																							// reset devolving trigger
 			} 
 			else if ((currentEvol < shellThreshold) && (previousState == ParticleState.Shell2) && devolving) {			// if FROM SHELL2 and devolving
-				nEvol -= 2;																									// decrease fn
+				// nEvol -= 2;																									// decrease fn
 				gameObject.tag = "Electron2";																				// set gameobject tag
 				rb.mass = 0.75f;																							// set mass
 				CoreToWhite ();																								// CORE: fade to white
@@ -332,7 +332,7 @@ public class ParticleStateManager : MonoBehaviour {
 				devolving = false;																							// reset devolving trigger
 			} 
 			else if ((currentEvol < shellThreshold) && (previousState == ParticleState.Shell) && devolving) {			// if FROM SHELL and devolving
-				nEvol -= 1;																									// decrease fn
+				// nEvol -= 1;																									// decrease fn
 				gameObject.tag = "Electron2";																				// set gameobject tag
 				rb.mass = 0.75f;																							// set mass
 				CoreToWhite ();																								// CORE: fade to white
@@ -359,7 +359,7 @@ public class ParticleStateManager : MonoBehaviour {
 			else if (evol >= shellThreshold) {																	// if evol shell
 				evolving = true;																						// evolving trigger
 				previousEvol = currentEvol;																				// previous evol value last frame
-				previousNEvol = currentNEvol;																			// previous nEvol value last frame
+				// previousNEvol = currentNEvol;																			// previous // nEvol value last frame
 				SetCurrentState (ParticleState.Shell);																	// evolve to shell state
 			}
 
@@ -382,7 +382,7 @@ public class ParticleStateManager : MonoBehaviour {
 
 			// checks for INCOMING (ANIMATIONS & STATE TRANSITION INTERACTIONS)
 			if (currentEvol >= shellThreshold && evolving) {															// if FROM ELECTRON2 and evolving
-				nEvol += 1;																									// increase fn
+				// nEvol += 1;																									// increase fn
 				gameObject.tag = "Shell";																					// set gameobject tag
 				rb.mass = 0.5f;																								// set mass
 				CoreToBlack();																								// CORE: fade to black
@@ -390,7 +390,7 @@ public class ParticleStateManager : MonoBehaviour {
 				evolving = false;																							// reset evolving trigger
 			} 
 			else if ((currentEvol < shell2Threshold) && (previousState == ParticleState.Atom2) && devolving) {			// if FROM ATOM2 and devolving
-				nEvol -= 3;																									// decrease fn
+				// nEvol -= 3;																									// decrease fn
 				gameObject.tag = "Shell";																					// set gameobject tag
 				shell.gameObject.tag = "Shell";																				// set shell gameobject tag
 				rb.mass = 0.5f;																								// set mass
@@ -398,7 +398,7 @@ public class ParticleStateManager : MonoBehaviour {
 				devolving = true;																							// devolving trigger
 			} 
 			else if ((currentEvol < shell2Threshold) && (previousState == ParticleState.Atom) && devolving) {			// if FROM ATOM and devolving
-				nEvol -= 2;																									// decrease fn
+				// nEvol -= 2;																									// decrease fn
 				gameObject.tag = "Shell";																					// set gameobject tag
 				shell.gameObject.tag = "Shell";																				// set shell gameobject tag
 				rb.mass = 0.5f;																								// set mass
@@ -407,7 +407,7 @@ public class ParticleStateManager : MonoBehaviour {
 				devolving = true;																							// devolving trigger
 			} 
 			else if ((currentEvol < shell2Threshold) && (previousState == ParticleState.Shell2) && devolving) {			// if FROM SHELL2 and devolving
-				nEvol -= 1;																									// decrease fn
+				// nEvol -= 1;																									// decrease fn
 				gameObject.tag = "Shell";																					// set gameobject tag
 				shell.gameObject.tag = "Shell";																				// set shell gameobject tag
 				rb.mass = 0.5f;																								// set mass
@@ -439,7 +439,7 @@ public class ParticleStateManager : MonoBehaviour {
 			else if (currentEvol >= shell2Threshold) {																// if evol shell2
 				evolving = true;																						// evolving trigger
 				previousEvol = currentEvol;																				// previous evol value last frame
-				previousNEvol = currentNEvol;																			// previous nEvol value last frame
+				// previousNEvol = currentNEvol;																			// previous // nEvol value last frame
 				SetCurrentState (ParticleState.Shell2);																	// evolve to shell2 state
 			}
 
@@ -463,7 +463,7 @@ public class ParticleStateManager : MonoBehaviour {
 
 			// checks for INCOMING (ANIMATIONS & STATE TRANSITION INTERACTIONS)
 			if (currentEvol >= shell2Threshold && evolving) {															// if FROM SHELL and evolving
-				nEvol += 1;																									// increase fn
+				// nEvol += 1;																									// increase fn
 				gameObject.tag = "Shell2";																					// set gameobject tag
 				shell.gameObject.tag = "Shell2";																			// set shell gameobject tag
 				rb.mass = 0.75f;																							// set mass
@@ -471,7 +471,7 @@ public class ParticleStateManager : MonoBehaviour {
 				evolving = false;																							// reset evolving trigger
 			} 
 			else if ((currentEvol < atomThreshold) && (previousState == ParticleState.Atom2) && devolving) {			// if FROM ATOM2 and devolving
-				nEvol -= 2;																									// decrease fn
+				// nEvol -= 2;																									// decrease fn
 				gameObject.tag = "Shell2";																					// set gameobject tag
 				shell.gameObject.tag = "Shell2";																			// set shell gameobject tag
 				rb.mass = 0.75f;																							// set mass
@@ -480,7 +480,7 @@ public class ParticleStateManager : MonoBehaviour {
 				devolving = false;																							// reset devolving trigger
 			} 
 			else if ((currentEvol < atomThreshold) && (previousState == ParticleState.Atom) && devolving) {				// if FROM ATOM and devolving
-				nEvol -= 1;																									// decrease fn
+				// nEvol -= 1;																									// decrease fn
 				gameObject.tag = "Shell2";																					// set gameobject tag
 				shell.gameObject.tag = "Shell2";																			// set shell gameobject tag
 				rb.mass = 0.75f;																							// set mass
@@ -518,7 +518,7 @@ public class ParticleStateManager : MonoBehaviour {
 			else if (currentEvol >= atomThreshold) {																// if evolatom
 				evolving = true;																						// evolving trigger 
 				previousEvol = currentEvol;																				// previous evol value last frame
-				previousNEvol = currentNEvol;																			// previous nEvol value last frame
+				// previousNEvol = currentNEvol;																			// previous // nEvol value last frame
 				SetCurrentState (ParticleState.Atom);																	// evolve to atom state
 			}
 
@@ -542,7 +542,7 @@ public class ParticleStateManager : MonoBehaviour {
 
 			// checks for INCOMING (ANIMATIONS & STATE TRANSITION INTERACTIONS)
 			if ((currentEvol >= atomThreshold) && evolving) {															// if FROM SHELL2 and evolving
-				nEvol += 1;																									// increase fn
+				// nEvol += 1;																									// increase fn
 				gameObject.tag = "Atom";																					// set gameobject tag
 				shell.gameObject.tag = "Atom";																			// set shell gameobject tag
 				rb.mass = 1.0f;																								// set mass
@@ -550,7 +550,7 @@ public class ParticleStateManager : MonoBehaviour {
 				evolving = false;																							// reset evolving trigger
 			} 
 			else if ((currentEvol < atom2Threshold)  && (previousState == ParticleState.Atom2) && devolving) {			// if FROM ATOM2 and devolving
-				nEvol -= 1;																									// decrease fn
+				// nEvol -= 1;																									// decrease fn
 				gameObject.tag = "Atom";																					// set gameobject tag
 				shell.gameObject.tag = "Atom";																			// set shell gameobject tag
 				rb.mass = 1.0f;																								// set mass
@@ -599,7 +599,7 @@ public class ParticleStateManager : MonoBehaviour {
 			else if (currentEvol >= atomThreshold) {																// if evol atom2
 				evolving = true;																						// evolving trigger
 				previousEvol = currentEvol;																				// previous evol value last frame
-				previousNEvol = currentNEvol;																			// previous nEvol value last frame
+				// previousNEvol = currentNEvol;																			// previous // nEvol value last frame
 				SetCurrentState (ParticleState.Atom2);																	// evolve to atom2 state
 			}
 
@@ -609,7 +609,7 @@ public class ParticleStateManager : MonoBehaviour {
 		}
 
 		//previousEvol = currentEvol;																// previous evol value last frame
-		//previousNEvol = currentNEvol;															// previous nEvol value last frame
+		//previousNEvol = currentNEvol;															// previous // nEvol value last frame
 
 		//previousFrameState = currentState;															// previous state last frame
 
@@ -678,32 +678,32 @@ public class ParticleStateManager : MonoBehaviour {
 			Debug.Log ("particle contact player");
 		} 
 		else if (other.gameObject.CompareTag ("Photon")) {																						// collide with photon
-			if ((evol == other.gameObject.GetComponent<ParticleStateManager> ().evol) && rolling && hasCollided) {									// if = other photon
+			if ((evol == other.gameObject.GetComponent<ParticleManager> ().evol) && rolling && hasCollided) {									// if = other photon
 				Debug.Log("photon/photon");
 				StartCoroutine(PreventParticleDamage (3));																								// prevent particle trigger collisions
-				other.gameObject.GetComponent<ParticleStateManager> ().StartCoroutine(PreventParticleDamage (3));										// prevent other particle trigger collisions
-				RollDie(other.gameObject.GetComponent<ParticleStateManager> (), 0.5f, 1.0f);															// roll die (win 0.5, lose 1)
+				other.gameObject.GetComponent<ParticleManager> ().StartCoroutine(PreventParticleDamage (3));										// prevent other particle trigger collisions
+				RollDie(other.gameObject.GetComponent<ParticleManager> (), 0.5f, 1.0f);															// roll die (win 0.5, lose 1)
 			} 
-			else if ((evol > other.gameObject.GetComponent<ParticleStateManager> ().evol) && hasCollided) {										// if > other photon
+			else if ((evol > other.gameObject.GetComponent<ParticleManager> ().evol) && hasCollided) {										// if > other photon
 				StartCoroutine(PreventParticleDamage (3));																								// prevent particle trigger collisions
-				other.gameObject.GetComponent<ParticleStateManager> ().StartCoroutine(PreventParticleDamage (3));										// prevent other particle trigger collisions
+				other.gameObject.GetComponent<ParticleManager> ().StartCoroutine(PreventParticleDamage (3));										// prevent other particle trigger collisions
 				AddEvol(0.5f);																															// add 0.5 evol
-				other.gameObject.GetComponent<ParticleStateManager> ().SubtractEvol(1.0f);																// subtract 1 evol from other
+				other.gameObject.GetComponent<ParticleManager> ().SubtractEvol(1.0f);																// subtract 1 evol from other
 			}
 		} 
 		else if (other.gameObject.CompareTag ("Electron")) {																					// collide with electron
-			if ((evol == other.gameObject.GetComponent<ParticleStateManager> ().evol) && rolling && hasCollided) {									// if = other electron
+			if ((evol == other.gameObject.GetComponent<ParticleManager> ().evol) && rolling && hasCollided) {									// if = other electron
 				StartCoroutine(PreventParticleDamage(3));																								// disable collider for 3 sec
-				other.gameObject.GetComponent<ParticleStateManager> ().StartCoroutine(PreventParticleDamage (3));										// prevent other particle trigger collisions
-				RollDie(other.gameObject.GetComponent<ParticleStateManager> (), 1.0f, 1.0f);															// roll die (win 1, lose 1)
+				other.gameObject.GetComponent<ParticleManager> ().StartCoroutine(PreventParticleDamage (3));										// prevent other particle trigger collisions
+				RollDie(other.gameObject.GetComponent<ParticleManager> (), 1.0f, 1.0f);															// roll die (win 1, lose 1)
 			}
-			else if ((evol > other.gameObject.GetComponent<ParticleStateManager> ().evol) && hasCollided) {											// if > other electron 
+			else if ((evol > other.gameObject.GetComponent<ParticleManager> ().evol) && hasCollided) {											// if > other electron 
 				StartCoroutine(PreventParticleDamage (3));																								// prevent particle trigger collisions
-				other.gameObject.GetComponent<ParticleStateManager> ().StartCoroutine(PreventParticleDamage (3));										// prevent other particle trigger collisions
+				other.gameObject.GetComponent<ParticleManager> ().StartCoroutine(PreventParticleDamage (3));										// prevent other particle trigger collisions
 				AddEvol(1.0f);																															// add 1 evol
-				other.gameObject.GetComponent<ParticleStateManager> ().SubtractEvol(1.0f);																// subtract 1 evol from other
+				other.gameObject.GetComponent<ParticleManager> ().SubtractEvol(1.0f);																// subtract 1 evol from other
 			}
-			/*else if ((evol < other.gameObject.GetComponent<ParticleStateManager> ().evol) && hasCollided) {											// if < other electron, or photon
+			/*else if ((evol < other.gameObject.GetComponent<ParticleManager> ().evol) && hasCollided) {											// if < other electron, or photon
 				StartCoroutine(PreventParticleDamage(3));																								// disable collider for 3 sec
 				//SetCurrentState(ParticleState.Dead);
 				//evol -= -1.0f;
@@ -711,34 +711,34 @@ public class ParticleStateManager : MonoBehaviour {
 			}*/
 		} 
 		else if (other.gameObject.CompareTag ("Electron2")) {																					// collide with electron2
-			if ((evol == other.gameObject.GetComponent<ParticleStateManager> ().evol) && rolling && hasCollided) {									// if = other electron2
+			if ((evol == other.gameObject.GetComponent<ParticleManager> ().evol) && rolling && hasCollided) {									// if = other electron2
 				StartCoroutine(PreventParticleDamage(3));																								// disable collider for 3 sec
-				other.gameObject.GetComponent<ParticleStateManager> ().StartCoroutine(PreventParticleDamage (3));										// prevent other particle trigger collisions
-				RollDie(other.gameObject.GetComponent<ParticleStateManager> (), 1.0f, 1.0f);															// roll die (win 1, lose 1)
+				other.gameObject.GetComponent<ParticleManager> ().StartCoroutine(PreventParticleDamage (3));										// prevent other particle trigger collisions
+				RollDie(other.gameObject.GetComponent<ParticleManager> (), 1.0f, 1.0f);															// roll die (win 1, lose 1)
 			} 
-			else if ((evol > other.gameObject.GetComponent<ParticleStateManager> ().evol) && hasCollided) {											// if > other electron2
+			else if ((evol > other.gameObject.GetComponent<ParticleManager> ().evol) && hasCollided) {											// if > other electron2
 				StartCoroutine(PreventParticleDamage (3));																								// prevent particle trigger collisions
-				other.gameObject.GetComponent<ParticleStateManager> ().StartCoroutine(PreventParticleDamage (3));										// prevent other particle trigger collisions
+				other.gameObject.GetComponent<ParticleManager> ().StartCoroutine(PreventParticleDamage (3));										// prevent other particle trigger collisions
 				AddEvol(1.0f);																																// add 1 evol
-				other.gameObject.GetComponent<ParticleStateManager> ().SubtractEvol(1.0f);																// subtract 1 evol from other
+				other.gameObject.GetComponent<ParticleManager> ().SubtractEvol(1.0f);																// subtract 1 evol from other
 			}
-			/*else if ((evol < other.gameObject.GetComponent<ParticleStateManager> ().evol) && hasCollided) {											// if < other electron2
+			/*else if ((evol < other.gameObject.GetComponent<ParticleManager> ().evol) && hasCollided) {											// if < other electron2
 				StartCoroutine(PreventParticleDamage(3));																								// disable collider for 3 sec
 				SubtractEvol(1.0f);																														// subtract 1 evol
 				//evol = -1.0f;
 			}*/
 		}
 		else if (other.gameObject.CompareTag ("Shell")) {																						// collide with shell
-			if ((evol == other.gameObject.GetComponentInParent<ParticleStateManager> ().evol) && rolling && hasCollided) {							// if = other shell
+			if ((evol == other.gameObject.GetComponentInParent<ParticleManager> ().evol) && rolling && hasCollided) {							// if = other shell
 				StartCoroutine(PreventParticleDamage(3));																								// disable collider for 3 sec
-				other.gameObject.GetComponentInParent<ParticleStateManager> ().StartCoroutine(PreventParticleDamage (3));										// prevent other particle trigger collisions
-				RollDie(other.gameObject.GetComponentInParent<ParticleStateManager> (), 1.0f, 2.0f);													// roll die	(win 1, lose 2)																											// subtract evol
+				other.gameObject.GetComponentInParent<ParticleManager> ().StartCoroutine(PreventParticleDamage (3));										// prevent other particle trigger collisions
+				RollDie(other.gameObject.GetComponentInParent<ParticleManager> (), 1.0f, 2.0f);													// roll die	(win 1, lose 2)																											// subtract evol
 			} 
-			else if ((evol > other.gameObject.GetComponentInParent<ParticleStateManager> ().evol) && hasCollided) {									// if > other shell
+			else if ((evol > other.gameObject.GetComponentInParent<ParticleManager> ().evol) && hasCollided) {									// if > other shell
 				StartCoroutine(PreventParticleDamage (3));																								// prevent particle trigger collisions
-				other.gameObject.GetComponentInParent<ParticleStateManager> ().StartCoroutine(PreventParticleDamage (3));										// prevent other particle trigger collisions
+				other.gameObject.GetComponentInParent<ParticleManager> ().StartCoroutine(PreventParticleDamage (3));										// prevent other particle trigger collisions
 				AddEvol(1.0f);																															// add 1 evol
-				other.gameObject.GetComponentInParent<ParticleStateManager> ().SubtractEvol(2.0f);																// subtract 2 evol from other
+				other.gameObject.GetComponentInParent<ParticleManager> ().SubtractEvol(2.0f);																// subtract 2 evol from other
 			} 
 			/*else if ((evol < 2.0f) && hasCollided) {																								// if < other shell
 				StartCoroutine(PreventParticleDamage(3));																								// disable collider for 3 sec
@@ -746,16 +746,16 @@ public class ParticleStateManager : MonoBehaviour {
 			}*/
 		}
 		else if (other.gameObject.CompareTag ("Shell2")) {																						// collide with shell
-			if ((evol == other.gameObject.GetComponentInParent<ParticleStateManager> ().evol) && rolling && hasCollided) {							// if = other shell2
+			if ((evol == other.gameObject.GetComponentInParent<ParticleManager> ().evol) && rolling && hasCollided) {							// if = other shell2
 				StartCoroutine(PreventParticleDamage(3));																								// disable collider for 3 sec
-				other.gameObject.GetComponentInParent<ParticleStateManager> ().StartCoroutine(PreventParticleDamage (3));										// prevent other particle trigger collisions
-				RollDie(other.gameObject.GetComponentInParent<ParticleStateManager> (), 1.0f, 2.0f);													// roll die	(win 1, lose 2)																											// subtract evol
+				other.gameObject.GetComponentInParent<ParticleManager> ().StartCoroutine(PreventParticleDamage (3));										// prevent other particle trigger collisions
+				RollDie(other.gameObject.GetComponentInParent<ParticleManager> (), 1.0f, 2.0f);													// roll die	(win 1, lose 2)																											// subtract evol
 			} 
-			else if ((evol > other.gameObject.GetComponentInParent<ParticleStateManager> ().evol) && hasCollided) {									// if > other shell2
+			else if ((evol > other.gameObject.GetComponentInParent<ParticleManager> ().evol) && hasCollided) {									// if > other shell2
 				StartCoroutine(PreventParticleDamage (3));																								// prevent particle trigger collisions
-				other.gameObject.GetComponentInParent<ParticleStateManager> ().StartCoroutine(PreventParticleDamage (3));										// prevent other particle trigger collisions
+				other.gameObject.GetComponentInParent<ParticleManager> ().StartCoroutine(PreventParticleDamage (3));										// prevent other particle trigger collisions
 				AddEvol(1.0f);																															// add 1 evol
-				other.gameObject.GetComponentInParent<ParticleStateManager> ().SubtractEvol(2.0f);																// subtract 2 evol from other
+				other.gameObject.GetComponentInParent<ParticleManager> ().SubtractEvol(2.0f);																// subtract 2 evol from other
 			} 
 			/*else if ((evol < 3.0f) && hasCollided) {																								// if < other shell2
 				StartCoroutine(PreventParticleDamage(3));																								// disable collider for 3 sec
@@ -763,25 +763,25 @@ public class ParticleStateManager : MonoBehaviour {
 			}*/
 		}
 		else if (other.gameObject.CompareTag ("Atom")) {																						// collide with atom
-			if ((evol == other.gameObject.GetComponentInParent<ParticleStateManager> ().evol) && rolling && hasCollided) { 							// if an atom of equal evol value
+			if ((evol == other.gameObject.GetComponentInParent<ParticleManager> ().evol) && rolling && hasCollided) { 							// if an atom of equal evol value
 				StartCoroutine(PreventParticleDamage(3));																								// disable collider for 3 sec
-				other.gameObject.GetComponentInParent<ParticleStateManager> ().StartCoroutine(PreventParticleDamage (3));										// prevent other particle trigger collisions
-				RollDie(other.gameObject.GetComponentInParent<ParticleStateManager> (), 1.0f, 3.0f);													// roll die (win 1, lose 3)
+				other.gameObject.GetComponentInParent<ParticleManager> ().StartCoroutine(PreventParticleDamage (3));										// prevent other particle trigger collisions
+				RollDie(other.gameObject.GetComponentInParent<ParticleManager> (), 1.0f, 3.0f);													// roll die (win 1, lose 3)
 			}
-			else if ((evol > other.gameObject.GetComponentInParent<ParticleStateManager> ().evol) && hasCollided)	{								// if > other atom
+			else if ((evol > other.gameObject.GetComponentInParent<ParticleManager> ().evol) && hasCollided)	{								// if > other atom
 				StartCoroutine(PreventParticleDamage (3));																								// prevent particle trigger collisions
-				other.gameObject.GetComponentInParent<ParticleStateManager> ().StartCoroutine(PreventParticleDamage (3));										// prevent other particle trigger collisions
+				other.gameObject.GetComponentInParent<ParticleManager> ().StartCoroutine(PreventParticleDamage (3));										// prevent other particle trigger collisions
 				AddEvol(1.0f);																															// add 1 evol
-				if (other.gameObject.GetComponentInParent<ParticleStateManager> ().evol < 5.0f) 														// if other < atom
-					other.gameObject.GetComponentInParent<ParticleStateManager> ().SubtractEvol(3.0f);																// subtract 3 evol from other
-				else if (other.gameObject.GetComponentInParent<ParticleStateManager> ().evol < evol) 														// if other atom < this atom
-					other.gameObject.GetComponentInParent<ParticleStateManager> ().SubtractEvol(2.0f);																// subtract 2 evol from other
+				if (other.gameObject.GetComponentInParent<ParticleManager> ().evol < 5.0f) 														// if other < atom
+					other.gameObject.GetComponentInParent<ParticleManager> ().SubtractEvol(3.0f);																// subtract 3 evol from other
+				else if (other.gameObject.GetComponentInParent<ParticleManager> ().evol < evol) 														// if other atom < this atom
+					other.gameObject.GetComponentInParent<ParticleManager> ().SubtractEvol(2.0f);																// subtract 2 evol from other
 			}
 			/*else if ((evol < 5.0f) && hasCollided) {																								// if < other atom
 				StartCoroutine(PreventParticleDamage(3));																								// disable collider for 3 sec
 				SubtractEvol(3.0f);																														// subtract 3 evol
 			}
-			else if ((evol >= 5.0f) && (evol < other.gameObject.GetComponentInParent<ParticleStateManager> ().evol) && hasCollided)	{				// if atom < other atom
+			else if ((evol >= 5.0f) && (evol < other.gameObject.GetComponentInParent<ParticleManager> ().evol) && hasCollided)	{				// if atom < other atom
 				StartCoroutine(PreventParticleDamage(3));																								// disable collider for 3 sec
 				SubtractEvol(2.0f);																														// subtract 2 evol
 			}*/
@@ -790,7 +790,7 @@ public class ParticleStateManager : MonoBehaviour {
 
 	// methods \\
 
-		void RollDie(ParticleStateManager other, float addAmount, float subAmount) {
+		void RollDie(ParticleManager other, float addAmount, float subAmount) {
 			do {
 				die = Random.Range(1,6);														// roll die
 				if (die > other.die) {															// if this die > other die
@@ -957,18 +957,18 @@ public class ParticleStateManager : MonoBehaviour {
 					(lostParticle, new Vector3(transform.position.x + Random.Range(-3.5f, -1.5f), transform.position.y, transform.position.z + Random.Range(-3.5f, -1.5f)), Quaternion.identity) as GameObject;		
 
 				particle.transform.parent = gameObject.transform.parent.transform;											// sort new particle under 'Collectables'
-				particle.GetComponent<FauxGravityBody> ().attractor = gameObject.GetComponent<FauxGravityBody>().attractor;	// manually set new particle FauxGravityAttractor as World
+				particle.GetComponent<ParticlePhysicsManager> ().attractor = gameObject.GetComponent<ParticlePhysicsManager>().attractor;	// manually set new particle FauxGravityAttractor as World
 				particle.GetComponent<Animator>().SetBool("black", false);													// set fade trigger
 				particle.GetComponent<Animator>().SetTrigger("fadein");														// fade to white
 
 				if (lostPart >= 3) {																						// if losing 3 particles
-					particle.GetComponent<ParticleStateManager>().initState = ParticleState.Electron;							// init electron (2x photon)
+					particle.GetComponent<ParticleManager>().initState = ParticleState.Electron;							// init electron (2x photon)
 					i+=1;																										// spawn 1 less photon
 				}
 				else {
 					particle.GetComponent<Animator>().SetBool("photon", true);													// photon: set photon condition
 					particle.GetComponent<Animator>().SetTrigger("scaledown");													// scale to photon
-					particle.GetComponent<ParticleStateManager>().initState = ParticleState.Photon;								// init photon
+					particle.GetComponent<ParticleManager>().initState = ParticleState.Photon;								// init photon
 				}
 
 				StartCoroutine(PreventParticleDamage(3));																	// prevent particle trigger collisions for 3 sec
@@ -978,21 +978,21 @@ public class ParticleStateManager : MonoBehaviour {
 					(lostParticle, new Vector3(transform.position.x + Random.Range(-3.5f, -1.5f), transform.position.y, transform.position.z + Random.Range(0.5f, 2.5f)), Quaternion.identity) as GameObject;		
 
 				particle.transform.parent = gameObject.transform.parent.transform;											// sort new electron under 'Collectables'
-				particle.GetComponent<FauxGravityBody> ().attractor = gameObject.GetComponent<FauxGravityBody>().attractor;	// manually set new electron FauxGravityAttractor as World
+				particle.GetComponent<ParticlePhysicsManager> ().attractor = gameObject.GetComponent<ParticlePhysicsManager>().attractor;	// manually set new electron FauxGravityAttractor as World
 				particle.GetComponent<Animator>().SetBool("black", false);													// set fade trigger
 				particle.GetComponent<Animator>().SetTrigger("fadein");														// fade to white
 
 				if (lostPart >= 3) {																						// if losing 3 particles
-					particle.GetComponent<ParticleStateManager>().initState = ParticleState.Electron;							// init electron (2x photon)
+					particle.GetComponent<ParticleManager>().initState = ParticleState.Electron;							// init electron (2x photon)
 					i+=1;																										// spawn 1 less photon
 				}
 				else {
 					particle.GetComponent<Animator>().SetBool("photon", true);													// photon: set photon condition
 					particle.GetComponent<Animator>().SetTrigger("scaledown");													// scale to photon
-					particle.GetComponent<ParticleStateManager>().initState = ParticleState.Photon;								// init photon
+					particle.GetComponent<ParticleManager>().initState = ParticleState.Photon;								// init photon
 				}
 
-				particle.GetComponent<ParticleStateManager>().initState = ParticleState.Photon;								// set particle to evol 0
+				particle.GetComponent<ParticleManager>().initState = ParticleState.Photon;								// set particle to evol 0
 				StartCoroutine(PreventParticleDamage(3));																	// prevent particle collisions for 3 sec
 			}
 			else if (i == 2){
@@ -1000,13 +1000,13 @@ public class ParticleStateManager : MonoBehaviour {
 					(lostParticle, new Vector3(transform.position.x + Random.Range(-3.5f, -1.5f), transform.position.y, transform.position.z + Random.Range(1.5f, -2.5f)), Quaternion.identity) as GameObject;		
 
 				particle.transform.parent = gameObject.transform.parent.transform;											// sort new electron under 'Collectables'
-				particle.GetComponent<FauxGravityBody> ().attractor = gameObject.GetComponent<FauxGravityBody>().attractor;	// manually set new electron FauxGravityAttractor as World
+				particle.GetComponent<ParticlePhysicsManager> ().attractor = gameObject.GetComponent<ParticlePhysicsManager>().attractor;	// manually set new electron FauxGravityAttractor as World
 				particle.GetComponent<Animator>().SetBool("black", false);													// set fade trigger
 				particle.GetComponent<Animator>().SetTrigger("fadein");														// fade to white
 
 				particle.GetComponent<Animator>().SetBool("photon", true);													// photon: set photon condition
 				particle.GetComponent<Animator>().SetTrigger("scaledown");													// scale to photon
-				particle.GetComponent<ParticleStateManager>().initState = ParticleState.Photon;								// set particle to evol 0
+				particle.GetComponent<ParticleManager>().initState = ParticleState.Photon;								// set particle to evol 0
 
 				StartCoroutine(PreventParticleDamage(3));																	// prevent particle collisions for 3 sec
 			}
@@ -1014,13 +1014,13 @@ public class ParticleStateManager : MonoBehaviour {
 				GameObject particle = Instantiate																			// create new electron
 					(lostParticle, new Vector3(transform.position.x + Random.Range(-3.5f, -1.5f), transform.position.y, transform.position.z + Random.Range(-3.5f, 2.5f)), Quaternion.identity) as GameObject;		
 				particle.transform.parent = gameObject.transform.parent.transform;											// sort new electron under 'Collectables'
-				particle.GetComponent<FauxGravityBody> ().attractor = gameObject.GetComponent<FauxGravityBody>().attractor;	// manually set new electron FauxGravityAttractor as World
+				particle.GetComponent<ParticlePhysicsManager> ().attractor = gameObject.GetComponent<ParticlePhysicsManager>().attractor;	// manually set new electron FauxGravityAttractor as World
 				particle.GetComponent<Animator>().SetBool("black", false);													// set fade trigger
 				particle.GetComponent<Animator>().SetTrigger("fadein");														// fade to white
 
 				particle.GetComponent<Animator>().SetBool("photon", true);													// photon: set photon condition
 				particle.GetComponent<Animator>().SetTrigger("scaledown");													// scale to photon
-				particle.GetComponent<ParticleStateManager>().initState = ParticleState.Photon;								// set particle to evol 0
+				particle.GetComponent<ParticleManager>().initState = ParticleState.Photon;								// set particle to evol 0
 
 				StartCoroutine(PreventParticleDamage(3));																	// prevent particle collisions for 3 sec
 			}

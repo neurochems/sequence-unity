@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 
-public class PlayerStateManager : MonoBehaviour {
+public class PlayerManager : MonoBehaviour {
 
 	// player states
 	public enum PlayerState {Dead, Photon, Electron, Electron2, Shell, Shell2, Atom, Atom2, StateEight, StateNine, StateTen}
@@ -12,16 +12,16 @@ public class PlayerStateManager : MonoBehaviour {
 
 	// player state management
 	public float evol;																										// current evol level
-	public int nEvol;																										// current nEvol level
+	//public int nEvol;																										// current nEvol level
 	public PlayerState currentState, previousState;																			// current player state
 		// state change parameters
 	private float /*deathThreshold, */photonThreshold, electronThreshold, electron2Threshold, shellThreshold, shell2Threshold, atomThreshold, atom2Threshold;		
 	private float previousEvol = 0.0f, currentEvol = 0.0f;																	// state change checks (evol)
-	private int previousNEvol, currentNEvol;																				// state change checks (nEvol)
+	//private int previousNEvol, currentNEvol;																				// state change checks (nEvol)
 	private bool start, evolving, devolving, dead;																			// state transition checkers
 												// dead = dark world
 	private bool coreScale = true, coreColour = true;																		// core state checkers
-	private bool shellActive = false, shellChange = false;																	// shell state checkers
+	private bool shellChange = false;																	// shell state checkers
 	private bool nucleusState = false, nucleusColour = true;																// nucleus state checkers
 
 	// gameobject references & utility
@@ -84,7 +84,7 @@ public class PlayerStateManager : MonoBehaviour {
 		// init player state
 		SetCurrentState(PlayerState.Photon);												// begin as photon
 		evol = 0.0f;																		// evolution start
-		nEvol = 0;																			// evolution start
+		// nEvol = 0;																			// evolution start
 		start = true;																		// evolution start
 
 	}
@@ -136,7 +136,7 @@ public class PlayerStateManager : MonoBehaviour {
 		// set player attributes and appearance
 
 		currentEvol = evol;																	// set current evol (evol direction check)
-		currentNEvol = nEvol;																	// set current evol (evol direction check)
+		// currentNEvol = nEvol;																	// set current evol (evol direction check)
 
 		// checks for OVERLAY TEXT
 		if (!uI.GetComponent<StartOptions>().inMainMenu && timeCheck == true) {				// if game start (not in menu)
@@ -175,7 +175,7 @@ public class PlayerStateManager : MonoBehaviour {
 
 			if ((currentEvol < electronThreshold) && (previousState == PlayerState.Shell2) && devolving) {				// if FROM SHELL2 and devolving
 				//StartCoroutine(ResetZoomCamera("shell", false, 3.0f));														// CAMERA: reset anim triggers after delay
-				nEvol = 0;																									// set fn to 0n
+				// nEvol = 0;																									// set fn to 0n
 				rb.mass = 0.25f;																							// set mass
 				CoreToWhite();																								// CORE: return to idle white
 				CoreToPhoton();																								// CORE: shrink to photon size, fade to white
@@ -185,7 +185,7 @@ public class PlayerStateManager : MonoBehaviour {
 			} 
 			else if ((currentEvol < electronThreshold) && (previousState == PlayerState.Shell) && devolving) {		// if FROM SHELL and devolving
 				//StartCoroutine(ResetZoomCamera("shell", false, 3.0f));														// CAMERA: reset anim triggers after delay
-				nEvol = 0;																									// set fn to 0
+				// nEvol = 0;																									// set fn to 0
 				rb.mass = 0.25f;																							// set mass
 				CoreToWhite();																								// CORE: return to idle white
 				CoreToPhoton ();																							// CORE: shrink to photon size, fade to white
@@ -195,7 +195,7 @@ public class PlayerStateManager : MonoBehaviour {
 			}
 			else if ((currentEvol < electronThreshold) && (previousState == PlayerState.Electron2) && devolving) {	// if FROM ELECTRON2 and devolving
 				//StartCoroutine(ResetZoomCamera("electron", false, 2.0f));														// CAMERA: reset anim triggers after delay
-				nEvol = 0;																									// set fn to 0
+				// nEvol = 0;																									// set fn to 0
 				rb.mass = 0.25f;																							// set mass
 				NucleusDisable ();																							// NUCLEUS: fade to white, then deactivate
 				CoreToPhoton ();																							// CORE: shrink to photon size, fade to white
@@ -203,7 +203,7 @@ public class PlayerStateManager : MonoBehaviour {
 			} 
 			else if ((currentEvol < electronThreshold) && (previousState == PlayerState.Electron) && devolving) {		// if FROM ELECTRON and devolving
 				//SetZoomCamera("photon", false);																				// CAMERA: reset anim triggers
-				nEvol = 0;																									// set fn to 0
+				// nEvol = 0;																									// set fn to 0
 				rb.mass = 0.25f;																							// set mass
 				CoreToPhoton ();																							// CORE: shrink to photon size, fade to white
 				devolving = false;																							// reset devolving trigger
@@ -239,14 +239,14 @@ public class PlayerStateManager : MonoBehaviour {
 			// checks on INCOMING TRIGGERS
 			if ((currentEvol >= electronThreshold) && evolving) {														// if FROM PHOTON and evolving
 				//StartCoroutine(ResetZoomCamera("photon", false, 2.0f));														// CAMERA: reset anim triggers after delay
-				nEvol += 1;																									// increase fn
+				// nEvol += 1;																									// increase fn
 				rb.mass = 0.50f;																							// set mass
 				CoreToElectron ();																							// CORE: grow to electron size, is white
 				evolving = false;																							// reset devolving trigger
 			} 
 			else if ((currentEvol < electron2Threshold) && (previousState == PlayerState.Atom2) && devolving) {		// if FROM ATOM2 and devolving
 				//StartCoroutine(ResetZoomCamera("atom", false, 5.0f));														// CAMERA: reset anim triggers after delay
-				nEvol -= 5;																									// set fn to 0n
+				// nEvol -= 5;																									// set fn to 0n
 				rb.mass = 0.50f;																							// set mass
 				ShellShrink ();																								// SHELL: shrink
 				NucleusToWhite ();																							// NUCLEUS: fade to white
@@ -254,14 +254,14 @@ public class PlayerStateManager : MonoBehaviour {
 			} 
 			else if ((currentEvol < electron2Threshold) && (previousState == PlayerState.Atom) && devolving) {		// if FROM ATOM and devolving
 				//StartCoroutine(ResetZoomCamera("atom", false, 5.0f));														// CAMERA: reset anim triggers after delay
-				nEvol -= 4;																									// set fn to 0n
+				// nEvol -= 4;																									// set fn to 0n
 				rb.mass = 0.50f;																							// set mass
 				ShellShrink ();																								// SHELL: shrink
 				devolving = false;																							// reset devolving trigger
 			} 
 			else if ((currentEvol < electron2Threshold) && (previousState == PlayerState.Shell2) && devolving) {		// if FROM SHELL2 and devolving
 				//StartCoroutine(ResetZoomCamera("shell", false, 3.0f));														// CAMERA: reset anim triggers after delay
-				nEvol -= 3;																									// set fn to 0n
+				// nEvol -= 3;																									// set fn to 0n
 				rb.mass = 0.50f;																							// set mass
 				CoreToWhite ();																								// CORE: fade to white
 				ShellShrink ();																								// SHELL: shrink
@@ -269,7 +269,7 @@ public class PlayerStateManager : MonoBehaviour {
 			} 
 			else if ((currentEvol < electron2Threshold) && (previousState == PlayerState.Shell) && devolving) {		// if FROM SHELL and devolving
 				//StartCoroutine(ResetZoomCamera("shell", false, 3.0f));														// CAMERA: reset anim triggers after delay
-				nEvol -= 2;																									// set fn to 0
+				// nEvol -= 2;																									// set fn to 0
 				rb.mass = 0.50f;																							// set mass
 				CoreToWhite ();																								// CORE: fade to white
 				ShellShrink ();																								// SHELL: shrink
@@ -277,7 +277,7 @@ public class PlayerStateManager : MonoBehaviour {
 				devolving = false;																							// reset devolving trigger
 			} 
 			else if ((currentEvol < electron2Threshold) && (previousState == PlayerState.Electron2) && devolving) {	// if FROM ELECTRON2 and devolving
-				nEvol -= 1;																									// decrease fn
+				// nEvol -= 1;																									// decrease fn
 				rb.mass = 0.50f;																							// set mass
 				NucleusToWhite ();																							// NUCLEUS: fade out to white
 				devolving = false;																							// reset devolving trigger
@@ -309,7 +309,7 @@ public class PlayerStateManager : MonoBehaviour {
 		case PlayerState.Electron2:
 			// checks for INCOMING (ANIMATIONS & STATE TRANSITION INTERACTIONS)
 			if ((currentEvol >= electron2Threshold) && evolving) {														// if FROM ELECTRON and evolving
-				nEvol += 1;																									// increase fn
+				// nEvol += 1;																									// increase fn
 				rb.mass = 0.75f;																							// set mass
 				NucleusEnable();																							// NUCLEUS: enable, fade in to black
 				NucleusToBlack();																							// NUCLEUS: fade to black
@@ -317,14 +317,14 @@ public class PlayerStateManager : MonoBehaviour {
 			} 
 			else if ((currentEvol < shellThreshold) && (previousState == PlayerState.Atom2) && devolving) {			// if FROM ATOM2 and devolving
 				//StartCoroutine(ResetZoomCamera("atom", false, 5.0f));														// CAMERA: reset anim triggers after delay
-				nEvol -= 4;																									// decrease fn
+				// nEvol -= 4;																									// decrease fn
 				rb.mass = 0.75f;																							// set mass
 				ShellShrink ();																								// SHELL: shrink
 				devolving = false;																							// reset devolving trigger
 			} 
 			else if ((currentEvol < shellThreshold) && (previousState == PlayerState.Atom) && devolving) {			// if FROM ATOM and devolving
 				//StartCoroutine(ResetZoomCamera("atom", false, 5.0f));														// CAMERA: reset anim triggers after delay
-				nEvol -= 3;																									// decrease fn
+				// nEvol -= 3;																									// decrease fn
 				rb.mass = 0.75f;																							// set mass
 				ShellShrink ();																								// SHELL: shrink
 				NucleusToBlack ();																							// NUCLEUS: fade to black
@@ -332,7 +332,7 @@ public class PlayerStateManager : MonoBehaviour {
 			} 
 			else if ((currentEvol < shellThreshold) && (previousState == PlayerState.Shell2) && devolving) {			// if FROM SHELL2 and devolving
 				//StartCoroutine(ResetZoomCamera("shell", false, 3.0f));														// CAMERA: reset anim triggers after delay
-				nEvol -= 2;																									// decrease fn
+				// nEvol -= 2;																									// decrease fn
 				rb.mass = 0.75f;																							// set mass
 				CoreToWhite ();																								// CORE: fade to white
 				ShellShrink ();																								// SHELL: shrink
@@ -341,7 +341,7 @@ public class PlayerStateManager : MonoBehaviour {
 			} 
 			else if ((currentEvol < shellThreshold) && (previousState == PlayerState.Shell) && devolving) {			// if FROM SHELL and devolving
 				//StartCoroutine(ResetZoomCamera("shell", false, 3.0f));														// CAMERA: reset anim triggers after delay
-				nEvol -= 1;																									// decrease fn
+				// nEvol -= 1;																									// decrease fn
 				rb.mass = 0.75f;																							// set mass
 				CoreToWhite ();																								// CORE: fade to white
 				ShellShrink ();																								// SHELL: shrink
@@ -389,7 +389,7 @@ public class PlayerStateManager : MonoBehaviour {
 			// checks for INCOMING (ANIMATIONS & STATE TRANSITION INTERACTIONS)
 			if (currentEvol >= shellThreshold && evolving) {															// if FROM ELECTRON2 and evolving
 				//StartCoroutine(ResetZoomCamera("electron", false, 3.0f));														// CAMERA: reset anim triggers after delay
-				nEvol += 1;																									// increase fn
+				// nEvol += 1;																									// increase fn
 				rb.mass = 0.50f;																							// set mass
 				CoreToBlack();																								// CORE: fade to black
 				ShellGrow ();																								// SHELL: grow
@@ -397,21 +397,21 @@ public class PlayerStateManager : MonoBehaviour {
 			} 
 			else if ((currentEvol < shell2Threshold) && (previousState == PlayerState.Atom2) && devolving) {			// if FROM ATOM2 and devolving
 				//StartCoroutine(ResetZoomCamera("atom", false, 5.0f));														// CAMERA: reset anim triggers after delay
-				nEvol -= 3;																									// decrease fn
+				// nEvol -= 3;																									// decrease fn
 				rb.mass = 0.50f;																							// set mass
 				CoreToBlack();																								// CORE: fade to black
 				devolving = true;																							// devolving trigger
 			} 
 			else if ((currentEvol < shell2Threshold) && (previousState == PlayerState.Atom) && devolving) {			// if FROM ATOM and devolving
 				//StartCoroutine(ResetZoomCamera("atom", false, 5.0f));														// CAMERA: reset anim triggers after delay
-				nEvol -= 2;																									// decrease fn
+				// nEvol -= 2;																									// decrease fn
 				rb.mass = 0.50f;																							// set mass
 				CoreToBlack();																								// CORE: fade to black
 				NucleusToBlack();																							// NUCLEUS: fade to black
 				devolving = true;																							// devolving trigger
 			} 
 			else if ((currentEvol < shell2Threshold) && (previousState == PlayerState.Shell2) && devolving) {			// if FROM SHELL2 and devolving
-				nEvol -= 1;																									// decrease fn
+				// nEvol -= 1;																									// decrease fn
 				rb.mass = 0.50f;																							// set mass
 				NucleusToBlack();																							// NUCLEUS: fade to black
 				devolving = false;																							// reset devolving trigger
@@ -455,14 +455,14 @@ public class PlayerStateManager : MonoBehaviour {
 		case PlayerState.Shell2:
 			// checks for INCOMING (ANIMATIONS & STATE TRANSITION INTERACTIONS)
 			if (currentEvol >= shell2Threshold && evolving) {															// if FROM SHELL and evolving
-				nEvol += 1;																									// increase fn
+				// nEvol += 1;																									// increase fn
 				rb.mass = 0.75f;																							// set mass
 				NucleusToWhite();																							// NUCLEUS: fade to white
 				evolving = false;																							// reset evolving trigger
 			} 
 			else if ((currentEvol < atomThreshold) && (previousState == PlayerState.Atom2) && devolving) {			// if FROM ATOM2 and devolving
 				//StartCoroutine(ResetZoomCamera("atom", false, 5.0f));														// CAMERA: reset anim triggers after delay
-				nEvol -= 2;																									// decrease fn
+				// nEvol -= 2;																									// decrease fn
 				rb.mass = 0.75f;																							// set mass
 				CoreToBlack();																								// CORE: fade to black
 				NucleusToWhite();																							// NUCLEUS: fade to white
@@ -470,7 +470,7 @@ public class PlayerStateManager : MonoBehaviour {
 			} 
 			else if ((currentEvol < atomThreshold) && (previousState == PlayerState.Atom) && devolving) {				// if FROM ATOM and devolving
 				//StartCoroutine(ResetZoomCamera("atom", false, 5.0f));														// CAMERA: reset anim triggers after delay
-				nEvol -= 1;																									// decrease fn
+				// nEvol -= 1;																									// decrease fn
 				rb.mass = 0.75f;																							// set mass
 				CoreToBlack();																								// CORE: fade to black
 				devolving = false;																							// reset devolving trigger
@@ -535,13 +535,13 @@ public class PlayerStateManager : MonoBehaviour {
 			// checks for INCOMING (ANIMATIONS & STATE TRANSITION INTERACTIONS)
 			if ((currentEvol >= atomThreshold) && evolving) {															// if FROM SHELL2 and evolving
 				//StartCoroutine(ResetZoomCamera("shell", false, 5.0f));														// CAMERA: reset anim triggers after delay
-				nEvol += 1;																									// increase fn
+				// nEvol += 1;																									// increase fn
 				rb.mass = 1.0f;																								// set mass
 				CoreToWhite();																								// CORE: fade to white
 				evolving = false;																							// reset evolving trigger
 			} 
 			else if ((currentEvol < atom2Threshold)  && (previousState == PlayerState.Atom2) && devolving) {			// if FROM ATOM2 and devolving
-				nEvol -= 1;																									// decrease fn
+				// nEvol -= 1;																									// decrease fn
 				rb.mass = 1.0f;																								// set mass
 				NucleusToWhite();																							// NUCLEUS: fade to white
 				devolving = false;																							// reset devolving trigger
@@ -601,7 +601,7 @@ public class PlayerStateManager : MonoBehaviour {
 		}
 
 		previousEvol = currentEvol;															// previous evol value last frame
-		previousNEvol = currentNEvol;														// previous nEvol value last frame
+		// previousNEvol = currentNEvol;														// previous nEvol value last frame
 	}
 
 	// trigger methods \\
@@ -692,63 +692,63 @@ public class PlayerStateManager : MonoBehaviour {
 
 		if (other.gameObject.CompareTag ("Photon")) {																					// collide with photon
 			StartCoroutine (PreventPlayerDamage (2.0f));																						// prevent player trigger collisions
-			if ((evol >= other.gameObject.GetComponent<ParticleStateManager> ().evol) && hasCollided) {										// if any state >= other photon
-				AddEvol(other.gameObject.GetComponent<ParticleStateManager>(), 0.5f, 1.0f);														// add 0.5 evol, take 1 evol
+			if ((evol >= other.gameObject.GetComponent<ParticleManager> ().evol) && hasCollided) {										// if any state >= other photon
+				AddEvol(other.gameObject.GetComponent<ParticleManager>(), 0.5f, 1.0f);														// add 0.5 evol, take 1 evol
 			}
 		} 
 		else if (other.gameObject.CompareTag ("Electron")) {																			// collide with electron
 			StartCoroutine (PreventPlayerDamage (2.0f));																						// prevent player trigger collisions
-			if ((evol < other.gameObject.GetComponent<ParticleStateManager> ().evol) && hasCollided) {										// if < other electron
-				SubtractEvol(other.gameObject.GetComponent<ParticleStateManager>(), 1.0f, 0.5f);												// subtract 1 evol, give 1 evol
+			if ((evol < other.gameObject.GetComponent<ParticleManager> ().evol) && hasCollided) {										// if < other electron
+				SubtractEvol(other.gameObject.GetComponent<ParticleManager>(), 1.0f, 0.5f);												// subtract 1 evol, give 1 evol
 			} 
-			else if ((evol >= other.gameObject.GetComponent<ParticleStateManager> ().evol) && hasCollided) {								// if any state >= other electron
-				AddEvol(other.gameObject.GetComponent<ParticleStateManager>(), 1.0f, 1.0f);														// add 1 evol, take 1 evol
+			else if ((evol >= other.gameObject.GetComponent<ParticleManager> ().evol) && hasCollided) {								// if any state >= other electron
+				AddEvol(other.gameObject.GetComponent<ParticleManager>(), 1.0f, 1.0f);														// add 1 evol, take 1 evol
 			}
 		}
 		else if (other.gameObject.CompareTag ("Electron2")) {																			// collide with electron2
 			StartCoroutine (PreventPlayerDamage (2.0f));																						// prevent player trigger collisions
-			if ((evol < other.gameObject.GetComponent<ParticleStateManager> ().evol) && hasCollided) {										// if < other electron2
-				SubtractEvol(other.gameObject.GetComponent<ParticleStateManager>(), 1.0f, 1.0f);												// subtract 1 evol, give 1 evol
+			if ((evol < other.gameObject.GetComponent<ParticleManager> ().evol) && hasCollided) {										// if < other electron2
+				SubtractEvol(other.gameObject.GetComponent<ParticleManager>(), 1.0f, 1.0f);												// subtract 1 evol, give 1 evol
 			} 
-			else if ((evol >= other.gameObject.GetComponent<ParticleStateManager> ().evol) && hasCollided) {								// if any state >= other electron2
-				AddEvol(other.gameObject.GetComponent<ParticleStateManager>(), 1.0f, 1.0f);														// add 1 evol, take 1 evol
+			else if ((evol >= other.gameObject.GetComponent<ParticleManager> ().evol) && hasCollided) {								// if any state >= other electron2
+				AddEvol(other.gameObject.GetComponent<ParticleManager>(), 1.0f, 1.0f);														// add 1 evol, take 1 evol
 			}
 		}
 		else if (other.gameObject.CompareTag ("Shell")) {																				// collide with shell
 			StartCoroutine(PreventPlayerDamage(2.0f));																							// prevent player trigger collisions
 			if ((evol < 2.0f) && hasCollided) {																								// if < shell
-				SubtractEvol(other.gameObject.GetComponentInParent<ParticleStateManager>(), 1.0f, 1.0f);										// subtract 2 evol, give 1 evol
+				SubtractEvol(other.gameObject.GetComponentInParent<ParticleManager>(), 1.0f, 1.0f);										// subtract 2 evol, give 1 evol
 			} 
-			else if ((evol >= 2.0f) && (evol >= other.gameObject.GetComponentInParent<ParticleStateManager> ().evol) && hasCollided) {	// if any state >= other shell											
-				AddEvol(other.gameObject.GetComponentInParent<ParticleStateManager>(), 1.0f, 2.0f);												// add 1 evol, take 2 evol
+			else if ((evol >= 2.0f) && (evol >= other.gameObject.GetComponentInParent<ParticleManager> ().evol) && hasCollided) {	// if any state >= other shell											
+				AddEvol(other.gameObject.GetComponentInParent<ParticleManager>(), 1.0f, 2.0f);												// add 1 evol, take 2 evol
 			}
 		}
 		else if (other.gameObject.CompareTag ("Shell2")) {																				// collide with shell
 			StartCoroutine(PreventPlayerDamage(2.0f));																							// prevent player trigger collisions
 			if ((evol < 3.0f) && hasCollided) {																								// if < shell2
-				SubtractEvol(other.gameObject.GetComponentInParent<ParticleStateManager>(), 1.0f, 1.0f);										// subtract 2 evol, give 1 evol
+				SubtractEvol(other.gameObject.GetComponentInParent<ParticleManager>(), 1.0f, 1.0f);										// subtract 2 evol, give 1 evol
 			} 
-			else if ((evol >= 3.0f) && (evol >= other.gameObject.GetComponentInParent<ParticleStateManager> ().evol) && hasCollided) {	// if any state >= other shell2											
-				AddEvol(other.gameObject.GetComponentInParent<ParticleStateManager>(), 1.0f, 2.0f);												// add 1 evol, take 2
+			else if ((evol >= 3.0f) && (evol >= other.gameObject.GetComponentInParent<ParticleManager> ().evol) && hasCollided) {	// if any state >= other shell2											
+				AddEvol(other.gameObject.GetComponentInParent<ParticleManager>(), 1.0f, 2.0f);												// add 1 evol, take 2
 			}
 		}
 		else if (other.gameObject.CompareTag ("Atom")) {																				// collide with atom
 			StartCoroutine(PreventPlayerDamage(2.0f));																							// prevent player trigger collisions
 			if ((evol < 5.0f) && hasCollided) {																								// if < atom
-				SubtractEvol(other.gameObject.GetComponentInParent<ParticleStateManager>(), 3.0f, 1.0f);										// subtract 3 evol, give 1 evol
+				SubtractEvol(other.gameObject.GetComponentInParent<ParticleManager>(), 3.0f, 1.0f);										// subtract 3 evol, give 1 evol
 			} 
-			else if ((evol >= 5.0f) && (evol < other.gameObject.GetComponentInParent<ParticleStateManager> ().evol) && hasCollided) {		// if atom < other atom
-				SubtractEvol(other.gameObject.GetComponentInParent<ParticleStateManager>(), 1.0f, 1.0f);										// subtract 1 evol, give 1 evol
+			else if ((evol >= 5.0f) && (evol < other.gameObject.GetComponentInParent<ParticleManager> ().evol) && hasCollided) {		// if atom < other atom
+				SubtractEvol(other.gameObject.GetComponentInParent<ParticleManager>(), 1.0f, 1.0f);										// subtract 1 evol, give 1 evol
 			} 
-			else if ((evol >= 5.0f) && (evol >= other.gameObject.GetComponentInParent<ParticleStateManager> ().evol) && hasCollided) {	// if any state >= other atom
-				AddEvol(other.gameObject.GetComponentInParent<ParticleStateManager>(), 1.0f, 3.0f);												// add 1 evol, take 3 evol
+			else if ((evol >= 5.0f) && (evol >= other.gameObject.GetComponentInParent<ParticleManager> ().evol) && hasCollided) {	// if any state >= other atom
+				AddEvol(other.gameObject.GetComponentInParent<ParticleManager>(), 1.0f, 3.0f);												// add 1 evol, take 3 evol
 			}
 		}
 	}
 
 	// methods \\
 
-		void SubtractEvol(ParticleStateManager other, float playerSubAmount, float otherAddAmount) {
+		void SubtractEvol(ParticleManager other, float playerSubAmount, float otherAddAmount) {
 			evol -= playerSubAmount;																							// remove evol level
 			other.evol += otherAddAmount;																						// +1 evol to other shell
 			bump = true;																										// collision bump
@@ -757,7 +757,7 @@ public class PlayerStateManager : MonoBehaviour {
 			Debug.Log ("evol: " + evol);
 		}
 
-		void AddEvol(ParticleStateManager other, float playerAddAmount, float otherSubAmount) {
+		void AddEvol(ParticleManager other, float playerAddAmount, float otherSubAmount) {
 			evol += playerAddAmount;																							// remove evol level
 			other.evol -= otherSubAmount;																						// +1 evol to other shell
 			hasCollided = false;																								// reset has collided trigger	
@@ -772,6 +772,7 @@ public class PlayerStateManager : MonoBehaviour {
 		lastStateChange = Time.time;														// reset time since last state change
 		Debug.Log("set state: " + currentState);											// debug
 	}
+// set delegate 
 
 	// core \\
 
@@ -908,21 +909,21 @@ public class PlayerStateManager : MonoBehaviour {
 					(lostParticle, new Vector3(transform.position.x + Random.Range(-3.5f, -1.5f), transform.position.y, transform.position.z + Random.Range(-3.5f, -1.5f)), Quaternion.identity) as GameObject;		
 
 				particle.transform.parent = lostParticleParent.transform;														// sort new electron under 'Collectables'
-				particle.GetComponent<FauxGravityBody> ().attractor = GetComponent<FauxGravityBody> ().attractor;				// set new electron FauxGravityAttractor as World
+				particle.GetComponent<PlayerPhysicsManager> ().attractor = GetComponent<PlayerPhysicsManager> ().attractor;				// set new electron FauxGravityAttractor as World
 
 				particle.GetComponent<Animator>().SetBool("black", false);														// fade core to white: reset black condition
 				particle.GetComponent<Animator>().SetTrigger("fadein");															// fade core to white
 
 				if (lostPart >= 3) {																							// if losing 3 particles
-					particle.GetComponent<ParticleStateManager>().initState = 
-						particle.GetComponent<ParticleStateManager>().initState = ParticleStateManager.ParticleState.Electron;		// init electron (2x photon)
+					particle.GetComponent<ParticleManager>().initState = 
+						particle.GetComponent<ParticleManager>().initState = ParticleManager.ParticleState.Electron;		// init electron (2x photon)
 					i+=1;																											// spawn 1 less photon
 				}
 				else {																											// else
 					particle.GetComponent<Animator>().SetBool("photon", true);														// photon: set photon condition
 					particle.GetComponent<Animator>().SetTrigger("scaledown");														// scale to photon
-					particle.GetComponent<ParticleStateManager>().initState = 
-						particle.GetComponent<ParticleStateManager>().initState = ParticleStateManager.ParticleState.Electron;		// init photon
+					particle.GetComponent<ParticleManager>().initState = 
+						particle.GetComponent<ParticleManager>().initState = ParticleManager.ParticleState.Electron;		// init photon
 				}
 
 				// particle collisions prevented in particle start()
@@ -933,21 +934,21 @@ public class PlayerStateManager : MonoBehaviour {
 					(lostParticle, new Vector3(transform.position.x + Random.Range(-3.5f, -1.5f), transform.position.y, transform.position.z + Random.Range(0.5f, 2.5f)), Quaternion.identity) as GameObject;		
 
 				particle.transform.parent = lostParticleParent.transform;														// sort new electron under 'Collectables'
-				particle.GetComponent<FauxGravityBody> ().attractor = GetComponent<FauxGravityBody> ().attractor;				// set new electron FauxGravityAttractor as World
+				particle.GetComponent<PlayerPhysicsManager> ().attractor = GetComponent<PlayerPhysicsManager> ().attractor;				// set new electron FauxGravityAttractor as World
 
 				particle.GetComponent<Animator>().SetBool("black", false);														// fade core to white: reset black condition
 				particle.GetComponent<Animator>().SetTrigger("fadein");															// fade core to white
 
 				if (lostPart >= 3) {																							// if losing 3 particles
-					particle.GetComponent<ParticleStateManager>().initState = 
-						particle.GetComponent<ParticleStateManager>().initState = ParticleStateManager.ParticleState.Electron;		// init electron (2x photon)
+					particle.GetComponent<ParticleManager>().initState = 
+						particle.GetComponent<ParticleManager>().initState = ParticleManager.ParticleState.Electron;		// init electron (2x photon)
 					i+=1;																											// spawn 1 less photon
 				}
 				else {																											// else
 					particle.GetComponent<Animator>().SetBool("photon", true);														// photon: set photon condition
 					particle.GetComponent<Animator>().SetTrigger("scaledown");														// scale to photon
-					particle.GetComponent<ParticleStateManager>().initState = 
-						particle.GetComponent<ParticleStateManager>().initState = ParticleStateManager.ParticleState.Electron;		// init photon
+					particle.GetComponent<ParticleManager>().initState = 
+						particle.GetComponent<ParticleManager>().initState = ParticleManager.ParticleState.Electron;		// init photon
 				}
 
 				// particle collisions prevented in particle start()
@@ -956,23 +957,23 @@ public class PlayerStateManager : MonoBehaviour {
 				GameObject particle = Instantiate																		// create new electron at same position randomly offset from centre
 					(lostParticle, new Vector3(transform.position.x + Random.Range(-3.5f, -1.5f), transform.position.y, transform.position.z + Random.Range(1.5f, -2.5f)), Quaternion.identity) as GameObject;		
 				particle.transform.parent = lostParticleParent.transform;												// sort new electron under 'Collectables'
-				particle.GetComponent<FauxGravityBody> ().attractor = GetComponent<FauxGravityBody> ().attractor;		// set new electron FauxGravityAttractor as World
+				particle.GetComponent<PlayerPhysicsManager> ().attractor = GetComponent<PlayerPhysicsManager> ().attractor;		// set new electron FauxGravityAttractor as World
 				particle.GetComponent<Animator>().SetBool("black", false);												// fade core to white: reset black condition
 				particle.GetComponent<Animator>().SetTrigger("fadein");													// fade core to white
 				particle.GetComponent<Animator>().SetBool("photon", true);												// photon: set photon condition
 				particle.GetComponent<Animator>().SetTrigger("scaledown");												// scale to photon
-				particle.GetComponent<ParticleStateManager>().evol = 0;													// set evol to 0
+				particle.GetComponent<ParticleManager>().evol = 0;													// set evol to 0
 			} 
 			else {
 				GameObject particle = Instantiate																		// create new electron at same position randomly offset from centre
 					(lostParticle, new Vector3(transform.position.x + Random.Range(-3.5f, -1.5f), transform.position.y, transform.position.z + Random.Range(-3.5f, 2.5f)), Quaternion.identity) as GameObject;		
 				particle.transform.parent = lostParticleParent.transform;												// sort new electron under 'Collectables'
-				particle.GetComponent<FauxGravityBody> ().attractor = GetComponent<FauxGravityBody> ().attractor;		// set new electron FauxGravityAttractor as World
+				particle.GetComponent<PlayerPhysicsManager> ().attractor = GetComponent<PlayerPhysicsManager> ().attractor;		// set new electron FauxGravityAttractor as World
 				particle.GetComponent<Animator>().SetBool("black", false);												// fade core to white: reset black condition
 				particle.GetComponent<Animator>().SetTrigger("fadein");													// fade core to white
 				particle.GetComponent<Animator>().SetBool("photon", true);												// photon: set photon condition
 				particle.GetComponent<Animator>().SetTrigger("scaledown");												// scale to photon
-				particle.GetComponent<ParticleStateManager>().evol = 0;													// set evol to 0
+				particle.GetComponent<ParticleManager>().evol = 0;													// set evol to 0
 			}
 			
 			i+=1;																										// # of particle spawn count

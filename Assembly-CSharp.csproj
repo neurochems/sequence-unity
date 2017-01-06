@@ -45,12 +45,35 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\Actors\IParticleState.cs" />
+     <Compile Include="Assets\Scripts\Actors\Particle\ParticleManager.cs" />
+     <Compile Include="Assets\Scripts\Actors\Particle\ParticlePhysicsManager.cs" />
+     <Compile Include="Assets\Scripts\Actors\Particle\ParticleStatePattern.cs" />
+     <Compile Include="Assets\Scripts\Actors\Particle\States\Atom2ParticleState.cs" />
+     <Compile Include="Assets\Scripts\Actors\Particle\States\AtomParticleState.cs" />
+     <Compile Include="Assets\Scripts\Actors\Particle\States\DeadParticleState.cs" />
+     <Compile Include="Assets\Scripts\Actors\Particle\States\Electron2ParticleState.cs" />
+     <Compile Include="Assets\Scripts\Actors\Particle\States\ElectronParticleState.cs" />
+     <Compile Include="Assets\Scripts\Actors\Particle\States\PhotonParticleState.cs" />
+     <Compile Include="Assets\Scripts\Actors\Particle\States\Shell2ParticleState.cs" />
+     <Compile Include="Assets\Scripts\Actors\Particle\States\ShellParticleState.cs" />
+     <Compile Include="Assets\Scripts\Actors\ParticleStateEvents.cs" />
+     <Compile Include="Assets\Scripts\Actors\Player\PlayerController.cs" />
+     <Compile Include="Assets\Scripts\Actors\Player\PlayerManager.cs" />
+     <Compile Include="Assets\Scripts\Actors\Player\PlayerPhysicsManager.cs" />
+     <Compile Include="Assets\Scripts\Actors\Player\PlayerStatePattern.cs" />
+     <Compile Include="Assets\Scripts\Actors\Player\States\Atom2PlayerState.cs" />
+     <Compile Include="Assets\Scripts\Actors\Player\States\AtomPlayerState.cs" />
+     <Compile Include="Assets\Scripts\Actors\Player\States\DeadPlayerState.cs" />
+     <Compile Include="Assets\Scripts\Actors\Player\States\Electron2PlayerState.cs" />
+     <Compile Include="Assets\Scripts\Actors\Player\States\ElectronPlayerState.cs" />
+     <Compile Include="Assets\Scripts\Actors\Player\States\PhotonPlayerState.cs" />
+     <Compile Include="Assets\Scripts\Actors\Player\States\Shell2PlayerState.cs" />
+     <Compile Include="Assets\Scripts\Actors\Player\States\ShellPlayerState.cs" />
+     <Compile Include="Assets\Scripts\Actors\Player\UIManager.cs" />
+     <Compile Include="Assets\Scripts\Actors\SpawnParticle.cs" />
+     <Compile Include="Assets\Scripts\Camera\OrthoSmoothFollow.cs" />
      <Compile Include="Assets\Scripts\Environment\FauxGravityAttractor.cs" />
-     <Compile Include="Assets\Scripts\Environment\FauxGravityBody.cs" />
-     <Compile Include="Assets\Scripts\Particle\ParticleStateManager.cs" />
-     <Compile Include="Assets\Scripts\Player\OrthoSmoothFollow.cs" />
-     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
-     <Compile Include="Assets\Scripts\Player\PlayerStateManager.cs" />
      <Compile Include="Assets\UI\Scripts\DontDestroy.cs" />
      <Compile Include="Assets\UI\Scripts\EventSystemChecker.cs" />
      <Compile Include="Assets\UI\Scripts\Pause.cs" />
