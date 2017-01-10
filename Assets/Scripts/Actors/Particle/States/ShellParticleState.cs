@@ -4,74 +4,76 @@ using System.Collections;
 public class ShellParticleState : IParticleState 
 {
 
-	private readonly ParticleStatePattern particle;								// reference to pattern/monobehaviour class
+	private readonly ParticleStatePattern particle;										// reference to pattern/monobehaviour class
 
-	private float stunTimer = 0f;												// timer for post-hit invulnerability
+	private bool canCollide = true;														// can collide flag
+	private float collisionTimer;														// reset can collide timer
 
-	public ShellParticleState (ParticleStatePattern particleStatePattern)		// constructor
+	public ShellParticleState (ParticleStatePattern particleStatePattern)				// constructor
 	{
-		particle = particleStatePattern;										// attach state pattern to this state 
+		particle = particleStatePattern;												// attach state pattern to this state 
 	}
 
 	public void UpdateState()
 	{
 		Evol ();
 		//Sense ();
+
+		// allow collisions timer
+		if (!canCollide) collisionTimer += Time.deltaTime;										// start timer
+		if (collisionTimer >= particle.stunDuration) canCollide = true;							// set can collide ability
 	}
 
 	public void OnTriggerEnter(Collider other)
 	{
-		// evol changes/collisions go here
-			// replace PreventPlayerCollision with Stun()
+		bool rolling = true;																											// roll die trigger
 
-		bool hasCollided = true;																								// has collided trigger
-		bool rolling = true;																									// roll die trigger
-
-		if (other.gameObject.CompareTag ("Player") && hasCollided) {															// colide with player
-			Stun();																													// disable collider
-			hasCollided = false;																									// reset has collided trigger	
+		if (other.gameObject.CompareTag ("Player") && canCollide) {																		// colide with player
+			particle.GetComponent<ParticleStatePattern> ().stunned = true;																	// stun new particle for 3 sec
+			canCollide = false;																												// reset can collide trigger	
 			Debug.Log ("particle contact player");
 		} 
-		else if (other.gameObject.CompareTag ("Photon")) {																		// collide with photon
-			Stun();																													// disable collider	
-			particle.AddEvol(0.5f);																									// add 0.5 evol
-			hasCollided = false;																									// reset collision trigger
+		else if (other.gameObject.CompareTag ("Photon") && canCollide) {																// collide with photon
+			particle.AddEvol(0.5f);																											// add 0.5 evol
+			particle.GetComponent<ParticleStatePattern> ().stunned = true;																	// stun new particle for 3 sec
+			canCollide = false;																												// reset can collide trigger
 		} 
-		else if (other.gameObject.CompareTag ("Electron")) {																	// collide with electron
-			Stun();																													// disable collider	
-			particle.AddEvol(1.0f);																									// add 1 evol
-			hasCollided = false;																									// reset collision trigger
+		else if (other.gameObject.CompareTag ("Electron") && canCollide) {																// collide with electron
+			particle.AddEvol(1.0f);																											// add 1 evol
+			particle.GetComponent<ParticleStatePattern> ().stunned = true;																	// stun new particle for 3 sec
+			canCollide = false;																												// reset can collide trigger
 		} 
-		else if (other.gameObject.CompareTag ("Electron2")) {																	// collide with electron2
-			Stun();																													// disable collider	
-			particle.AddEvol(1.0f);																									// add 1 evol
-			hasCollided = false;																									// reset collision trigger
+		else if (other.gameObject.CompareTag ("Electron2") && canCollide) {																// collide with electron2
+			particle.GetComponent<ParticleStatePattern> ().stunned = true;																	// stun new particle for 3 sec
+			particle.AddEvol(1.0f);																											// add 1 evol
+			canCollide = false;																												// reset can collide trigger
 		}
-		else if (other.gameObject.CompareTag ("Shell")) {																		// collide with shell
-			if ((particle.evol == other.gameObject.GetComponent<ParticleStatePattern> ().evol) && rolling && hasCollided) {			// if = other shell
-				Stun();																													// disable collider
-				particle.RollDie(other.gameObject.GetComponent<ParticleStatePattern> (), 1.0f, 1.0f);									// roll die (win 1, lose -2)
+		else if (other.gameObject.CompareTag ("Shell") && canCollide) {																	// collide with shell
+			if ((particle.evol == other.gameObject.GetComponentInParent<ParticleStatePattern> ().evol) && rolling && canCollide) {			// if = other shell
+				particle.RollDie(other.gameObject.GetComponentInParent<ParticleStatePattern> (), 1.0f, 1.0f);									// roll die (win 1, lose -2)
+				particle.GetComponentInParent<ParticleStatePattern> ().stunned = true;															// stun new particle for 3 sec
+				canCollide = false;																												// reset can collide trigger
 			}	
-			else if ((particle.evol > other.gameObject.GetComponent<ParticleStatePattern> ().evol) && hasCollided) {				// if > other electron 
-				Stun();																													// disable collider
-				particle.AddEvol(1.0f);																									// add 1 evol
-				hasCollided = false;																									// reset has collided trigger
+			else if ((particle.evol > other.gameObject.GetComponent<ParticleStatePattern> ().evol) && canCollide) {							// if > other electron 
+				particle.AddEvol(1.0f);																											// add 1 evol
+				particle.GetComponentInParent<ParticleStatePattern> ().stunned = true;															// stun new particle for 3 sec
+				canCollide = false;																												// reset can collide trigger
 			}
-			else if ((particle.evol < other.gameObject.GetComponent<ParticleStatePattern> ().evol) && hasCollided) {				// if < other electron, or photon
-				Stun();																													// disable collider
-				particle.SubtractEvol(2.0f);																							// subtract 2 evol
-				hasCollided = false;																									// reset has collided trigger
+			else if ((particle.evol < other.gameObject.GetComponent<ParticleStatePattern> ().evol) && canCollide) {							// if < other electron, or photon
+				particle.SubtractEvol(2.0f);																									// subtract 2 evol
+				particle.GetComponentInParent<ParticleStatePattern> ().stunned = true;															// stun new particle for 3 sec
+				canCollide = false;																												// reset can collide trigger
 			}
 		}
-		else if (other.gameObject.CompareTag ("Shell2")) {																		// collide with shell
-			Stun();																													// disable collider	
-			particle.SubtractEvol(2.0f);																							// subtract 2 evol
-			hasCollided = false;																									// reset collision trigger
+		else if (other.gameObject.CompareTag ("Shell2") && canCollide) {																// collide with shell2
+			particle.SubtractEvol(2.0f);																									// subtract 2 evol
+			particle.GetComponentInParent<ParticleStatePattern> ().stunned = true;															// stun new particle for 3 sec
+			canCollide = false;																												// reset can collide trigger
 		}
-		else if (other.gameObject.CompareTag ("Atom")) {																						// collide with atom
-			Stun();																													// disable collider	
-			particle.SubtractEvol(3.0f);																							// subtract 2 evol
-			hasCollided = false;																									// reset collision trigger
+		else if (other.gameObject.CompareTag ("Atom") && canCollide) {																	// collide with atom
+			particle.SubtractEvol(3.0f);																									// subtract 2 evol
+			particle.GetComponentInParent<ParticleStatePattern> ().stunned = true;															// stun new particle for 3 sec
+			canCollide = false;																												// reset can collide trigger
 		}
 	}
 
@@ -83,7 +85,6 @@ public class ShellParticleState : IParticleState
 		particle.SpawnElectron(1);														// spawn 1 electron
 		particle.SpawnPhoton(1);														// spawn 1 photon
 		particle.currentState = particle.deadState;										// set to new state
-		stunTimer = 0f;																	// reset stun timer
 	}
 
 	public void ToPhoton()
@@ -94,7 +95,6 @@ public class ShellParticleState : IParticleState
 		particle.SpawnElectron(1);														// spawn 1 electron
 		particle.SpawnPhoton(1);														// spawn 1 photon
 		particle.currentState = particle.photonState;									// set to new state
-		stunTimer = 0f;																	// reset stun timer
 	}
 
 	public void ToElectron()
@@ -104,7 +104,6 @@ public class ShellParticleState : IParticleState
 		ParticleStateEvents.toElectron += particle.TransitionToElectron;				// flag transition in delegate
 		particle.SpawnPhoton(3);														// spawn 3 photons
 		particle.currentState = particle.electronState;									// set to new state
-		stunTimer = 0f;																	// reset stun timer
 	}
 
 	public void ToElectron2()
@@ -114,7 +113,6 @@ public class ShellParticleState : IParticleState
 		ParticleStateEvents.toElectron2 += particle.TransitionToElectron2;				// flag transition in delegate
 		particle.SpawnPhoton(2);														// spawn 2 photons
 		particle.currentState = particle.electron2State;								// set to new state
-		stunTimer = 0f;																	// reset stun timer
 	}
 
 	public void ToShell()
@@ -128,7 +126,6 @@ public class ShellParticleState : IParticleState
 		particle.TransitionToShell2(particle.self);										// trigger transition effects
 		ParticleStateEvents.toShell2 += particle.TransitionToShell2;					// flag transition in delegate
 		particle.currentState = particle.shell2State;									// set to new state
-		stunTimer = 0f;																	// reset stun timer
 	}
 
 	public void ToAtom()
@@ -137,13 +134,11 @@ public class ShellParticleState : IParticleState
 		particle.TransitionToAtom(particle.self);										// trigger transition effects
 		ParticleStateEvents.toAtom += particle.TransitionToAtom;						// flag transition in delegate
 		particle.currentState = particle.atomState;										// set to new state
-		stunTimer = 0f;																	// reset stun timer
 	}
 
 /*	public void ToAtom2()
 	{
 		particle.currentState = particle.atom2State;							// set to new state
-		stunTimer = 0f;															// reset stun timer
 	}*/
 
 	public void Evol()
@@ -168,15 +163,4 @@ public class ShellParticleState : IParticleState
 			particle.attractionTarget = hit.transform;
 		}
 	}*/
-
-	private void Stun()															/* trigger post-hit invulnerability */
-	{
-		particle.Stun (true);													// disable collider
-		stunTimer += Time.deltaTime;											// start timer
-		if (stunTimer >= particle.stunDuration) {								// if timer >= duration
-			particle.Stun (false);													// enable collider
-			stunTimer = 0f;															// reset timer
-		}
-	}
-
 }

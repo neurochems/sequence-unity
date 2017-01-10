@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour {
 
@@ -10,6 +11,14 @@ public class UIManager : MonoBehaviour {
 
 	// player state pattern
 	private PlayerStatePattern psp;
+
+	// flags
+	private bool dead = false; 
+	private bool endgame = false; 
+
+	// timers
+	private float deathFadeTimer = 0.0f;
+	private float endGameTimer = 0.0f;
 
 	// endless
 	public bool endless = false;
@@ -22,8 +31,7 @@ public class UIManager : MonoBehaviour {
 	// ui text anim
 	public GameObject[] overlayTextTrigger;
 
-	// timers
-	private float deathFadeTimer = 0.0f;
+
 
 	void Start () 
 	{
@@ -34,7 +42,7 @@ public class UIManager : MonoBehaviour {
 	void Update () 
 	{
 
-		// DEBUG particle counts \\
+		/////////////////////////      DEBUG particle counts      \\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		// total children
 		numTotal = debugCollectables.transform.childCount;
@@ -64,7 +72,24 @@ public class UIManager : MonoBehaviour {
 		numAtom = 0;
 		numAtom2 = 0;
 
+		//////////////////////////////////////////////////////////////////////////////////////
+
+		if (dead) deathFadeTimer += Time.deltaTime;																		// start death timer
+		if (deathFadeTimer >= 8f) {																					// if timer >= duration
+			uI.gameObject.tag = "Destroy";																				// flag old ui for destroy
+			SceneManager.LoadScene("Sequence1");																		// restart scene
+			deathFadeTimer = 0f;																						// reset timer
+		}
+
+		if (endgame) endGameTimer += Time.deltaTime;																	// start endgame timer
+		if (endGameTimer >= 10f) {																				// if timer >= duration
+			uI.gameObject.tag = "Destroy";																				// flag old ui for destroy
+			SceneManager.LoadScene("Sequence1");																		// restart scene
+			endGameTimer = 0f;																						// reset timer
+		}
+
 		// checks for OVERLAY TEXT (FIRST)
+
 		if (!uI.GetComponent<StartOptions> ().inMainMenu && GetPlaytimeElapsed () >= 5.0f) {							// 5 sec into playable/not-menu game	// OVERLAY TEXT
 			overlayTextTrigger [0].SetActive (true);																	// activate text
 			overlayTextTrigger [0].GetComponent<Animator> ().SetTrigger ("fade");										// trigger text fade
@@ -92,21 +117,29 @@ public class UIManager : MonoBehaviour {
 		if (psp.currentState == psp.atomState && GetStateElapsed () > 40.0f) {																			// 20 sec into being atom				
 			overlayTextTrigger [4].SetActive (true);																	// activate text
 			overlayTextTrigger [4].GetComponent<Animator> ().SetTrigger ("fade");										// trigger overlay text
+
+			//overlayTextTrigger [4].SetActive (true);																	// activate text
+			//overlayTextTrigger [4].GetComponent<Animator> ().SetTrigger ("fade");
+
+			//overlayTextTrigger [4].SetActive (true);																	// activate text
+			//overlayTextTrigger [4].GetComponent<Animator> ().SetTrigger ("fade");
+
+			//overlayTextTrigger [4].SetActive (true);																	// activate text
+			//overlayTextTrigger [4].GetComponent<Animator> ().SetTrigger ("fade");
+
 			if (!endless) 																								// if not endless
-				Endgame();																					// ENDGAME
+				endgame = true;
+				deathFade.SetActive(true);																					// fade screen to black
 		}	
 	}
 
-	private void Endgame()
+	public void Dead(bool isDead)
 	{
-		deathFade.SetActive(true);											// fade screen to black
+		dead = isDead;
+		deathFade.SetActive(true);																					// fade screen to black
 
-		deathFadeTimer += Time.deltaTime;									// start timer
-		if (deathFadeTimer >= 2f) {											// if timer >= duration
-			uI.gameObject.tag = "Destroy";									// flag old ui for destroy
-			SceneManager.LoadScene("Sequence1");								// restart scene
-			deathFadeTimer = 0f;												// reset timer
-		}
+		overlayTextTrigger [5].SetActive (true);																	// activate text
+		overlayTextTrigger [5].GetComponent<Animator> ().SetTrigger ("fade");										// trigger overlay text
 	}
 
 	public void IsEndless(bool toggle) {

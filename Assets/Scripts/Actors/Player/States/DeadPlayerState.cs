@@ -6,8 +6,6 @@ public class DeadPlayerState : IParticleState
 
 	private readonly PlayerStatePattern particle;										// reference to pattern/monobehaviour class
 
-	private float stunTimer = 0f;														// timer for post-hit invulnerability
-
 	public DeadPlayerState (PlayerStatePattern playerStatePattern)						// constructor
 	{
 		particle = playerStatePattern;													// attach state pattern to this state 
@@ -82,43 +80,36 @@ public class DeadPlayerState : IParticleState
 	public void ToPhoton()
 	{
 		particle.currentState = particle.photonState;							// set to new state
-		stunTimer = 0f;															// reset stun timer
 	}
 
 	public void ToElectron()
 	{
 		particle.currentState = particle.electronState;							// set to new state
-		stunTimer = 0f;															// reset stun timer
 	}
 
 	public void ToElectron2()
 	{
 		particle.currentState = particle.electron2State;						// set to new state
-		stunTimer = 0f;															// reset stun timer
 	}
 
 	public void ToShell()
 	{
 		particle.currentState = particle.shellState;							// set to new state
-		stunTimer = 0f;															// reset stun timer
 	}
 
 	public void ToShell2()
 	{
 		particle.currentState = particle.shell2State;							// set to new state
-		stunTimer = 0f;															// reset stun timer
 	}
 
 	public void ToAtom()
 	{
 		particle.currentState = particle.atomState;								// set to new state
-		stunTimer = 0f;															// reset stun timer
 	}
 
 	/*	public void ToAtom2()
 	{
 		particle.currentState = particle.atom2State;							// set to new state
-		stunTimer = 0f;															// reset stun timer
 	}*/
 
 	public void Evol()
@@ -138,15 +129,4 @@ public class DeadPlayerState : IParticleState
 		//		else if (particle.evol >= 8f)
 		//			ToAtom2 ();
 	}
-		
-	private void Stun()															/* trigger post-hit invulnerability */
-	{
-		particle.Stun (true);													// disable collider
-		stunTimer += Time.deltaTime;											// start timer
-		if (stunTimer >= particle.stunDuration) {								// if timer >= duration
-			particle.Stun (false);													// enable collider
-			stunTimer = 0f;															// reset timer
-		}
-	}
-
 }
