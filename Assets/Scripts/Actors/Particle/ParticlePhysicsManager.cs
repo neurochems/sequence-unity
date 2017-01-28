@@ -19,7 +19,7 @@ public class ParticlePhysicsManager : MonoBehaviour {
 	public int bumpStrength = 100;
 
 	void Start () {
-		GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
+		//GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
 		GetComponent<Rigidbody>().useGravity = false;
 		particleTransform = transform;
 

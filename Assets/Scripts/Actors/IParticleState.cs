@@ -9,19 +9,21 @@ public interface IParticleState
 
 	void Death();
 
-	void ToPhoton();
+	void ToZero();
 
-	void ToElectron();
+	void ToFirst();
 
-	void ToElectron2();
+	void ToSecond();
 
-	void ToShell();
+	void ToThird();
 
-	void ToShell2();
+	void ToFourth();
 
-	void ToAtom();
+	void ToFifth();
 
-//	void ToAtom2();
+	void ToSixth();
+
+	void ToSeventh();
 
 	void Evol ();
 

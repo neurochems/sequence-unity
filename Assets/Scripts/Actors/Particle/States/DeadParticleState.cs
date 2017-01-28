@@ -110,10 +110,15 @@ public class DeadParticleState : IParticleState
 		particle.currentState = particle.atomState;								// set to new state
 	}
 
-/*	public void ToAtom2()
+	public void ToAtom2()
 	{
 		particle.currentState = particle.atom2State;							// set to new state
-	}*/
+	}
+
+	public void ToElement()
+	{
+		Debug.Log ("Can't transition to same state");
+	}
 
 	public void Evol()
 	{
@@ -129,8 +134,8 @@ public class DeadParticleState : IParticleState
 			ToShell ();
 		else if (particle.evol >= 3f && particle.evol < 5f)
 			ToShell2 ();
-		//		else if (particle.evol >= 8f)
-		//			ToAtom2 ();
+		else if (particle.evol >= 8f)
+			ToAtom2 ();
 	}
 
 /*	private void Sense()
@@ -142,17 +147,5 @@ public class DeadParticleState : IParticleState
 
 		}
 	} */
-
-/*	private void Stun()															/* trigger post-hit invulnerability
-	{
-		particle.Stun ();
-
-		/*		particle.Stun (true);															// disable collider
-		stunTimer += Time.deltaTime;													// start timer
-		if (stunTimer >= particle.stunDuration) {										// if timer >= duration
-			particle.Stun (false);															// enable collider
-			stunTimer = 0f;																	// reset timer
-		}
-	}*/
 
 }

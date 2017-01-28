@@ -107,10 +107,15 @@ public class DeadPlayerState : IParticleState
 		particle.currentState = particle.atomState;								// set to new state
 	}
 
-	/*	public void ToAtom2()
+	public void ToAtom2()
 	{
 		particle.currentState = particle.atom2State;							// set to new state
-	}*/
+	}
+
+	public void ToElement()
+	{
+		Debug.Log ("Can't transition to same state");
+	}
 
 	public void Evol()
 	{
@@ -126,7 +131,9 @@ public class DeadPlayerState : IParticleState
 			ToShell ();
 		else if (particle.evol >= 3f && particle.evol < 5f)
 			ToShell2 ();
-		//		else if (particle.evol >= 8f)
-		//			ToAtom2 ();
+		else if (particle.evol >= 5f && particle.evol < 8f)
+			ToAtom ();
+		else if (particle.evol >= 8f)
+			ToAtom2 ();
 	}
 }
