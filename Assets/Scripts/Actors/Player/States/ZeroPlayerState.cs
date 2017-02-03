@@ -4,15 +4,18 @@ using System.Collections;
 public class ZeroPlayerState : IParticleState
 {
 
-	private readonly PlayerStatePattern particle;										// reference to pattern/monobehaviour class
+	private readonly PlayerStatePattern psp;											// reference to pattern/monobehaviour class
+
+	public bool light = true;															// 'is light' flag
+	//public float darkEvolDelta, lightEvolDelta;	
 
 	private bool canCollide = true;														// can collide flag
 	private float collisionTimer;														// reset collision timer
 
 	// constructor
-	public ZeroPlayerState (PlayerStatePattern playerStatePattern)					// constructor
+	public ZeroPlayerState (PlayerStatePattern playerStatePattern)						// constructor
 	{
-		particle = playerStatePattern;													// attach state pattern to this state 
+		psp = playerStatePattern;														// attach state pattern to this state 
 	}
 
 	public void UpdateState()															// called every frame in PlayerStatePattern
@@ -21,170 +24,39 @@ public class ZeroPlayerState : IParticleState
 
 		// allow collisions timer
 		if (!canCollide) collisionTimer += Time.deltaTime;								// start timer
-		if (collisionTimer >= particle.stunDuration) {									// if timer is up
+		if (collisionTimer >= psp.stunDuration) {										// if timer is up
 			canCollide = true;																// set collision ability			
-			particle.stunned = false;														// reset stunned flag
+			psp.stunned = false;															// reset stunned flag
 		}
 	}
 
 	public void OnTriggerEnter(Collider other)
 	{
-		ParticleStatePattern otherParticle 
-			= other.gameObject.GetComponent<ParticleStatePattern>();							// ref other ParticleStatePattern
+		ParticleStatePattern pspOther 
+			= other.gameObject.GetComponent<ParticleStatePattern>();					// ref other ParticleStatePattern
 
-		if (canCollide) {																		// if collision allowed
+		if (canCollide) {																// if collision allowed
 
-/*			if (other == zero)
-				AddDark(otherDark)
-				AddLight(otherLight)
-			else
-				SubDark(otherDark)
-				SubLight(otherLight)	*/
-
-			if (other.gameObject.CompareTag ("Zero")) {												// collide with zero
-				particle.stunned = true;																// stun for duration
-
-				//particle.AddEvol (0.5f);																// add 0.5 evol
-				//otherParticle.SubtractEvol (0.5f);														// subtract 0.5 evol from other
-
-				if (otherParticle.darkEvol > 0)	{														// if other is dark
-					particle.AddDark(0.5f);																	// add 0.5 dark
-					otherParticle.SubtractDark(0.5f);														// subtract 0.5 dark from other
-				}
-				else if (otherParticle.lightEvol > 0) {													// if other is light
-					particle.AddLight(0.5f);																// add 0.5 light
-					otherParticle.SubtractLight(0.5f);														// subtract 0.5 light from other
-				}
-				
-				canCollide = false;																		// reset has collided trigger
+			if (other.gameObject.CompareTag ("Zero")) {										// if collide with zero
+				psp.stunned = true;																// stunned flag
+				psp.AddDark (pspOther.darkEvol);												// add dark of other
+				psp.AddLight (pspOther.lightEvol);												// add light of other
+				canCollide = false;																// reset has collided trigger
 			} 
-			else if (other.gameObject.CompareTag ("First")) {										// collide with first
-				particle.stunned = true;																// stun for duration
-
-				//particle.SubtractEvol (1.0f);															// subtract 1 evol
-				//otherParticle.AddEvol (0.5f);															// add 1 evol from other
-
-				if (particle.darkEvol > 0) {															// if dark
-					particle.SubtractDark(0.5f);															// subtract 0.5 dark
-					otherParticle.AddDark(0.5f);															// add 0.5 dark to other
-				}
-				else if (particle.lightEvol > 0) {														// if light
-					particle.SubtractLight(0.5f);															// subtract 0.5 light
-					otherParticle.AddLight(0.5f);															// add 0.5 light to other
-				}
-
-				canCollide = false;																		// reset has collided trigger
-			} 
-			else if (other.gameObject.CompareTag ("Second")) {										// collide with second
-				particle.stunned = true;																// stun for duration
-
-				particle.SubtractEvol (1.0f);															// subtract 1 evol
-				otherParticle.AddEvol (0.5f);															// add 1 evol from other
-
-				if (particle.darkEvol > 0) {															// if dark
-					particle.SubtractDark(0.5f);															// subtract 0.5 dark
-					otherParticle.AddDark(0.5f);															// add 0.5 dark to other
-				}
-				else if (particle.lightEvol > 0) {														// if light
-					particle.SubtractLight(0.5f);															// subtract 0.5 light
-					otherParticle.AddLight(0.5f);															// add 0.5 light to other
-				}
-
-				canCollide = false;																		// reset has collided trigger
-			} 
-			else if (other.gameObject.CompareTag ("Third")) {										// collide with third
-				particle.stunned = true;																// stun for duration
-
-				particle.SubtractEvol (1.0f);															// subtract 1 evol
-				otherParticle.AddEvol (0.5f);															// add 1 evol from other
-
-				if (particle.darkEvol > 0) {															// if dark
-					particle.SubtractDark(0.5f);															// subtract 0.5 dark
-					otherParticle.AddDark(0.5f);															// add 0.5 dark to other
-				}
-				else if (particle.lightEvol > 0) {														// if light
-					particle.SubtractLight(0.5f);															// subtract 0.5 light
-					otherParticle.AddLight(0.5f);															// add 0.5 light to other
-				}
-				
-				canCollide = false;																		// reset has collided trigger
-			} 
-			else if (other.gameObject.CompareTag ("Fourth")) {										// collide with fourth
-				particle.stunned = true;																// stun for duration
-
-				particle.SubtractEvol (1.5f);															// subtract 1.5 evol
-				otherParticle.AddEvol (0.5f);															// add 1 evol from other
-
-				if (particle.darkEvol > 0) {															// if dark
-					particle.SubtractDark(0.5f);															// subtract 0.5 dark
-					otherParticle.AddDark(0.5f);															// add 0.5 dark to other
-				}
-				else if (particle.lightEvol > 0) {														// if light
-					particle.SubtractLight(0.5f);															// subtract 0.5 light
-					otherParticle.AddLight(0.5f);															// add 0.5 light to other
-				}
-
-				canCollide = false;																		// reset has collided trigger
-			} 
-			else if (other.gameObject.CompareTag ("Fifth")) {										// collide with fifth
-				particle.stunned = true;																// stun for duration
-
-				particle.SubtractEvol (2.5f);															// subtract 2.5 evol
-				otherParticle.AddEvol (0.5f);															// add 1 evol from other
-
-				if (particle.darkEvol > 0) {															// if dark
-					particle.SubtractDark(0.5f);															// subtract 0.5 dark
-					otherParticle.AddDark(0.5f);															// add 0.5 dark to other
-				}
-				else if (particle.lightEvol > 0) {														// if light
-					particle.SubtractLight(0.5f);															// subtract 0.5 light
-					otherParticle.AddLight(0.5f);															// add 0.5 light to other
-				}
-
-				canCollide = false;																		// reset has collided trigger
-			}
-			else if (other.gameObject.CompareTag ("Sixth")) {										// collide with sixth
-				particle.stunned = true;																// stun for duration
-
-				particle.SubtractEvol (4.0f);															// subtract 4 evol
-				otherParticle.AddEvol (0.5f);															// add 1 evol from other
-
-				if (particle.darkEvol > 0) {															// if dark
-					particle.SubtractDark(0.5f);															// subtract 0.5 dark
-					otherParticle.AddDark(0.5f);															// add 0.5 dark to other
-				}
-				else if (particle.lightEvol > 0) {														// if light
-					particle.SubtractLight(0.5f);															// subtract 0.5 light
-					otherParticle.AddLight(0.5f);															// add 0.5 light to other
-				}
-
-				canCollide = false;																		// reset has collided trigger
-			}
-			else if (other.gameObject.CompareTag ("Seventh")) {										// collide with seventh
-				particle.stunned = true;																// stun for duration
-
-				particle.SubtractEvol (6.5f);															// subtract 6.5 evol
-				otherParticle.AddEvol (0.5f);															// add 1 evol from other
-
-				if (particle.darkEvol > 0) {															// if dark
-					particle.SubtractDark(0.5f);															// subtract 0.5 dark
-					otherParticle.AddDark(0.5f);															// add 0.5 dark to other
-				}
-				else if (particle.lightEvol > 0) {														// if light
-					particle.SubtractLight(0.5f);															// subtract 0.5 light
-					otherParticle.AddLight(0.5f);															// add 0.5 light to other
-				}
-
-				canCollide = false;																		// reset has collided trigger
+			else {																			// collide with any other
+				psp.stunned = true;																// set stunned flag
+				psp.SubDark (pspOther.darkEvol);												// subtract other dark
+				psp.SubLight (pspOther.lightEvol);												// subtract other light
+				canCollide = false;																// reset has collided trigger
 			}
 		}
 	}
 
 	public void Death()
 	{
-		particle.TransitionToDead(0, particle.self);										// trigger transition effects
-		ParticleStateEvents.toDead += particle.TransitionToDead;						// flag transition in delegate
-		particle.currentState = particle.deadState;										// set to new state
+		psp.TransitionToDead(0, psp.self);										// trigger transition effects
+		ParticleStateEvents.toDead += psp.TransitionToDead;						// flag transition in delegate
+		psp.currentState = psp.deadState;										// set to new state
 	}
 
 	public void ToZero()
@@ -192,72 +64,115 @@ public class ZeroPlayerState : IParticleState
 		Debug.Log ("Can't transition to same state");
 	}
 
-	public void ToFirst()
+	public void ToLightZero()
 	{
-		particle.TransitionToFirst(0, particle.self);									// trigger transition effects
-		ParticleStateEvents.toFirst += particle.TransitionToFirst;						// flag transition in delegate
-		particle.currentState = particle.firstState;									// set to new state
+		// fill out
+		// psp.TransitionToZero(true, 0, psp.self);
+		// ParticleStateEvents.toLightZero += psp.TransitionToLightZero;
 	}
 
-	public void ToSecond()
+	public void ToDarkZero()
 	{
-		particle.TransitionToSecond(0, particle.self);									// trigger transition effects
-		ParticleStateEvents.toSecond += particle.TransitionToSecond;					// flag transition in delegate
-		particle.currentState = particle.secondState;									// set to new state
+		// fill out
+		// psp.TransitionToZero(false, 0, psp.self);
+		// ParticleStateEvents.toDarkZero += psp.TransitionToDarkZero;
 	}
 
-	public void ToThird()
+	public void ToFirst(bool light)
 	{
-		particle.TransitionToThird(0, particle.self);									// trigger transition effects
-		ParticleStateEvents.toThird += particle.TransitionToThird;						// flag transition in delegate
-		particle.currentState = particle.thirdState;									// set to new state
+		psp.TransitionToFirst(light, 0, psp.self);									// trigger transition effects
+		ParticleStateEvents.toFirst += psp.TransitionToFirst;						// flag transition in delegate
+		psp.currentState = psp.firstState;											// set to new state
 	}
 
-	public void ToFourth()
+	public void ToSecond(bool light)
 	{
-		particle.TransitionToFourth(0, particle.self);									// trigger transition effects
-		ParticleStateEvents.toFourth += particle.TransitionToFourth;					// flag transition in delegate
-		particle.currentState = particle.fourthState;									// set to new state
+		psp.TransitionToSecond(light, 0, psp.self);									// trigger transition effects
+		ParticleStateEvents.toSecond += psp.TransitionToSecond;						// flag transition in delegate
+		psp.currentState = psp.secondState;											// set to new state
 	}
 
-	public void ToFifth()
+	public void ToThird(bool light)
 	{
-		particle.TransitionToFifth(0, particle.self);									// trigger transition effects
-		ParticleStateEvents.toFifth += particle.TransitionToFifth;						// flag transition in delegate
-		particle.currentState = particle.fifthState;										// set to new state
+		psp.TransitionToThird(light, 0, psp.self);									// trigger transition effects
+		ParticleStateEvents.toThird += psp.TransitionToThird;						// flag transition in delegate
+		psp.currentState = psp.thirdState;											// set to new state
 	}
 
-	public void ToSixth()
+	public void ToFourth(bool light)
 	{
-		particle.TransitionToSixth(0, particle.self);									// trigger transition effects
-		ParticleStateEvents.toSixth += particle.TransitionToSixth;						// flag transition in delegate
-		particle.currentState = particle.sixthState;									// set to new state
+		psp.TransitionToFourth(light, 0, psp.self);									// trigger transition effects
+		ParticleStateEvents.toFourth += psp.TransitionToFourth;						// flag transition in delegate
+		psp.currentState = psp.fourthState;											// set to new state
 	}
 
-	public void ToSeventh()
+	public void ToFifth(bool light)
 	{
-		particle.TransitionToSeventh(0, particle.self);									// trigger transition effects
-		ParticleStateEvents.toSeventh += particle.TransitionToSeventh;					// flag transition in delegate
-		particle.currentState = particle.seventhState;									// set to new stateebug.Log ("Can't transition to same state");
+		psp.TransitionToFifth(light, 0, psp.self);									// trigger transition effects
+		ParticleStateEvents.toFifth += psp.TransitionToFifth;						// flag transition in delegate
+		psp.currentState = psp.fifthState;											// set to new state
 	}
 
-	public void Evol()									// all states here for init 
+	public void ToSixth(bool light)
 	{
-		if (particle.evol < 0f)															// if evol < 0
-			Death ();																		// change to dead state
-		else if (particle.evol == 1f)													// if evol == 1
-			ToFirst ();																		// evolve to first
-		else if (particle.evol == 1.5f)													// if evol == 1.5
-			ToSecond ();																	// evolve to second
-		else if (particle.evol == 2f)													// if evol == 2
-			ToThird ();																		// evolve to third
-		else if (particle.evol == 3f)													// if evol == 3
-			ToFourth ();																	// evolve to fourth
-		else if (particle.evol == 5f)													// if evol == 5
-			ToFifth ();																		// evolve to fifth
-		else if (particle.evol == 8f)													// if evol == 8
-			ToSixth ();																		// evolve to sixth
-		else if (particle.evol == 13f)													// if evol == 13
-			ToSeventh ();																	// evolve to seventh
+		psp.TransitionToSixth(light, 0, psp.self);									// trigger transition effects
+		ParticleStateEvents.toSixth += psp.TransitionToSixth;						// flag transition in delegate
+		psp.currentState = psp.sixthState;											// set to new state
+	}
+
+	public void ToSeventh(bool light)
+	{
+		psp.TransitionToSeventh(light, 0, psp.self);								// trigger transition effects
+		ParticleStateEvents.toSeventh += psp.TransitionToSeventh;					// flag transition in delegate
+		psp.currentState = psp.seventhState;										// set to new stateebug.Log ("Can't transition to same state");
+	}
+
+	public void Evol()									// all states here for init \\
+	{
+		float deltaDark = psp.darkEvolDelta;										// local dark check
+		float deltaLight = psp.lightEvolDelta;										// local light check
+
+		if (psp.evol < 0f) {														// to dead (if evol < 0)
+			Death ();																	// change to dead state
+		}
+		else if (psp.evol == 0.5f) {												// to zero (if evol = 0.5)
+			if (deltaDark == 0.5f) ToDarkZero ();										// if gain dark = to dark zero
+			else if (deltaLight == 0.5f) ToLightZero ();								// if gain light = to light zero
+		}
+		else if (psp.evol == 1f) {													// to first (if evol == 1)
+			if (!light && deltaDark == 0.5) ToFirst (false);							// if dark & gain dark = to dark first
+			else if (!light && deltaLight == 0.5) ToFirst(true);						// if dark & gain light = to light first
+			else if (light && deltaDark == 0.5) ToFirst(false);							// if light & gain dark = to dark first
+			else if (light && deltaLight == 0.5) ToFirst(true);							// if light & gain light = to light first
+		}
+		else if (psp.evol == 1.5f) {												// to second (if evol == 1.5)
+			ToSecond (true);															// evolve to second
+		}
+		else if (psp.evol == 2f) {													// to third (if evol == 2)
+			ToThird (true);																// evolve to third
+		}
+		else if (psp.evol == 3f) {													// to fourth (if evol == 3)
+			int i = Random.Range(0,1);													// random 0 or 1
+			if (i == 0) ToFourth (false);												// evolve to dark fourth
+			else ToFourth (true);														// evolve to light fourth
+		}
+		else if (psp.evol == 5f) {													// to fifth (if evol == 5)
+			int i = Random.Range(0,2);													// random 0 or 1 or 2
+			if (i == 0) ToFifthCircle (true);											// evolve to circle fifth
+			else if (i == 1) ToFifthTriangle (true);									// evolve to triangle fifth
+			else if (i == 2) ToFifthSquare (true);										// evolve to square fifth
+		}
+		else if (psp.evol == 8f) {													// to sixth (if evol == 8)
+			int i = Random.Range(0,2);													// random 0 or 1 or 2
+			if (i == 0) ToSixthCircle (true);											// evolve to circle sixth
+			else if (i == 1) ToSixthTriangle (true);									// evolve to triangle sixth
+			else if (i == 2) ToSixthSquare (true);									// evolve to square sixth
+		}
+		else if (psp.evol == 13f) {													// to seventh (if evol == 13)
+			int i = Random.Range(0,2);													// random 0 or 1 or 2
+			if (i == 0) ToSeventhCircle (true);											// evolve to circle seventh
+			else if (i == 1) ToSevenhTriangle (true);									// evolve to triangle seventh
+			else if (i == 2) ToSeventhSquare (true);									// evolve to square seventh
+		}
 	}
 }

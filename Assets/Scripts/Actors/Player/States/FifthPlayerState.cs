@@ -4,14 +4,17 @@ using System.Collections;
 public class FifthPlayerState : IParticleState 
 {
 
-	private readonly PlayerStatePattern particle;										// reference to pattern/monobehaviour class
+	private readonly PlayerStatePattern psp;											// reference to pattern/monobehaviour class
+
+	public bool light = true;															// 'is light' flag
+	public bool circle, triangle, square;												// shape flags flag
 
 	private bool canCollide = true;														// can collide flag
 	private float collisionTimer;														// reset collision timer
 
 	public FifthPlayerState (PlayerStatePattern playerStatePattern)						// constructor
 	{
-		particle = playerStatePattern;													// attach state pattern to this state 
+		psp = playerStatePattern;														// attach state pattern to this state 
 	}
 
 	public void UpdateState()															// updated each frame in PlayerStatePattern
@@ -20,52 +23,34 @@ public class FifthPlayerState : IParticleState
 
 		// allow collisions timer
 		if (!canCollide) collisionTimer += Time.deltaTime;								// start timer
-		if (collisionTimer >= particle.stunDuration) canCollide = true;					// set collision ability
+		if (collisionTimer >= psp.stunDuration) {										// if timer is up
+			canCollide = true;																// set collision ability
+			psp.stunned = false;															// reset stunned trigger
+		}
 	}
 
 	public void OnTriggerEnter(Collider other)
 	{
+		ParticleStatePattern pspOther 
+			= other.gameObject.GetComponent<ParticleStatePattern>();							// ref other ParticleStatePattern
+
 		if (canCollide) {																		// if collision allowed
-			if (other.gameObject.CompareTag ("Photon")) {											// collide with photon
-				particle.GetComponent<PlayerStatePattern> ().stunned = true;							// stun for duration
-				particle.AddEvol (0.5f);																// add 0.5 evol
-				other.gameObject.GetComponent<ParticleStatePattern> ().SubtractEvol (3.0f);				// subtract 3 evol from other
+			
+			if (other.gameObject.CompareTag ("Zero")												// collide with zero
+				|| other.gameObject.CompareTag ("First")											// collide with first
+				|| other.gameObject.CompareTag ("Second")											// collide with second
+				|| other.gameObject.CompareTag ("Third")											// collide with third
+				|| other.gameObject.CompareTag ("Fourth")											// collide with fourth
+				|| other.gameObject.CompareTag ("Fifth")) {											// collide with fifth
+				psp.stunned = true;																		// set stunned flag
+				psp.AddDark (pspOther.darkEvol);														// add dark of other
+				psp.AddLight (pspOther.lightEvol);														// add light of other
 				canCollide = false;																		// reset has collided trigger
 			} 
-			else if (other.gameObject.CompareTag ("Electron")) {									// collide with electron
-				particle.GetComponent<PlayerStatePattern> ().stunned = true;							// stun for duration
-				particle.AddEvol (1.0f);																// add 1 evol
-				other.gameObject.GetComponent<ParticleStatePattern> ().SubtractEvol (3.0f);				// subtract 3 evol from other
-				canCollide = false;																		// reset has collided trigger
-			} 
-			else if (other.gameObject.CompareTag ("Electron2")) {									// collide with electron2
-				particle.GetComponent<PlayerStatePattern> ().stunned = true;							// stun for duration
-				particle.AddEvol (1.0f);																// add 1 evol
-				other.gameObject.GetComponent<ParticleStatePattern> ().SubtractEvol (3.0f);				// subtract 3 evol from other
-				canCollide = false;																		// reset has collided trigger
-			} 
-			else if (other.gameObject.CompareTag ("Shell")) {										// collide with shell
-				particle.GetComponent<PlayerStatePattern> ().stunned = true;							// stun for duration
-				particle.AddEvol (1.0f);																// add 1 evol
-				other.gameObject.GetComponent<ParticleStatePattern> ().SubtractEvol (3.0f);				// subtract 3 evol from other
-				canCollide = false;																		// reset has collided trigger
-			} 
-			else if (other.gameObject.CompareTag ("Shell2")) {										// collide with shell
-				particle.GetComponent<PlayerStatePattern> ().stunned = true;							// stun for duration
-				particle.AddEvol (1.0f);																// add 1 evol
-				other.gameObject.GetComponent<ParticleStatePattern> ().SubtractEvol (3.0f);				// subtract 3 evol from other
-				canCollide = false;																		// reset has collided trigger
-			} 
-			else if (other.gameObject.CompareTag ("Atom")) {										// collide with atom
-				particle.GetComponent<PlayerStatePattern> ().stunned = true;							// stun for duration
-				particle.AddEvol (1.0f);																// add 1 evol
-				other.gameObject.GetComponent<ParticleStatePattern> ().SubtractEvol (3.0f);				// subtract 3 evol from other
-				canCollide = false;																		// reset has collided trigger
-			}
-			else if (other.gameObject.CompareTag ("Atom2")) {										// collide with atom2
-				particle.GetComponent<PlayerStatePattern> ().stunned = true;							// stun for duration
-				particle.SubtractEvol (3.0f);															// subtract 3 evol
-				other.gameObject.GetComponent<ParticleStatePattern> ().AddEvol (1.0f);					// add 1 evol to other
+			else {																					// collide with any other
+				psp.stunned = true;																		// set stunned flag
+				psp.SubDark (pspOther.darkEvol);														// subtract other dark
+				psp.SubLight (pspOther.lightEvol);														// subtract other light
 				canCollide = false;																		// reset has collided trigger
 			}
 		}
@@ -73,88 +58,129 @@ public class FifthPlayerState : IParticleState
 
 	public void Death()
 	{
-		particle.TransitionToDead(5, particle.self);									// trigger transition effects
-		ParticleStateEvents.toDead += particle.TransitionToDead;						// flag transition in delegate
-		particle.SpawnElectron(2);														// spawn 2 electrons
-		particle.SpawnPhoton(2);														// spawn 2 photons
-		particle.currentState = particle.deadState;										// set to new state
+		psp.TransitionToDead(5, psp.self);										// trigger transition effects
+		ParticleStateEvents.toDead += psp.TransitionToDead;						// flag transition in delegate
+		psp.SpawnFirst(2);														// spawn 2 Firsts
+		psp.SpawnZero(2);														// spawn 2 Zeros
+		psp.currentState = psp.deadState;										// set to new state
 	}
 
-	public void ToPhoton()
+	public void ToZero()
 	{
-		particle.TransitionToPhoton(5, particle.self);									// trigger transition effects
-		ParticleStateEvents.toPhoton += particle.TransitionToPhoton;					// flag transition in delegate
-		particle.SpawnElectron(2);														// spawn 2 electrons
-		particle.SpawnPhoton(2);														// spawn 2 photons
-		particle.currentState = particle.photonState;									// set to new state
+		psp.TransitionToZero(5, psp.self);										// trigger transition effects
+		ParticleStateEvents.toZero += psp.TransitionToZero;						// flag transition in delegate
+		psp.SpawnFirst(2);														// spawn 2 Firsts
+		psp.SpawnZero(2);														// spawn 2 Zeros
+		psp.currentState = psp.zeroState;										// set to new state
 	}
 
-	public void ToElectron()
+	public void ToLightZero()
 	{
-		particle.TransitionToElectron(5, particle.self);								// trigger transition effects
-		ParticleStateEvents.toElectron += particle.TransitionToElectron;				// flag transition in delegate
-		particle.SpawnElectron(1);														// spawn 1 electron
-		particle.SpawnPhoton(3);														// spawn 2 photons
-		particle.currentState = particle.electronState;									// set to new state
+		// fill out
+		// psp.TransitionToZero(true, 0, psp.self);
+		// ParticleStateEvents.toLightZero += psp.TransitionToLightZero;
 	}
 
-	public void ToElectron2()
+	public void ToDarkZero()
 	{
-		particle.TransitionToElectron2(5, particle.self);								// trigger transition effects
-		ParticleStateEvents.toElectron2 += particle.TransitionToElectron2;				// flag transition in delegate
-		particle.SpawnElectron(1);														// spawn 1 electron
-		particle.SpawnPhoton(2);														// spawn 2 photon
-		particle.currentState = particle.electron2State;								// set to new state
+		// fill out
+		// psp.TransitionToZero(false, 0, psp.self);
+		// ParticleStateEvents.toDarkZero += psp.TransitionToDarkZero;
 	}
 
-	public void ToShell()
+	public void ToFirst(bool light)
 	{
-		particle.TransitionToShell(5, particle.self);									// trigger transition effects
-		ParticleStateEvents.toShell += particle.TransitionToShell;						// flag transition in delegate
-		particle.SpawnElectron(1);														// spawn 1 electron
-		particle.currentState = particle.shellState;									// set to new state
+		psp.TransitionToFirst(light, 5, psp.self);								// trigger transition effects
+		ParticleStateEvents.toFirst += psp.TransitionToFirst;					// flag transition in delegate
+		psp.SpawnFirst(1);														// spawn 1 First
+		psp.SpawnZero(3);														// spawn 2 Zeros
+		psp.currentState = psp.firstState;										// set to new state
 	}
 
-	public void ToShell2()
+	public void ToSecond(bool light)
 	{
-		particle.TransitionToShell2(5, particle.self);									// trigger transition effects
-		ParticleStateEvents.toShell2 += particle.TransitionToShell2;					// flag transition in delegate
-		particle.SpawnPhoton(2);														// spawn 2 photons
-		particle.currentState = particle.shell2State;									// set to new state
+		psp.TransitionToSecond(light, 5, psp.self);								// trigger transition effects
+		ParticleStateEvents.toSecond += psp.TransitionToSecond;					// flag transition in delegate
+		psp.SpawnFirst(1);														// spawn 1 First
+		psp.SpawnZero(2);														// spawn 2 Zero
+		psp.currentState = psp.secondState;										// set to new state
 	}
 
-	public void ToAtom()
+	public void ToThird(bool light)
+	{
+		psp.TransitionToThird(light, 5, psp.self);								// trigger transition effects
+		ParticleStateEvents.toThird += psp.TransitionToThird;					// flag transition in delegate
+		psp.SpawnFirst(1);														// spawn 1 First
+		psp.currentState = psp.thirdState;										// set to new state
+	}
+
+	public void ToFourth(bool light)
+	{
+		psp.TransitionToFourth(light, 5, psp.self);								// trigger transition effects
+		ParticleStateEvents.toFourth += psp.TransitionToFourth;					// flag transition in delegate
+		psp.SpawnZero(2);														// spawn 2 Zeros
+		psp.currentState = psp.fourthState;										// set to new state
+	}
+
+	public void ToFifth(bool light)
 	{
 		Debug.Log ("Can't transition to same state");
 	}
 
-	public void ToAtom2()
+	public void ToSixth(bool light)
 	{
-		particle.TransitionToAtom2(5, particle.self);									// trigger transition effects
-		ParticleStateEvents.toAtom2 += particle.TransitionToAtom2;						// flag transition in delegate
-		particle.currentState = particle.atom2State;									// set to new state
+		psp.TransitionToSixth(light, 5, psp.self);								// trigger transition effects
+		ParticleStateEvents.toSixth += psp.TransitionToSixth;					// flag transition in delegate
+		psp.currentState = psp.sixthState;										// set to new state
 	}
 
-	public void ToElement()
+	public void ToSeventh(bool light)
 	{
-		Debug.Log ("Can't transition to same state");
+		Debug.Log ("Seventh");
 	}
 
-	public void Evol()												// all states here for init 
+	public void Evol() 
 	{
-		if (particle.evol <= 0f)
-			Death ();
-		else if (particle.evol < 1f)
-			ToPhoton ();
-		else if (particle.evol == 1f)
-			ToElectron ();
-		else if (particle.evol == 1.5f)
-			ToElectron2 ();
-		else if (particle.evol >= 2f && particle.evol < 3f)
-			ToShell ();
-		else if (particle.evol >= 3f && particle.evol < 5f)
-			ToShell2 ();
-		else if (particle.evol >= 8f)
-			ToAtom2 ();
+		float deltaDark = psp.darkEvolDelta;																// local dark check
+		float deltaLight = psp.lightEvolDelta;																// local light check
+
+		if (psp.evol <= 0f) {																				// to dead (if evol < 0)
+			Death ();																							// to dead state
+		} 
+		else if (psp.evol == 0) {																			// to zero (if evol = 0)
+			ToZero ();																							// to zero state
+		} 
+		else if (psp.evol == 0.5f) {																		// to zero (if evol = 0.5)
+			if (deltaDark <= -4.5 && deltaDark >= -7) ToLightZero ();											// if lose dark = to light
+			else if (deltaLight <= -4.5 && deltaLight >= -7) ToDarkZero ();										// if lose light = to dark
+		}
+		else if (psp.evol == 1f) {																			// to first (if evol = 1)
+			if (deltaDark <= -4 && deltaDark >= -6.5) ToFirst (true);											// if lose dark = to light
+			else if (deltaLight <= -4 && deltaLight >= -6.5) ToFirst (false);									// if lose light = to dark
+		}
+		else if (psp.evol == 1.5f) {																		// to second (if evol = 1.5)
+			if (deltaDark <= -3.5 && deltaDark >= -6) ToSecond (true);											// if lose dark = to light
+			else if (deltaLight <= -3.5 && deltaLight >= -6) ToSecond (false);									// if lose light = to dark
+		}
+		else if (psp.evol >= 2f && psp.evol < 3f) {															// to third (if evol >= 2 and < 3)
+			if (deltaDark <= -3 && deltaDark >= -5) ToThird (true);												// if lose dark = to light
+			else if (deltaLight <= -3 && deltaLight >= -5) ToThird (false);										// if lose light = to dark
+		}
+		else if (psp.evol >= 3f && psp.evol < 5f) {															// to fourth (if evol >= 3 and < 5)
+			if (circle && deltaDark <= -2 && deltaDark >= -3) ToFourth (false);									// if circle & lose dark = to dark
+			else if (circle && deltaLight <= -2 && deltaLight >= -3) ToFourth (false);							// if circle & lose light = to dark
+			else if ((triangle || square) && deltaDark <= -2 && deltaDark >= -3) ToFourth (true);				// if triangle or square & lose dark = to light
+			else if ((triangle || square) && deltaLight <= -2 && deltaLight >= -3) ToFourth (true);				// if triangle or square & lose light = to light
+		}
+		else if (psp.evol >= 8f) {																			// to sixth (if evol >= 8)
+			if ((circle && !light) && (deltaDark >= 0.5 && deltaDark <= 3)) ToSixthCircle(false);				// if dark circle & gain dark = to dark circle
+			else if ((circle && !light) && (deltaLight >= 0.5 && deltaLight <= 3)) ToSixthCircle(true);			// if dark circle & gain light = to light circle
+			else if ((circle && light) && (deltaDark >= 0.5 && deltaDark <= 3)) ToSixthCircle(false);			// if light circle & gain dark = to dark circle
+			else if ((circle && light) && (deltaLight >= 0.5 && deltaLight <= 3)) ToSixthCircle(true);			// if light circle & gain light = to light circle
+			else if (triangle && (deltaDark >= 0.5 && deltaDark <= 3)) ToSixthTriangle();						// if triangle & gain dark = to triangle2
+			else if (triangle && (deltaLight >= 0.5 && deltaLight <= 3)) ToSixthTriangle();						// if triangle & gain light = to triangle2
+			else if (square && (deltaDark >= 0.5 && deltaDark <= 3)) ToSixthSquare();							// if square & gain dark = to square2
+			else if (square && (deltaLight >= 0.5 && deltaLight <= 3)) ToSixthSquare();							// if square & gain light = to square2
+		}
 	}
 }
