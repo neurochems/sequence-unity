@@ -64,18 +64,16 @@ public class ZeroPlayerState : IParticleState
 		Debug.Log ("Can't transition to same state");
 	}
 
-	public void ToLightZero()
+	public void ToLightZero(bool light)
 	{
-		// fill out
 		// psp.TransitionToZero(true, 0, psp.self);
-		// ParticleStateEvents.toLightZero += psp.TransitionToLightZero;
+		ParticleStateEvents.toLightZero += psp.TransitionToLightZero;
 	}
 
-	public void ToDarkZero()
+	public void ToDarkZero(bool light)
 	{
-		// fill out
-		// psp.TransitionToZero(false, 0, psp.self);
-		// ParticleStateEvents.toDarkZero += psp.TransitionToDarkZero;
+		psp.TransitionToZero(light, 0, psp.self);
+		ParticleStateEvents.toDarkZero += psp.TransitionToDarkZero;
 	}
 
 	public void ToFirst(bool light)
@@ -136,8 +134,8 @@ public class ZeroPlayerState : IParticleState
 			Death ();																	// change to dead state
 		}
 		else if (psp.evol == 0.5f) {												// to zero (if evol = 0.5)
-			if (deltaDark == 0.5f) ToDarkZero ();										// if gain dark = to dark zero
-			else if (deltaLight == 0.5f) ToLightZero ();								// if gain light = to light zero
+			if (deltaDark == 0.5f) ToDarkZero (false);									// if gain dark = to dark zero
+			else if (deltaLight == 0.5f) ToLightZero (true);							// if gain light = to light zero
 		}
 		else if (psp.evol == 1f) {													// to first (if evol == 1)
 			if (!light && deltaDark == 0.5) ToFirst (false);							// if dark & gain dark = to dark first

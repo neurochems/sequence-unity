@@ -59,26 +59,26 @@ public class FirstPlayerState : IParticleState
 		psp.currentState = psp.deadState;										// set to new state
 	}
 
-	public void ToZero()
+	public void ToZero(bool light)
 	{
-		psp.TransitionToZero(1, psp.self);									// trigger transition effects
-		ParticleStateEvents.toZero += psp.TransitionToZero;					// flag transition in delegate
+		psp.TransitionToZero(light, 1, psp.self);								// trigger transition effects
+		ParticleStateEvents.toZero += psp.TransitionToZero;						// flag transition in delegate
 		psp.SpawnZero(1);														// spawn 1 zero
 		psp.currentState = psp.zeroState;										// set to new state
 	}
 
-	public void ToLightZero()
+	public void ToLightZero(bool light)
 	{
-		// fill out
-		// psp.TransitionToZero(true, 0, psp.self);
-		// ParticleStateEvents.toLightZero += psp.TransitionToLightZero;
+		psp.TransitionToZero(light, 0, psp.self);								// trigger transition effects
+		ParticleStateEvents.toLightZero += psp.TransitionToLightZero;			// flag transition in delegate
+		psp.currentState = psp.zeroState;										// set to new state
 	}
 
-	public void ToDarkZero()
+	public void ToDarkZero(bool light)
 	{
-		// fill out
-		// psp.TransitionToZero(false, 0, psp.self);
-		// ParticleStateEvents.toDarkZero += psp.TransitionToDarkZero;
+		psp.TransitionToZero(light, 0, psp.self);								// trigger transition effects
+		ParticleStateEvents.toDarkZero += psp.TransitionToDarkZero;				// flag transition in delegate
+		psp.currentState = psp.zeroState;										// set to new state
 	}
 
 	public void ToFirst(bool light)
