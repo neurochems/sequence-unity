@@ -190,22 +190,22 @@ public class PlayerStatePattern : MonoBehaviour {
 
 	// STATE TRANSTITIONS \\
 
-	public void TransitionTo(int fromState, int toState, bool light)
+	public void TransitionTo(int fromState, int toState, bool fromLight, bool toLight, int shape)
 	{
 		if (toState == 0)	{ 													// to zero
 			// rb.mass = 0.2f;															// set mass
-			Core (fromState, toState, light);										// CORE: to zero circle
+			Core (fromState, toState, fromLight, toLight, shape);					// CORE: to zero circle
 		}
 		else if (toState == 1) {												// to first
 			// rb.mass = 0.2f;															// set mass
 			SetZoomCamera(toState.ToString(), fromState.ToString(), light);			// CAMERA: zoom to size 20
-			Core (fromState, toState, light);										// CORE: to zero circle
+			Shell (fromState, toState, fromLight, toLight);							// SHELL: shrink, deactivate
 		}
 		else if (toState == 2) {												// to second
 			//rb.mass = 0.2f;															// set mass
 			SetZoomCamera(toState.ToString(), fromState.ToString(), light);			// CAMERA: zoom to size 20
-			Core (fromState, toState, light);										// CORE: to zero circle
-			Nucleus (fromState, toState, light);									// NUCLEUS: fade to white, deactivate
+			Shell (fromState, toState, fromLight, toLight);							// SHELL: shrink, deactivate
+			Nucleus (fromState, toState, fromLight, toLight);						// NUCLEUS: fade to white, deactivate
 		}
 		else if (toState == 3) {												// to third
 			//rb.mass = 0.2f;															// set mass
@@ -214,9 +214,9 @@ public class PlayerStatePattern : MonoBehaviour {
 			//sc[0].center = new Vector3(0f, 0f, 0f);								// level circle collider on world
 			sc[1].radius = 0.51f;													// shrink collision radius in
 			sc[1].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
-			Core (fromState, toState, light);										// CORE: shrink to zero, fade to white
-			Shell (fromState, toState, light);										// SHELL: shrink, deactivate
-			Nucleus (fromState, toState, light);									// NUCLEUS: fade to white, deactivate
+			Core (fromState, toState, fromLight, toLight, shape);					// CORE: to zero circle
+			Shell (fromState, toState, fromLight, toLight);							// SHELL: shrink, deactivate
+			Nucleus (fromState, toState, fromLight, toLight);						// NUCLEUS: fade to white, deactivate
 		}
 		else if (toState == 4) {												// to fourth
 			//rb.mass = 0.2f;															// set mass
@@ -225,9 +225,9 @@ public class PlayerStatePattern : MonoBehaviour {
 			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
 			sc[1].radius = 0.51f;													// shrink collision radius in
 			sc[1].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
-			Core (fromState, toState, light);										// CORE: shrink to zero, fade to white
-			Shell (fromState, toState, light);										// SHELL: shrink, deactivate
-			Nucleus (fromState, toState, light);									// NUCLEUS: fade to white, deactivate
+			Core (fromState, toState, fromLight, toLight, shape);					// CORE: to zero circle
+			Shell (fromState, toState, fromLight, toLight);							// SHELL: shrink, deactivate
+			Nucleus (fromState, toState, fromLight, toLight);						// NUCLEUS: fade to white, deactivate
 		}
 		else if (toState == 5) {												// to fifth
 			//rb.mass = 0.2f;															// set mass
@@ -236,9 +236,9 @@ public class PlayerStatePattern : MonoBehaviour {
 			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
 			sc[1].radius = 0.51f;													// shrink collision radius in
 			sc[1].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
-			Core (fromState, toState, light);										// CORE: shrink to zero, fade to white
-			Shell (fromState, toState, light);										// SHELL: shrink, deactivate
-			Nucleus (fromState, toState, light);									// NUCLEUS: fade to white, deactivate
+			Core (fromState, toState, fromLight, toLight, shape);					// CORE: to zero circle
+			Shell (fromState, toState, fromLight, toLight);							// SHELL: shrink, deactivate
+			Nucleus (fromState, toState, fromLight, toLight);						// NUCLEUS: fade to white, deactivate
 		}
 		else if (toState == 6) {												// to sixth
 			//rb.mass = 0.2f;															// set mass
@@ -247,9 +247,9 @@ public class PlayerStatePattern : MonoBehaviour {
 			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
 			sc[1].radius = 0.51f;													// shrink collision radius in
 			sc[1].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
-			Core (fromState, toState, light);										// CORE: shrink to zero, fade to white
-			Shell (fromState, toState, light);										// SHELL: shrink, deactivate
-			Nucleus (fromState, toState, light);									// NUCLEUS: fade to white, deactivate
+			Core (fromState, toState, fromLight, toLight, shape);					// CORE: to zero circle
+			Shell (fromState, toState, fromLight, toLight);							// SHELL: shrink, deactivate
+			Nucleus (fromState, toState, fromLight, toLight);						// NUCLEUS: fade to white, deactivate
 		}
 		else if (toState == 7) {												// to seventh
 			// rb.mass = 0.2f;															// set mass
@@ -258,9 +258,9 @@ public class PlayerStatePattern : MonoBehaviour {
 			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
 			sc[1].radius = 0.51f;													// shrink collision radius in
 			sc[1].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
-			Core (fromState, toState, light);										// CORE: shrink to zero, fade to white
-			Shell (fromState, toState, light);										// SHELL: shrink, deactivate
-			Nucleus (fromState, toState, light);									// NUCLEUS: fade to white, deactivate
+			Core (fromState, toState, fromLight, toLight, shape);					// CORE: to zero circle
+			Shell (fromState, toState, fromLight, toLight);							// SHELL: shrink, deactivate
+			Nucleus (fromState, toState, fromLight, toLight);						// NUCLEUS: fade to white, deactivate
 		}
 		//new state
 
@@ -695,13 +695,1461 @@ public class PlayerStatePattern : MonoBehaviour {
 			transform.FindChild ("Follow Camera").GetComponent<Animator> ().SetBool ("devolve", false);						// reset devolve trigger
 	}
 
-	// shape
-	// private void SelectShape()
-	// logic on lightCollected (+1 in state OnTriggerEnter; electron, electron2, square) and darkCollected (+1 in state OnTriggerEnter; shell, shell2, doubleShell, doubleShell2) vars
-
 	// core
-	private void Core (int fromState, int toState, bool light) {
-		
+	private void Core (int fromState, int toState, bool fromLight, bool toLight, int shape) 
+	{
+	// evolutions \\
+
+		// zero
+			// to dark zero (0.5)
+				// from zero
+		if (fromState == 0 && toState == 0 && fromLight && !toLight) {			// to dark zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+			// to light zero (0.5) no change
+			// to first
+				// from dark zero (0.5)
+		if (fromState == 0 && toState == 1 && !fromLight && !toLight) {			// to dark first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+		else if (fromState == 0 && toState == 1 && !fromLight && toLight) {		// to light first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+				// from light zero (0.5)
+		if (fromState == 0 && toState == 1 && fromLight && !toLight) {			// to dark first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+		else if (fromState == 0 && toState == 1 && fromLight && toLight) {		// to light first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+	
+		// first
+			// to second
+				// from dark first
+		if (fromState == 1 && toState == 2 && !fromLight && !toLight) {			// to dark second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+		else if (fromState == 1 && toState == 2 && !fromLight && toLight) {	// to light second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+				// from light first
+		if (fromState == 1 && toState == 2 && fromLight && !toLight) {			// to dark second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+		else if (fromState == 1 && toState == 2 && fromLight && toLight) {		// to light second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+
+		// second
+			// to third
+				// from dark second
+		if (fromState == 2 && toState == 3 && !fromLight && !toLight) {			// to dark third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+		else if (fromState == 2 && toState == 3 && !fromLight && toLight) {		// to light third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+				// from light second
+		if (fromState == 2 && toState == 3 && fromLight && !toLight) {			// to dark third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+		else if (fromState == 2 && toState == 3 && fromLight && toLight) {		// to light third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+
+		// third
+			// to fourth
+				// from dark third
+		if (fromState == 3 && toState == 4 && !fromLight && !toLight) {							// to dark fourth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 3 && toState == 4 && !fromLight && toLight) {						// to light fourth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light third
+		if (fromState == 3 && toState == 4 && fromLight && !toLight) {							// to dark fourth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 3 && toState == 4 && fromLight && toLight) {						// to light fourth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// fourth
+			// to fifth
+				// from dark fourth
+		if (fromState == 4 && toState == 5 && !fromLight && !toLight && shape == 0) {			// to dark circle fifth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 4 && toState == 5 && !fromLight && toLight && shape == 0) {		// to light circle fifth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from light fourth
+		if (fromState == 4 && toState == 5 && fromLight && toLight && shape == 1) {			// to triangle fifth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 4 && toState == 5 && fromLight && toLight && shape == 2) {		// to square fifth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// fifth
+			// to sixth
+				// from dark circle fifth
+		if (fromState == 5 && toState == 6 && !fromLight && !toLight && shape == 0) {			// to dark circle sixth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 6 && !fromLight && toLight && shape == 0) {		// to light circle sixth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from light circle fifth
+		if (fromState == 5 && toState == 6 && fromLight && !toLight && shape == 0) {			// to dark circle sixth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 6 && fromLight && toLight && shape == 0) {		// to light circle sixth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from triangle fifth
+		if (fromState == 5 && toState == 6 && fromLight && shape == 1) {						// to dark triangle sixth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from square fifth
+		if (fromState == 5 && toState == 6 && fromLight && shape == 2) {						// to dark square sixth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// sixth
+			// to seventh
+				// from dark circle sixth
+		if (fromState == 6 && toState == 7 && !fromLight && !toLight && shape == 0) {			// to dark circle seventh
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 7 && !fromLight && toLight && shape == 0) {		// to light circle seventh
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from light circle sixth
+		if (fromState == 6 && toState == 7 && fromLight && !toLight && shape == 0) {			// to dark circle seventh
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 7 && fromLight && toLight && shape == 0) {		// to light circle seventh
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from dark triangle sixth
+		if (fromState == 6 && toState == 7 && !fromLight && !toLight && shape == 1) {			// to dark triangle seventh
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 7 && !fromLight && toLight && shape == 1) {		// to light triangle seventh
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from dark square sixth
+		if (fromState == 6 && toState == 7 && !fromLight && !toLight && shape == 2) {			// to dark square seventh
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 7 && !fromLight && toLight && shape == 2) {		// to light square seventh
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// seventh
+			// to eighth
+				// from dark circle seventh
+		if (fromState == 7 && toState == 8 && !fromLight && !toLight && shape == 0) {			// to dark circle eighth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 8 && !fromLight && toLight && shape == 0) {		// to light circle eighth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from light circle seventh
+		if (fromState == 7 && toState == 8 && fromLight && !toLight && shape == 0) {			// to dark circle eighth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 8 && fromLight && toLight && shape == 0) {		// to light circle eighth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from dark triangle seventh
+		if (fromState == 7 && toState == 8 && !fromLight && !toLight && shape == 1) {			// to dark triangle eighth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 8 && !fromLight && toLight && shape == 1) {		// to light triangle eighth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from light triangle seventh
+		if (fromState == 7 && toState == 8 && fromLight && !toLight && shape == 1) {			// to dark triangle eighth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 8 && fromLight && toLight && shape == 1) {		// to light triangle eighth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from dark square seventh
+		if (fromState == 7 && toState == 8 && !fromLight && !toLight && shape == 2) {			// to dark square eighth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 8 && !fromLight && toLight && shape == 2) {		// to light square eighth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from light square seventh
+		if (fromState == 7 && toState == 8 && fromLight && !toLight && shape == 2) {			// to dark square eighth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 8 && fromLight && toLight && shape == 2) {		// to light square eighth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+	// devolutions \\
+
+		// zero
+				// to dead
+		if (fromState == 0 && toState == -1) {													// to dead
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			
+			// dark zero (0.5)
+				// to zero
+		if (fromState == 0 && toState == 0 && !fromLight && toLight) {							// to zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// first
+			// to dead
+		if (fromState == 1 && toState == -1) {													// to dead
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from dark first
+				// to zero
+		if (fromState == 1 && toState == 0 && !fromLight && toLight) {							// to zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero (0.5)
+		if (fromState == 1 && toState == 0 && !fromLight && !toLight) {							// to dark zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light first
+				// to zero
+		if (fromState == 1 && toState == 0 && fromLight && toLight) {							// to zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero (0.5)
+		if (fromState == 1 && toState == 0 && fromLight && !toLight) {							// to dark zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// second
+			// to dead
+		if (fromState == 2 && toState == -1) {													// to dead
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from dark second
+				// to zero
+		if (fromState == 2 && toState == 0 && !fromLight && toLight) {							// to zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 2 && toState == 0 && !fromLight && !toLight) {							// to dark zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 2 && toState == 1 && !fromLight && !toLight) {							// to dark first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 2 && toState == 1 && !fromLight && toLight) {						// to light first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light second
+				// to zero
+		if (fromState == 2 && toState == 0 && fromLight && toLight) {							// to zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 2 && toState == 0 && fromLight && !toLight) {							// to dark zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 2 && toState == 1 && fromLight && !toLight) {							// to dark first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 2 && toState == 1 && fromLight && toLight) {						// to light first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+	
+		// third
+			// to dead
+		if (fromState == 3 && toState == -1) {									// to dead
+			GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+			// from dark third	
+				// to zero
+		if (fromState == 3 && toState == 0 && !fromLight && toLight) {							// to zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 3 && toState == 0 && !fromLight && !toLight) {							// to dark zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 3 && toState == 1 && !fromLight && !toLight) {							// to dark first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 3 && toState == 1 && !fromLight && toLight) {						// to light first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 3 && toState == 2 && !fromLight && !toLight) {							// to dark second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 3 && toState == 2 && !fromLight && toLight) {						// to light second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light third	
+				// to zero
+		if (fromState == 3 && toState == 0 && fromLight && !toLight) {							// to zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 3 && toState == 0 && fromLight && !toLight) {							// to dark zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 3 && toState == 1 && fromLight && !toLight) {							// to dark first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 3 && toState == 1 && !fromLight && toLight) {						// to light first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 3 && toState == 2 && fromLight && !toLight) {							// to dark second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 3 && toState == 2 && !fromLight && toLight) {						// to light second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// fourth
+			// to dead
+		if (fromState == 4 && toState == -1) {									// to dead
+			GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+			// from dark fourth	
+				// to zero
+		if (fromState == 4 && toState == 0 && !fromLight && toLight) {							// to zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 4 && toState == 0 && !fromLight && !toLight) {							// to dark zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 4 && toState == 1 && !fromLight && !toLight) {							// to dark first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 4 && toState == 1 && !fromLight && toLight) {						// to light first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 4 && toState == 2 && !fromLight && !toLight) {							// to dark second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 4 && toState == 2 && !fromLight && toLight) {						// to light second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 4 && toState == 3 && !fromLight && !toLight) {							// to dark third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 4 && toState == 3 && !fromLight && toLight) {						// to light third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light fourth	
+				// to zero
+		if (fromState == 4 && toState == 0 && fromLight && toLight) {							// to zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 4 && toState == 0 && fromLight && !toLight) {							// to dark zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 4 && toState == 1 && fromLight && !toLight) {							// to dark first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 4 && toState == 1 && fromLight && toLight) {						// to light first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 4 && toState == 2 && fromLight && !toLight) {							// to dark second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 4 && toState == 2 && fromLight && toLight) {						// to light second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 4 && toState == 3 && fromLight && !toLight) {							// to dark third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 4 && toState == 3 && fromLight && toLight) {						// to light third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// fifth
+			// to dead
+		if (fromState == 5 && toState == -1) {									// to dead
+			GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+			// from dark circle fifth
+				// to zero
+		if (fromState == 5 && toState == 0 && !fromLight && toLight && shape == 0) {			// to zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 5 && toState == 0 && !fromLight && !toLight && shape == 0) {			// to dark zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 5 && toState == 1 && !fromLight && !toLight && shape == 0) {			// to dark first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 1 && !fromLight && toLight && shape == 0) {		// to light first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+			if (fromState == 5 && toState == 2 && !fromLight && !toLight && shape == 0) {		// to dark second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 2 && !fromLight && toLight && shape == 0) {		// to light second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 5 && toState == 3 && !fromLight && !toLight && shape == 0) {			// to dark third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 3 && !fromLight && toLight && shape == 0) {		// to light third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 5 && toState == 4 && !fromLight && !toLight && shape == 0) {			// to dark fourth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light circle fifth
+				// to zero
+		if (fromState == 5 && toState == 0 && fromLight && toLight && shape == 0) {				// to zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 5 && toState == 0 && fromLight && !toLight && shape == 0) {			// to dark zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 5 && toState == 1 && fromLight && !toLight && shape == 0) {			// to dark first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 1 && fromLight && toLight && shape == 0) {		// to light first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 5 && toState == 2 && fromLight && !toLight && shape == 0) {			// to dark second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 2 && fromLight && toLight && shape == 0) {		// to light second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 5 && toState == 3 && fromLight && !toLight && shape == 0) {			// to dark third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 3 && fromLight && toLight && shape == 0) {		// to light third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 5 && toState == 4 && fromLight && !toLight && shape == 0) {			// to dark fourth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from triangle fifth
+				// to zero
+		if (fromState == 5 && toState == 0 && fromLight && toLight && shape == 1) {				// to zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 5 && toState == 0 && fromLight && !toLight && shape == 1) {			// to dark zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 5 && toState == 1 && fromLight && !toLight && shape == 1) {			// to dark first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 1 && fromLight && toLight && shape == 1) {		// to light first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 5 && toState == 2 && fromLight && !toLight && shape == 1) {			// to dark second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 2 && fromLight && toLight && shape == 1) {		// to light second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 5 && toState == 3 && fromLight && !toLight && shape == 1) {			// to dark third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 3 && fromLight && toLight && shape == 1) {		// to light third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 5 && toState == 4 && fromLight && toLight && shape == 1) {				// to light fourth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from square fifth
+				// to zero
+		if (fromState == 5 && toState == 0 && fromLight && toLight && shape == 2) {				// to zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 5 && toState == 0 && fromLight && !toLight && shape == 2) {			// to dark zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 5 && toState == 1 && fromLight && !toLight && shape == 2) {			// to dark first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 1 && fromLight && toLight && shape == 2) {		// to light first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 5 && toState == 2 && fromLight && !toLight && shape == 2) {			// to dark second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 2 && fromLight && toLight && shape == 2) {		// to light second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 5 && toState == 3 && fromLight && !toLight && shape == 2) {			// to dark third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 3 && fromLight && toLight && shape == 2) {		// to light third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 5 && toState == 4 && fromLight && toLight && shape == 2) {				// to light fourth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// sixth
+			// to dead
+		if (fromState == 6 && toState == -1) {									// to dead
+			GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+			// from dark circle sixth
+				// to zero
+		if (fromState == 6 && toState == 0 && !fromLight && toLight && shape == 0) {			// to zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 6 && toState == 0 && !fromLight && !toLight && shape == 0) {			// to dark zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 6 && toState == 1 && !fromLight && !toLight && shape == 0) {			// to dark first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 1 && !fromLight && toLight && shape == 0) {		// to light first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 6 && toState == 2 && !fromLight && !toLight && shape == 0) {		// to dark second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 2 && !fromLight && toLight && shape == 0) {		// to light second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 6 && toState == 3 && !fromLight && !toLight && shape == 0) {			// to dark third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 3 && !fromLight && toLight && shape == 0) {		// to light third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 6 && toState == 4 && !fromLight && !toLight && shape == 0) {			// to dark fourth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// to fifth
+		if (fromState == 6 && toState == 5 && !fromLight && !toLight && shape == 0) {			// to dark circle fifth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 5 && !fromLight && toLight && shape == 0) {		// to light circle fifth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light circle sixth
+				// to zero
+		if (fromState == 6 && toState == 0 && fromLight && toLight && shape == 0) {				// to zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 6 && toState == 0 && fromLight && !toLight && shape == 0) {			// to dark zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 6 && toState == 1 && fromLight && !toLight && shape == 0) {			// to dark first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 1 && fromLight && toLight && shape == 0) {		// to light first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 6 && toState == 2 && fromLight && !toLight && shape == 0) {			// to dark second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 2 && fromLight && toLight && shape == 0) {		// to light second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 6 && toState == 3 && fromLight && !toLight && shape == 0) {			// to dark third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 3 && fromLight && toLight && shape == 0) {		// to light third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 6 && toState == 4 && fromLight && !toLight && shape == 0) {			// to dark fourth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 6 && toState == 5 && fromLight && !toLight && shape == 0) {			// to dark circle fifth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 5 && fromLight && toLight && shape == 0) {		// to light circle fifth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from triangle sixth
+				// to zero
+		if (fromState == 6 && toState == 0 && !fromLight && toLight && shape == 1) {				// to zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 6 && toState == 0 && !fromLight && !toLight && shape == 1) {			// to dark zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator> ().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 6 && toState == 1 && !fromLight && !toLight && shape == 1) {			// to dark first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 1 && !fromLight && toLight && shape == 1) {		// to light first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 6 && toState == 2 && !fromLight && !toLight && shape == 1) {			// to dark second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 2 && !fromLight && toLight && shape == 1) {		// to light second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 6 && toState == 3 && !fromLight && !toLight && shape == 1) {			// to dark third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 3 && !fromLight && toLight && shape == 1) {		// to light third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 6 && toState == 4 && !fromLight && toLight && shape == 1) {			// to light fourth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 6 && toState == 5 && !fromLight && !toLight && shape == 1) {			// to triangle fifth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from square sixth
+				// to zero
+		if (fromState == 6 && toState == 0 && !fromLight && toLight && shape == 2) {				// to zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 6 && toState == 0 && !fromLight && !toLight && shape == 2) {			// to dark zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 6 && toState == 1 && !fromLight && !toLight && shape == 2) {			// to dark first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 1 && !fromLight && toLight && shape == 2) {		// to light first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 6 && toState == 2 && !fromLight && !toLight && shape == 2) {			// to dark second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 2 && !fromLight && toLight && shape == 2) {		// to light second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 6 && toState == 3 && !fromLight && !toLight && shape == 2) {			// to dark third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 3 && !fromLight && toLight && shape == 2) {		// to light third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 6 && toState == 4 && !fromLight && toLight && shape == 2) {			// to light fourth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 6 && toState == 5 && !fromLight && toLight && shape == 0) {			// to square fifth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// seventh
+			// to dead
+		if (fromState == 7 && toState == -1) {									// to dead
+			GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+			// from dark circle seventh
+				// to zero
+		if (fromState == 7 && toState == 0 && !fromLight && toLight && shape == 0) {			// to zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 7 && toState == 0 && !fromLight && !toLight && shape == 0) {			// to dark zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 7 && toState == 1 && !fromLight && !toLight && shape == 0) {			// to dark first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 1 && !fromLight && toLight && shape == 0) {		// to light first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 7 && toState == 2 && !fromLight && !toLight && shape == 0) {		// to dark second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 2 && !fromLight && toLight && shape == 0) {		// to light second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 7 && toState == 3 && !fromLight && !toLight && shape == 0) {			// to dark third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 3 && !fromLight && toLight && shape == 0) {		// to light third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 7 && toState == 4 && !fromLight && !toLight && shape == 0) {			// to dark fourth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 7 && toState == 5 && !fromLight && !toLight && shape == 0) {			// to dark circle fifth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 5 && !fromLight && toLight && shape == 0) {		// to light circle fifth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to sixth
+		if (fromState == 7 && toState == 6 && !fromLight && !toLight && shape == 0) {			// to dark circle sixth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 6 && !fromLight && toLight && shape == 0) {		// to light circle sixth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light circle seventh
+				// to zero
+		if (fromState == 7 && toState == 0 && fromLight && toLight && shape == 0) {				// to zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 7 && toState == 0 && fromLight && !toLight && shape == 0) {			// to dark zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 7 && toState == 1 && fromLight && !toLight && shape == 0) {			// to dark first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 1 && fromLight && toLight && shape == 0) {		// to light first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 7 && toState == 2 && fromLight && !toLight && shape == 0) {			// to dark second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 2 && fromLight && toLight && shape == 0) {		// to light second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// to third
+		if (fromState == 7 && toState == 3 && fromLight && !toLight && shape == 0) {			// to dark third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 3 && fromLight && toLight && shape == 0) {		// to light third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// to fourth
+		if (fromState == 7 && toState == 4 && fromLight && !toLight && shape == 0) {			// to dark fourth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// to fifth
+		if (fromState == 7 && toState == 5 && fromLight && !toLight && shape == 0) {			// to dark circle fifth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 5 && fromLight && toLight && shape == 0) {		// to light circle fifth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// to sixth
+		if (fromState == 7 && toState == 6 && fromLight && !toLight && shape == 0) {			// to dark circle sixth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 6 && fromLight && toLight && shape == 0) {		// to light circle sixth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from dark triangle seventh
+				// to zero
+		if (fromState == 7 && toState == 0 && !fromLight && toLight && shape == 1) {			// to zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 7 && toState == 0 && !fromLight && !toLight && shape == 1) {			// to dark zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator> ().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 7 && toState == 1 && !fromLight && !toLight && shape == 1) {			// to dark first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 1 && !fromLight && toLight && shape == 1) {		// to light first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 7 && toState == 2 && !fromLight && !toLight && shape == 1) {			// to dark second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 2 && !fromLight && toLight && shape == 1) {		// to light second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 7 && toState == 3 && !fromLight && !toLight && shape == 1) {			// to dark third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 3 && !fromLight && toLight && shape == 1) {		// to light third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 7 && toState == 4 && !fromLight && toLight && shape == 1) {			// to light fourth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 7 && toState == 5 && !fromLight && toLight && shape == 1) {			// to triangle fifth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to sixth
+		if (fromState == 7 && toState == 6 && !fromLight && !toLight && shape == 1) {			// to dark triangle sixth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light triangle seventh
+				// to zero
+		if (fromState == 7 && toState == 0 && fromLight && toLight && shape == 1) {				// to zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 7 && toState == 0 && fromLight && !toLight && shape == 1) {			// to dark zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator> ().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 7 && toState == 1 && fromLight && !toLight && shape == 1) {			// to dark first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 1 && fromLight && toLight && shape == 1) {		// to light first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 7 && toState == 2 && fromLight && !toLight && shape == 1) {			// to dark second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 2 && fromLight && toLight && shape == 1) {		// to light second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 7 && toState == 3 && fromLight && !toLight && shape == 1) {			// to dark third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 3 && fromLight && toLight && shape == 1) {		// to light third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 7 && toState == 4 && fromLight && toLight && shape == 1) {			// to light fourth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 7 && toState == 5 && fromLight && toLight && shape == 1) {			// to triangle fifth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to sixth
+		if (fromState == 7 && toState == 6 && fromLight && !toLight && shape == 1) {			// to dark triangle sixth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}	
+			// from dark square seventh
+				// to zero
+		if (fromState == 7 && toState == 0 && !fromLight && toLight && shape == 2) {			// to zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 7 && toState == 0 && !fromLight && !toLight && shape == 2) {			// to dark zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 7 && toState == 1 && !fromLight && !toLight && shape == 2) {			// to dark first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 1 && !fromLight && toLight && shape == 2) {		// to light first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 7 && toState == 2 && !fromLight && !toLight && shape == 2) {			// to dark second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 2 && !fromLight && toLight && shape == 2) {		// to light second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 7 && toState == 3 && !fromLight && !toLight && shape == 2) {			// to dark third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 3 && !fromLight && toLight && shape == 2) {		// to light third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 7 && toState == 4 && !fromLight && toLight && shape == 2) {			// to light fourth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 7 && toState == 5 && !fromLight && toLight && shape == 0) {			// to square fifth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to sixth
+		if (fromState == 7 && toState == 6 && !fromLight && !toLight && shape == 0) {			// to dark square sixth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light square seventh
+				// to zero
+		if (fromState == 7 && toState == 0 && fromLight && toLight && shape == 2) {				// to zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 7 && toState == 0 && fromLight && !toLight && shape == 2) {			// to dark zero
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 7 && toState == 1 && fromLight && !toLight && shape == 2) {			// to dark first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 1 && fromLight && toLight && shape == 2) {		// to light first
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 7 && toState == 2 && fromLight && !toLight && shape == 2) {			// to dark second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 2 && fromLight && toLight && shape == 2) {		// to light second
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 7 && toState == 3 && fromLight && !toLight && shape == 2) {			// to dark third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 3 && fromLight && toLight && shape == 2) {		// to light third
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 7 && toState == 4 && fromLight && toLight && shape == 2) {				// to light fourth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 7 && toState == 5 && fromLight && toLight && shape == 0) {				// to square fifth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to sixth
+		if (fromState == 7 && toState == 6 && fromLight && !toLight && shape == 0) {			// to dark square sixth
+			GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
 	}
 
 	private void CoreToZero() {
@@ -727,7 +2175,1458 @@ public class PlayerStatePattern : MonoBehaviour {
 	// private void CoreToShape()
 
 	// shell
-	private void Shell (int fromState, int toState, bool light) {
+	private void Shell (int fromState, int toState, bool fromLight, bool toLight, int shape) 
+	{
+		// evolutions \\
+
+		// zero
+			// to dark zero (0.5)
+				// from zero
+		if (fromState == 0 && toState == 0 && fromLight && !toLight) {			// to dark zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+			// to first
+				// from dark zero (0.5)
+		if (fromState == 0 && toState == 1 && !fromLight && !toLight) {			// to dark first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+		else if (fromState == 0 && toState == 1 && !fromLight && toLight) {		// to light first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+				// from light zero (0.5)
+		if (fromState == 0 && toState == 1 && fromLight && !toLight) {			// to dark first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+		else if (fromState == 0 && toState == 1 && fromLight && toLight) {		// to light first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+
+		// first
+			// to second
+				// from dark first
+		if (fromState == 1 && toState == 2 && !fromLight && !toLight) {			// to dark second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+		else if (fromState == 1 && toState == 2 && !fromLight && toLight) {	// to light second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+				// from light first
+		if (fromState == 1 && toState == 2 && fromLight && !toLight) {			// to dark second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+		else if (fromState == 1 && toState == 2 && fromLight && toLight) {		// to light second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+
+		// second
+			// to third
+				// from dark second
+		if (fromState == 2 && toState == 3 && !fromLight && !toLight) {			// to dark third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+		else if (fromState == 2 && toState == 3 && !fromLight && toLight) {		// to light third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+				// from light second
+		if (fromState == 2 && toState == 3 && fromLight && !toLight) {			// to dark third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+		else if (fromState == 2 && toState == 3 && fromLight && toLight) {		// to light third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+
+		// third
+			// to fourth
+				// from dark third
+		if (fromState == 3 && toState == 4 && !fromLight && !toLight) {							// to dark fourth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 3 && toState == 4 && !fromLight && toLight) {						// to light fourth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from light third
+		if (fromState == 3 && toState == 4 && fromLight && !toLight) {							// to dark fourth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 3 && toState == 4 && fromLight && toLight) {						// to light fourth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// fourth
+			// to fifth
+				// from dark fourth
+		if (fromState == 4 && toState == 5 && !fromLight && !toLight && shape == 0) {			// to dark circle fifth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 4 && toState == 5 && !fromLight && toLight && shape == 0) {		// to light circle fifth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from light fourth
+		if (fromState == 4 && toState == 5 && fromLight && toLight && shape == 1) {			// to triangle fifth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 4 && toState == 5 && fromLight && toLight && shape == 2) {		// to square fifth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// fifth
+			// to sixth
+				// from dark circle fifth
+		if (fromState == 5 && toState == 6 && !fromLight && !toLight && shape == 0) {			// to dark circle sixth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 6 && !fromLight && toLight && shape == 0) {		// to light circle sixth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from light circle fifth
+		if (fromState == 5 && toState == 6 && fromLight && !toLight && shape == 0) {			// to dark circle sixth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 6 && fromLight && toLight && shape == 0) {		// to light circle sixth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from triangle fifth
+		if (fromState == 5 && toState == 6 && fromLight && shape == 1) {						// to dark triangle sixth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from square fifth
+		if (fromState == 5 && toState == 6 && fromLight && shape == 2) {						// to dark square sixth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// sixth
+			// to seventh
+				// from dark circle sixth
+		if (fromState == 6 && toState == 7 && !fromLight && !toLight && shape == 0) {			// to dark circle seventh
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 7 && !fromLight && toLight && shape == 0) {		// to light circle seventh
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from light circle sixth
+		if (fromState == 6 && toState == 7 && fromLight && !toLight && shape == 0) {			// to dark circle seventh
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 7 && fromLight && toLight && shape == 0) {		// to light circle seventh
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from dark triangle sixth
+		if (fromState == 6 && toState == 7 && !fromLight && !toLight && shape == 1) {			// to dark triangle seventh
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 7 && !fromLight && toLight && shape == 1) {		// to light triangle seventh
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from dark square sixth
+		if (fromState == 6 && toState == 7 && !fromLight && !toLight && shape == 2) {			// to dark square seventh
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 7 && !fromLight && toLight && shape == 2) {		// to light square seventh
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// seventh
+			// to eighth
+				// from dark circle seventh
+		if (fromState == 7 && toState == 8 && !fromLight && !toLight && shape == 0) {			// to dark circle eighth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 8 && !fromLight && toLight && shape == 0) {		// to light circle eighth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from light circle seventh
+		if (fromState == 7 && toState == 8 && fromLight && !toLight && shape == 0) {			// to dark circle eighth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 8 && fromLight && toLight && shape == 0) {		// to light circle eighth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from dark triangle seventh
+		if (fromState == 7 && toState == 8 && !fromLight && !toLight && shape == 1) {			// to dark triangle eighth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 8 && !fromLight && toLight && shape == 1) {		// to light triangle eighth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from light triangle seventh
+		if (fromState == 7 && toState == 8 && fromLight && !toLight && shape == 1) {			// to dark triangle eighth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 8 && fromLight && toLight && shape == 1) {		// to light triangle eighth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from dark square seventh
+		if (fromState == 7 && toState == 8 && !fromLight && !toLight && shape == 2) {			// to dark square eighth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 8 && !fromLight && toLight && shape == 2) {		// to light square eighth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from light square seventh
+		if (fromState == 7 && toState == 8 && fromLight && !toLight && shape == 2) {			// to dark square eighth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 8 && fromLight && toLight && shape == 2) {		// to light square eighth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// devolutions \\
+
+		// zero
+			// to dead
+		if (fromState == 0 && toState == -1) {													// to dead
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+			// dark zero (0.5)
+				// to zero
+		if (fromState == 0 && toState == 0 && !fromLight && toLight) {							// to zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// first
+			// to dead
+		if (fromState == 1 && toState == -1) {													// to dead
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from dark first
+				// to zero
+		if (fromState == 1 && toState == 0 && !fromLight && toLight) {							// to zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero (0.5)
+		if (fromState == 1 && toState == 0 && !fromLight && !toLight) {							// to dark zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light first
+				// to zero
+		if (fromState == 1 && toState == 0 && fromLight && toLight) {							// to zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero (0.5)
+		if (fromState == 1 && toState == 0 && fromLight && !toLight) {							// to dark zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// second
+			// to dead
+		if (fromState == 2 && toState == -1) {													// to dead
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from dark second
+				// to zero
+		if (fromState == 2 && toState == 0 && !fromLight && toLight) {							// to zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 2 && toState == 0 && !fromLight && !toLight) {							// to dark zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 2 && toState == 1 && !fromLight && !toLight) {							// to dark first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 2 && toState == 1 && !fromLight && toLight) {						// to light first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light second
+				// to zero
+		if (fromState == 2 && toState == 0 && fromLight && toLight) {							// to zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 2 && toState == 0 && fromLight && !toLight) {							// to dark zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 2 && toState == 1 && fromLight && !toLight) {							// to dark first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 2 && toState == 1 && fromLight && toLight) {						// to light first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// third
+			// to dead
+		if (fromState == 3 && toState == -1) {									// to dead
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+			// from dark third	
+				// to zero
+		if (fromState == 3 && toState == 0 && !fromLight && toLight) {							// to zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 3 && toState == 0 && !fromLight && !toLight) {							// to dark zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 3 && toState == 1 && !fromLight && !toLight) {							// to dark first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 3 && toState == 1 && !fromLight && toLight) {						// to light first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 3 && toState == 2 && !fromLight && !toLight) {							// to dark second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 3 && toState == 2 && !fromLight && toLight) {						// to light second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light third	
+				// to zero
+		if (fromState == 3 && toState == 0 && fromLight && !toLight) {							// to zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 3 && toState == 0 && fromLight && !toLight) {							// to dark zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 3 && toState == 1 && fromLight && !toLight) {							// to dark first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 3 && toState == 1 && !fromLight && toLight) {						// to light first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 3 && toState == 2 && fromLight && !toLight) {							// to dark second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 3 && toState == 2 && !fromLight && toLight) {						// to light second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// fourth
+			// to dead
+		if (fromState == 4 && toState == -1) {									// to dead
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+			// from dark fourth	
+				// to zero
+		if (fromState == 4 && toState == 0 && !fromLight && toLight) {							// to zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 4 && toState == 0 && !fromLight && !toLight) {							// to dark zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 4 && toState == 1 && !fromLight && !toLight) {							// to dark first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 4 && toState == 1 && !fromLight && toLight) {						// to light first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 4 && toState == 2 && !fromLight && !toLight) {							// to dark second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 4 && toState == 2 && !fromLight && toLight) {						// to light second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 4 && toState == 3 && !fromLight && !toLight) {							// to dark third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 4 && toState == 3 && !fromLight && toLight) {						// to light third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light fourth	
+				// to zero
+		if (fromState == 4 && toState == 0 && fromLight && toLight) {							// to zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 4 && toState == 0 && fromLight && !toLight) {							// to dark zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 4 && toState == 1 && fromLight && !toLight) {							// to dark first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 4 && toState == 1 && fromLight && toLight) {						// to light first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 4 && toState == 2 && fromLight && !toLight) {							// to dark second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 4 && toState == 2 && fromLight && toLight) {						// to light second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 4 && toState == 3 && fromLight && !toLight) {							// to dark third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 4 && toState == 3 && fromLight && toLight) {						// to light third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// fifth
+			// to dead
+		if (fromState == 5 && toState == -1) {									// to dead
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+			// from dark circle fifth
+				// to zero
+		if (fromState == 5 && toState == 0 && !fromLight && toLight && shape == 0) {			// to zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 5 && toState == 0 && !fromLight && !toLight && shape == 0) {			// to dark zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 5 && toState == 1 && !fromLight && !toLight && shape == 0) {			// to dark first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 1 && !fromLight && toLight && shape == 0) {		// to light first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 5 && toState == 2 && !fromLight && !toLight && shape == 0) {		// to dark second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 2 && !fromLight && toLight && shape == 0) {		// to light second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 5 && toState == 3 && !fromLight && !toLight && shape == 0) {			// to dark third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 3 && !fromLight && toLight && shape == 0) {		// to light third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 5 && toState == 4 && !fromLight && !toLight && shape == 0) {			// to dark fourth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light circle fifth
+				// to zero
+		if (fromState == 5 && toState == 0 && fromLight && toLight && shape == 0) {				// to zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 5 && toState == 0 && fromLight && !toLight && shape == 0) {			// to dark zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 5 && toState == 1 && fromLight && !toLight && shape == 0) {			// to dark first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 1 && fromLight && toLight && shape == 0) {		// to light first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 5 && toState == 2 && fromLight && !toLight && shape == 0) {			// to dark second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 2 && fromLight && toLight && shape == 0) {		// to light second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 5 && toState == 3 && fromLight && !toLight && shape == 0) {			// to dark third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 3 && fromLight && toLight && shape == 0) {		// to light third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 5 && toState == 4 && fromLight && !toLight && shape == 0) {			// to dark fourth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from triangle fifth
+				// to zero
+		if (fromState == 5 && toState == 0 && fromLight && toLight && shape == 1) {				// to zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 5 && toState == 0 && fromLight && !toLight && shape == 1) {			// to dark zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 5 && toState == 1 && fromLight && !toLight && shape == 1) {			// to dark first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 1 && fromLight && toLight && shape == 1) {		// to light first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 5 && toState == 2 && fromLight && !toLight && shape == 1) {			// to dark second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 2 && fromLight && toLight && shape == 1) {		// to light second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 5 && toState == 3 && fromLight && !toLight && shape == 1) {			// to dark third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 3 && fromLight && toLight && shape == 1) {		// to light third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 5 && toState == 4 && fromLight && toLight && shape == 1) {				// to light fourth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from square fifth
+				// to zero
+		if (fromState == 5 && toState == 0 && fromLight && toLight && shape == 2) {				// to zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 5 && toState == 0 && fromLight && !toLight && shape == 2) {			// to dark zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 5 && toState == 1 && fromLight && !toLight && shape == 2) {			// to dark first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 1 && fromLight && toLight && shape == 2) {		// to light first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 5 && toState == 2 && fromLight && !toLight && shape == 2) {			// to dark second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 2 && fromLight && toLight && shape == 2) {		// to light second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 5 && toState == 3 && fromLight && !toLight && shape == 2) {			// to dark third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 3 && fromLight && toLight && shape == 2) {		// to light third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 5 && toState == 4 && fromLight && toLight && shape == 2) {				// to light fourth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// sixth
+			// to dead
+		if (fromState == 6 && toState == -1) {									// to dead
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+			// from dark circle sixth
+				// to zero
+		if (fromState == 6 && toState == 0 && !fromLight && toLight && shape == 0) {			// to zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 6 && toState == 0 && !fromLight && !toLight && shape == 0) {			// to dark zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 6 && toState == 1 && !fromLight && !toLight && shape == 0) {			// to dark first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 1 && !fromLight && toLight && shape == 0) {		// to light first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 6 && toState == 2 && !fromLight && !toLight && shape == 0) {		// to dark second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 2 && !fromLight && toLight && shape == 0) {		// to light second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 6 && toState == 3 && !fromLight && !toLight && shape == 0) {			// to dark third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 3 && !fromLight && toLight && shape == 0) {		// to light third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 6 && toState == 4 && !fromLight && !toLight && shape == 0) {			// to dark fourth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 6 && toState == 5 && !fromLight && !toLight && shape == 0) {			// to dark circle fifth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 5 && !fromLight && toLight && shape == 0) {		// to light circle fifth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light circle sixth
+				// to zero
+		if (fromState == 6 && toState == 0 && fromLight && toLight && shape == 0) {				// to zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 6 && toState == 0 && fromLight && !toLight && shape == 0) {			// to dark zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 6 && toState == 1 && fromLight && !toLight && shape == 0) {			// to dark first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 1 && fromLight && toLight && shape == 0) {		// to light first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 6 && toState == 2 && fromLight && !toLight && shape == 0) {			// to dark second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 2 && fromLight && toLight && shape == 0) {		// to light second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 6 && toState == 3 && fromLight && !toLight && shape == 0) {			// to dark third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 3 && fromLight && toLight && shape == 0) {		// to light third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 6 && toState == 4 && fromLight && !toLight && shape == 0) {			// to dark fourth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 6 && toState == 5 && fromLight && !toLight && shape == 0) {			// to dark circle fifth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 5 && fromLight && toLight && shape == 0) {		// to light circle fifth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from triangle sixth
+				// to zero
+		if (fromState == 6 && toState == 0 && !fromLight && toLight && shape == 1) {				// to zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 6 && toState == 0 && !fromLight && !toLight && shape == 1) {			// to dark zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator> ().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 6 && toState == 1 && !fromLight && !toLight && shape == 1) {			// to dark first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 1 && !fromLight && toLight && shape == 1) {		// to light first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 6 && toState == 2 && !fromLight && !toLight && shape == 1) {			// to dark second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 2 && !fromLight && toLight && shape == 1) {		// to light second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 6 && toState == 3 && !fromLight && !toLight && shape == 1) {			// to dark third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 3 && !fromLight && toLight && shape == 1) {		// to light third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 6 && toState == 4 && !fromLight && toLight && shape == 1) {			// to light fourth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 6 && toState == 5 && !fromLight && !toLight && shape == 1) {			// to triangle fifth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from square sixth
+				// to zero
+		if (fromState == 6 && toState == 0 && !fromLight && toLight && shape == 2) {				// to zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 6 && toState == 0 && !fromLight && !toLight && shape == 2) {			// to dark zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 6 && toState == 1 && !fromLight && !toLight && shape == 2) {			// to dark first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 1 && !fromLight && toLight && shape == 2) {		// to light first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 6 && toState == 2 && !fromLight && !toLight && shape == 2) {			// to dark second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 2 && !fromLight && toLight && shape == 2) {		// to light second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 6 && toState == 3 && !fromLight && !toLight && shape == 2) {			// to dark third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 3 && !fromLight && toLight && shape == 2) {		// to light third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 6 && toState == 4 && !fromLight && toLight && shape == 2) {			// to light fourth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 6 && toState == 5 && !fromLight && toLight && shape == 0) {			// to square fifth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// seventh
+			// to dead
+		if (fromState == 7 && toState == -1) {									// to dead
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+			// from dark circle seventh
+				// to zero
+		if (fromState == 7 && toState == 0 && !fromLight && toLight && shape == 0) {			// to zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 7 && toState == 0 && !fromLight && !toLight && shape == 0) {			// to dark zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 7 && toState == 1 && !fromLight && !toLight && shape == 0) {			// to dark first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 1 && !fromLight && toLight && shape == 0) {		// to light first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 7 && toState == 2 && !fromLight && !toLight && shape == 0) {		// to dark second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 2 && !fromLight && toLight && shape == 0) {		// to light second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 7 && toState == 3 && !fromLight && !toLight && shape == 0) {			// to dark third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 3 && !fromLight && toLight && shape == 0) {		// to light third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 7 && toState == 4 && !fromLight && !toLight && shape == 0) {			// to dark fourth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 7 && toState == 5 && !fromLight && !toLight && shape == 0) {			// to dark circle fifth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 5 && !fromLight && toLight && shape == 0) {		// to light circle fifth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to sixth
+		if (fromState == 7 && toState == 6 && !fromLight && !toLight && shape == 0) {			// to dark circle sixth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 6 && !fromLight && toLight && shape == 0) {		// to light circle sixth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light circle seventh
+				// to zero
+		if (fromState == 7 && toState == 0 && fromLight && toLight && shape == 0) {				// to zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 7 && toState == 0 && fromLight && !toLight && shape == 0) {			// to dark zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 7 && toState == 1 && fromLight && !toLight && shape == 0) {			// to dark first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 1 && fromLight && toLight && shape == 0) {		// to light first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 7 && toState == 2 && fromLight && !toLight && shape == 0) {			// to dark second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 2 && fromLight && toLight && shape == 0) {		// to light second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 7 && toState == 3 && fromLight && !toLight && shape == 0) {			// to dark third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 3 && fromLight && toLight && shape == 0) {		// to light third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 7 && toState == 4 && fromLight && !toLight && shape == 0) {			// to dark fourth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 7 && toState == 5 && fromLight && !toLight && shape == 0) {			// to dark circle fifth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 5 && fromLight && toLight && shape == 0) {		// to light circle fifth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to sixth
+		if (fromState == 7 && toState == 6 && fromLight && !toLight && shape == 0) {			// to dark circle sixth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 6 && fromLight && toLight && shape == 0) {		// to light circle sixth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from dark triangle seventh
+				// to zero
+		if (fromState == 7 && toState == 0 && !fromLight && toLight && shape == 1) {			// to zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 7 && toState == 0 && !fromLight && !toLight && shape == 1) {			// to dark zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator> ().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 7 && toState == 1 && !fromLight && !toLight && shape == 1) {			// to dark first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 1 && !fromLight && toLight && shape == 1) {		// to light first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 7 && toState == 2 && !fromLight && !toLight && shape == 1) {			// to dark second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 2 && !fromLight && toLight && shape == 1) {		// to light second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 7 && toState == 3 && !fromLight && !toLight && shape == 1) {			// to dark third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 3 && !fromLight && toLight && shape == 1) {		// to light third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 7 && toState == 4 && !fromLight && toLight && shape == 1) {			// to light fourth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 7 && toState == 5 && !fromLight && toLight && shape == 1) {			// to triangle fifth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to sixth
+		if (fromState == 7 && toState == 6 && !fromLight && !toLight && shape == 1) {			// to dark triangle sixth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light triangle seventh
+				// to zero
+		if (fromState == 7 && toState == 0 && fromLight && toLight && shape == 1) {				// to zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 7 && toState == 0 && fromLight && !toLight && shape == 1) {			// to dark zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator> ().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 7 && toState == 1 && fromLight && !toLight && shape == 1) {			// to dark first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 1 && fromLight && toLight && shape == 1) {		// to light first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 7 && toState == 2 && fromLight && !toLight && shape == 1) {			// to dark second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 2 && fromLight && toLight && shape == 1) {		// to light second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 7 && toState == 3 && fromLight && !toLight && shape == 1) {			// to dark third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 3 && fromLight && toLight && shape == 1) {		// to light third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 7 && toState == 4 && fromLight && toLight && shape == 1) {			// to light fourth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 7 && toState == 5 && fromLight && toLight && shape == 1) {			// to triangle fifth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to sixth
+		if (fromState == 7 && toState == 6 && fromLight && !toLight && shape == 1) {			// to dark triangle sixth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}	
+			// from dark square seventh
+				// to zero
+		if (fromState == 7 && toState == 0 && !fromLight && toLight && shape == 2) {			// to zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 7 && toState == 0 && !fromLight && !toLight && shape == 2) {			// to dark zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 7 && toState == 1 && !fromLight && !toLight && shape == 2) {			// to dark first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 1 && !fromLight && toLight && shape == 2) {		// to light first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 7 && toState == 2 && !fromLight && !toLight && shape == 2) {			// to dark second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 2 && !fromLight && toLight && shape == 2) {		// to light second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 7 && toState == 3 && !fromLight && !toLight && shape == 2) {			// to dark third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 3 && !fromLight && toLight && shape == 2) {		// to light third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 7 && toState == 4 && !fromLight && toLight && shape == 2) {			// to light fourth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 7 && toState == 5 && !fromLight && toLight && shape == 0) {			// to square fifth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to sixth
+		if (fromState == 7 && toState == 6 && !fromLight && !toLight && shape == 0) {			// to dark square sixth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light square seventh
+				// to zero
+		if (fromState == 7 && toState == 0 && fromLight && toLight && shape == 2) {				// to zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 7 && toState == 0 && fromLight && !toLight && shape == 2) {			// to dark zero
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 7 && toState == 1 && fromLight && !toLight && shape == 2) {			// to dark first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 1 && fromLight && toLight && shape == 2) {		// to light first
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 7 && toState == 2 && fromLight && !toLight && shape == 2) {			// to dark second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 2 && fromLight && toLight && shape == 2) {		// to light second
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 7 && toState == 3 && fromLight && !toLight && shape == 2) {			// to dark third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 3 && fromLight && toLight && shape == 2) {		// to light third
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 7 && toState == 4 && fromLight && toLight && shape == 2) {				// to light fourth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 7 && toState == 5 && fromLight && toLight && shape == 0) {				// to square fifth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to sixth
+		if (fromState == 7 && toState == 6 && fromLight && !toLight && shape == 0) {			// to dark square sixth
+			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
 
 	}
 
@@ -752,7 +3651,1458 @@ public class PlayerStatePattern : MonoBehaviour {
 	}
 
 	// nucleus
-	private void Nucleus (int fromState, int toState, bool light) {
+	private void Nucleus (int fromState, int toState, bool fromLight, bool toLight, int shape) 
+	{
+		// evolutions \\
+
+		// zero
+			// to dark zero (0.5)
+				// from zero
+		if (fromState == 0 && toState == 0 && fromLight && !toLight) {			// to dark zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+			// to first
+				// from dark zero (0.5)
+		if (fromState == 0 && toState == 1 && !fromLight && !toLight) {			// to dark first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+		else if (fromState == 0 && toState == 1 && !fromLight && toLight) {		// to light first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+				// from light zero (0.5)
+		if (fromState == 0 && toState == 1 && fromLight && !toLight) {			// to dark first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+		else if (fromState == 0 && toState == 1 && fromLight && toLight) {		// to light first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+
+		// first
+			// to second
+				// from dark first
+		if (fromState == 1 && toState == 2 && !fromLight && !toLight) {			// to dark second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+		else if (fromState == 1 && toState == 2 && !fromLight && toLight) {	// to light second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+				// from light first
+		if (fromState == 1 && toState == 2 && fromLight && !toLight) {			// to dark second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+		else if (fromState == 1 && toState == 2 && fromLight && toLight) {		// to light second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+
+		// second
+			// to third
+				// from dark second
+		if (fromState == 2 && toState == 3 && !fromLight && !toLight) {			// to dark third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+		else if (fromState == 2 && toState == 3 && !fromLight && toLight) {		// to light third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+				// from light second
+		if (fromState == 2 && toState == 3 && fromLight && !toLight) {			// to dark third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+		else if (fromState == 2 && toState == 3 && fromLight && toLight) {		// to light third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+
+		// third
+			// to fourth
+				// from dark third
+		if (fromState == 3 && toState == 4 && !fromLight && !toLight) {							// to dark fourth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 3 && toState == 4 && !fromLight && toLight) {						// to light fourth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from light third
+		if (fromState == 3 && toState == 4 && fromLight && !toLight) {							// to dark fourth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 3 && toState == 4 && fromLight && toLight) {						// to light fourth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// fourth
+			// to fifth
+				// from dark fourth
+		if (fromState == 4 && toState == 5 && !fromLight && !toLight && shape == 0) {			// to dark circle fifth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 4 && toState == 5 && !fromLight && toLight && shape == 0) {		// to light circle fifth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from light fourth
+		if (fromState == 4 && toState == 5 && fromLight && toLight && shape == 1) {			// to triangle fifth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 4 && toState == 5 && fromLight && toLight && shape == 2) {		// to square fifth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// fifth
+			// to sixth
+				// from dark circle fifth
+		if (fromState == 5 && toState == 6 && !fromLight && !toLight && shape == 0) {			// to dark circle sixth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 6 && !fromLight && toLight && shape == 0) {		// to light circle sixth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from light circle fifth
+		if (fromState == 5 && toState == 6 && fromLight && !toLight && shape == 0) {			// to dark circle sixth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 6 && fromLight && toLight && shape == 0) {		// to light circle sixth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from triangle fifth
+		if (fromState == 5 && toState == 6 && fromLight && shape == 1) {						// to dark triangle sixth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from square fifth
+		if (fromState == 5 && toState == 6 && fromLight && shape == 2) {						// to dark square sixth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// sixth
+			// to seventh
+				// from dark circle sixth
+		if (fromState == 6 && toState == 7 && !fromLight && !toLight && shape == 0) {			// to dark circle seventh
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 7 && !fromLight && toLight && shape == 0) {		// to light circle seventh
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from light circle sixth
+		if (fromState == 6 && toState == 7 && fromLight && !toLight && shape == 0) {			// to dark circle seventh
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 7 && fromLight && toLight && shape == 0) {		// to light circle seventh
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from dark triangle sixth
+		if (fromState == 6 && toState == 7 && !fromLight && !toLight && shape == 1) {			// to dark triangle seventh
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 7 && !fromLight && toLight && shape == 1) {		// to light triangle seventh
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from dark square sixth
+		if (fromState == 6 && toState == 7 && !fromLight && !toLight && shape == 2) {			// to dark square seventh
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 7 && !fromLight && toLight && shape == 2) {		// to light square seventh
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// seventh
+			// to eighth
+				// from dark circle seventh
+		if (fromState == 7 && toState == 8 && !fromLight && !toLight && shape == 0) {			// to dark circle eighth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 8 && !fromLight && toLight && shape == 0) {		// to light circle eighth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from light circle seventh
+		if (fromState == 7 && toState == 8 && fromLight && !toLight && shape == 0) {			// to dark circle eighth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 8 && fromLight && toLight && shape == 0) {		// to light circle eighth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from dark triangle seventh
+		if (fromState == 7 && toState == 8 && !fromLight && !toLight && shape == 1) {			// to dark triangle eighth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 8 && !fromLight && toLight && shape == 1) {		// to light triangle eighth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from light triangle seventh
+		if (fromState == 7 && toState == 8 && fromLight && !toLight && shape == 1) {			// to dark triangle eighth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 8 && fromLight && toLight && shape == 1) {		// to light triangle eighth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from dark square seventh
+		if (fromState == 7 && toState == 8 && !fromLight && !toLight && shape == 2) {			// to dark square eighth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 8 && !fromLight && toLight && shape == 2) {		// to light square eighth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// from light square seventh
+		if (fromState == 7 && toState == 8 && fromLight && !toLight && shape == 2) {			// to dark square eighth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 8 && fromLight && toLight && shape == 2) {		// to light square eighth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// devolutions \\
+
+		// zero
+			// to dead
+		if (fromState == 0 && toState == -1) {													// to dead
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// dark zero (0.5)
+			// to zero
+		if (fromState == 0 && toState == 0 && !fromLight && toLight) {							// to zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// first
+			// to dead
+		if (fromState == 1 && toState == -1) {													// to dead
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from dark first
+				// to zero
+		if (fromState == 1 && toState == 0 && !fromLight && toLight) {							// to zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero (0.5)
+		if (fromState == 1 && toState == 0 && !fromLight && !toLight) {							// to dark zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light first
+				// to zero
+		if (fromState == 1 && toState == 0 && fromLight && toLight) {							// to zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero (0.5)
+		if (fromState == 1 && toState == 0 && fromLight && !toLight) {							// to dark zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// second
+			// to dead
+		if (fromState == 2 && toState == -1) {													// to dead
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from dark second
+				// to zero
+		if (fromState == 2 && toState == 0 && !fromLight && toLight) {							// to zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 2 && toState == 0 && !fromLight && !toLight) {							// to dark zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 2 && toState == 1 && !fromLight && !toLight) {							// to dark first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 2 && toState == 1 && !fromLight && toLight) {						// to light first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light second
+				// to zero
+		if (fromState == 2 && toState == 0 && fromLight && toLight) {							// to zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 2 && toState == 0 && fromLight && !toLight) {							// to dark zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 2 && toState == 1 && fromLight && !toLight) {							// to dark first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 2 && toState == 1 && fromLight && toLight) {						// to light first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// third
+			// to dead
+		if (fromState == 3 && toState == -1) {									// to dead
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+			// from dark third	
+				// to zero
+		if (fromState == 3 && toState == 0 && !fromLight && toLight) {							// to zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 3 && toState == 0 && !fromLight && !toLight) {							// to dark zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 3 && toState == 1 && !fromLight && !toLight) {							// to dark first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 3 && toState == 1 && !fromLight && toLight) {						// to light first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 3 && toState == 2 && !fromLight && !toLight) {							// to dark second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 3 && toState == 2 && !fromLight && toLight) {						// to light second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light third	
+				// to zero
+		if (fromState == 3 && toState == 0 && fromLight && !toLight) {							// to zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 3 && toState == 0 && fromLight && !toLight) {							// to dark zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 3 && toState == 1 && fromLight && !toLight) {							// to dark first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 3 && toState == 1 && !fromLight && toLight) {						// to light first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 3 && toState == 2 && fromLight && !toLight) {							// to dark second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 3 && toState == 2 && !fromLight && toLight) {						// to light second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// fourth
+			// to dead
+		if (fromState == 4 && toState == -1) {									// to dead
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+			// from dark fourth	
+				// to zero
+		if (fromState == 4 && toState == 0 && !fromLight && toLight) {							// to zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 4 && toState == 0 && !fromLight && !toLight) {							// to dark zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 4 && toState == 1 && !fromLight && !toLight) {							// to dark first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 4 && toState == 1 && !fromLight && toLight) {						// to light first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 4 && toState == 2 && !fromLight && !toLight) {							// to dark second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 4 && toState == 2 && !fromLight && toLight) {						// to light second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 4 && toState == 3 && !fromLight && !toLight) {							// to dark third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 4 && toState == 3 && !fromLight && toLight) {						// to light third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light fourth	
+				// to zero
+		if (fromState == 4 && toState == 0 && fromLight && toLight) {							// to zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 4 && toState == 0 && fromLight && !toLight) {							// to dark zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 4 && toState == 1 && fromLight && !toLight) {							// to dark first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 4 && toState == 1 && fromLight && toLight) {						// to light first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 4 && toState == 2 && fromLight && !toLight) {							// to dark second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 4 && toState == 2 && fromLight && toLight) {						// to light second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 4 && toState == 3 && fromLight && !toLight) {							// to dark third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 4 && toState == 3 && fromLight && toLight) {						// to light third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// fifth
+			// to dead
+		if (fromState == 5 && toState == -1) {									// to dead
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+			// from dark circle fifth
+				// to zero
+		if (fromState == 5 && toState == 0 && !fromLight && toLight && shape == 0) {			// to zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 5 && toState == 0 && !fromLight && !toLight && shape == 0) {			// to dark zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 5 && toState == 1 && !fromLight && !toLight && shape == 0) {			// to dark first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 1 && !fromLight && toLight && shape == 0) {		// to light first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 5 && toState == 2 && !fromLight && !toLight && shape == 0) {		// to dark second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 2 && !fromLight && toLight && shape == 0) {		// to light second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 5 && toState == 3 && !fromLight && !toLight && shape == 0) {			// to dark third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 3 && !fromLight && toLight && shape == 0) {		// to light third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 5 && toState == 4 && !fromLight && !toLight && shape == 0) {			// to dark fourth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light circle fifth
+				// to zero
+		if (fromState == 5 && toState == 0 && fromLight && toLight && shape == 0) {				// to zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 5 && toState == 0 && fromLight && !toLight && shape == 0) {			// to dark zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 5 && toState == 1 && fromLight && !toLight && shape == 0) {			// to dark first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 1 && fromLight && toLight && shape == 0) {		// to light first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 5 && toState == 2 && fromLight && !toLight && shape == 0) {			// to dark second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 2 && fromLight && toLight && shape == 0) {		// to light second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 5 && toState == 3 && fromLight && !toLight && shape == 0) {			// to dark third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 3 && fromLight && toLight && shape == 0) {		// to light third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 5 && toState == 4 && fromLight && !toLight && shape == 0) {			// to dark fourth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from triangle fifth
+				// to zero
+		if (fromState == 5 && toState == 0 && fromLight && toLight && shape == 1) {				// to zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 5 && toState == 0 && fromLight && !toLight && shape == 1) {			// to dark zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 5 && toState == 1 && fromLight && !toLight && shape == 1) {			// to dark first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 1 && fromLight && toLight && shape == 1) {		// to light first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 5 && toState == 2 && fromLight && !toLight && shape == 1) {			// to dark second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 2 && fromLight && toLight && shape == 1) {		// to light second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 5 && toState == 3 && fromLight && !toLight && shape == 1) {			// to dark third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 3 && fromLight && toLight && shape == 1) {		// to light third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 5 && toState == 4 && fromLight && toLight && shape == 1) {				// to light fourth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from square fifth
+				// to zero
+		if (fromState == 5 && toState == 0 && fromLight && toLight && shape == 2) {				// to zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 5 && toState == 0 && fromLight && !toLight && shape == 2) {			// to dark zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 5 && toState == 1 && fromLight && !toLight && shape == 2) {			// to dark first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 1 && fromLight && toLight && shape == 2) {		// to light first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 5 && toState == 2 && fromLight && !toLight && shape == 2) {			// to dark second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 2 && fromLight && toLight && shape == 2) {		// to light second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 5 && toState == 3 && fromLight && !toLight && shape == 2) {			// to dark third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 5 && toState == 3 && fromLight && toLight && shape == 2) {		// to light third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 5 && toState == 4 && fromLight && toLight && shape == 2) {				// to light fourth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// sixth
+			// to dead
+		if (fromState == 6 && toState == -1) {									// to dead
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+			// from dark circle sixth
+				// to zero
+		if (fromState == 6 && toState == 0 && !fromLight && toLight && shape == 0) {			// to zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 6 && toState == 0 && !fromLight && !toLight && shape == 0) {			// to dark zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 6 && toState == 1 && !fromLight && !toLight && shape == 0) {			// to dark first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 1 && !fromLight && toLight && shape == 0) {		// to light first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 6 && toState == 2 && !fromLight && !toLight && shape == 0) {		// to dark second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 2 && !fromLight && toLight && shape == 0) {		// to light second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 6 && toState == 3 && !fromLight && !toLight && shape == 0) {			// to dark third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 3 && !fromLight && toLight && shape == 0) {		// to light third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 6 && toState == 4 && !fromLight && !toLight && shape == 0) {			// to dark fourth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 6 && toState == 5 && !fromLight && !toLight && shape == 0) {			// to dark circle fifth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 5 && !fromLight && toLight && shape == 0) {		// to light circle fifth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light circle sixth
+				// to zero
+		if (fromState == 6 && toState == 0 && fromLight && toLight && shape == 0) {				// to zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 6 && toState == 0 && fromLight && !toLight && shape == 0) {			// to dark zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 6 && toState == 1 && fromLight && !toLight && shape == 0) {			// to dark first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 1 && fromLight && toLight && shape == 0) {		// to light first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 6 && toState == 2 && fromLight && !toLight && shape == 0) {			// to dark second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 2 && fromLight && toLight && shape == 0) {		// to light second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 6 && toState == 3 && fromLight && !toLight && shape == 0) {			// to dark third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 3 && fromLight && toLight && shape == 0) {		// to light third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 6 && toState == 4 && fromLight && !toLight && shape == 0) {			// to dark fourth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 6 && toState == 5 && fromLight && !toLight && shape == 0) {			// to dark circle fifth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 5 && fromLight && toLight && shape == 0) {		// to light circle fifth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from triangle sixth
+				// to zero
+		if (fromState == 6 && toState == 0 && !fromLight && toLight && shape == 1) {				// to zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 6 && toState == 0 && !fromLight && !toLight && shape == 1) {			// to dark zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator> ().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 6 && toState == 1 && !fromLight && !toLight && shape == 1) {			// to dark first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 1 && !fromLight && toLight && shape == 1) {		// to light first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 6 && toState == 2 && !fromLight && !toLight && shape == 1) {			// to dark second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 2 && !fromLight && toLight && shape == 1) {		// to light second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 6 && toState == 3 && !fromLight && !toLight && shape == 1) {			// to dark third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 3 && !fromLight && toLight && shape == 1) {		// to light third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 6 && toState == 4 && !fromLight && toLight && shape == 1) {			// to light fourth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 6 && toState == 5 && !fromLight && !toLight && shape == 1) {			// to triangle fifth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from square sixth
+				// to zero
+		if (fromState == 6 && toState == 0 && !fromLight && toLight && shape == 2) {				// to zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 6 && toState == 0 && !fromLight && !toLight && shape == 2) {			// to dark zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 6 && toState == 1 && !fromLight && !toLight && shape == 2) {			// to dark first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 1 && !fromLight && toLight && shape == 2) {		// to light first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 6 && toState == 2 && !fromLight && !toLight && shape == 2) {			// to dark second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 2 && !fromLight && toLight && shape == 2) {		// to light second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 6 && toState == 3 && !fromLight && !toLight && shape == 2) {			// to dark third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 6 && toState == 3 && !fromLight && toLight && shape == 2) {		// to light third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 6 && toState == 4 && !fromLight && toLight && shape == 2) {			// to light fourth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 6 && toState == 5 && !fromLight && toLight && shape == 0) {			// to square fifth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+
+		// seventh
+			// to dead
+		if (fromState == 7 && toState == -1) {									// to dead
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");						// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");						// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);						// enable black core animation state
+		}
+			// from dark circle seventh
+				// to zero
+		if (fromState == 7 && toState == 0 && !fromLight && toLight && shape == 0) {			// to zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 7 && toState == 0 && !fromLight && !toLight && shape == 0) {			// to dark zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 7 && toState == 1 && !fromLight && !toLight && shape == 0) {			// to dark first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 1 && !fromLight && toLight && shape == 0) {		// to light first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 7 && toState == 2 && !fromLight && !toLight && shape == 0) {		// to dark second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 2 && !fromLight && toLight && shape == 0) {		// to light second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 7 && toState == 3 && !fromLight && !toLight && shape == 0) {			// to dark third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 3 && !fromLight && toLight && shape == 0) {		// to light third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 7 && toState == 4 && !fromLight && !toLight && shape == 0) {			// to dark fourth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 7 && toState == 5 && !fromLight && !toLight && shape == 0) {			// to dark circle fifth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 5 && !fromLight && toLight && shape == 0) {		// to light circle fifth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to sixth
+		if (fromState == 7 && toState == 6 && !fromLight && !toLight && shape == 0) {			// to dark circle sixth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 6 && !fromLight && toLight && shape == 0) {		// to light circle sixth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light circle seventh
+				// to zero
+		if (fromState == 7 && toState == 0 && fromLight && toLight && shape == 0) {				// to zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 7 && toState == 0 && fromLight && !toLight && shape == 0) {			// to dark zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 7 && toState == 1 && fromLight && !toLight && shape == 0) {			// to dark first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 1 && fromLight && toLight && shape == 0) {		// to light first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 7 && toState == 2 && fromLight && !toLight && shape == 0) {			// to dark second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 2 && fromLight && toLight && shape == 0) {		// to light second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 7 && toState == 3 && fromLight && !toLight && shape == 0) {			// to dark third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 3 && fromLight && toLight && shape == 0) {		// to light third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 7 && toState == 4 && fromLight && !toLight && shape == 0) {			// to dark fourth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 7 && toState == 5 && fromLight && !toLight && shape == 0) {			// to dark circle fifth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 5 && fromLight && toLight && shape == 0) {		// to light circle fifth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to sixth
+		if (fromState == 7 && toState == 6 && fromLight && !toLight && shape == 0) {			// to dark circle sixth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 6 && fromLight && toLight && shape == 0) {		// to light circle sixth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from dark triangle seventh
+				// to zero
+		if (fromState == 7 && toState == 0 && !fromLight && toLight && shape == 1) {			// to zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 7 && toState == 0 && !fromLight && !toLight && shape == 1) {			// to dark zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator> ().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 7 && toState == 1 && !fromLight && !toLight && shape == 1) {			// to dark first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 1 && !fromLight && toLight && shape == 1) {		// to light first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 7 && toState == 2 && !fromLight && !toLight && shape == 1) {			// to dark second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 2 && !fromLight && toLight && shape == 1) {		// to light second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 7 && toState == 3 && !fromLight && !toLight && shape == 1) {			// to dark third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 3 && !fromLight && toLight && shape == 1) {		// to light third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 7 && toState == 4 && !fromLight && toLight && shape == 1) {			// to light fourth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 7 && toState == 5 && !fromLight && toLight && shape == 1) {			// to triangle fifth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to sixth
+		if (fromState == 7 && toState == 6 && !fromLight && !toLight && shape == 1) {			// to dark triangle sixth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light triangle seventh
+				// to zero
+		if (fromState == 7 && toState == 0 && fromLight && toLight && shape == 1) {				// to zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 7 && toState == 0 && fromLight && !toLight && shape == 1) {			// to dark zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator> ().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 7 && toState == 1 && fromLight && !toLight && shape == 1) {			// to dark first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 1 && fromLight && toLight && shape == 1) {		// to light first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 7 && toState == 2 && fromLight && !toLight && shape == 1) {			// to dark second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 2 && fromLight && toLight && shape == 1) {		// to light second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 7 && toState == 3 && fromLight && !toLight && shape == 1) {			// to dark third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 3 && fromLight && toLight && shape == 1) {		// to light third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 7 && toState == 4 && fromLight && toLight && shape == 1) {			// to light fourth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 7 && toState == 5 && fromLight && toLight && shape == 1) {			// to triangle fifth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to sixth
+		if (fromState == 7 && toState == 6 && fromLight && !toLight && shape == 1) {			// to dark triangle sixth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}	
+			// from dark square seventh
+				// to zero
+		if (fromState == 7 && toState == 0 && !fromLight && toLight && shape == 2) {			// to zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 7 && toState == 0 && !fromLight && !toLight && shape == 2) {			// to dark zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 7 && toState == 1 && !fromLight && !toLight && shape == 2) {			// to dark first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 1 && !fromLight && toLight && shape == 2) {		// to light first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 7 && toState == 2 && !fromLight && !toLight && shape == 2) {			// to dark second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 2 && !fromLight && toLight && shape == 2) {		// to light second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 7 && toState == 3 && !fromLight && !toLight && shape == 2) {			// to dark third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 3 && !fromLight && toLight && shape == 2) {		// to light third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 7 && toState == 4 && !fromLight && toLight && shape == 2) {			// to light fourth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 7 && toState == 5 && !fromLight && toLight && shape == 0) {			// to square fifth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to sixth
+		if (fromState == 7 && toState == 6 && !fromLight && !toLight && shape == 0) {			// to dark square sixth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+			// from light square seventh
+				// to zero
+		if (fromState == 7 && toState == 0 && fromLight && toLight && shape == 2) {				// to zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to dark zero
+		if (fromState == 7 && toState == 0 && fromLight && !toLight && shape == 2) {			// to dark zero
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to first
+		if (fromState == 7 && toState == 1 && fromLight && !toLight && shape == 2) {			// to dark first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 1 && fromLight && toLight && shape == 2) {		// to light first
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to second
+		if (fromState == 7 && toState == 2 && fromLight && !toLight && shape == 2) {			// to dark second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 2 && fromLight && toLight && shape == 2) {		// to light second
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to third
+		if (fromState == 7 && toState == 3 && fromLight && !toLight && shape == 2) {			// to dark third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+		else if (fromState == 7 && toState == 3 && fromLight && toLight && shape == 2) {		// to light third
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fourth
+		if (fromState == 7 && toState == 4 && fromLight && toLight && shape == 2) {				// to light fourth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to fifth
+		if (fromState == 7 && toState == 5 && fromLight && toLight && shape == 0) {				// to square fifth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
+				// to sixth
+		if (fromState == 7 && toState == 6 && fromLight && !toLight && shape == 0) {			// to dark square sixth
+			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
+			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
+			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
+		}
 
 	}
 

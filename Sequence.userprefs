@@ -2,17 +2,17 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Actors\Player\PlayerStatePattern.cs">
     <Files>
-      <File FileName="Assets\Scripts\Actors\Player\PlayerStatePattern.cs" Line="786" Column="1" />
+      <File FileName="Assets\Scripts\Actors\Player\PlayerStatePattern.cs" Line="4" Column="48" />
       <File FileName="Assets\Scripts\Actors\IParticleState.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Actors\ParticleStateEvents.cs" Line="71" Column="1" />
+      <File FileName="Assets\Scripts\Actors\ParticleStateEvents.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Actors\Player\States\ZeroPlayerState.cs" Line="137" Column="33" NotebookId="1" />
-      <File FileName="Assets\Scripts\Actors\Player\States\FirstPlayerState.cs" Line="83" Column="2" NotebookId="1" />
+      <File FileName="Assets\Scripts\Actors\Player\States\FirstPlayerState.cs" Line="1" Column="1" NotebookId="1" />
       <File FileName="Assets\Scripts\Actors\Player\States\SecondPlayerState.cs" Line="1" Column="1" NotebookId="1" />
       <File FileName="Assets\Scripts\Actors\Player\States\ThirdPlayerState.cs" Line="1" Column="1" NotebookId="1" />
       <File FileName="Assets\Scripts\Actors\Player\States\FourthPlayerState.cs" Line="1" Column="1" NotebookId="1" />
       <File FileName="Assets\Scripts\Actors\Player\States\FifthPlayerState.cs" Line="1" Column="1" NotebookId="1" />
-      <File FileName="Assets\Scripts\Actors\Player\States\SixthPlayerState.cs" Line="179" Column="4" NotebookId="1" />
-      <File FileName="Assets\Scripts\Actors\Player\States\SeventhPlayerState.cs" Line="83" Column="28" NotebookId="1" />
+      <File FileName="Assets\Scripts\Actors\Player\States\SixthPlayerState.cs" Line="1" Column="1" NotebookId="1" />
+      <File FileName="Assets\Scripts\Actors\Player\States\SeventhPlayerState.cs" Line="1" Column="1" NotebookId="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
