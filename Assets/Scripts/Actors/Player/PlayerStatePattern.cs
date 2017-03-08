@@ -2152,7 +2152,7 @@ public class PlayerStatePattern : MonoBehaviour {
 
 	}
 
-	private void CoreToZero() {
+/*	private void CoreToZero() {
 		GetComponent<Animator> ().ResetTrigger ("scaleup");					// reset next stage
 		GetComponent<Animator> ().SetTrigger("scaledown");					// enable core to black animation
 		GetComponent<Animator>().SetBool("photon", true);					// enable black core animation state
@@ -2172,7 +2172,7 @@ public class PlayerStatePattern : MonoBehaviour {
 		GetComponent<Animator>().SetBool("black", true);					// enable black core animation state	
 
 	}
-	// private void CoreToShape()
+	// private void CoreToShape()*/
 
 	// shell
 	private void Shell (int fromState, int toState, bool fromLight, bool toLight, int shape) 
@@ -3552,13 +3552,13 @@ public class PlayerStatePattern : MonoBehaviour {
 			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
 		}
 				// to fifth
-		if (fromState == 7 && toState == 5 && !fromLight && toLight && shape == 0) {			// to square fifth
+		if (fromState == 7 && toState == 5 && !fromLight && toLight && shape == 2) {			// to square fifth
 			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
 			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
 			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
 		}
 				// to sixth
-		if (fromState == 7 && toState == 6 && !fromLight && !toLight && shape == 0) {			// to dark square sixth
+		if (fromState == 7 && toState == 6 && !fromLight && !toLight && shape == 2) {			// to dark square sixth
 			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
 			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
 			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
@@ -3616,13 +3616,13 @@ public class PlayerStatePattern : MonoBehaviour {
 			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
 		}
 				// to fifth
-		if (fromState == 7 && toState == 5 && fromLight && toLight && shape == 0) {				// to square fifth
+		if (fromState == 7 && toState == 5 && fromLight && toLight && shape == 2) {				// to square fifth
 			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
 			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
 			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
 		}
 				// to sixth
-		if (fromState == 7 && toState == 6 && fromLight && !toLight && shape == 0) {			// to dark square sixth
+		if (fromState == 7 && toState == 6 && fromLight && !toLight && shape == 2) {			// to dark square sixth
 			shell.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
 			shell.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
 			shell.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
@@ -3630,7 +3630,7 @@ public class PlayerStatePattern : MonoBehaviour {
 
 	}
 
-	private void ShellDisable() {
+/*	private void ShellDisable() {
 		shell.GetComponent<Animator> ().SetTrigger ("shrink");				// trigger shell shrink animation
 		shell.GetComponent<Animator>().SetBool("shell", false);				// enable black core animation state
 		shellShrinking = true;												// activate timer
@@ -3648,7 +3648,7 @@ public class PlayerStatePattern : MonoBehaviour {
 		shell.GetComponent<Animator>().SetBool("shell", true);				// enable shell grown animation state
 		//shell.GetComponent<SphereCollider> ().enabled = true;				// enable collider (enable here to prevent particles from entering shell to contact core electron)
 		//GetComponent<SphereCollider>().enabled = false;						// disable core collider
-	}
+	}*/
 
 	// nucleus
 	private void Nucleus (int fromState, int toState, bool fromLight, bool toLight, int shape) 
@@ -5028,13 +5028,13 @@ public class PlayerStatePattern : MonoBehaviour {
 			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
 		}
 				// to fifth
-		if (fromState == 7 && toState == 5 && !fromLight && toLight && shape == 0) {			// to square fifth
+		if (fromState == 7 && toState == 5 && !fromLight && toLight && shape == 2) {			// to square fifth
 			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
 			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
 			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
 		}
 				// to sixth
-		if (fromState == 7 && toState == 6 && !fromLight && !toLight && shape == 0) {			// to dark square sixth
+		if (fromState == 7 && toState == 6 && !fromLight && !toLight && shape == 2) {			// to dark square sixth
 			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
 			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
 			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
@@ -5092,13 +5092,13 @@ public class PlayerStatePattern : MonoBehaviour {
 			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
 		}
 				// to fifth
-		if (fromState == 7 && toState == 5 && fromLight && toLight && shape == 0) {				// to square fifth
+		if (fromState == 7 && toState == 5 && fromLight && toLight && shape == 2) {				// to square fifth
 			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
 			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
 			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
 		}
 				// to sixth
-		if (fromState == 7 && toState == 6 && fromLight && !toLight && shape == 0) {			// to dark square sixth
+		if (fromState == 7 && toState == 6 && fromLight && !toLight && shape == 2) {			// to dark square sixth
 			nucleus.GetComponent<Animator> ().ResetTrigger ("scaleup");										// reset next stage
 			nucleus.GetComponent<Animator> ().SetTrigger("scaledown");										// enable core to black animation
 			nucleus.GetComponent<Animator>().SetBool("photon", true);										// enable black core animation state
@@ -5106,7 +5106,7 @@ public class PlayerStatePattern : MonoBehaviour {
 
 	}
 
-	private void NucleusEnable() {
+	/*private void NucleusEnable() {
 		nucleus.SetActive(true);											// enable nucleus	
 	}
 	private void NucleusDisable() {
@@ -5131,5 +5131,5 @@ public class PlayerStatePattern : MonoBehaviour {
 		nucleus.GetComponent<Animator>().SetBool("white", false);			// enable white nucleus animation state	
 
 	}
-
+*/
 }
