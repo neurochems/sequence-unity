@@ -66,96 +66,84 @@ public class SixthPlayerState : IParticleState
 		psp.currentState = psp.deadState;										// set to new state
 	}
 
-	public void ToZero()
+	public void ToZero(bool toLight)
 	{
-		psp.TransitionToZero(6, psp.self);										// trigger transition effects
-		ParticleStateEvents.toZero += psp.TransitionToZero;						// flag transition in delegate
+		psp.TransitionTo(6, 0, light, toLight, 0);								// trigger transition effects
+		//ParticleStateEvents.toZero += psp.TransitionToZero;						// flag transition in delegate
 		psp.SpawnFirst(2);														// spawn 2 Firsts
 		psp.SpawnZero(3);														// spawn 3 Zeros
 		psp.currentState = psp.zeroState;										// set to new state
 	}
-
-	public void ToLightZero()
+		
+	public void ToFirst(bool toLight)
 	{
-		// fill out
-		// psp.TransitionToZero(true, 0, psp.self);
-		// ParticleStateEvents.toLightZero += psp.TransitionToLightZero;
-	}
-
-	public void ToDarkZero()
-	{
-		// fill out
-		// psp.TransitionToZero(false, 0, psp.self);
-		// ParticleStateEvents.toDarkZero += psp.TransitionToDarkZero;
-	}
-
-	public void ToFirst(bool light)
-	{
-		psp.TransitionToFirst(light, 6, psp.self);								// trigger transition effects
-		ParticleStateEvents.toFirst += psp.TransitionToFirst;					// flag transition in delegate
+		psp.TransitionTo(6, 1, light, toLight, 0);								// trigger transition effects
+		//ParticleStateEvents.toFirst += psp.TransitionToFirst;					// flag transition in delegate
 		psp.SpawnFirst(2);														// spawn 1 First
 		psp.currentState = psp.firstState;										// set to new state
 	}
 
-	public void ToSecond(bool light)
+	public void ToSecond(bool toLight)
 	{
-		psp.TransitionToSecond(light, 6, psp.self);								// trigger transition effects
-		ParticleStateEvents.toSecond += psp.TransitionToSecond;					// flag transition in delegate
+		psp.TransitionTo(6, 2, light, toLight, 0);								// trigger transition effects
+		//ParticleStateEvents.toSecond += psp.TranitionToSecond;					// flag transition in delegate
 		psp.SpawnFirst(1);														// spawn 1 First
 		psp.SpawnZero(3);														// spawn 3 Zero
 		psp.currentState = psp.secondState;										// set to new state
 	}
 
-	public void ToThird(bool light)
+	public void ToThird(bool toLight)
 	{
-		psp.TransitionToThird(light, 6, psp.self);								// trigger transition effects
-		ParticleStateEvents.toThird += psp.TransitionToThird;					// flag transition in delegate
+		psp.TransitionTo(6, 3, light, toLight, 0);								// trigger transition effects
+		//ParticleStateEvents.toThird += psp.TransitionToThird;					// flag transition in delegate
 		psp.SpawnFirst(1);														// spawn 1 First
 		psp.SpawnZero(2);														// spawn 2 Zero
 		psp.currentState = psp.thirdState;										// set to new state
 	}
 
-	public void ToFourth(bool light)
+	public void ToFourth(bool toLight)
 	{
-		psp.TransitionToFourth(light, 6, psp.self);								// trigger transition effects
-		ParticleStateEvents.toFourth += psp.TransitionToFourth;					// flag transition in delegate
+		psp.TransitionTo(6, 4, light, toLight, 0);								// trigger transition effects
+		//ParticleStateEvents.toFourth += psp.TransitionToFourth;					// flag transition in delegate
 		psp.SpawnFirst(1);														// spawn 1 First
 		psp.SpawnZero(1);														// spawn 1 Zero
 		psp.currentState = psp.fourthState;										// set to new state
 	}
 
-	public void ToFifth(bool light)
+	public void ToFifth(bool toLight, int shape)
 	{
-		psp.TransitionToFifth(light, 6, psp.self);								// trigger transition effects
-		ParticleStateEvents.toFifth += psp.TransitionToFifth;					// flag transition in delegate
+		psp.TransitionTo(6, 5, light, toLight, shape);							// trigger transition effects
+		//ParticleStateEvents.toFifth += psp.TransitionToFifth;					// flag transition in delegate
 		psp.SpawnFirst(1);														// spawn 1 First
 		psp.currentState = psp.fifthState;										// set to new state
 	}
 
-	public void ToSixth(bool light)
+	public void ToSixth(bool toLight, int shape)
 	{
 		Debug.Log ("Can't transition to same state");
 	}
 
-	public void ToSeventh(bool light)
+	public void ToSeventh(bool toLight, int shape)
 	{
-		Debug.Log ("Seventh");
+		psp.TransitionTo(6, 7, light, toLight, shape);							// trigger transition effects
+		//ParticleStateEvents.toSeventh += psp.TransitionToSeventh;					// flag transition in delegate
+		psp.currentState = psp.seventhState;										// set to new state
 	}
 
 	public void Evol()
 	{
-		float deltaDark = psp.darkEvolDelta;																// local dark check
-		float deltaLight = psp.lightEvolDelta;																// local light check
+		float deltaDark = psp.deltaDark;																// local dark check
+		float deltaLight = psp.deltaLight;																// local light check
 
 		if (psp.evol <= 0f) {																				// to dead (if evol < 0)
 			Death ();																							// to dead state
 		} 
 		else if (psp.evol == 0) {																			// to zero (if evol = 0)
-			ToZero ();																							// to zero state
+			ToZero (true);																						// to zero state
 		}
 		else if (psp.evol == 0.5) {																			// to zero (if evol = 0.5)
-			if (deltaDark <= -7.5 && deltaDark >= -12) ToLightZero();											// if lose dark = to light
-			else if (deltaLight <= -7.5 && deltaLight >= -12) ToDarkZero();										// if lose light = to dark
+			if (deltaDark <= -7.5 && deltaDark >= -12) ToZero(true);											// if lose dark = to light
+			else if (deltaLight <= -7.5 && deltaLight >= -12) ToZero(false);									// if lose light = to dark
 		} 
 		else if (psp.evol == 1f) {																			// to first (if evol = 1)
 			if (deltaDark <= -7 && deltaDark >= -11.5) ToFirst(true);											// if lose dark = to light
@@ -176,24 +164,24 @@ public class SixthPlayerState : IParticleState
 			else if ((triangle || square) && deltaLight <= -5 && deltaLight >= -8) ToFourth(true);				// if triangle or square & lose light = to light
 		} 
 		else if (psp.evol >= 5f && psp.evol < 8f) {															// to fifth (if evol >= 5 and < 8)
-			if ((circle && !light) && deltaDark <= -3 && deltaDark >= -5) ToFifthCircle(true);					// if dark circle & lose dark = to light circle
-			else if ((circle && !light) && deltaLight <= -3 && deltaLight >= -5) ToFifthCircle(false);			// if dark circle & lose light = to dark circle
-			else if ((circle && light) && deltaDark <= -3 && deltaDark >= -5) ToFifthCircle(true);				// if light circle & lose dark = to light circle
-			else if ((circle && light) && deltaLight <= -3 && deltaLight >= -5) ToFifthCircle(false);			// if light circle & lose light = to dark circle
-			else if (triangle && deltaDark <= -3 && deltaDark >= -5) ToFifthTriangle();							// if triangle2 & lose dark = to triangle
-			else if (triangle && deltaLight <= -3 && deltaLight >= -5) ToFifthTriangle();						// if triangle2 & lose light = to triangle
-			else if (square && deltaDark <= -3 && deltaDark >= -5) ToFifthSquare();								// if square2 & lose dark = to square
-			else if (square && deltaLight <= -3 && deltaLight >= -5) ToFifthSquare();							// if square2 & lose light = to square
+			if ((circle && !light) && deltaDark <= -3 && deltaDark >= -5) ToFifth(true, 0);						// if dark circle & lose dark = to light circle
+			else if ((circle && !light) && deltaLight <= -3 && deltaLight >= -5) ToFifth(false, 0);				// if dark circle & lose light = to dark circle
+			else if ((circle && light) && deltaDark <= -3 && deltaDark >= -5) ToFifth(true, 0);					// if light circle & lose dark = to light circle
+			else if ((circle && light) && deltaLight <= -3 && deltaLight >= -5) ToFifth(false, 0);				// if light circle & lose light = to dark circle
+			else if (triangle && deltaDark <= -3 && deltaDark >= -5) ToFifth(true, 1);							// if triangle2 & lose dark = to triangle
+			else if (triangle && deltaLight <= -3 && deltaLight >= -5) ToFifth(true, 1);						// if triangle2 & lose light = to triangle
+			else if (square && deltaDark <= -3 && deltaDark >= -5) ToFifth(true, 2);							// if square2 & lose dark = to square
+			else if (square && deltaLight <= -3 && deltaLight >= -5) ToFifth(true, 2);							// if square2 & lose light = to square
 		} 
 		else if (psp.evol >= 13f) {																			// to seventh (if evol >= 13)
-			if ((circle && !light) && (deltaDark >= 0.5 && deltaDark <= 5)) ToSeventhCircle(false);				// if dark circle & gain dark = to dark circle
-			else if ((circle && !light) && (deltaLight >= 0.5 && deltaLight <= 5)) ToSeventhCircle(true);		// if dark circle & gain light = to light circle
-			else if ((circle && light) && (deltaDark >= 0.5 && deltaDark <= 5)) ToSeventhCircle(false);			// if light circle & gain dark = to dark circle
-			else if ((circle && light) && (deltaLight >= 0.5 && deltaLight <= 5)) ToSeventhCircle(true);		// if light circle & gain light = to light circle
-			else if (triangle && (deltaDark >= 0.5 && deltaDark <= 5)) ToSeventhTriangle(false);				// if triangle2 & gain dark = to dark triangle
-			else if (triangle && (deltaLight >= 0.5 && deltaLight <= 5)) ToSeventhTriangle(true);				// if triangle2 & gain light = to light triangle
-			else if (square && (deltaDark >= 0.5 && deltaDark <= 5)) ToSeventhSquare(false);					// if square2 & gain dark = to dark square
-			else if (square && (deltaLight >= 0.5 && deltaLight <= 5)) ToSeventhSquare(true);					// if square2 & gain light = to light square
+			if ((circle && !light) && (deltaDark >= 0.5 && deltaDark <= 5)) ToSeventh(false, 0);				// if dark circle & gain dark = to dark circle
+			else if ((circle && !light) && (deltaLight >= 0.5 && deltaLight <= 5)) ToSeventh(true, 0);			// if dark circle & gain light = to light circle
+			else if ((circle && light) && (deltaDark >= 0.5 && deltaDark <= 5)) ToSeventh(false, 0);			// if light circle & gain dark = to dark circle
+			else if ((circle && light) && (deltaLight >= 0.5 && deltaLight <= 5)) ToSeventh(true, 0);			// if light circle & gain light = to light circle
+			else if (triangle && (deltaDark >= 0.5 && deltaDark <= 5)) ToSeventh(false, 1);						// if triangle2 & gain dark = to dark triangle
+			else if (triangle && (deltaLight >= 0.5 && deltaLight <= 5)) ToSeventh(true, 1);					// if triangle2 & gain light = to light triangle
+			else if (square && (deltaDark >= 0.5 && deltaDark <= 5)) ToSeventh(false, 2);						// if square2 & gain dark = to dark square
+			else if (square && (deltaLight >= 0.5 && deltaLight <= 5)) ToSeventh(true, 2);						// if square2 & gain light = to light square
 		}
 	}
 }

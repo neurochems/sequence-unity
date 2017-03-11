@@ -59,8 +59,11 @@
      <Compile Include="Assets\Scripts\Actors\Particle\States\ShellParticleState.cs" />
      <Compile Include="Assets\Scripts\Actors\ParticleStateEvents.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\PlayerController.cs" />
+     <Compile Include="Assets\Scripts\Actors\Player\PlayerCoreManager.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\PlayerManager.cs" />
+     <Compile Include="Assets\Scripts\Actors\Player\PlayerNucleusManager.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\PlayerPhysicsManager.cs" />
+     <Compile Include="Assets\Scripts\Actors\Player\PlayerShellManager.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\PlayerStatePattern.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\States\DeadPlayerState.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\States\FifthPlayerState.cs" />

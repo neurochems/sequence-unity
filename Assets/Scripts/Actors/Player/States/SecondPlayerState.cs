@@ -52,7 +52,7 @@ public class SecondPlayerState : IParticleState
 		}
 	}
 
-	public void Death()
+	public void Death(bool toLight)
 	{
 		psp.TransitionToDead(2, psp.self);										// trigger transition effects
 		ParticleStateEvents.toDead += psp.TransitionToDead;						// flag transition in delegate
@@ -60,46 +60,32 @@ public class SecondPlayerState : IParticleState
 		psp.currentState = psp.deadState;										// set to new state
 	}
 
-	public void ToZero()
+	public void ToZero(bool toLight)
 	{
-		psp.TransitionToZero(2, psp.self);										// trigger transition effects
-		ParticleStateEvents.toZero += psp.TransitionToZero;						// flag transition in delegate
+		psp.TransitionTo(2, 0, light, toLight, 0);								// trigger transition effects
+		//ParticleStateEvents.toZero += psp.TransitionToZero;						// flag transition in delegate
 		psp.SpawnZero(2);														// spawn 2 Zeros
 		psp.currentState = psp.zeroState;										// set to new state
 	}
 
-	public void ToLightZero()
+	public void ToFirst(bool toLight)
 	{
-		// fill out
-		// psp.TransitionToZero(true, 0, psp.self);
-		// ParticleStateEvents.toLightZero += psp.TransitionToLightZero;
-	}
-
-	public void ToDarkZero()
-	{
-		// fill out
-		// psp.TransitionToZero(false, 0, psp.self);
-		// ParticleStateEvents.toDarkZero += psp.TransitionToDarkZero;
-	}
-
-	public void ToFirst(bool light)
-	{
-		psp.TransitionToFirst(light, 2, psp.self);								// trigger transition effects
-		ParticleStateEvents.toFirst += psp.TransitionToFirst;				// flag transition in delegate
+		psp.TransitionTo(2, 1, light, toLight, 0);								// trigger transition effects
+		//ParticleStateEvents.toFirst += psp.TransitionToFirst;						// flag transition in delegate
 		psp.SpawnZero(1);														// spawn 1 Zero
-		psp.currentState = psp.firstState;									// set to new state
+		psp.currentState = psp.firstState;										// set to new state
 	}
 
-	public void ToSecond(bool light)
+	public void ToSecond(bool toLight)
 	{
 		Debug.Log ("Can't transition to same state");
 	}
 
-	public void ToThird(bool light)
+	public void ToThird(bool toLight)
 	{
-		psp.TransitionToThird(light, 2, psp.self);									// trigger transition effects
-		ParticleStateEvents.toThird += psp.TransitionToThird;						// flag transition in delegate
-		psp.currentState = psp.thirdState;									// set to new state
+		psp.TransitionTo(2, 3, light, toLight, 0);								// trigger transition effects
+		//ParticleStateEvents.toThird += psp.TransitionToThird;						// flag transition in delegate
+		psp.currentState = psp.thirdState;										// set to new state
 	}
 
 	public void ToFourth(bool light)
@@ -130,18 +116,18 @@ public class SecondPlayerState : IParticleState
 
 	public void Evol() 
 	{
-		float deltaDark = psp.darkEvolDelta;										// local dark check
-		float deltaLight = psp.lightEvolDelta;										// local light check
+		float deltaDark = psp.deltaDark;										// local dark check
+		float deltaLight = psp.deltaLight;										// local light check
 
 		if (psp.evol <= 0f) {														// to dead (if evol < 0)
 			Death ();																	// to death state
 		}
 		else if (psp.evol == 0) {													// to zero (if evol = 0)
-			ToZero ();																	// to zero state
+			ToZero (true);																	// to zero state
 		}
 		else if (psp.evol == 0.5f) {												// to zero (if evol = 0.5)
-			if (deltaDark == -1f) ToDarkZero ();										// if gain dark = to dark zero
-			else if (deltaLight == -1f) ToLightZero ();									// if gain light = to light zero
+			if (deltaDark == -1f) ToZero (false);										// if gain dark = to dark zero
+			else if (deltaLight == -1f) ToZero (true);									// if gain light = to light zero
 		}
 		else if (psp.evol == 1f) {													// to first (if evol = 1)
 			if (deltaDark == -0.5) ToFirst(true);										// if lose dark = to light

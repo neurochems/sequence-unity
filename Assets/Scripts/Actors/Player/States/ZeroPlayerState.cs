@@ -54,8 +54,8 @@ public class ZeroPlayerState : IParticleState
 
 	public void Death()
 	{
-		psp.TransitionToDead(0, psp.self);										// trigger transition effects
-		ParticleStateEvents.toDead += psp.TransitionToDead;						// flag transition in delegate
+		psp.TransitionTo(0, -1, light, light, 0);										// trigger transition effects
+		//ParticleStateEvents.toDead += psp.TransitionToDead;						// flag transition in delegate
 		psp.currentState = psp.deadState;										// set to new state
 	}
 
@@ -64,78 +64,72 @@ public class ZeroPlayerState : IParticleState
 		Debug.Log ("Can't transition to same state");
 	}
 
-	public void ToLightZero(bool light)
+	public void ToHalfZero(bool toLight)
 	{
-		// psp.TransitionToZero(true, 0, psp.self);
-		ParticleStateEvents.toLightZero += psp.TransitionToLightZero;
+		psp.TransitionTo(0, 0, light, toLight, 0);
+		//ParticleStateEvents.toLightZero += psp.TransitionToLightZero;
 	}
 
-	public void ToDarkZero(bool light)
+	public void ToFirst(bool toLight)
 	{
-		psp.TransitionToZero(light, 0, psp.self);
-		ParticleStateEvents.toDarkZero += psp.TransitionToDarkZero;
-	}
-
-	public void ToFirst(bool light)
-	{
-		psp.TransitionToFirst(light, 0, psp.self);									// trigger transition effects
-		ParticleStateEvents.toFirst += psp.TransitionToFirst;						// flag transition in delegate
+		psp.TransitionTo(0, 1, light, toLight, 0);									// trigger transition effects
+		//ParticleStateEvents.toFirst += psp.TransitionToFirst;						// flag transition in delegate
 		psp.currentState = psp.firstState;											// set to new state
 	}
 
-	public void ToSecond(bool light)
+	public void ToSecond(bool toLight)
 	{
-		psp.TransitionToSecond(light, 0, psp.self);									// trigger transition effects
-		ParticleStateEvents.toSecond += psp.TransitionToSecond;						// flag transition in delegate
+		psp.TransitionTo(0, 2, light, toLight, 0);									// trigger transition effects
+		//ParticleStateEvents.toSecond += psp.TransitionToSecond;						// flag transition in delegate
 		psp.currentState = psp.secondState;											// set to new state
 	}
 
-	public void ToThird(bool light)
+	public void ToThird(bool toLight)
 	{
-		psp.TransitionToThird(light, 0, psp.self);									// trigger transition effects
-		ParticleStateEvents.toThird += psp.TransitionToThird;						// flag transition in delegate
+		psp.TransitionTo(0, 3, light, toLight, 0);									// trigger transition effects
+		//ParticleStateEvents.toThird += psp.TransitionToThird;						// flag transition in delegate
 		psp.currentState = psp.thirdState;											// set to new state
 	}
 
-	public void ToFourth(bool light)
+	public void ToFourth(bool toLight)
 	{
-		psp.TransitionToFourth(light, 0, psp.self);									// trigger transition effects
-		ParticleStateEvents.toFourth += psp.TransitionToFourth;						// flag transition in delegate
+		psp.TransitionTo(0, 4, light, toLight, 0);									// trigger transition effects
+		//ParticleStateEvents.toFourth += psp.TransitionToFourth;						// flag transition in delegate
 		psp.currentState = psp.fourthState;											// set to new state
 	}
 
-	public void ToFifth(bool light)
+	public void ToFifth(bool toLight, int shape)
 	{
-		psp.TransitionToFifth(light, 0, psp.self);									// trigger transition effects
-		ParticleStateEvents.toFifth += psp.TransitionToFifth;						// flag transition in delegate
+		psp.TransitionTo(0, 5, light, toLight, shape);								// trigger transition effects
+		//ParticleStateEvents.toFifth += psp.TransitionToFifth;						// flag transition in delegate
 		psp.currentState = psp.fifthState;											// set to new state
 	}
 
-	public void ToSixth(bool light)
+	public void ToSixth(bool toLight, int shape)
 	{
-		psp.TransitionToSixth(light, 0, psp.self);									// trigger transition effects
-		ParticleStateEvents.toSixth += psp.TransitionToSixth;						// flag transition in delegate
+		psp.TransitionTo(0, 6, light, toLight, shape);								// trigger transition effects
+		//ParticleStateEvents.toSixth += psp.TransitionToSixth;						// flag transition in delegate
 		psp.currentState = psp.sixthState;											// set to new state
 	}
 
-	public void ToSeventh(bool light)
+	public void ToSeventh(bool toLight, int shape)
 	{
-		psp.TransitionToSeventh(light, 0, psp.self);								// trigger transition effects
-		ParticleStateEvents.toSeventh += psp.TransitionToSeventh;					// flag transition in delegate
+		psp.TransitionTo(0, 7, light, toLight, shape);								// trigger transition effects
+		//ParticleStateEvents.toSeventh += psp.TransitionToSeventh;					// flag transition in delegate
 		psp.currentState = psp.seventhState;										// set to new stateebug.Log ("Can't transition to same state");
 	}
 
 	public void Evol()									// all states here for init \\
 	{
-		float deltaDark = psp.darkEvolDelta;										// local dark check
-		float deltaLight = psp.lightEvolDelta;										// local light check
+		float deltaDark = psp.deltaDark;										// local dark check
+		float deltaLight = psp.deltaLight;										// local light check
 
 		if (psp.evol < 0f) {														// to dead (if evol < 0)
 			Death ();																	// change to dead state
 		}
 		else if (psp.evol == 0.5f) {												// to zero (if evol = 0.5)
-			if (deltaDark == 0.5f) ToDarkZero (false);									// if gain dark = to dark zero
-			else if (deltaLight == 0.5f) ToLightZero (true);							// if gain light = to light zero
+			if (deltaDark == 0.5f) ToHalfZero (false);									// if gain dark = to dark zero
+			else if (deltaLight == 0.5f) ToHalfZero (true);							// if gain light = to light zero
 		}
 		else if (psp.evol == 1f) {													// to first (if evol == 1)
 			if (!light && deltaDark == 0.5) ToFirst (false);							// if dark & gain dark = to dark first
@@ -156,21 +150,21 @@ public class ZeroPlayerState : IParticleState
 		}
 		else if (psp.evol == 5f) {													// to fifth (if evol == 5)
 			int i = Random.Range(0,2);													// random 0 or 1 or 2
-			if (i == 0) ToFifthCircle (true);											// evolve to circle fifth
-			else if (i == 1) ToFifthTriangle (true);									// evolve to triangle fifth
-			else if (i == 2) ToFifthSquare (true);										// evolve to square fifth
+			if (i == 0) ToFifth (true, 0);												// evolve to circle fifth
+			else if (i == 1) ToFifth (true, 1);											// evolve to triangle fifth
+			else if (i == 2) ToFifth (true, 2);											// evolve to square fifth
 		}
 		else if (psp.evol == 8f) {													// to sixth (if evol == 8)
 			int i = Random.Range(0,2);													// random 0 or 1 or 2
-			if (i == 0) ToSixthCircle (true);											// evolve to circle sixth
-			else if (i == 1) ToSixthTriangle (true);									// evolve to triangle sixth
-			else if (i == 2) ToSixthSquare (true);									// evolve to square sixth
+			if (i == 0) ToSixth (true, 0);												// evolve to circle sixth
+			else if (i == 1) ToSixth (true, 1);											// evolve to triangle sixth
+			else if (i == 2) ToSixth (true, 2);											// evolve to square sixth
 		}
 		else if (psp.evol == 13f) {													// to seventh (if evol == 13)
 			int i = Random.Range(0,2);													// random 0 or 1 or 2
-			if (i == 0) ToSeventhCircle (true);											// evolve to circle seventh
-			else if (i == 1) ToSevenhTriangle (true);									// evolve to triangle seventh
-			else if (i == 2) ToSeventhSquare (true);									// evolve to square seventh
+			if (i == 0) ToSeventh (true, 0);											// evolve to circle seventh
+			else if (i == 1) ToSeventh (true, 1);										// evolve to triangle seventh
+			else if (i == 2) ToSeventh (true, 2);										// evolve to square seventh
 		}
 	}
 }

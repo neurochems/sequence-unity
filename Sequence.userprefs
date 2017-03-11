@@ -1,18 +1,12 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Actors\Player\PlayerStatePattern.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Actors\Player\PlayerCoreManager.cs">
     <Files>
-      <File FileName="Assets\Scripts\Actors\Player\PlayerStatePattern.cs" Line="699" Column="89" />
-      <File FileName="Assets\Scripts\Actors\IParticleState.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Actors\ParticleStateEvents.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Actors\Player\States\ZeroPlayerState.cs" Line="158" Column="35" NotebookId="1" />
-      <File FileName="Assets\Scripts\Actors\Player\States\FirstPlayerState.cs" Line="1" Column="1" NotebookId="1" />
-      <File FileName="Assets\Scripts\Actors\Player\States\SecondPlayerState.cs" Line="1" Column="1" NotebookId="1" />
-      <File FileName="Assets\Scripts\Actors\Player\States\ThirdPlayerState.cs" Line="1" Column="1" NotebookId="1" />
-      <File FileName="Assets\Scripts\Actors\Player\States\FourthPlayerState.cs" Line="1" Column="1" NotebookId="1" />
-      <File FileName="Assets\Scripts\Actors\Player\States\FifthPlayerState.cs" Line="1" Column="1" NotebookId="1" />
-      <File FileName="Assets\Scripts\Actors\Player\States\SixthPlayerState.cs" Line="1" Column="1" NotebookId="1" />
-      <File FileName="Assets\Scripts\Actors\Player\States\SeventhPlayerState.cs" Line="1" Column="1" NotebookId="1" />
+      <File FileName="Assets\Scripts\Actors\Player\PlayerStatePattern.cs" Line="263" Column="3" />
+      <File FileName="Assets\Scripts\Actors\Player\States\ZeroPlayerState.cs" Line="58" Column="5" />
+      <File FileName="Assets\Scripts\Actors\Player\PlayerCoreManager.cs" Line="29" Column="3" NotebookId="1" />
+      <File FileName="Assets\Scripts\Actors\Player\PlayerShellManager.cs" Line="17" Column="77" NotebookId="1" />
+      <File FileName="Assets\Scripts\Actors\Player\PlayerNucleusManager.cs" Line="15" Column="2" NotebookId="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
