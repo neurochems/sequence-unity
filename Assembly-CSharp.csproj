@@ -46,8 +46,11 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\Actors\IParticleState.cs" />
+     <Compile Include="Assets\Scripts\Actors\Particle\ParticleCoreManager.cs" />
      <Compile Include="Assets\Scripts\Actors\Particle\ParticleManager.cs" />
+     <Compile Include="Assets\Scripts\Actors\Particle\ParticleNucleusManager.cs" />
      <Compile Include="Assets\Scripts\Actors\Particle\ParticlePhysicsManager.cs" />
+     <Compile Include="Assets\Scripts\Actors\Particle\ParticleShellManager.cs" />
      <Compile Include="Assets\Scripts\Actors\Particle\ParticleStatePattern.cs" />
      <Compile Include="Assets\Scripts\Actors\Particle\States\Atom2ParticleState.cs" />
      <Compile Include="Assets\Scripts\Actors\Particle\States\AtomParticleState.cs" />

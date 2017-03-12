@@ -6,10 +6,9 @@ public class PlayerCoreManager : MonoBehaviour {
 	private Animator anim;						// animator on core ref
 
 	void Awake () {
-		anim = anim;		// init animator ref
+		anim = GetComponent<Animator>();		// init animator ref
 	}
-
-	// core
+		
 	public void Core (int fromState, int toState, bool fromLight, bool toLight, int shape) 
 	{
 		// evolutions \\
@@ -18,6 +17,7 @@ public class PlayerCoreManager : MonoBehaviour {
 			// to dark zero (0.5)
 				// from zero
 		if (fromState == 0 && toState == 0 && fromLight && !toLight) {			// to dark zero
+			
 			anim.ResetTrigger ("scaleup");											// reset next stage
 			anim.SetTrigger("scaledown");											// enable core to black animation
 			anim.SetBool("photon", true);											// enable black core animation state
@@ -1466,6 +1466,44 @@ public class PlayerCoreManager : MonoBehaviour {
 
 	}
 
-	private void 
+	///<summary>
+	///<para>0 = circle, 1 = triangle, 2 = square</para>
+	///</summary>
+	private void SetShape(int shape)
+	{
+		anim.ResetTrigger ("scaleup");											// reset next stage
+		anim.SetTrigger("scaledown");											// enable core to black animation
+		anim.SetBool("photon", true);											// enable black core animation state
+	}
+
+	///<summary>
+	///<para>flag core as light</para>
+	///</summary>
+	private void SetLight (bool light)
+	{
+		anim.ResetTrigger ("scaleup");											// reset next stage
+		anim.SetTrigger("scaledown");											// enable core to black animation
+		anim.SetBool("photon", true);											// enable black core animation state
+	}
+
+	///<summary>
+	///<para> vals in mechanim: 0.6, 1, 2, ... , 200 (test and add) </para>
+	///</summary>
+	private void GrowTo (string setScale, string resetScale, bool devol)
+	{
+		anim.ResetTrigger ("scaleup");											// reset next stage
+		anim.SetTrigger("scaledown");											// enable core to black animation
+		anim.SetBool("photon", true);											// enable black core animation state
+	}
+
+	///<summary>
+	///<para> vals in mechanim: 0.6, 1, 2, ... , 200 (test and add) </para>
+	///</summary>
+	private void ShrinkTo (string setScale, string resetScale, bool devol)
+	{
+		anim.ResetTrigger ("scaleup");											// reset next stage
+		anim.SetTrigger("scaledown");											// enable core to black animation
+		anim.SetBool("photon", true);											// enable black core animation state
+	}
 
 }
