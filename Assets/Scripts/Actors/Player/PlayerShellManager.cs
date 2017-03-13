@@ -10,7 +10,7 @@ public class PlayerShellManager : MonoBehaviour {
 	}
 
 	// shell
-	public void Shell (int fromState, int toState, bool fromLight, bool toLight) 
+	public void Shell (int fromState, int toState, bool fromLight, bool toLight, int shape) 
 	{
 		// evolutions \\
 

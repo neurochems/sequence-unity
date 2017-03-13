@@ -96,25 +96,25 @@ public class UIManager : MonoBehaviour {
 		}
 
 		// checks for OVERLAY TEXT (SECOND)
-		if (psp.currentState == psp.electronState && GetStateElapsed () > 2.0f) {																			// 2 sec into being electron				
+		if (psp.currentState == psp.firstState && GetStateElapsed () > 2.0f) {																			// 2 sec into being electron				
 			overlayTextTrigger [1].SetActive (true);																	// activate text
 			overlayTextTrigger [1].GetComponent<Animator> ().SetTrigger ("fade");										// trigger overlay text
 		}	
 	 	
 		// checks for OVERLAY TEXT (THIRD)
-		if (psp.currentState == psp.shellState && GetStateElapsed () > 2.0f) {																			// 2 sec into being shell				
+		if (psp.currentState == psp.thirdState && GetStateElapsed () > 2.0f) {																			// 2 sec into being shell				
 			overlayTextTrigger [2].SetActive (true);																	// activate text
 			overlayTextTrigger [2].GetComponent<Animator> ().SetTrigger ("fade");										// trigger overlay text
 		}	
 
 		// checks for OVERLAY TEXT (FOURTH)
-		if (psp.currentState == psp.atomState && GetStateElapsed () > 2.0f) {																			// 2 sec into being atom				
+		if (psp.currentState == psp.fifthState && GetStateElapsed () > 2.0f) {																			// 2 sec into being atom				
 			overlayTextTrigger [3].SetActive (true);																	// activate text
 			overlayTextTrigger [3].GetComponent<Animator> ().SetTrigger ("fade");										// trigger overlay text
 		}
 
 		// checks for OVERLAY TEXT (ENDING)
-		if (psp.currentState == psp.atomState && GetStateElapsed () > 40.0f) {																			// 20 sec into being atom				
+		if (psp.currentState == psp.fifthState && GetStateElapsed () > 40.0f) {																			// 20 sec into being atom				
 			overlayTextTrigger [4].SetActive (true);																	// activate text
 			overlayTextTrigger [4].GetComponent<Animator> ().SetTrigger ("fade");										// trigger overlay text
 

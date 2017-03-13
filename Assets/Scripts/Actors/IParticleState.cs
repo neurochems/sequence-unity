@@ -7,23 +7,23 @@ public interface IParticleState
 
 	void OnTriggerEnter(Collider other);
 
-	void Death();
+	void Death(bool toLight);
 
-	void ToZero();
+	void ToZero(bool toLight);
 
-	void ToFirst();
+	void ToFirst(bool toLight);
 
-	void ToSecond();
+	void ToSecond(bool toLight);
 
-	void ToThird();
+	void ToThird(bool toLight);
 
-	void ToFourth();
+	void ToFourth(bool toLight);
 
-	void ToFifth();
+	void ToFifth(bool toLight, int shape);
 
-	void ToSixth();
+	void ToSixth(bool toLight, int shape);
 
-	void ToSeventh();
+	void ToSeventh(bool toLight, int shape);
 
 	void Evol ();
 

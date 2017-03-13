@@ -1,24 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SecondPlayerState : IParticleState 
+public class SecondParticleState : IParticleState 
 {
 
-	private readonly PlayerStatePattern psp;											// reference to pattern/monobehaviour class
+	private readonly ParticleStatePattern psp;											// reference to pattern/monobehaviour class
 
 	public bool light = true;															// 'is light' flag
 
 	private bool canCollide = true;														// can collide flag
-	private float collisionTimer;														// reset collision timer
+	private float collisionTimer;														// reset can collide timer
 
-	public SecondPlayerState (PlayerStatePattern playerStatePattern)					// constructor
+	public SecondParticleState (ParticleStatePattern statePatternParticle)				// constructor
 	{
-		psp = playerStatePattern;														// attach state pattern to this state 
+		psp = statePatternParticle;															// attach state pattern to this state 
 	}
 
-	public void UpdateState()															// updated each frame in PlayerStatePattern
+	public void UpdateState()
 	{
-		Evol ();																		// check evol
+		Evol ();
 
 		// allow collisions timer
 		if (!canCollide) collisionTimer += Time.deltaTime;								// start timer
@@ -33,21 +33,26 @@ public class SecondPlayerState : IParticleState
 		ParticleStatePattern pspOther 
 			= other.gameObject.GetComponent<ParticleStatePattern>();					// ref other ParticleStatePattern
 
-		if (canCollide) {																		// if collision allowed
+		if (canCollide) {																// if collision allowed
 			
-			if (other.gameObject.CompareTag ("Zero") 											// collide with Zero
+			if (other.gameObject.CompareTag ("Player")) {									// colide with player
+				psp.stunned = true;																// stun new particle for 3 sec
+				canCollide = false;																// reset can collide trigger	
+				Debug.Log ("particle contact player");
+			} 
+			else if (other.gameObject.CompareTag ("Zero") 									// collide with Zero
 				|| other.gameObject.CompareTag ("First") 										// collide with first
 				|| other.gameObject.CompareTag ("Second")) {									// collide with second
-				psp.stunned = true;																	// set stunned flag
-				psp.AddDark (pspOther.darkEvol);													// add dark of other
-				psp.AddLight (pspOther.lightEvol);													// add light of other
-				canCollide = false;																		// reset has collided trigger
+				psp.stunned = true;																// set stunned flag
+				psp.AddDark (pspOther.darkEvol);												// add dark of other
+				psp.AddLight (pspOther.lightEvol);												// add light of other
+				canCollide = false;																// reset has collided trigger
 			} 
-			else {																				// collide with any other
-				psp.stunned = true;																	// set stunned flag
-				psp.SubDark (pspOther.darkEvol);													// subtract other dark
-				psp.SubLight (pspOther.lightEvol);													// subtract other light
-				canCollide = false;																	// reset has collided trigger
+			else {																			// collide with any other
+				psp.stunned = true;																// set stunned flag
+				psp.SubDark (pspOther.darkEvol);												// subtract other dark
+				psp.SubLight (pspOther.lightEvol);												// subtract other light
+				canCollide = false;																// reset has collided trigger
 			}
 		}
 	}
@@ -116,7 +121,7 @@ public class SecondPlayerState : IParticleState
 		psp.currentState = psp.sixthState;										// set to new state
 	}
 
-	public void Evol() 
+	public void Evol()
 	{
 		float deltaDark = psp.deltaDark;										// local dark check
 		float deltaLight = psp.deltaLight;										// local light check

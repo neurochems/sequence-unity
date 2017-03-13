@@ -22,7 +22,7 @@ public class PlayerStatePattern : MonoBehaviour {
 	[HideInInspector] public SeventhPlayerState seventhState;				// instance of element state
 	// new state
 
-	private GameObject nucleus, shell;								// reference to nucleus and shell children
+	//private GameObject nucleus, shell;								// reference to nucleus and shell children
 
 	// component references
 	private PlayerCoreManager pcm;											// player core manager (animations)
@@ -33,12 +33,13 @@ public class PlayerStatePattern : MonoBehaviour {
 	private SphereCollider[] sc;											// sphere colliders
 
 	// timers & flags
+	private int die;														// roll for collision conflicts
 	public bool stunned;													// stunned?
 	public float stunDuration = 5f;											// duration of post-hit invulnerability
-	private int die;														// roll for collision conflicts
 	private float stunTimer = 0f;											// stun timer
 	private bool shellShrinking, shell2Shrinking, nucleusDeactivating;		// shell/shell2 shrinking flag, nucleus deactivating flag
 	[HideInInspector] public float shrinkTimer = 0f;						// shell deactivation timer
+	// UI
 	[HideInInspector] public float lastStateChange = 0.0f;					// since last state change
 	[HideInInspector] public float sincePlaytimeBegin = 0.0f;				// since game start
 	private bool timeCheck = true;											// time check flag
@@ -93,7 +94,7 @@ public class PlayerStatePattern : MonoBehaviour {
 
 		// trigger timed stun
 		if (stunned) {
-			Stun ();
+			//Stun ();
 			stunTimer += Time.deltaTime;													// start timer
 		} 
 
@@ -114,27 +115,27 @@ public class PlayerStatePattern : MonoBehaviour {
 
 	void OnDisable()
 	{
-		ParticleStateEvents.toZero -= TransitionToZero;						// untrigger transition event
-		ParticleStateEvents.toFirst -= TransitionToFirst;					// untrigger transition event
-		ParticleStateEvents.toSecond -= TransitionToSecond;					// untrigger transition event
-		ParticleStateEvents.toThird -= TransitionToThird;					// untrigger transition event
-		ParticleStateEvents.toFourth -= TransitionToFourth;					// untrigger transition event
-		ParticleStateEvents.toFifth -= TransitionToFifth;					// untrigger transition event
-		ParticleStateEvents.toSixth -= TransitionToSixth;					// untrigger transition event
-		ParticleStateEvents.toSeventh -= TransitionToSeventh;				// untrigger transition event
+		//ParticleStateEvents.toZero -= TransitionToZero;						// untrigger transition event
+		//ParticleStateEvents.toFirst -= TransitionToFirst;					// untrigger transition event
+		//ParticleStateEvents.toSecond -= TransitionToSecond;					// untrigger transition event
+		//ParticleStateEvents.toThird -= TransitionToThird;					// untrigger transition event
+		//ParticleStateEvents.toFourth -= TransitionToFourth;					// untrigger transition event
+		//ParticleStateEvents.toFifth -= TransitionToFifth;					// untrigger transition event
+		//ParticleStateEvents.toSixth -= TransitionToSixth;					// untrigger transition event
+		//ParticleStateEvents.toSeventh -= TransitionToSeventh;				// untrigger transition event
 		// new state
 	}
 
 	void OnDestroy()
 	{
-		ParticleStateEvents.toZero -= TransitionToZero;						// untrigger transition event
-		ParticleStateEvents.toFirst -= TransitionToFirst;					// untrigger transition event
-		ParticleStateEvents.toSecond -= TransitionToSecond;					// untrigger transition event
-		ParticleStateEvents.toThird -= TransitionToThird;					// untrigger transition event
-		ParticleStateEvents.toFourth -= TransitionToFourth;					// untrigger transition event
-		ParticleStateEvents.toFifth -= TransitionToFifth;					// untrigger transition event
-		ParticleStateEvents.toSixth -= TransitionToSixth;					// untrigger transition event
-		ParticleStateEvents.toSeventh -= TransitionToSeventh;				// untrigger transition event
+		//ParticleStateEvents.toZero -= TransitionToZero;						// untrigger transition event
+		//ParticleStateEvents.toFirst -= TransitionToFirst;					// untrigger transition event
+		//ParticleStateEvents.toSecond -= TransitionToSecond;					// untrigger transition event
+		//ParticleStateEvents.toThird -= TransitionToThird;					// untrigger transition event
+		//ParticleStateEvents.toFourth -= TransitionToFourth;					// untrigger transition event
+		//ParticleStateEvents.toFifth -= TransitionToFifth;					// untrigger transition event
+		//ParticleStateEvents.toSixth -= TransitionToSixth;					// untrigger transition event
+		//ParticleStateEvents.toSeventh -= TransitionToSeventh;				// untrigger transition event
 		// new state
 	}
 
@@ -152,14 +153,14 @@ public class PlayerStatePattern : MonoBehaviour {
 	public void AddDark(float changeAmount) {
 		darkEvol += changeAmount;											// add dark evol level
 	}
-	public void SubtractDark(float changeAmount) {
+	public void SubDark(float changeAmount) {
 		lightEvol -= changeAmount;											// subtract dark evol level
 	}
 
 	public void AddLight(float changeAmount) {
 		darkEvol += changeAmount;											// add light evol level
 	}
-	public void SubtractLight(float changeAmount) {
+	public void SubLight(float changeAmount) {
 		lightEvol -= changeAmount;											// subtract light evol level
 	}
 
@@ -286,7 +287,7 @@ public class PlayerStatePattern : MonoBehaviour {
 	private void SetParts(int fromState, int toState, bool fromLight, bool toLight, int shape)
 	{
 		pcm.Core (fromState, toState, fromLight, toLight, shape);					// change circle
-		psm.Shell (fromState, toState, fromLight, toLight);							// change shell
+		psm.Shell (fromState, toState, fromLight, toLight, shape);							// change shell
 		pnm.Nucleus(fromState, toState, fromLight, toLight, shape);					// change nucleus
 	}
 

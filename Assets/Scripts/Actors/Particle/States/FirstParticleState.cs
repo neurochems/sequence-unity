@@ -1,24 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FirstPlayerState : IParticleState 
+public class FirstParticleState : IParticleState
 {
 
-	private readonly PlayerStatePattern psp;											// reference to pattern/monobehaviour class
+	private readonly ParticleStatePattern psp;											// reference to pattern/monobehaviour class
 
 	public bool light = true;															// 'is light' flag
 
 	private bool canCollide = true;														// can collide flag
-	private float collisionTimer;														// reset collision timer
+	private float collisionTimer;														// reset can collide timer
 
-	public FirstPlayerState (PlayerStatePattern playerStatePattern)						// constructor
+	public FirstParticleState (ParticleStatePattern statePatternParticle)				// constructor
 	{
-		psp = playerStatePattern;														// attach state pattern to this state 
+		psp = statePatternParticle;															// attach state pattern to this state 
 	}
 
-	public void UpdateState()															// updated each frame in PlayerStatePattern
+	public void UpdateState()
 	{
-		Evol ();																		// check evol
+		Evol ();
 
 		// allow collisions timer
 		if (!canCollide) collisionTimer += Time.deltaTime;								// start timer
@@ -31,11 +31,16 @@ public class FirstPlayerState : IParticleState
 	public void OnTriggerEnter(Collider other)
 	{
 		ParticleStatePattern pspOther 
-			= other.gameObject.GetComponent<ParticleStatePattern>();					// ref other ParticleStatePattern
+			= other.gameObject.GetComponent<ParticleStatePattern>();					// ref other ParticleStatePattern																							// roll die trigger
 
-		if (canCollide) {																// if collision allowed
-
-			if (other.gameObject.CompareTag ("Zero")										// collide with zero
+		if (canCollide) {																	// if collision allowed
+			
+			if (other.gameObject.CompareTag ("Player")) {										// colide with player
+				psp.stunned = true;																// stun for duration
+				canCollide = false;																// reset can collide trigger	
+				Debug.Log ("particle contact player");
+			}
+			else if (other.gameObject.CompareTag ("Zero")									// collide with zero
 				|| other.gameObject.CompareTag ("First")) {									// collide with first	
 				psp.stunned = true;																// stun for duration
 				psp.AddDark (pspOther.darkEvol);												// add dark of other
@@ -48,14 +53,14 @@ public class FirstPlayerState : IParticleState
 				psp.SubLight (pspOther.lightEvol);												// subtract other light
 				canCollide = false;																// reset has collided trigger
 			}
-		}				
+		}
 	}
 
 	public void Death(bool toLight)
 	{
 		psp.TransitionTo(1, -1, light, toLight, 0);								// trigger transition effects
-		//ParticleStateEvents.toDead += psp.TransitionToDead;						// flag transition in delegate
-		psp.SpawnZero(2);														// spawn 2 zero
+		//ParticleStateEvents.toDead += particle.TransitionToDead;					// flag transition in delegate
+		psp.SpawnZero(1);														// spawn 2 photons
 		psp.currentState = psp.deadState;										// set to new state
 	}
 
@@ -75,7 +80,7 @@ public class FirstPlayerState : IParticleState
 	public void ToSecond(bool toLight)
 	{
 		psp.TransitionTo(1, 2, light, toLight, 0);								// trigger transition effects
-		//ParticleStateEvents.toSecond += psp.TransitionToSecond;					// flag transition in delegate
+		//ParticleStateEvents.toSecond += psp.TransitionToSecond;				// flag transition in delegate
 		psp.currentState = psp.secondState;										// set to new state
 	}
 
@@ -114,7 +119,7 @@ public class FirstPlayerState : IParticleState
 		psp.currentState = psp.seventhState;										// set to new state
 	}
 
-	public void Evol()							
+	public void Evol()
 	{
 		float deltaDark = psp.deltaDark;										// local dark check
 		float deltaLight = psp.deltaLight;										// local light check
@@ -134,6 +139,6 @@ public class FirstPlayerState : IParticleState
 			else if (!light && deltaLight == 0.5) ToSecond(true);						// if dark & gain light = to light
 			else if (light && deltaDark == 0.5) ToSecond(false);						// if light & gain dark = to dark
 			else if (light && deltaLight == 0.5) ToSecond(true);						// if light & gain light = to light
-		} 
+		}
 	}
 }

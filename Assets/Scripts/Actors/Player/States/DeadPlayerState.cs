@@ -4,11 +4,11 @@ using System.Collections;
 public class DeadPlayerState : IParticleState 
 {
 
-	private readonly PlayerStatePattern particle;										// reference to pattern/monobehaviour class
+	private readonly PlayerStatePattern psp;										// reference to pattern/monobehaviour class
 
 	public DeadPlayerState (PlayerStatePattern playerStatePattern)						// constructor
 	{
-		particle = playerStatePattern;													// attach state pattern to this state 
+		psp = playerStatePattern;													// attach state pattern to this state 
 	}
 
 	public void UpdateState()															// updated each frame in PlayerStatePattern
@@ -31,109 +31,109 @@ public class DeadPlayerState : IParticleState
 		} 
 		else if (other.gameObject.CompareTag ("Photon")) {																		// collide with photon
 			Stun();																													// disable collider	
-			particle.AddEvol(0.5f);																									// add 0.5 evol
+			psp.AddEvol(0.5f);																									// add 0.5 evol
 			hasCollided = false;																									// reset collision trigger
 		} 
 		else if (other.gameObject.CompareTag ("Electron")) {																	// collide with electron
 			Stun();																													// disable collider	
-			particle.AddEvol(1.0f);																									// add 1 evol
+			psp.AddEvol(1.0f);																									// add 1 evol
 			hasCollided = false;																									// reset collision trigger
 		} 
 		else if (other.gameObject.CompareTag ("Electron2")) {																	// collide with electron2
 			Stun();																													// disable collider	
-			particle.AddEvol(1.0f);																									// add 1 evol
+			psp.AddEvol(1.0f);																									// add 1 evol
 			hasCollided = false;																									// reset collision trigger
 		}
 		else if (other.gameObject.CompareTag ("Shell")) {																		// collide with shell
 			Stun();																													// disable collider	
-			particle.AddEvol(1.0f);																									// add 1 evol
+			psp.AddEvol(1.0f);																									// add 1 evol
 			hasCollided = false;																									// reset collision trigger
 		}
 		else if (other.gameObject.CompareTag ("Shell2")) {																		// collide with shell
 			Stun();																													// disable collider	
-			particle.AddEvol(1.0f);																									// add 1 evol
+			psp.AddEvol(1.0f);																									// add 1 evol
 			hasCollided = false;																									// reset collision trigger
 		}
 		else if (other.gameObject.CompareTag ("Atom")) {																		// collide with atom
-			if ((particle.evol == other.gameObject.GetComponent<PlayerStatePattern> ().evol) && rolling && hasCollided) {			// if = other electron
+			if ((psp.evol == other.gameObject.GetComponent<PlayerStatePattern> ().evol) && rolling && hasCollided) {			// if = other electron
 				Stun();																													// disable collider
-				particle.RollDie(other.gameObject.GetComponent<PlayerStatePattern> (), 1.0f, 2.0f);									// roll die (win 1, lose -2)
+				psp.RollDie(other.gameObject.GetComponent<PlayerStatePattern> (), 1.0f, 2.0f);									// roll die (win 1, lose -2)
 			}
-			else if ((particle.evol > other.gameObject.GetComponent<PlayerStatePattern> ().evol) && hasCollided) {				// if > other electron 
+			else if ((psp.evol > other.gameObject.GetComponent<PlayerStatePattern> ().evol) && hasCollided) {				// if > other electron 
 				Stun();																													// disable collider
-				particle.AddEvol(1.0f);																									// add 1 evol
+				psp.AddEvol(1.0f);																									// add 1 evol
 				hasCollided = false;																									// reset has collided trigger
 			}
-			else if ((particle.evol < other.gameObject.GetComponent<PlayerStatePattern> ().evol) && hasCollided) {				// if < other electron, or photon
+			else if ((psp.evol < other.gameObject.GetComponent<PlayerStatePattern> ().evol) && hasCollided) {				// if < other electron, or photon
 				Stun();																													// disable collider
-				particle.SubtractEvol(2.0f);																							// subtract 2 evol
+				psp.SubtractEvol(2.0f);																							// subtract 2 evol
 				hasCollided = false;																									// reset has collided trigger
 			}
 		}*/
 	}
 
-	public void Death()
+	public void Death(bool toLight)
 	{
 		//Debug.Log ("Can't transition to same state");
 	}
 
-	public void ToPhoton()
+	public void ToZero(bool toLight)
 	{
-		particle.currentState = particle.photonState;							// set to new state
+		psp.currentState = psp.zeroState;							// set to new state
 	}
 
-	public void ToElectron()
+	public void ToFirst(bool toLight)
 	{
-		particle.currentState = particle.electronState;							// set to new state
+		psp.currentState = psp.firstState;							// set to new state
 	}
 
-	public void ToElectron2()
+	public void ToSecond(bool toLight)
 	{
-		particle.currentState = particle.electron2State;						// set to new state
+		psp.currentState = psp.secondState;						// set to new state
 	}
 
-	public void ToShell()
+	public void ToThird(bool toLight)
 	{
-		particle.currentState = particle.shellState;							// set to new state
+		psp.currentState = psp.thirdState;							// set to new state
 	}
 
-	public void ToShell2()
+	public void ToFourth(bool toLight)
 	{
-		particle.currentState = particle.shell2State;							// set to new state
+		psp.currentState = psp.fourthState;							// set to new state
 	}
 
-	public void ToAtom()
+	public void ToFifth(bool toLight, int shape)
 	{
-		particle.currentState = particle.atomState;								// set to new state
+		psp.currentState = psp.fifthState;								// set to new state
 	}
 
-	public void ToAtom2()
+	public void ToSixth(bool toLight, int shape)
 	{
-		particle.currentState = particle.atom2State;							// set to new state
+		psp.currentState = psp.sixthState;							// set to new state
 	}
 
-	public void ToElement()
+	public void ToSeventh(bool toLight, int shape)
 	{
 		Debug.Log ("Can't transition to same state");
 	}
 
 	public void Evol()
 	{
-		if (particle.evol <= 0f)
-			Death ();
-		else if (particle.evol < 1f)
-			ToPhoton ();
-		else if (particle.evol == 1f)
-			ToElectron ();
-		else if (particle.evol == 1.5f)
-			ToElectron2 ();
-		else if (particle.evol >= 2f && particle.evol < 3f)
-			ToShell ();
-		else if (particle.evol >= 3f && particle.evol < 5f)
-			ToShell2 ();
-		else if (particle.evol >= 5f && particle.evol < 8f)
-			ToAtom ();
-		else if (particle.evol >= 8f)
-			ToAtom2 ();
+		if (psp.evol <= 0f)
+			Death (true);
+		else if (psp.evol < 1f)
+			ToZero (true);
+		else if (psp.evol == 1f)
+			ToFirst (true);
+		else if (psp.evol == 1.5f)
+			ToSecond (true);
+		else if (psp.evol >= 2f && psp.evol < 3f)
+			ToThird (true);
+		else if (psp.evol >= 3f && psp.evol < 5f)
+			ToFourth (true);
+		else if (psp.evol >= 5f && psp.evol < 8f)
+			ToFifth (true, 0);
+		else if (psp.evol >= 8f)
+			ToSixth (true, 0);
 	}
 }

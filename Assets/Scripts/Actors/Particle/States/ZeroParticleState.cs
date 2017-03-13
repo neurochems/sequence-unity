@@ -1,31 +1,31 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ZeroPlayerState : IParticleState
+public class ZeroParticleState : IParticleState 
 {
 
-	private readonly PlayerStatePattern psp;											// reference to pattern/monobehaviour class
+	private readonly ParticleStatePattern psp;											// reference to pattern/monobehaviour class
 
 	public bool light = true;															// 'is light' flag
 	//public float darkEvolDelta, lightEvolDelta;	
 
-	private bool canCollide = true;														// can collide flag
-	private float collisionTimer;														// reset collision timer
+	private bool canCollide = false;													// can collide flag (false to stun on new spawn)
+	private float collisionTimer;														// reset can collide timer	
 
 	// constructor
-	public ZeroPlayerState (PlayerStatePattern playerStatePattern)						// constructor
+	public ZeroParticleState (ParticleStatePattern statePatternParticle)				
 	{
-		psp = playerStatePattern;														// attach state pattern to this state 
+		psp = statePatternParticle;														// attach state pattern to this state 
 	}
 
-	public void UpdateState()															// called every frame in PlayerStatePattern
+	public void UpdateState()
 	{
-		Evol ();																		// check evol
+		Evol ();
 
 		// allow collisions timer
 		if (!canCollide) collisionTimer += Time.deltaTime;								// start timer
 		if (collisionTimer >= psp.stunDuration) {										// if timer is up
-			canCollide = true;																// set collision ability			
+			canCollide = true;																// set collision ability
 			psp.stunned = false;															// reset stunned flag
 		}
 	}
@@ -35,9 +35,13 @@ public class ZeroPlayerState : IParticleState
 		ParticleStatePattern pspOther 
 			= other.gameObject.GetComponent<ParticleStatePattern>();					// ref other ParticleStatePattern
 
-		if (canCollide) {																// if collision allowed
-
-			if (other.gameObject.CompareTag ("Zero")) {										// if collide with zero
+		if (canCollide) {																								// if collision allowed
+			if (other.gameObject.CompareTag ("Player")) {																	// colide with player
+				psp.stunned = true;																// stunned flag
+				canCollide = false;																								// reset can collide trigger	
+				Debug.Log ("particle contact player");
+			} 
+			else if (other.gameObject.CompareTag ("Zero")) {										// if collide with zero
 				psp.stunned = true;																// stunned flag
 				psp.AddDark (pspOther.darkEvol);												// add dark of other
 				psp.AddLight (pspOther.lightEvol);												// add light of other
@@ -54,9 +58,9 @@ public class ZeroPlayerState : IParticleState
 
 	public void Death(bool toLight)
 	{
-		psp.TransitionTo(0, -1, light, toLight, 0);										// trigger transition effects
+		psp.TransitionTo(0, -1, light, light, 0);										// trigger transition effects
 		//ParticleStateEvents.toDead += psp.TransitionToDead;								// flag transition in delegate
-		psp.currentState = psp.deadState;												// set to new state
+		psp.currentState = psp.deadState;												// set to new state		ParticleStateEvents.toDead += particle.TransitionToDead;						// flag transition in delegate
 	}
 
 	public void ToZero(bool toLight)
@@ -73,7 +77,7 @@ public class ZeroPlayerState : IParticleState
 	public void ToFirst(bool toLight)
 	{
 		psp.TransitionTo(0, 1, light, toLight, 0);									// trigger transition effects
-		//ParticleStateEvents.toFirst += psp.TransitionToFirst;						// flag transition in delegate
+		//ParticleStateEvents.toFirst += psp.TransitionToFirst;							// flag transition in delegate
 		psp.currentState = psp.firstState;											// set to new state
 	}
 
@@ -87,7 +91,7 @@ public class ZeroPlayerState : IParticleState
 	public void ToThird(bool toLight)
 	{
 		psp.TransitionTo(0, 3, light, toLight, 0);									// trigger transition effects
-		//ParticleStateEvents.toThird += psp.TransitionToThird;						// flag transition in delegate
+		//ParticleStateEvents.toThird += psp.TransitionToThird;							// flag transition in delegate
 		psp.currentState = psp.thirdState;											// set to new state
 	}
 
@@ -101,25 +105,25 @@ public class ZeroPlayerState : IParticleState
 	public void ToFifth(bool toLight, int shape)
 	{
 		psp.TransitionTo(0, 5, light, toLight, shape);								// trigger transition effects
-		//ParticleStateEvents.toFifth += psp.TransitionToFifth;						// flag transition in delegate
+		//ParticleStateEvents.toFifth += psp.TransitionToFifth;							// flag transition in delegate
 		psp.currentState = psp.fifthState;											// set to new state
 	}
 
 	public void ToSixth(bool toLight, int shape)
 	{
 		psp.TransitionTo(0, 6, light, toLight, shape);								// trigger transition effects
-		//ParticleStateEvents.toSixth += psp.TransitionToSixth;						// flag transition in delegate
+		//ParticleStateEvents.toSixth += psp.TransitionToSixth;							// flag transition in delegate
 		psp.currentState = psp.sixthState;											// set to new state
 	}
 
 	public void ToSeventh(bool toLight, int shape)
 	{
 		psp.TransitionTo(0, 7, light, toLight, shape);								// trigger transition effects
-		//ParticleStateEvents.toSeventh += psp.TransitionToSeventh;					// flag transition in delegate
+		//ParticleStateEvents.toSeventh += psp.TransitionToSeventh;						// flag transition in delegate
 		psp.currentState = psp.seventhState;										// set to new stateebug.Log ("Can't transition to same state");
 	}
 
-	public void Evol()									// all states here for init \\
+	public void Evol()									// all states here for init 
 	{
 		float deltaDark = psp.deltaDark;										// local dark check
 		float deltaLight = psp.deltaLight;										// local light check

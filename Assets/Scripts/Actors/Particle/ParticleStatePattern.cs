@@ -4,65 +4,79 @@ using System.Collections;
 public class ParticleStatePattern : MonoBehaviour {
 
 	public float evol;														// evolution level
+	public float darkEvol, lightEvol;										// dark & light evolution level
+	public float deltaDark, deltaLight;										// delta dark & light evolution level
+
+	public bool light = true, toLight;										// is light flag, to light flag
 
 	[HideInInspector] public IParticleState currentState;					// other object state
 	//[HideInInspector] public int previousState;								// previous state index / Fn
 
 	[HideInInspector] public DeadParticleState deadState;					// instance of dead state
-	[HideInInspector] public PhotonParticleState photonState;				// instance of photon state
-	[HideInInspector] public ElectronParticleState electronState;			// instance of electron state
-	[HideInInspector] public Electron2ParticleState electron2State;			// instance of electron2 state
-	[HideInInspector] public ShellParticleState shellState;					// instance of shell state
-	[HideInInspector] public Shell2ParticleState shell2State;				// instance of shell2 state
-	[HideInInspector] public AtomParticleState atomState;					// instance of atom state
-	[HideInInspector] public Atom2ParticleState atom2State;					// instance of atom2 state
+	[HideInInspector] public ZeroParticleState zeroState;				// instance of photon state
+	[HideInInspector] public FirstParticleState firstState;			// instance of electron state
+	[HideInInspector] public SecondParticleState secondState;			// instance of electron2 state
+	[HideInInspector] public ThirdParticleState thirdState;					// instance of shell state
+	[HideInInspector] public FourthParticleState fourthState;				// instance of shell2 state
+	[HideInInspector] public FifthParticleState fifthState;					// instance of atom state
+	[HideInInspector] public SixthParticleState sixthState;					// instance of atom2 state
+	[HideInInspector] public SeventhParticleState seventhState;					// instance of atom2 state
 	// new state
 
 	//public float attractionRange = 20f;										// particle sensing distance
 	//[HideInInspector] public Transform attractionTarget;					// particle sensing target
 
-	private int die;														// roll for collision conflicts
-	private GameObject nucleus, shell;										// reference to nucleus and shell children
+	//private GameObject nucleus, shell;										// reference to nucleus and shell children
 	[HideInInspector] public GameObject self;								// reference to this gameobject
 
 	//component references
+	private ParticleCoreManager pcm;										// particle core manager (animations)
+	private ParticleShellManager psm;										// particle core manager (animations)
+	private ParticleNucleusManager pnm;										// particle core manager (animations)
 	//private ParticlePhysicsManager ppm;										// particle physics manager
 	private SphereCollider[] sc;											// sphere colliders
 
+	private int die;														// roll for collision conflicts
 	public bool stunned;													// stunned?
-	private bool shellShrinking, nucleusDeactivating;						// shell shrinking flag, nucleus deactivating flag
 	public float stunDuration = 3f;											// duration of post-hit invulnerability
-	private float stunTimer;												// stun timer
+	private float stunTimer = 0f;											// stun timer
+	private bool shellShrinking, nucleusDeactivating;						// shell shrinking flag, nucleus deactivating flag
 	[HideInInspector] public float shrinkTimer = 0f;						// shell deactivation timer
 
 	void Awake()
 	{
-		//evol = 0f;															// initialize evol
+		evol = 0f;															// initialize evol
+		darkEvol = 0f;														// initialize dark evol
+		lightEvol = 0f;														// initialize light evol
+
+		deltaDark = 0f;														// initialize delta dark evol
+		deltaLight = 0f;													// initialize delta light evol
 
 		deadState = new DeadParticleState (this);							// initialize dead state
-		photonState = new PhotonParticleState (this);						// initialize photon state
-		electronState = new ElectronParticleState (this);					// initialize electron state
-		electron2State = new Electron2ParticleState (this);					// initialize electron2 state
-		shellState = new ShellParticleState (this);							// initialize shell state
-		shell2State = new Shell2ParticleState (this);						// initialize shell2 state
-		atomState = new AtomParticleState (this);							// initialize atom state
-		atom2State = new Atom2ParticleState (this);							// initialize atom2 state
+		zeroState = new ZeroParticleState (this);							// initialize zero state
+		firstState = new FirstParticleState (this);							// initialize first state
+		secondState = new SecondParticleState (this);						// initialize second state
+		thirdState = new ThirdParticleState (this);							// initialize third state
+		fourthState = new FourthParticleState (this);						// initialize fourth state
+		fifthState = new FifthParticleState (this);							// initialize fifth state
+		sixthState = new SixthParticleState (this);							// initialize sixth state
+		seventhState = new SeventhParticleState (this);						// initialize seventh state
 		// new state
 
-		nucleus = transform.FindChild("Nucleus").gameObject;				// initialize nucleus ref
-		shell = transform.FindChild ("Shell").gameObject;					// initialize shell ref
+		pcm = GetComponent<ParticleCoreManager> ();							// initialize core manager ref
+		psm = transform.FindChild ("Shell")
+			.gameObject.GetComponent<ParticleShellManager>();				// initialize shell manager ref
+		pnm = transform.FindChild ("Nucleus")
+			.gameObject.GetComponent<ParticleNucleusManager>();				// initialize nucleus manager ref
 
 		//ppm = GetComponent<ParticlePhysicsManager> ();						// init particle physics manager ref
 		sc = GetComponents<SphereCollider> ();								// init sphere colliders ref
-
-		self = gameObject;													// init this gameobject ref
-
 	}
 
 	void Start () 
 	{
-		currentState = photonState;											// start at photon state
-		TransitionToPhoton(0, gameObject);										// CORE: shrink to photon size, fade to white
+		currentState = zeroState;											// start at photon state
+		TransitionTo(0, 0, light, toLight, 0);								// CORE: shrink to photon size, fade to white
 	}
 
 	void Update () 
@@ -71,7 +85,7 @@ public class ParticleStatePattern : MonoBehaviour {
 
 		// stun duration timer
 		if (stunned) {
-			Stun ();
+			//Stun ();
 			stunTimer += Time.deltaTime;													// start timer
 		}
 
@@ -86,422 +100,137 @@ public class ParticleStatePattern : MonoBehaviour {
 
 	void OnDisable()
 	{
-		ParticleStateEvents.toPhoton -= TransitionToPhoton;					// untrigger transition event
-		ParticleStateEvents.toElectron -= TransitionToElectron;				// untrigger transition event
-		ParticleStateEvents.toElectron2 -= TransitionToElectron2;			// untrigger transition event
-		ParticleStateEvents.toShell -= TransitionToShell;					// untrigger transition event
-		ParticleStateEvents.toShell2 -= TransitionToShell2;					// untrigger transition event
-		ParticleStateEvents.toAtom -= TransitionToAtom;						// untrigger transition event
-		ParticleStateEvents.toAtom2 -= TransitionToAtom2;					// untrigger transition event
+		//ParticleStateEvents.toZero -= TransitionToZero;						// untrigger transition event
+		//ParticleStateEvents.toFirst -= TransitionToFirst;					// untrigger transition event
+		//ParticleStateEvents.toSecond -= TransitionToSecond;					// untrigger transition event
+		//ParticleStateEvents.toThird -= TransitionToThird;					// untrigger transition event
+		//ParticleStateEvents.toFourth -= TransitionToFourth;					// untrigger transition event
+		//ParticleStateEvents.toFifth -= TransitionToFifth;					// untrigger transition event
+		//ParticleStateEvents.toSixth -= TransitionToSixth;					// untrigger transition event
+		//ParticleStateEvents.toSeventh -= TransitionToSeventh;					// untrigger transition event
 		// new state
 	}
 
 	void OnDestroy()
 	{
-		ParticleStateEvents.toPhoton -= TransitionToPhoton;					// untrigger transition event
-		ParticleStateEvents.toElectron -= TransitionToElectron;				// untrigger transition event
-		ParticleStateEvents.toElectron2 -= TransitionToElectron2;			// untrigger transition event
-		ParticleStateEvents.toShell -= TransitionToShell;					// untrigger transition event
-		ParticleStateEvents.toShell2 -= TransitionToShell2;					// untrigger transition event
-		ParticleStateEvents.toAtom -= TransitionToAtom;						// untrigger transition event
-		ParticleStateEvents.toAtom2 -= TransitionToAtom2;					// untrigger transition event
+		//ParticleStateEvents.toZero -= TransitionToZero;						// untrigger transition event
+		//ParticleStateEvents.toFirst -= TransitionToFirst;					// untrigger transition event
+		//ParticleStateEvents.toSecond -= TransitionToSecond;					// untrigger transition event
+		//ParticleStateEvents.toThird -= TransitionToThird;					// untrigger transition event
+		//ParticleStateEvents.toFourth -= TransitionToFourth;					// untrigger transition event
+		//ParticleStateEvents.toFifth -= TransitionToFifth;					// untrigger transition event
+		//ParticleStateEvents.toSixth -= TransitionToSixth;					// untrigger transition event
+		//ParticleStateEvents.toSeventh -= TransitionToSeventh;					// untrigger transition event
 		// new state
 	}
 
 	// BEHAVIOURS \\
 
-	public void Stun ()											// post-hit invulnerability
-	{
-		if (GetComponent<SphereCollider> ().enabled) {
-			//GetComponent<SphereCollider> ().enabled = false;					// disable collider
-			//ppm.Bump (true);													// enable bump
-		}
-
-		if (stunTimer >= stunDuration) {									// if timer >= duration
-			//GetComponent<SphereCollider> ().enabled = true;						// enable collider
-			stunned = false;													// reset stunned flag
-			stunTimer = 0f;														// reset timer
-		}
-	}
-
-	public void SpawnPhoton (int num)
+	public void SpawnZero (int num)
 	{
 		GetComponent<SpawnParticle> ().SpawnPhoton (num);
 	}
 
-	public void SpawnElectron (int num)
+	public void SpawnFirst (int num)
 	{
 		GetComponent<SpawnParticle> ().SpawnElectron (num);
 	}
 
 	// EVOL CHANGES \\
-	public void RollDie(ParticleStatePattern other, float addAmount, float subAmount) {
-		bool rolling = true;
-		do {
-			die = Random.Range(1,6);														// roll die
-			if (die > other.die) {															// if this die > other die
-				AddEvol(addAmount);																// add evol level
-				other.SubtractEvol(subAmount);													// other: remove evol level
-				rolling = false;																// exit roll
-			}
-		} while (rolling);																	// reroll if same die
-	}
 
-	public void SubtractEvol(float changeAmount) 
+	public void SubEvol(float changeAmount) 
 	{
 		evol -= changeAmount;												// subtract evol level
 	}
-
 	public void AddEvol(float changeAmount) 
 	{
 		evol += changeAmount;												// add evol level
 	}
 
-	// STATE TRANSTITIONS \\
-
-	public void TransitionToDead(int prevState, GameObject particle)
-	{
-		gameObject.tag = "Dead";											// set gameobject tag
-		//GetComponent<SphereCollider> ().enabled = false;					// disable collider at start to prevent collisions during shrink
-		//GetComponent<Animator>().SetTrigger("fadeout");					// fade to black
-		GetComponent<Animator>().SetBool("dead", true);						// enable black core animation state
-		StopAllCoroutines();
-		Destroy (gameObject, 2.0f);											// destroy object after animation
+	public void AddDark(float changeAmount) {
+		darkEvol += changeAmount;											// add dark evol level
+	}
+	public void SubDark(float changeAmount) {
+		lightEvol -= changeAmount;											// subtract dark evol level
 	}
 
-	public void TransitionToPhoton(int prevState, GameObject particle)
+	public void AddLight(float changeAmount) {
+		darkEvol += changeAmount;											// add light evol level
+	}
+	public void SubLight(float changeAmount) {
+		lightEvol -= changeAmount;											// subtract light evol level
+	}
+
+	// STATE TRANSTITIONS \\
+
+	public void TransitionTo(int fromState, int toState, bool fromLight, bool toLight, int shape)
 	{
-		gameObject.tag = "Photon";											// set gameobject tag
-		//GetComponent<SphereCollider>().enabled = true;			// enable sphere collider
-		// devolving from electron
-		if (prevState == 0 || prevState == 1)	{ 											
-			// rb.mass = 0.2f;													// set mass
-			CoreToPhoton ();												// CORE: shrink to photon size, fade to white
+		if (toState == 0)	{ 														// to zero
+			// rb.mass = 0.2f;															// set mass
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
-		// devolving from electron2
-		else if (prevState == 2) {										
-			//rb.mass = 0.2f;													// set mass
-			CoreToPhoton ();												// CORE: shrink to photon size, fade to white
-			NucleusDisable ();												// NUCLEUS: fade to white, then deactivate
+		else if (toState == 1) {													// to first
+			// rb.mass = 0.2f;															// set mass
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
-		// devolving from shell
-		else if (prevState == 3) {										
-			//rb.mass = 0.2f;													// set mass
-			sc[0].radius = 0.51f;											// shrink collision radius in
-			//sc[0].center = new Vector3(0f, 0f, 0f);							// level circle collider on world
-			sc[1].radius = 0.51f;											// shrink collision radius in
-			sc[1].center = new Vector3(0f, 0f, 0f);							// level circle collider on world
-			CoreToPhoton ();												// CORE: shrink to photon size, fade to white
-			ShellShrink ();													// SHELL: shrink
-			NucleusDisable ();												// NUCLEUS: fade to white, then deactivate
+		else if (toState == 2) {													// to second
+			//rb.mass = 0.2f;															// set mass
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
-		// devolving from shell2
-		else if (prevState == 4) {										
-			//rb.mass = 0.2f;													// set mass
-			sc[0].radius = 0.51f;											// shrink collision radius in
-			//sc[0].center = new Vector3(0f, 0f, 0f);							// level circle collider on world
-			sc[1].radius = 0.51f;											// shrink collision radius in
-			sc[1].center = new Vector3(0f, 0f, 0f);							// level circle collider on world
-			CoreToWhite ();													// CORE: return to idle white
-			CoreToPhoton ();												// CORE: shrink to photon size, fade to white
-			NucleusDisable (); 												// NUCLEUS: fade to white, then deactivate
-			ShellShrink ();													// SHELL: shrink
+		else if (toState == 3) {													// to third
+			//rb.mass = 0.2f;															// set mass
+			sc[0].radius = 0.51f;														// shrink collision radius in
+			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
+			sc[1].radius = 0.51f;														// shrink collision radius in
+			sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
-		// devolving from atom
-		else if (prevState == 5) {										
-			//rb.mass = 0.2f;													// set mass
-			sc[0].radius = 0.51f;											// shrink collision radius in
-			//sc[0].center = new Vector3(0f, 0f, 0f);							// level circle collider on world
-			sc[1].radius = 0.51f;											// shrink collision radius in
-			sc[1].center = new Vector3(0f, 0f, 0f);							// level circle collider on world
-			CoreToPhoton ();												// CORE: shrink to photon size, fade to white
-			ShellShrink ();													// SHELL: shrink
-			NucleusDisable ();												// NUCLEUS: fade to white, then deactivate
+		else if (toState == 4) {													// to fourth
+			//rb.mass = 0.2f;															// set mass
+			sc[0].radius = 0.51f;														// shrink collision radius in
+			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
+			sc[1].radius = 0.51f;														// shrink collision radius in
+			sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
-		// devolving from atom2
-		else if (prevState == 6) {										
-			//rb.mass = 0.2f;													// set mass
-			sc[0].radius = 0.51f;											// shrink collision radius in
-			//sc[0].center = new Vector3(0f, 0f, 0f);							// level circle collider on world
-			sc[1].radius = 0.51f;											// shrink collision radius in
-			sc[1].center = new Vector3(0f, 0f, 0f);							// level circle collider on world
-			CoreToPhoton ();												// CORE: shrink to photon size, fade to white
-			ShellShrink ();													// SHELL: shrink
-			NucleusDisable ();												// NUCLEUS: fade to white, then deactivate
+		else if (toState == 5) {													// to fifth
+			//rb.mass = 0.2f;															// set mass
+			sc[0].radius = 0.51f;														// shrink collision radius in
+			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
+			sc[1].radius = 0.51f;														// shrink collision radius in
+			sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+		}
+		else if (toState == 6) {													// to sixth
+			//rb.mass = 0.2f;															// set mass
+			sc[0].radius = 0.51f;														// shrink collision radius in
+			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
+			sc[1].radius = 0.51f;														// shrink collision radius in
+			sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+		}
+		else if (toState == 7) {													// to seventh
+			// rb.mass = 0.2f;															// set mass
+			sc[0].radius = 0.51f;														// shrink collision radius in
+			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
+			sc[1].radius = 0.51f;														// shrink collision radius in
+			sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		//new state
 	}
-
-	public void TransitionToElectron(int prevState, GameObject particle)
-	{
-		gameObject.tag = "Electron";											// set gameobject tag
-		// evolving from photon
-		if (prevState == 0)	{ 											
-			// rb.mass = 0.5f;													// set mass
-			CoreToElectron ();												// CORE: grow to electron size, is white
-		}
-		// devolving from electron2
-		else if (prevState == 2) {										
-			//rb.mass = 0.5f;													// set mass
-			NucleusToWhite ();												// NUCLEUS: fade out to white
-		}
-		// devolving from shell
-		else if (prevState == 3) {										
-			//rb.mass = 0.5f;													// set mass
-			sc[0].radius = 0.51f;											// shrink collision radius in
-			//sc[0].center = new Vector3(0f, 0f, 0f);							// level circle collider on world
-			sc[1].radius = 0.51f;											// shrink collision radius in
-			sc[1].center = new Vector3(0f, 0f, 0f);							// level circle collider on world
-			CoreToWhite ();													// CORE: fade to white
-			ShellShrink ();													// SHELL: shrink
-			NucleusToWhite ();												// NUCLEUS: fade to white
-		}
-		// devolving from shell2
-		else if (prevState == 4) {										
-			//rb.mass = 0.5f;													// set mass
-			sc[0].radius = 0.51f;											// shrink collision radius in
-			//sc[0].center = new Vector3(0f, 0f, 0f);							// level circle collider on world
-			sc[1].radius = 0.51f;											// shrink collision radius in
-			sc[1].center = new Vector3(0f, 0f, 0f);							// level circle collider on world
-			CoreToWhite ();													// CORE: fade to white
-			ShellShrink ();													// SHELL: shrink
-		}
-		// devolving from atom
-		else if (prevState == 5) {										
-			//rb.mass = 0.5f;													// set mass
-			sc[0].radius = 0.51f;											// shrink collision radius in
-			//sc[0].center = new Vector3(0f, 0f, 0f);							// level circle collider on world
-			sc[1].radius = 0.51f;											// shrink collision radius in
-			sc[1].center = new Vector3(0f, 0f, 0f);							// level circle collider on world
-			ShellShrink ();													// SHELL: shrink
-		}
-		// devolving from atom2
-		else if (prevState == 6) {										
-			//rb.mass = 0.2f;													// set mass
-			sc[0].radius = 0.51f;											// shrink collision radius in
-			//sc[0].center = new Vector3(0f, 0f, 0f);							// level circle collider on world
-			sc[1].radius = 0.51f;											// shrink collision radius in
-			sc[1].center = new Vector3(0f, 0f, 0f);							// level circle collider on world
-			ShellShrink ();													// SHELL: shrink
-			NucleusToWhite ();												// NUCLEUS: fade out to white
-		}
-		// new state
-	}
-
-	public void TransitionToElectron2(int prevState, GameObject particle)
-	{
-		gameObject.tag = "Electron2";										// set gameobject tag
-		// init from photon
-		if (prevState == 0)	{ 											
-			// rb.mass = 0.75f;													// set mass
-			CoreToElectron ();												// CORE: grow to electron size, is white
-			NucleusEnable ();												// NUCLEUS: enable, fade in to black
-		}
-		// evolving from electron
-		else if (prevState == 1)	{ 											
-			// rb.mass = 0.75f;													// set mass
-			NucleusEnable ();												// NUCLEUS: enable, fade in to black
-		}
-		// devolving from shell
-		else if (prevState == 3) {										
-			//rb.mass = 0.75f;													// set mass
-			sc[0].radius = 0.51f;											// shrink collision radius in
-			//sc[0].center = new Vector3(0f, 0f, 0f);							// level circle collider on world
-			sc[1].radius = 0.51f;											// shrink collision radius in
-			sc[1].center = new Vector3(0f, 0f, 0f);							// level circle collider on world
-			CoreToWhite ();													// CORE: fade to white
-			ShellShrink ();													// SHELL: shrink
-		}
-		// devolving from shell2
-		else if (prevState == 4) {										
-			//rb.mass = 0.75f;													// set mass
-			sc[0].radius = 0.51f;											// shrink collision radius in
-			//sc[0].center = new Vector3(0f, 0f, 0f);							// level circle collider on world
-			sc[1].radius = 0.51f;											// shrink collision radius in
-			sc[1].center = new Vector3(0f, 0f, 0f);							// level circle collider on world
-			CoreToWhite ();													// CORE: fade to white
-			ShellShrink ();													// SHELL: shrink
-			NucleusToBlack ();												// NUCLEUS: fade to black
-		}
-		// devolving from atom
-		else if (prevState == 5) {										
-			//rb.mass = 0.75f;													// set mass
-			sc[0].radius = 0.51f;											// shrink collision radius in
-			//sc[0].center = new Vector3(0f, 0f, 0f);							// level circle collider on world
-			sc[1].radius = 0.51f;											// shrink collision radius in
-			sc[1].center = new Vector3(0f, 0f, 0f);							// level circle collider on world
-			ShellShrink ();													// SHELL: shrink
-			NucleusToBlack ();												// NUCLEUS: fade to black
-		}
-		// devolving from atom2
-		else if (prevState == 6) {										
-			//rb.mass = 0.2f;													// set mass
-			sc[0].radius = 0.51f;											// shrink collision radius in
-			//sc[0].center = new Vector3(0f, 0f, 0f);							// level circle collider on world
-			sc[1].radius = 0.51f;											// shrink collision radius in
-			sc[1].center = new Vector3(0f, 0f, 0f);							// level circle collider on world
-			ShellShrink ();													// SHELL: shrink
-		}
-		// new state
-	}
-
-	public void TransitionToShell(int prevState, GameObject particle)
-	{
-		gameObject.tag = "Shell";											// set gameobject tag
-		// init from photon
-		if (prevState == 0)	{ 											
-			// rb.mass = 0.75f;													// set mass
-			sc[0].radius = 1.575f;											// grow collision radius out
-			//sc[0].center = new Vector3(0f, 0.3f, 0f);						// level circle collider on world
-			sc[1].radius = 1.575f;											// grow collision radius out
-			sc[1].center = new Vector3(0f, 0.3f, 0f);						// level circle collider on world
-			CoreToElectron ();												// CORE: grow to electron size, is white
-			NucleusEnable ();												// NUCLEUS: enable, fade in to black
-			CoreToBlack();													// CORE: fade to black
-			ShellGrow ();													// SHELL: grow
-		}
-		// evolving from electron
-		else if (prevState == 1)	{ 											
-			// rb.mass = 0.5f;													// set mass
-			sc[0].radius = 1.575f;											// grow collision radius out
-			//sc[0].center = new Vector3(0f, 0.3f, 0f);						// level circle collider on world
-			sc[1].radius = 1.575f;											// grow collision radius out
-			sc[1].center = new Vector3(0f, 0.3f, 0f);						// level circle collider on world
-			CoreToBlack();													// CORE: fade to black
-			ShellGrow ();													// SHELL: grow
-		}
-		// evolving from electron2
-		else if (prevState == 2) {										
-			//rb.mass = 0.5f;													// set mass
-			sc[0].radius = 1.575f;											// grow collision radius out
-			//sc[0].center = new Vector3(0f, 0.3f, 0f);						// level circle collider on world
-			sc[1].radius = 1.575f;											// grow collision radius out
-			sc[1].center = new Vector3(0f, 0.3f, 0f);						// level circle collider on world
-			CoreToBlack ();													// CORE: fade to black
-			ShellGrow ();													// SHELL: grow
-		}
-		// devolving from shell2
-		else if (prevState == 4) {										
-			//rb.mass = 0.5f;													// set mass
-			NucleusToBlack ();												// NUCLEUS: fade to black
-		}
-		// devolving from atom
-		else if (prevState == 5) {										
-			//rb.mass = 0.5f;													// set mass
-			CoreToBlack ();													// CORE: fade to black
-			NucleusToBlack ();												// NUCLEUS: fade to black
-		}
-		// devolving from atom2
-		else if (prevState == 6) {										
-			//rb.mass = 0.2f;													// set mass
-			CoreToBlack ();													// CORE: fade to black
-		}
-		// new state
-	}
-
-	public void TransitionToShell2(int prevState, GameObject particle)
-	{
-		gameObject.tag = "Shell2";											// set gameobject tag
-		shell.gameObject.tag = "Shell2";									// set shell gameobject tag
-		// init from photon
-		if (prevState == 0)	{ 											
-			// rb.mass = 0.75f;													// set mass
-			sc[0].radius = 1.575f;											// grow collision radius out
-			//sc[0].center = new Vector3(0f, 0.3f, 0f);						// level circle collider on world
-			sc[1].radius = 1.575f;											// grow collision radius out
-			sc[1].center = new Vector3(0f, 0.3f, 0f);						// level circle collider on world
-			CoreToElectron ();												// CORE: grow to electron size, is white
-			CoreToBlack();													// CORE: fade to black
-			ShellGrow ();													// SHELL: grow
-			NucleusEnable ();												// NUCLEUS: enable, fade in to black
-			NucleusToWhite ();												// NUCLEUS: fade out to white
-		}
-		// evolving from electron2
-		if (prevState == 2)	{ 											
-			// rb.mass = 0.75f;													// set mass
-			sc[0].radius = 1.575f;											// grow collision radius out
-			//sc[0].center = new Vector3(0f, 0.3f, 0f);						// level circle collider on world
-			sc[1].radius = 1.575f;											// grow collision radius out
-			sc[1].center = new Vector3(0f, 0.3f, 0f);						// level circle collider on world
-			CoreToBlack ();													// CORE: fade to black
-			NucleusToWhite ();												// NUCLEUS: fade out to white
-			ShellGrow ();													// SHELL: grow
-		}
-		// evolving from shell
-		else if (prevState == 2) {										
-			//rb.mass = 0.75f;													// set mass
-			NucleusToWhite ();												// NUCLEUS: fade out to white
-		}
-		// devolving from atom
-		else if (prevState == 5) {										
-			//rb.mass = 0.75f;													// set mass
-			CoreToBlack ();													// CORE: fade to black
-		}
-		// devolving from atom2
-		else if (prevState == 6) {										
-			//rb.mass = 0.2f;													// set mass
-			CoreToBlack ();													// CORE: fade to black
-			NucleusToWhite ();												// NUCLEUS: fade out to white
-		}
-		// new state
-	}
-
-	public void TransitionToAtom(int prevState, GameObject particle)
-	{
-		gameObject.tag = "Atom2";											// set gameobject tag
-		shell.gameObject.tag = "Atom2";									// set shell gameobject tag
-		// init from photon
-		if (prevState == 0)	{ 											
-			// rb.mass = 0.75f;													// set mass
-			sc[0].radius = 1.575f;											// grow collision radius out
-			//sc[0].center = new Vector3(0f, 0.3f, 0f);						// level circle collider on world
-			sc[1].radius = 1.575f;											// grow collision radius out
-			sc[1].center = new Vector3(0f, 0.3f, 0f);						// level circle collider on world
-			CoreToElectron ();												// CORE: grow to electron size, is white
-			NucleusEnable ();												// NUCLEUS: enable, fade in to black
-			ShellGrow ();													// SHELL: grow
-		}
-		// evolving from shell2
-		else if (prevState == 5) { 											
-			// rb.mass = 0.5f;													// set mass
-			CoreToWhite ();													// CORE: fade to white
-			NucleusToWhite ();												// NUCLEUS: fade out to white
-		}
-		// devolving from atom2
-		else if (prevState == 6) {										
-			//rb.mass = 0.2f;													// set mass
-			NucleusToWhite ();												// NUCLEUS: fade out to white
-		}
-		// new state
-	}
-
-	public void TransitionToAtom2(int prevState, GameObject particle)
-	{
-		gameObject.tag = "Atom";											// set gameobject tag
-		shell.gameObject.tag = "Atom";									// set shell gameobject tag
-		// init from photon
-		if (prevState == 0)	{ 											
-			// rb.mass = 0.75f;													// set mass
-			sc[0].radius = 1.575f;											// grow collision radius out
-			//sc[0].center = new Vector3(0f, 0.3f, 0f);						// level circle collider on world
-			sc[1].radius = 1.575f;											// grow collision radius out
-			sc[1].center = new Vector3(0f, 0.3f, 0f);						// level circle collider on world
-			CoreToElectron ();												// CORE: grow to electron size, is white
-			NucleusEnable ();												// NUCLEUS: enable, fade in to black
-			NucleusToWhite ();												// NUCLEUS: fade out to white
-			ShellGrow ();													// SHELL: grow
-		}
-		// evolving from atom
-		else if (prevState == 5) { 											
-			// rb.mass = 0.5f;													// set mass
-			NucleusToBlack ();												// NUCLEUS: fade to black
-		}
-		// new state
-	}
-
+		
 	// transitions \\
 
-	// core
+	// set player parts
+	private void SetParts(int fromState, int toState, bool fromLight, bool toLight, int shape)
+	{
+		pcm.Core (fromState, toState, fromLight, toLight, shape);					// change circle
+		psm.Shell (fromState, toState, fromLight, toLight, shape);							// change shell
+		pnm.Nucleus(fromState, toState, fromLight, toLight, shape);					// change nucleus
+	}
+
+	/* core
 	void CoreToPhoton() {
 		GetComponent<Animator> ().ResetTrigger ("scaleup");					// reset next stage
 		GetComponent<Animator> ().SetTrigger("scaledown");					// enable core to black animation
@@ -569,5 +298,5 @@ public class ParticleStatePattern : MonoBehaviour {
 		nucleus.GetComponent<Animator>().SetBool("white", false);			// enable white nucleus animation state	
 
 	}
-
+	*/
 }

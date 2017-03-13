@@ -1,24 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ThirdPlayerState : IParticleState 
+public class ThirdParticleState : IParticleState 
 {
 
-	private readonly PlayerStatePattern psp;											// reference to pattern/monobehaviour class
+	private readonly ParticleStatePattern psp;											// reference to pattern/monobehaviour class
 
 	public bool light = true;															// 'is light' flag
 
 	private bool canCollide = true;														// can collide flag
-	private float collisionTimer;														// reset collision timer
+	private float collisionTimer;														// reset can collide timer
 
-	public ThirdPlayerState (PlayerStatePattern playerStatePattern)						// constructor
+	public ThirdParticleState (ParticleStatePattern particleStatePattern)				// constructor
 	{
-		psp = playerStatePattern;														// attach state pattern to this state 
+		psp = particleStatePattern;															// attach state pattern to this state 
 	}
 
-	public void UpdateState()															// updated each frame in PlayerStatePattern
+	public void UpdateState()
 	{
-		Evol ();																		// check evol
+		Evol ();
 
 		// allow collisions timer
 		if (!canCollide) collisionTimer += Time.deltaTime;								// start timer
@@ -31,24 +31,30 @@ public class ThirdPlayerState : IParticleState
 	public void OnTriggerEnter(Collider other)
 	{
 		ParticleStatePattern pspOther 
-			= other.gameObject.GetComponent<ParticleStatePattern>();					// ref other ParticleStatePattern
+		= other.gameObject.GetComponent<ParticleStatePattern>();					// ref other ParticleStatePattern
 
-		if (canCollide) {																		// if collision allowed
+
+		if (canCollide) {															// if collision allowed
 			
-			if (other.gameObject.CompareTag ("Zero")										// collide with zero
-				|| other.gameObject.CompareTag ("First")									// collide with first
-				|| other.gameObject.CompareTag ("Second")									// collide with second
-				|| other.gameObject.CompareTag ("Third")) {									// collide with third
-				psp.stunned = true;																// set stunned flag
-				psp.AddDark (pspOther.darkEvol);												// add dark of other
-				psp.AddLight (pspOther.lightEvol);												// add light of other
-				canCollide = false;																// reset has collided trigger
+			if (other.gameObject.CompareTag ("Player")) {								// colide with player
+				psp.stunned = true;															// stun new particle for 3 sec
+				canCollide = false;															// reset can collide trigger	
+				Debug.Log ("particle contact player");
 			} 
-			else {																			// collide with any other
-				psp.stunned = true;																// set stunned flag
-				psp.SubDark (pspOther.darkEvol);												// subtract other dark
-				psp.SubLight (pspOther.lightEvol);												// subtract other light
-				canCollide = false;																// reset has collided trigger
+			else if (other.gameObject.CompareTag ("Zero")								// collide with zero
+				|| other.gameObject.CompareTag ("First")								// collide with first
+				|| other.gameObject.CompareTag ("Second")								// collide with second
+				|| other.gameObject.CompareTag ("Third")) {								// collide with third
+				psp.stunned = true;															// set stunned flag
+				psp.AddDark (pspOther.darkEvol);											// add dark of other
+				psp.AddLight (pspOther.lightEvol);											// add light of other
+				canCollide = false;															// reset has collided trigger
+			} 
+			else {																		// collide with any other
+				psp.stunned = true;															// set stunned flag
+				psp.SubDark (pspOther.darkEvol);											// subtract other dark
+				psp.SubLight (pspOther.lightEvol);											// subtract other light
+				canCollide = false;															// reset has collided trigger
 			}
 		}
 	}
@@ -70,7 +76,7 @@ public class ThirdPlayerState : IParticleState
 		psp.SpawnZero(1);														// spawn 1 Zero
 		psp.currentState = psp.zeroState;										// set to new state
 	}
-		
+
 	public void ToFirst(bool toLight)
 	{
 		psp.TransitionTo(3, 1, light, toLight, 0);								// trigger transition effects
@@ -150,4 +156,13 @@ public class ThirdPlayerState : IParticleState
 			else if (light && (deltaLight == 0.5 || deltaLight == 1)) ToFourth(true);			// if light & gain light = to light
 		}
 	}
+
+/*	private void Sense()
+	{
+		// search for photons to attract to
+		RaycastHit hit;
+		if (Physics.Raycast(particle.transform.position, particle.transform.forward, out hit, particle.attractionRange) && hit.collider.CompareTag("Photon")) {
+			particle.attractionTarget = hit.transform;
+		}
+	}*/
 }
