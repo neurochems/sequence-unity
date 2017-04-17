@@ -9,7 +9,6 @@ public class PlayerShellManager : MonoBehaviour {
 		anim = GetComponent<Animator>();		// init animator ref
 	}
 
-	// shell
 	public void Shell (int fromState, int toState, bool fromLight, bool toLight, int shape) 
 	{
 		// EVOLUTIONS \\
@@ -49,19 +48,13 @@ public class PlayerShellManager : MonoBehaviour {
 
 		// from dark second
 		if (fromState == 2 && toState == 3 && !fromLight && !toLight) {			// to dark third
-			// scale to third
-			anim.ResetTrigger ("scaleup");						// reset next stage
-			anim.SetTrigger("scaledown");						// enable core to black animation
-			anim.SetBool("photon", true);						// enable black core animation state
+			ScaleTo (false, "hidden", "third");										// scale to third
 		}
 			// to light third (no shell change)
 			
 		// from light second
 		if (fromState == 2 && toState == 3 && fromLight && !toLight) {			// to dark third
-			// scale to third
-			anim.ResetTrigger ("scaleup");						// reset next stage
-			anim.SetTrigger("scaledown");						// enable core to black animation
-			anim.SetBool("photon", true);						// enable black core animation state
+			ScaleTo (false, "hidden", "third");										// scale to third
 		}
 			// to light third (no shell change)
 
@@ -71,18 +64,12 @@ public class PlayerShellManager : MonoBehaviour {
 
 		// from dark third
 			// to dark fourth (no shell change)
-		if (fromState == 3 && toState == 4 && !fromLight && toLight) {						// to light fourth
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+		if (fromState == 3 && toState == 4 && !fromLight && toLight) {			// to light fourth
+			ScaleTo (false, "third", "hidden");										// scale to hidden
 		}
 		// from light third
-		if (fromState == 3 && toState == 4 && fromLight && !toLight) {							// to dark fourth
-			// scale to third
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+		if (fromState == 3 && toState == 4 && fromLight && !toLight) {			// to dark fourth
+			ScaleTo (false, "hidden", "third");										// scale to third
 		}
 			// to light fourth (no shell change)
 			
@@ -122,45 +109,27 @@ public class PlayerShellManager : MonoBehaviour {
 
 		// from dark circle sixth
 		if (fromState == 6 && toState == 7 && !fromLight && !toLight && shape == 0) {			// to dark circle seventh
-			// scale to seventh
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (false, "third", "seventh");													// scale to seventh
 		}
 		else if (fromState == 6 && toState == 7 && !fromLight && toLight && shape == 0) {		// to light circle seventh
-			// scale to seventh
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (false, "third", "seventh");													// scale to seventh
 		}
 		// from light circle sixth
 		if (fromState == 6 && toState == 7 && fromLight && !toLight && shape == 0) {			// to dark circle seventh
-			// scale to seventh
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (false, "third", "seventh");													// scale to seventh
 		}
 		else if (fromState == 6 && toState == 7 && fromLight && toLight && shape == 0) {		// to light circle seventh
-			// scale to seventh
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (false, "third", "seventh");													// scale to seventh
 		}
 		// from dark triangle sixth
 		if (fromState == 6 && toState == 7 && !fromLight && !toLight && shape == 1) {			// to dark triangle seventh
-			// scale to seventh
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (false, "hidden", "seventh");													// scale to seventh
 		}
 			// to light triangle seventh (no shell change)
 			
 		// from dark square sixth
 		if (fromState == 6 && toState == 7 && !fromLight && !toLight && shape == 2) {			// to dark square seventh
-			// scale to seventh
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (false, "hidden", "seventh");													// scale to seventh
 		}
 			// to light square seventh (no shell change)
 
@@ -178,37 +147,25 @@ public class PlayerShellManager : MonoBehaviour {
 			
 		// from dark triangle seventh
 			// to dark triangle eighth (no shell change)
-		if (fromState == 7 && toState == 8 && !fromLight && toLight && shape == 1) {		// to light triangle eighth
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+		if (fromState == 7 && toState == 8 && !fromLight && toLight && shape == 1) {			// to light triangle eighth
+			ScaleTo (false, "seventh", "hidden");													// scale to hidden
 		}
 
 		// from light triangle seventh
 		if (fromState == 7 && toState == 8 && fromLight && !toLight && shape == 1) {			// to dark triangle eighth
-			// scale to seventh
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (false, "hidden", "seventh");													// scale to seventh
 		}
 			// to light triangle eighth (no shell change)
 			
 		// from dark square seventh
 			// to dark square eighth (no shell change)
-		if (fromState == 7 && toState == 8 && !fromLight && toLight && shape == 2) {		// to light square eighth
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+		if (fromState == 7 && toState == 8 && !fromLight && toLight && shape == 2) {			// to light square eighth
+			ScaleTo (false, "hidden", "seventh");													// scale to seventh
 		}
 
 		// from light square seventh
 		if (fromState == 7 && toState == 8 && fromLight && !toLight && shape == 2) {			// to dark square eighth
-			// scale to seventh
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (false, "hidden", "seventh");													// scale to seventh
 		}
 		// to light square eighth (no shell change)
 
@@ -278,44 +235,26 @@ public class PlayerShellManager : MonoBehaviour {
 
 		// from dark third	
 		// to zero
-		if (fromState == 3 && toState == 0 && !fromLight && toLight) {							// to zero
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+		if (fromState == 3 && toState == 0 && !fromLight && toLight) {					// to zero
+			ScaleTo (true, "third", "hidden");												// scale to hidden
 		}
 		// to dark zero
-		if (fromState == 3 && toState == 0 && !fromLight && !toLight) {							// to dark zero
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+		if (fromState == 3 && toState == 0 && !fromLight && !toLight) {					// to dark zero
+			ScaleTo (true, "third", "hidden");												// scale to hidden
 		}
 		// to first
-		if (fromState == 3 && toState == 1 && !fromLight && !toLight) {							// to dark first
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+		if (fromState == 3 && toState == 1 && !fromLight && !toLight) {					// to dark first
+			ScaleTo (true, "third", "hidden");												// scale to hidden
 		}
-		else if (fromState == 3 && toState == 1 && !fromLight && toLight) {						// to light first
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+		else if (fromState == 3 && toState == 1 && !fromLight && toLight) {				// to light first
+			ScaleTo (true, "third", "hidden");												// scale to hidden
 		}
 		// to second
-		if (fromState == 3 && toState == 2 && !fromLight && !toLight) {							// to dark second
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+		if (fromState == 3 && toState == 2 && !fromLight && !toLight) {					// to dark second
+			ScaleTo (true, "third", "hidden");												// scale to hidden
 		}
-		else if (fromState == 3 && toState == 2 && !fromLight && toLight) {						// to light second
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+		else if (fromState == 3 && toState == 2 && !fromLight && toLight) {				// to light second
+			ScaleTo (true, "third", "hidden");												// scale to hidden
 		}
 
 		// from light third	
@@ -339,44 +278,26 @@ public class PlayerShellManager : MonoBehaviour {
 
 		// from dark fourth	
 		// to zero
-		if (fromState == 4 && toState == 0 && !fromLight && toLight) {							// to zero
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+		if (fromState == 4 && toState == 0 && !fromLight && toLight) {					// to zero
+			ScaleTo (true, "third", "hidden");												// scale to hidden
 		}
 		// to dark zero
-		if (fromState == 4 && toState == 0 && !fromLight && !toLight) {							// to dark zero
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+		if (fromState == 4 && toState == 0 && !fromLight && !toLight) {					// to dark zero
+			ScaleTo (true, "third", "hidden");												// scale to hidden
 		}
 		// to first
-		if (fromState == 4 && toState == 1 && !fromLight && !toLight) {							// to dark first
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+		if (fromState == 4 && toState == 1 && !fromLight && !toLight) {					// to dark first
+			ScaleTo (true, "third", "hidden");												// scale to hidden
 		}
-		else if (fromState == 4 && toState == 1 && !fromLight && toLight) {						// to light first
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+		else if (fromState == 4 && toState == 1 && !fromLight && toLight) {				// to light first
+			ScaleTo (true, "third", "hidden");												// scale to hidden
 		}
 		// to second
-		if (fromState == 4 && toState == 2 && !fromLight && !toLight) {							// to dark second
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+		if (fromState == 4 && toState == 2 && !fromLight && !toLight) {					// to dark second
+			ScaleTo (true, "third", "hidden");												// scale to hidden
 		}
-		else if (fromState == 4 && toState == 2 && !fromLight && toLight) {						// to light second
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+		else if (fromState == 4 && toState == 2 && !fromLight && toLight) {				// to light second
+			ScaleTo (true, "third", "hidden");												// scale to hidden
 		}
 		// to third
 			// to dark third (no shell change)
@@ -392,11 +313,8 @@ public class PlayerShellManager : MonoBehaviour {
 			// to dark second (no shell change)
 			// to light second (no shell change)
 		// to third
-		if (fromState == 4 && toState == 3 && fromLight && !toLight) {							// to dark third
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+		if (fromState == 4 && toState == 3 && fromLight && !toLight) {					// to dark third
+			ScaleTo (false, "hidden", "third");												// scale to third
 		}
 		// to light third (no shell change)
 
@@ -412,51 +330,30 @@ public class PlayerShellManager : MonoBehaviour {
 		// from dark circle fifth
 		// to zero
 		if (fromState == 5 && toState == 0 && !fromLight && toLight && shape == 0) {			// to zero
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		// to dark zero
 		if (fromState == 5 && toState == 0 && !fromLight && !toLight && shape == 0) {			// to dark zero
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		// to first
 		if (fromState == 5 && toState == 1 && !fromLight && !toLight && shape == 0) {			// to dark first
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		else if (fromState == 5 && toState == 1 && !fromLight && toLight && shape == 0) {		// to light first
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		// to second
-		if (fromState == 5 && toState == 2 && !fromLight && !toLight && shape == 0) {		// to dark second
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+		if (fromState == 5 && toState == 2 && !fromLight && !toLight && shape == 0) {			// to dark second
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		else if (fromState == 5 && toState == 2 && !fromLight && toLight && shape == 0) {		// to light second
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		// to third
 			// to dark third (no shell change)
-		if (fromState == 5 && toState == 3 && !fromLight && toLight && shape == 0) {		// to light third
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+		if (fromState == 5 && toState == 3 && !fromLight && toLight && shape == 0) {			// to light third
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		// to fourth
 			// to dark fourth (no shell change)
@@ -464,51 +361,30 @@ public class PlayerShellManager : MonoBehaviour {
 		// from light circle fifth
 		// to zero
 		if (fromState == 5 && toState == 0 && fromLight && toLight && shape == 0) {				// to zero
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		// to dark zero
 		if (fromState == 5 && toState == 0 && fromLight && !toLight && shape == 0) {			// to dark zero
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		// to first
 		if (fromState == 5 && toState == 1 && fromLight && !toLight && shape == 0) {			// to dark first
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		else if (fromState == 5 && toState == 1 && fromLight && toLight && shape == 0) {		// to light first
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		// to second
 		if (fromState == 5 && toState == 2 && fromLight && !toLight && shape == 0) {			// to dark second
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		else if (fromState == 5 && toState == 2 && fromLight && toLight && shape == 0) {		// to light second
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		// to third
 			// to dark third (no shell change)
-		if (fromState == 5 && toState == 3 && fromLight && toLight && shape == 0) {		// to light third
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+		if (fromState == 5 && toState == 3 && fromLight && toLight && shape == 0) {				// to light third
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		// to fourth
 			// to dark fourth (no shell change)
@@ -524,10 +400,7 @@ public class PlayerShellManager : MonoBehaviour {
 			// to light second (no shell change)
 		// to third
 		if (fromState == 5 && toState == 3 && fromLight && !toLight && shape == 1) {			// to dark third
-			// scale to third
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (false, "hidden", "third");														// scale to third
 		}
 			// to light third (no shell change)
 		// to fourth
@@ -544,10 +417,7 @@ public class PlayerShellManager : MonoBehaviour {
 			// to light second (no shell change)
 		// to third
 		if (fromState == 5 && toState == 3 && fromLight && !toLight && shape == 2) {			// to dark third
-			// scale to third
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (false, "hidden", "third");														// scale to third
 		}
 			// to light third (no shell change)
 		// to fourth
@@ -565,51 +435,30 @@ public class PlayerShellManager : MonoBehaviour {
 		// from dark circle sixth
 		// to zero
 		if (fromState == 6 && toState == 0 && !fromLight && toLight && shape == 0) {			// to zero
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		// to dark zero
 		if (fromState == 6 && toState == 0 && !fromLight && !toLight && shape == 0) {			// to dark zero
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		// to first
 		if (fromState == 6 && toState == 1 && !fromLight && !toLight && shape == 0) {			// to dark first
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		else if (fromState == 6 && toState == 1 && !fromLight && toLight && shape == 0) {		// to light first
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		// to second
 		if (fromState == 6 && toState == 2 && !fromLight && !toLight && shape == 0) {		// to dark second
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		else if (fromState == 6 && toState == 2 && !fromLight && toLight && shape == 0) {		// to light second
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		// to third
 			// to dark third (no shell change)
 		if (fromState == 6 && toState == 3 && !fromLight && toLight && shape == 0) {		// to light third
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		// to fourth
 			// to dark fourth (no shell change)
@@ -621,43 +470,25 @@ public class PlayerShellManager : MonoBehaviour {
 		// from light circle sixth
 		// to zero
 		if (fromState == 6 && toState == 0 && fromLight && toLight && shape == 0) {				// to zero
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		// to dark zero
 		if (fromState == 6 && toState == 0 && fromLight && !toLight && shape == 0) {			// to dark zero
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		// to first
 		if (fromState == 6 && toState == 1 && fromLight && !toLight && shape == 0) {			// to dark first
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		else if (fromState == 6 && toState == 1 && fromLight && toLight && shape == 0) {		// to light first
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		// to second
 		if (fromState == 6 && toState == 2 && fromLight && !toLight && shape == 0) {			// to dark second
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		else if (fromState == 6 && toState == 2 && fromLight && toLight && shape == 0) {		// to light second
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "third", "hidden");														// scale to hidden
 		}
 		// to third
 			// to dark third (no shell change)
@@ -679,10 +510,7 @@ public class PlayerShellManager : MonoBehaviour {
 			// to light second (no shell change)
 		// to third
 		if (fromState == 6 && toState == 3 && !fromLight && !toLight && shape == 1) {			// to dark third
-			// scale to third
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (false, "hidden", "third");														// scale to third
 		}
 			// to light third (no shell change)
 		// to fourth
@@ -701,10 +529,7 @@ public class PlayerShellManager : MonoBehaviour {
 			// to light second (no shell change)
 		// to third
 		if (fromState == 6 && toState == 3 && !fromLight && !toLight && shape == 2) {			// to dark third
-			// scale to third
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (false, "hidden", "third");														// scale to third
 		}
 			// to light third (no shell change)
 		// to fourth
@@ -724,253 +549,142 @@ public class PlayerShellManager : MonoBehaviour {
 		// from dark circle seventh
 		// to zero
 		if (fromState == 7 && toState == 0 && !fromLight && toLight && shape == 0) {			// to zero
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		// to dark zero
 		if (fromState == 7 && toState == 0 && !fromLight && !toLight && shape == 0) {			// to dark zero
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		// to first
 		if (fromState == 7 && toState == 1 && !fromLight && !toLight && shape == 0) {			// to dark first
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		else if (fromState == 7 && toState == 1 && !fromLight && toLight && shape == 0) {		// to light first
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		// to second
-		if (fromState == 7 && toState == 2 && !fromLight && !toLight && shape == 0) {		// to dark second
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+		if (fromState == 7 && toState == 2 && !fromLight && !toLight && shape == 0) {			// to dark second
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		else if (fromState == 7 && toState == 2 && !fromLight && toLight && shape == 0) {		// to light second
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		// to third
 		if (fromState == 7 && toState == 3 && !fromLight && !toLight && shape == 0) {			// to dark third
-			// scale to third
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "third");														// scale to third
 		}
 		else if (fromState == 7 && toState == 3 && !fromLight && toLight && shape == 0) {		// to light third
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		// to fourth
 		if (fromState == 7 && toState == 4 && !fromLight && !toLight && shape == 0) {			// to dark fourth
-			// scale to third
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "third");														// scale to third
 		}
 		// to fifth
 		if (fromState == 7 && toState == 5 && !fromLight && !toLight && shape == 0) {			// to dark circle fifth
-			// scale to third
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "third");														// scale to third
 		}
 		else if (fromState == 7 && toState == 5 && !fromLight && toLight && shape == 0) {		// to light circle fifth
-			// scale to third
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "third");														// scale to third
 		}
 		// to sixth
 		if (fromState == 7 && toState == 6 && !fromLight && !toLight && shape == 0) {			// to dark circle sixth
-			// scale to third
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "third");														// scale to third
 		}
 		else if (fromState == 7 && toState == 6 && !fromLight && toLight && shape == 0) {		// to light circle sixth
-			// scale to third
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "third");														// scale to third
 		}
 
 		// from light circle seventh
 		// to zero
 		if (fromState == 7 && toState == 0 && fromLight && toLight && shape == 0) {				// to zero
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		// to dark zero
 		if (fromState == 7 && toState == 0 && fromLight && !toLight && shape == 0) {			// to dark zero
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		// to first
 		if (fromState == 7 && toState == 1 && fromLight && !toLight && shape == 0) {			// to dark first
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		else if (fromState == 7 && toState == 1 && fromLight && toLight && shape == 0) {		// to light first
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		// to second
 		if (fromState == 7 && toState == 2 && fromLight && !toLight && shape == 0) {			// to dark second
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		else if (fromState == 7 && toState == 2 && fromLight && toLight && shape == 0) {		// to light second
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		// to third
 		if (fromState == 7 && toState == 3 && fromLight && !toLight && shape == 0) {			// to dark third
-			// scale to third
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "third");														// scale to third
 		}
 		else if (fromState == 7 && toState == 3 && fromLight && toLight && shape == 0) {		// to light third
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		// to fourth
 		if (fromState == 7 && toState == 4 && fromLight && !toLight && shape == 0) {			// to dark fourth
-			// scale to third
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "third");														// scale to third
 		}
 		// to fifth
 		if (fromState == 7 && toState == 5 && fromLight && !toLight && shape == 0) {			// to dark circle fifth
-			// scale to third
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "third");														// scale to third
 		}
 		else if (fromState == 7 && toState == 5 && fromLight && toLight && shape == 0) {		// to light circle fifth
-			// scale to third
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "third");														// scale to third
 		}
 		// to sixth
 		if (fromState == 7 && toState == 6 && fromLight && !toLight && shape == 0) {			// to dark circle sixth
-			// scale to third
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "third");														// scale to third
 		}
 		else if (fromState == 7 && toState == 6 && fromLight && toLight && shape == 0) {		// to light circle sixth
-			// scale to third
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "third");														// scale to third
 		}
 
 		// from dark triangle seventh
 		// to zero
 		if (fromState == 7 && toState == 0 && !fromLight && toLight && shape == 1) {			// to zero
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		// to dark zero
 		if (fromState == 7 && toState == 0 && !fromLight && !toLight && shape == 1) {			// to dark zero
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		// to first
 		if (fromState == 7 && toState == 1 && !fromLight && !toLight && shape == 1) {			// to dark first
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		else if (fromState == 7 && toState == 1 && !fromLight && toLight && shape == 1) {		// to light first
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		// to second
 		if (fromState == 7 && toState == 2 && !fromLight && !toLight && shape == 1) {			// to dark second
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		else if (fromState == 7 && toState == 2 && !fromLight && toLight && shape == 1) {		// to light second
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		// to third
 		if (fromState == 7 && toState == 3 && !fromLight && !toLight && shape == 1) {			// to dark third
-			// scale to third
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "third");														// scale to third
 		}
 		else if (fromState == 7 && toState == 3 && !fromLight && toLight && shape == 1) {		// to light third
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		// to fourth
 		if (fromState == 7 && toState == 4 && !fromLight && toLight && shape == 1) {			// to light fourth
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		// to fifth
 		if (fromState == 7 && toState == 5 && !fromLight && toLight && shape == 1) {			// to triangle fifth
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		// to sixth
 		if (fromState == 7 && toState == 6 && !fromLight && !toLight && shape == 1) {			// to dark triangle sixth
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 
 		// from light triangle seventh
@@ -984,10 +698,7 @@ public class PlayerShellManager : MonoBehaviour {
 			// to light second (no shell change)
 		// to third
 		if (fromState == 7 && toState == 3 && fromLight && !toLight && shape == 1) {			// to dark third
-			// scale to third
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "third");														// scale to third
 		}
 			// to light third (no shell change)
 		// to fourth
@@ -1000,77 +711,44 @@ public class PlayerShellManager : MonoBehaviour {
 		// from dark square seventh
 		// to zero
 		if (fromState == 7 && toState == 0 && !fromLight && toLight && shape == 2) {			// to zero
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		// to dark zero
 		if (fromState == 7 && toState == 0 && !fromLight && !toLight && shape == 2) {			// to dark zero
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		// to first
 		if (fromState == 7 && toState == 1 && !fromLight && !toLight && shape == 2) {			// to dark first
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		else if (fromState == 7 && toState == 1 && !fromLight && toLight && shape == 2) {		// to light first
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		// to second
 		if (fromState == 7 && toState == 2 && !fromLight && !toLight && shape == 2) {			// to dark second
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		else if (fromState == 7 && toState == 2 && !fromLight && toLight && shape == 2) {		// to light second
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		// to third
 		if (fromState == 7 && toState == 3 && !fromLight && !toLight && shape == 2) {			// to dark third
-			// scale to third
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "third");														// scale to third
 		}
 		else if (fromState == 7 && toState == 3 && !fromLight && toLight && shape == 2) {		// to light third
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		// to fourth
 		if (fromState == 7 && toState == 4 && !fromLight && toLight && shape == 2) {			// to light fourth
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		// to fifth
 		if (fromState == 7 && toState == 5 && !fromLight && toLight && shape == 2) {			// to square fifth
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 		// to sixth
 		if (fromState == 7 && toState == 6 && !fromLight && !toLight && shape == 2) {			// to dark square sixth
-			// scale to zero
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 
 		// from light square seventh
@@ -1084,10 +762,7 @@ public class PlayerShellManager : MonoBehaviour {
 			// to light second (no shell change)
 		// to third
 		if (fromState == 7 && toState == 3 && fromLight && !toLight && shape == 2) {			// to dark third
-			// scale to third
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
+			ScaleTo (true, "seventh", "third");														// scale to third
 		}
 			// to light third (no shell change)
 		// to fourth
@@ -1099,48 +774,23 @@ public class PlayerShellManager : MonoBehaviour {
 	}
 
 	///<summary>
-	///<para>0 = circle, 1 = triangle, 2 = square</para>
+	///<para> devol = whether to scale up or scale down </para>
+	///<para> resetState = state to set to false </para>
+	///<para> setState = state to set to true </para>
 	///</summary>
-	private void SetActive(bool active)
+	private void ScaleTo (bool devol, string setState, string resetState)
 	{
-		anim.ResetTrigger ("scaleup");											// reset next stage
-		anim.SetTrigger("scaledown");											// enable core to black animation
-		anim.SetBool("photon", true);											// enable black core animation state
-	}
+		if (devol) {
+			anim.ResetTrigger ("scaleup");											// reset last stage
+			anim.SetTrigger ("scaledown");											// enable scaledown
+		}
+		else {
+			anim.ResetTrigger ("scaledown");										// reset last stage
+			anim.SetTrigger ("scaleup");											// enable scaleup
 
-	///<summary>
-	///<para>flag shell as light</para>
-	///</summary>
-	private void SetLight (bool light)
-	{
-		anim.ResetTrigger ("scaleup");											// reset next stage
-		anim.SetTrigger("scaledown");											// enable core to black animation
-		anim.SetBool("photon", true);											// enable black core animation state
-	}
-
-	///<summary>
-	///<para> vals in mechanim: 0, 0.75, 1, 1.25 ... , 200 (test and add) </para>
-	///</summary>
-	private void ScaleTo (string setScale, string resetScale, bool devol)
-	{
-		// scale to zero
-		// scale to third
-		// scale to seventh
-		// scale to ninth
-		// scale to tenth
-		anim.ResetTrigger ("scaleup");											// reset next stage
-		anim.SetTrigger("scaledown");											// enable core to black animation
-		anim.SetBool("photon", true);											// enable black core animation state
-	}
-
-	///<summary>
-	///<para> vals in mechanim: 0.6, 1, 2, ... , 200 (test and add) </para>
-	///</summary>
-	private void ShrinkTo (string setScale, string resetScale, bool devol)
-	{
-		anim.ResetTrigger ("scaleup");											// reset next stage
-		anim.SetTrigger("scaledown");											// enable core to black animation
-		anim.SetBool("photon", true);											// enable black core animation state
+		}
+		anim.SetBool(resetState, false);											// reset previously active state
+		anim.SetBool(setState, true);												// set active state
 	}
 
 }

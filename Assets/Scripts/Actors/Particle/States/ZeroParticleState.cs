@@ -36,18 +36,29 @@ public class ZeroParticleState : IParticleState
 			= other.gameObject.GetComponent<ParticleStatePattern>();					// ref other ParticleStatePattern
 
 		if (canCollide) {																								// if collision allowed
-			if (other.gameObject.CompareTag ("Player")) {																	// colide with player
+			if (other.gameObject.CompareTag ("Player")) {									// colide with player
 				psp.stunned = true;																// stunned flag
+				psp.SubDark (other.gameObject.GetComponent<PlayerStatePattern>().darkEvol);		// subtract other dark
+				psp.SubLight (other.gameObject.GetComponent<PlayerStatePattern>().lightEvol);	// subtract other light
 				canCollide = false;																								// reset can collide trigger	
 				Debug.Log ("particle contact player");
 			} 
-			else if (other.gameObject.CompareTag ("Zero")) {										// if collide with zero
+			else if (other.gameObject.CompareTag ("Zero")) {								// if collide with zero
 				psp.stunned = true;																// stunned flag
 				psp.AddDark (pspOther.darkEvol);												// add dark of other
 				psp.AddLight (pspOther.lightEvol);												// add light of other
 				canCollide = false;																// reset has collided trigger
 			} 
-			else {																			// collide with any other
+			else if (other.gameObject.CompareTag("First") 										// collide with first
+				|| other.gameObject.CompareTag("Second")									// collide with second
+				|| other.gameObject.CompareTag("Third")										// collide with third
+				|| other.gameObject.CompareTag("Fourth")									// collide with fourth
+				|| other.gameObject.CompareTag("Fifth")										// collide with fifth
+				|| other.gameObject.CompareTag("Sixth")										// collide with sixth
+				|| other.gameObject.CompareTag("Seventh")									// collide with seventh
+				|| other.gameObject.CompareTag("Eighth")									// collide with eighth
+				|| other.gameObject.CompareTag("Ninth"))									// collide with ninth
+			{									
 				psp.stunned = true;																// set stunned flag
 				psp.SubDark (pspOther.darkEvol);												// subtract other dark
 				psp.SubLight (pspOther.lightEvol);												// subtract other light

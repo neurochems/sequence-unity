@@ -24,9 +24,9 @@ public class UIManager : MonoBehaviour {
 	public bool endless = false;
 
 	// debug info
-	public UnityEngine.UI.Text numParticles;
-	public GameObject debugCollectables;
-	private int numTotal, numPhoton, numElectron, numElectron2, numShell, numShell2, numAtom, numAtom2;
+	//public UnityEngine.UI.Text numParticles;
+	//public GameObject debugCollectables;
+	//private int numTotal, numPhoton, numElectron, numElectron2, numShell, numShell2, numAtom, numAtom2;
 
 	// ui text anim
 	public GameObject[] overlayTextTrigger;
@@ -42,12 +42,12 @@ public class UIManager : MonoBehaviour {
 	void Update () 
 	{
 
-		/////////////////////////      DEBUG particle counts      \\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+		/*////////////////////////      DEBUG particle counts      \\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		// total children
 		numTotal = debugCollectables.transform.childCount;
 
-		// iterate particles, logging tag type
+		/ iterate particles, logging tag type
 		foreach (Transform child in debugCollectables.transform) {
 			if (child.CompareTag("Photon")) numPhoton += 1;
 			else if (child.CompareTag("Electron")) numElectron += 1;
@@ -71,6 +71,8 @@ public class UIManager : MonoBehaviour {
 		numShell2 = 0;
 		numAtom = 0;
 		numAtom2 = 0;
+
+		*/
 
 		//////////////////////////////////////////////////////////////////////////////////////
 

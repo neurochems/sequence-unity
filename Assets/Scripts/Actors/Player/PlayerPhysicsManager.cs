@@ -15,11 +15,11 @@ public class PlayerPhysicsManager : MonoBehaviour {
 
 
 	void Start () {
-		GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
-		GetComponent<Rigidbody>().useGravity = false;
+		rb = GetComponent<Rigidbody> ();
+		rb.constraints = RigidbodyConstraints.FreezeRotation;
+		rb.useGravity = false;
 		playerTransform = transform;
 
-		rb = GetComponent<Rigidbody> ();
 	}
 	
 	void FixedUpdate () {

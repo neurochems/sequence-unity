@@ -7,7 +7,7 @@ public interface IParticleState
 
 	void OnTriggerEnter(Collider other);
 
-	void Death(bool toLight);
+	//void ToLightWorld(bool toLightWorld);
 
 	void ToZero(bool toLight);
 

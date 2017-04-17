@@ -7,20 +7,21 @@ public class ParticleStatePattern : MonoBehaviour {
 	public float darkEvol, lightEvol;										// dark & light evolution level
 	public float deltaDark, deltaLight;										// delta dark & light evolution level
 
-	public bool light = true, toLight;										// is light flag, to light flag
+	public new bool light;													// is light flag
+	public bool toLight;													// to light flag
 
 	[HideInInspector] public IParticleState currentState;					// other object state
 	//[HideInInspector] public int previousState;								// previous state index / Fn
 
 	[HideInInspector] public DeadParticleState deadState;					// instance of dead state
-	[HideInInspector] public ZeroParticleState zeroState;				// instance of photon state
-	[HideInInspector] public FirstParticleState firstState;			// instance of electron state
-	[HideInInspector] public SecondParticleState secondState;			// instance of electron2 state
-	[HideInInspector] public ThirdParticleState thirdState;					// instance of shell state
-	[HideInInspector] public FourthParticleState fourthState;				// instance of shell2 state
-	[HideInInspector] public FifthParticleState fifthState;					// instance of atom state
-	[HideInInspector] public SixthParticleState sixthState;					// instance of atom2 state
-	[HideInInspector] public SeventhParticleState seventhState;					// instance of atom2 state
+	[HideInInspector] public ZeroParticleState zeroState;					// instance of zero state
+	[HideInInspector] public FirstParticleState firstState;					// instance of first state
+	[HideInInspector] public SecondParticleState secondState;				// instance of second state
+	[HideInInspector] public ThirdParticleState thirdState;					// instance of third state
+	[HideInInspector] public FourthParticleState fourthState;				// instance of fourth state
+	[HideInInspector] public FifthParticleState fifthState;					// instance of fifth state
+	[HideInInspector] public SixthParticleState sixthState;					// instance of sixth state
+	[HideInInspector] public SeventhParticleState seventhState;				// instance of seventh state
 	// new state
 
 	//public float attractionRange = 20f;										// particle sensing distance
@@ -40,7 +41,7 @@ public class ParticleStatePattern : MonoBehaviour {
 	public bool stunned;													// stunned?
 	public float stunDuration = 3f;											// duration of post-hit invulnerability
 	private float stunTimer = 0f;											// stun timer
-	private bool shellShrinking, nucleusDeactivating;						// shell shrinking flag, nucleus deactivating flag
+	//private bool shellShrinking, nucleusDeactivating;						// shell shrinking flag, nucleus deactivating flag
 	[HideInInspector] public float shrinkTimer = 0f;						// shell deactivation timer
 
 	void Awake()
@@ -63,24 +64,30 @@ public class ParticleStatePattern : MonoBehaviour {
 		seventhState = new SeventhParticleState (this);						// initialize seventh state
 		// new state
 
-		pcm = GetComponent<ParticleCoreManager> ();							// initialize core manager ref
+		pcm = transform.FindChild("Core")
+			.gameObject.GetComponent<ParticleCoreManager> ();				// initialize core manager ref
 		psm = transform.FindChild ("Shell")
 			.gameObject.GetComponent<ParticleShellManager>();				// initialize shell manager ref
 		pnm = transform.FindChild ("Nucleus")
 			.gameObject.GetComponent<ParticleNucleusManager>();				// initialize nucleus manager ref
 
 		//ppm = GetComponent<ParticlePhysicsManager> ();						// init particle physics manager ref
-		sc = GetComponents<SphereCollider> ();								// init sphere colliders ref
+		sc = transform.FindChild("Core")
+			.gameObject.GetComponents<SphereCollider> ();					// init sphere colliders ref
 	}
 
 	void Start () 
 	{
-		currentState = zeroState;											// start at photon state
-		TransitionTo(0, 0, light, toLight, 0);								// CORE: shrink to photon size, fade to white
+		light = true;														// init light
+		lightEvol = 0.5f;													// init 0.5 evol
+		currentState = zeroState;											// start at zero state
+		TransitionTo(0, 0, light, toLight, 0);								// CORE: shrink to zero size, fade to white
 	}
 
 	void Update () 
 	{
+		evol = lightEvol + darkEvol;										// update total evol value
+
 		currentState.UpdateState ();										// frame updates from current state class
 
 		// stun duration timer
@@ -90,7 +97,7 @@ public class ParticleStatePattern : MonoBehaviour {
 		}
 
 		// deactivating shell/nucleus timer
-		if (shellShrinking || nucleusDeactivating) shrinkTimer += Time.deltaTime;			// start timer
+		//if (shellShrinking || nucleusDeactivating) shrinkTimer += Time.deltaTime;			// start timer
 	}
 
 	private void OnTriggerEnter(Collider other)
@@ -124,7 +131,7 @@ public class ParticleStatePattern : MonoBehaviour {
 		// new state
 	}
 
-	// BEHAVIOURS \\
+	// BEHAVIOURS \\ - PUT IN SEPARATE SCRIPT
 
 	public void SpawnZero (int num)
 	{
@@ -136,7 +143,7 @@ public class ParticleStatePattern : MonoBehaviour {
 		GetComponent<SpawnParticle> ().SpawnElectron (num);
 	}
 
-	// EVOL CHANGES \\
+	// EVOL CHANGES \\ - PUT IN SEPARATE SCRIPT
 
 	public void SubEvol(float changeAmount) 
 	{
@@ -230,73 +237,4 @@ public class ParticleStatePattern : MonoBehaviour {
 		pnm.Nucleus(fromState, toState, fromLight, toLight, shape);					// change nucleus
 	}
 
-	/* core
-	void CoreToPhoton() {
-		GetComponent<Animator> ().ResetTrigger ("scaleup");					// reset next stage
-		GetComponent<Animator> ().SetTrigger("scaledown");					// enable core to black animation
-		GetComponent<Animator>().SetBool("photon", true);					// enable black core animation state
-	}
-	void CoreToElectron() {
-		GetComponent<Animator>().SetTrigger ("scaleup");					// trigger core to white animation
-		GetComponent<Animator>().SetBool("photon", false);					// disable black core animation state, returning to idle
-	}
-	void CoreToWhite() {
-		GetComponent<Animator> ().SetTrigger ("fadein");					// trigger core to white animation
-		GetComponent<Animator>().SetBool("black", false);					// disable black core animation state, returning to idle
-
-	}
-	void CoreToBlack() {
-		GetComponent<Animator> ().ResetTrigger ("fadein");					// reset next stage
-		GetComponent<Animator> ().SetTrigger("fadeout");					// enable core to black animation
-		GetComponent<Animator>().SetBool("black", true);					// enable black core animation state	
-
-	}
-
-	// shell
-	void ShellGrow() {
-		shell.SetActive(true);												// activate shell
-		shell.GetComponent<Animator>().SetTrigger("grow");					// enable shell grow animation
-		shell.GetComponent<Animator>().SetBool("shell", true);				// enable shell grown animation state
-		//shell.GetComponent<SphereCollider> ().enabled = true;				// enable collider (enable here to prevent particles from entering shell to contact core electron)
-		//GetComponent<SphereCollider>().enabled = false;						// disable core collider
-	}
-	void ShellShrink() {
-		shell.GetComponent<Animator> ().SetTrigger ("shrink");				// trigger shell shrink animation
-		shell.GetComponent<Animator>().SetBool("shell", false);				// enable black core animation state
-		shellShrinking = true;												// activate timer
-		if (shrinkTimer >= 2f) {											// if timer >= duration
-			shell.SetActive(false);												// deactivate shell
-			shellShrinking = false;												// reset timer flag
-			shrinkTimer = 0f;													// reset timer
-		}
-		//GetComponent<SphereCollider>().enabled = true;						// enable core collider
-	}
-
-	// nucleus
-	void NucleusEnable() {
-		nucleus.SetActive(true);											// enable nucleus	
-	}
-	void NucleusDisable() {
-		nucleus.GetComponent<Animator> ().ResetTrigger ("fadeblack");		// reset next stage
-		nucleus.GetComponent<Animator> ().SetTrigger ("fadewhite");			// trigger nucleus to white animation
-		nucleus.GetComponent<Animator>().SetBool("white", true);			// disable white nucleus animation state, returning to idle
-		// deactivate
-		nucleusDeactivating = true;											// activate timer
-		if (shrinkTimer >= 1f) {											// if timer >= duration
-			nucleus.SetActive(false);											// deactivate nucleus
-			nucleusDeactivating = false;										// reset timer flag
-			shrinkTimer = 0f;													// reset timer
-		}
-	}
-	void NucleusToWhite() {
-		nucleus.GetComponent<Animator> ().ResetTrigger ("fadeblack");		// reset next stage
-		nucleus.GetComponent<Animator> ().SetTrigger ("fadewhite");			// trigger nucleus to white animation
-		nucleus.GetComponent<Animator>().SetBool("white", true);			// disable white nucleus animation state, returning to idle
-	}
-	void NucleusToBlack() {
-		nucleus.GetComponent<Animator> ().SetTrigger("fadeblack");			// enable nucleus to black animation
-		nucleus.GetComponent<Animator>().SetBool("white", false);			// enable white nucleus animation state	
-
-	}
-	*/
 }

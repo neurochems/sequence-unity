@@ -7,11 +7,12 @@ public class PlayerStatePattern : MonoBehaviour {
 	public float darkEvol, lightEvol;										// dark & light evolution level
 	public float deltaDark, deltaLight;										// delta dark & light evolution level
 
-	public bool light = true, toLight;										// is light flag, to light flag
+	public new bool light = true;											// is light flag
+	public bool toLight;													// to light flag
 
 	[HideInInspector] public IParticleState currentState;					// other object state
 
-	[HideInInspector] public DeadPlayerState deadState;						// instance of dead state
+	//[HideInInspector] public DeadPlayerState deadState;						// instance of dead state
 	[HideInInspector] public ZeroPlayerState zeroState;						// instance of photon state
 	[HideInInspector] public FirstPlayerState firstState;					// instance of electron state
 	[HideInInspector] public SecondPlayerState secondState;					// instance of electron2 state
@@ -22,22 +23,25 @@ public class PlayerStatePattern : MonoBehaviour {
 	[HideInInspector] public SeventhPlayerState seventhState;				// instance of element state
 	// new state
 
-	//private GameObject nucleus, shell;								// reference to nucleus and shell children
+	public bool lightworld;													// is light world flag
 
 	// component references
-	private PlayerCoreManager pcm;											// player core manager (animations)
-	private PlayerShellManager psm;											// player shell manager (animations)
-	private PlayerNucleusManager pnm;										// player nucleus manager (animations)
+	private CameraManager cam;													// main camera animator
+	private PlayerCoreManager pcm;											// player core manager (for animations)
+	private PlayerShellManager psm;											// player shell manager (for animations)
+	private PlayerNucleusManager pnm;										// player nucleus manager (for animations)
 	private UIManager uim;													// UI manager
 	//private PlayerPhysicsManager ppm;										// player physics manager
 	private SphereCollider[] sc;											// sphere colliders
+
+	private MeshRenderer rendWorld, rendCore, rendShell, rendNucleus;		// mesh renderers (for lightworld colour changes)
 
 	// timers & flags
 	private int die;														// roll for collision conflicts
 	public bool stunned;													// stunned?
 	public float stunDuration = 5f;											// duration of post-hit invulnerability
 	private float stunTimer = 0f;											// stun timer
-	private bool shellShrinking, shell2Shrinking, nucleusDeactivating;		// shell/shell2 shrinking flag, nucleus deactivating flag
+	//private bool shellShrinking, shell2Shrinking, nucleusDeactivating;		// shell/shell2 shrinking flag, nucleus deactivating flag
 	[HideInInspector] public float shrinkTimer = 0f;						// shell deactivation timer
 	// UI
 	[HideInInspector] public float lastStateChange = 0.0f;					// since last state change
@@ -53,7 +57,7 @@ public class PlayerStatePattern : MonoBehaviour {
 		deltaDark = 0f;														// initialize delta dark evol
 		deltaLight = 0f;														// initialize delta light evol
 
-		deadState = new DeadPlayerState (this);								// initialize dead state
+		//deadState = new DeadPlayerState (this);								// initialize dead state
 		zeroState = new ZeroPlayerState (this);								// initialize zero state
 		firstState = new FirstPlayerState (this);							// initialize first state
 		secondState = new SecondPlayerState (this);							// initialize second state
@@ -64,28 +68,46 @@ public class PlayerStatePattern : MonoBehaviour {
 		seventhState = new SeventhPlayerState (this);						// initialize seventh state
 		// new state
 
-		pcm = GetComponent<PlayerCoreManager> ();							// initialize core manager ref
+		cam = transform.FindChild ("Follow Camera")
+			.gameObject.GetComponent<CameraManager> ();						// initialize camera manager ref
+		pcm = transform.FindChild ("Player Core")
+			.gameObject.GetComponent<PlayerCoreManager> ();					// initialize core manager ref
 		psm = transform.FindChild ("Player Shell")
 			.gameObject.GetComponent<PlayerShellManager>();					// initialize shell manager ref
 		pnm = transform.FindChild ("Player Nucleus")
 			.gameObject.GetComponent<PlayerNucleusManager>();				// initialize nucleus manager ref
 
-		uim = GetComponent<UIManager> ();									// init ui manager ref
-		//ppm = GetComponent<PlayerPhysicsManager> ();						// init player physics manager ref
-		sc = GetComponents<SphereCollider> ();								// init sphere collider ref
+		sc = transform.FindChild ("Player Core")
+			.gameObject.GetComponents<SphereCollider> ();					// init sphere collider ref
 
+		rendWorld = GameObject.Find("World")
+			.GetComponent<MeshRenderer>();									// init world mesh renderer ref
+		rendCore = transform.FindChild ("Player Core")
+			.gameObject.GetComponent<MeshRenderer> ();						// init core mesh renderer ref
+		rendShell = transform.FindChild ("Player Shell")
+			.gameObject.GetComponent<MeshRenderer> ();						// init shell mesh renderer ref
+		rendNucleus = transform.FindChild ("Player Nucleus")
+			.gameObject.GetComponent<MeshRenderer> ();						// init nucleus mesh renderer ref
+
+		//ppm = GetComponent<PlayerPhysicsManager> ();						// init player physics manager ref
+
+		uim = GetComponent<UIManager> ();									// init ui manager ref
 		Destroy(GameObject.FindGameObjectWithTag("Destroy"));				// destroy old UI
 
 	}
 
 	void Start () 
 	{
-		currentState = zeroState;											// start at photon state
-		TransitionTo(0, 0, light, toLight, 0);								// CORE: shrink to photon size, fade to white
+		light = true;														// start as light
+		lightEvol = 0.5f;													// start at 0.5 light evol
+		currentState = zeroState;											// start at zero state
+		TransitionTo(0, 0, light, toLight, 0);								// start at zero size
 	}
 
 	void Update () 
 	{
+		evol = lightEvol + darkEvol;														// update total evol value
+
 		if (uim.uI.GetComponent<StartOptions> ().inMainMenu) {								// if in menu
 			evol = 0f;																			// prevent evol changes (no death in menu)
 		}
@@ -98,7 +120,7 @@ public class PlayerStatePattern : MonoBehaviour {
 			stunTimer += Time.deltaTime;													// start timer
 		} 
 
-		if (shellShrinking || nucleusDeactivating) shrinkTimer += Time.deltaTime;			// start timer
+		//if (shellShrinking || nucleusDeactivating) shrinkTimer += Time.deltaTime;			// start timer
 
 		// checks for OVERLAY TEXT
 		if (!uim.uI.GetComponent<StartOptions>().inMainMenu && timeCheck == true) {			// if game start (not in menu)
@@ -195,26 +217,29 @@ public class PlayerStatePattern : MonoBehaviour {
 
 	// STATE TRANSTITIONS \\
 
-	public void TransitionTo(int fromState, int toState, bool fromLight, bool toLight, int shape)
+	public void TransitionTo (int fromState, int toState, bool fromLight, bool toLight, int shape)
 	{
+
+		light = toLight;															// update light value
+
 		if (toState == 0)	{ 														// to zero
 			// rb.mass = 0.2f;															// set mass
-			SetZoomCamera(toState.ToString(), fromState.ToString(), light);				// CAMERA: zoom to size 20
+			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 1) {													// to first
 			// rb.mass = 0.2f;															// set mass
-			SetZoomCamera(toState.ToString(), fromState.ToString(), light);				// CAMERA: zoom to size 20
+			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 2) {													// to second
 			//rb.mass = 0.2f;															// set mass
-			SetZoomCamera(toState.ToString(), fromState.ToString(), light);				// CAMERA: zoom to size 20
+			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 3) {													// to third
 			//rb.mass = 0.2f;															// set mass
-			SetZoomCamera(toState.ToString(), fromState.ToString(), light);				// CAMERA: zoom to size 20
+			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
 			sc[0].radius = 0.51f;														// shrink collision radius in
 			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
 			sc[1].radius = 0.51f;														// shrink collision radius in
@@ -223,7 +248,7 @@ public class PlayerStatePattern : MonoBehaviour {
 		}
 		else if (toState == 4) {													// to fourth
 			//rb.mass = 0.2f;															// set mass
-			SetZoomCamera(toState.ToString(), fromState.ToString(), light);				// CAMERA: zoom to size 20
+			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
 			sc[0].radius = 0.51f;														// shrink collision radius in
 			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
 			sc[1].radius = 0.51f;														// shrink collision radius in
@@ -232,7 +257,7 @@ public class PlayerStatePattern : MonoBehaviour {
 		}
 		else if (toState == 5) {													// to fifth
 			//rb.mass = 0.2f;															// set mass
-			SetZoomCamera(toState.ToString(), fromState.ToString(), light);				// CAMERA: zoom to size 20
+			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
 			sc[0].radius = 0.51f;														// shrink collision radius in
 			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
 			sc[1].radius = 0.51f;														// shrink collision radius in
@@ -241,7 +266,7 @@ public class PlayerStatePattern : MonoBehaviour {
 		}
 		else if (toState == 6) {													// to sixth
 			//rb.mass = 0.2f;															// set mass
-			SetZoomCamera(toState.ToString(), fromState.ToString(), light);				// CAMERA: zoom to size 20
+			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
 			sc[0].radius = 0.51f;														// shrink collision radius in
 			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
 			sc[1].radius = 0.51f;														// shrink collision radius in
@@ -250,7 +275,7 @@ public class PlayerStatePattern : MonoBehaviour {
 		}
 		else if (toState == 7) {													// to seventh
 			// rb.mass = 0.2f;															// set mass
-			SetZoomCamera(toState.ToString(), fromState.ToString(), light);				// CAMERA: zoom to size 20
+			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
 			sc[0].radius = 0.51f;														// shrink collision radius in
 			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
 			sc[1].radius = 0.51f;														// shrink collision radius in
@@ -259,35 +284,27 @@ public class PlayerStatePattern : MonoBehaviour {
 		}
 		//new state
 
-		lastStateChange = Time.time;														// reset time since last state change
+		lastStateChange = Time.time;												// reset time since last state change
 	}
-		
+
+	public void ToLightWorld (bool toLightWorld) {
+		rendWorld.material.SetColor("_Color", Color.white);							// change world to white
+		rendCore.material.SetColor("_Color", Color.black);							// change core to black
+		rendShell.material.SetColor("_Color", Color.black);							// change shell to black
+		rendNucleus.material.SetColor("_Color", Color.black);							// change nucleus to black
+	}
+
 	// camera - PUT IN SEPARATE SCRIPT
-	private void SetZoomCamera(string set, string reset, bool devol) 
+	private void SetZoomCamera (int fromState, int toState) 
 	{
-		transform.FindChild ("Follow Camera").GetComponent<Animator> ().SetTrigger (set);								// set trigger state
-
-		transform.FindChild ("Follow Camera").GetComponent<Animator> ().ResetTrigger (reset);								// reset trigger state
-
-		if (devol == true)																								// if devol true
-			transform.FindChild ("Follow Camera").GetComponent<Animator> ().SetBool ("devolve", true);						// set devolve trigger
-		else																											// else
-			transform.FindChild ("Follow Camera").GetComponent<Animator> ().SetBool ("devolve", false);						// reset devolve trigger
-
-	}
-	private void ResetZoomCamera(bool devol) 
-	{
-		if (devol == true)																									// if devol true
-			transform.FindChild ("Follow Camera").GetComponent<Animator> ().SetBool ("devolve", true);						// set devolve trigger
-		else																											// else
-			transform.FindChild ("Follow Camera").GetComponent<Animator> ().SetBool ("devolve", false);						// reset devolve trigger
+		cam.ZoomCamera (fromState, toState);
 	}
 
 	// set player parts
 	private void SetParts(int fromState, int toState, bool fromLight, bool toLight, int shape)
 	{
 		pcm.Core (fromState, toState, fromLight, toLight, shape);					// change circle
-		psm.Shell (fromState, toState, fromLight, toLight, shape);							// change shell
+		psm.Shell (fromState, toState, fromLight, toLight, shape);					// change shell
 		pnm.Nucleus(fromState, toState, fromLight, toLight, shape);					// change nucleus
 	}
 

@@ -1,9 +1,47 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Actors\Player\UIManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Actors\Player\States\SeventhPlayerState.cs">
     <Files>
-      <File FileName="Assets\Scripts\Actors\Player\UIManager.cs" Line="158" Column="1" />
+      <File FileName="Assets\Scripts\Actors\Player\PlayerStatePattern.cs" Line="90" Column="28" />
+      <File FileName="Assets\Scripts\Actors\Player\States\ZeroPlayerState.cs" Line="210" Column="1" />
+      <File FileName="Assets\Scripts\Actors\Player\States\FirstPlayerState.cs" Line="170" Column="85" />
+      <File FileName="Assets\Scripts\Actors\Player\States\SecondPlayerState.cs" Line="143" Column="5" />
+      <File FileName="Assets\Scripts\Actors\Player\States\ThirdPlayerState.cs" Line="151" Column="4" />
+      <File FileName="Assets\Scripts\Actors\Player\States\FourthPlayerState.cs" Line="160" Column="41" />
+      <File FileName="Assets\Scripts\Actors\Player\States\FifthPlayerState.cs" Line="197" Column="6" />
+      <File FileName="Assets\Scripts\Actors\Player\States\SixthPlayerState.cs" Line="188" Column="4" />
+      <File FileName="Assets\Scripts\Actors\Player\States\SeventhPlayerState.cs" Line="193" Column="37" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Sequence" expanded="True">
+            <Node name="Assembly-CSharp" expanded="True">
+              <Node name="Scripts" expanded="True">
+                <Node name="Actors" expanded="True">
+                  <Node name="Particle" expanded="True">
+                    <Node name="States" expanded="True" />
+                  </Node>
+                  <Node name="Player" expanded="True">
+                    <Node name="States" expanded="True">
+                      <Node name="SeventhPlayerState.cs" selected="True" />
+                    </Node>
+                  </Node>
+                </Node>
+                <Node name="Camera" expanded="True" />
+              </Node>
+            </Node>
+            <Node name="Assembly-CSharp-Editor" expanded="True" />
+            <Node name="Assembly-CSharp-firstpass" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State name="__root__">
+          <Node name="Sequence" expanded="True" selected="True" />
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
