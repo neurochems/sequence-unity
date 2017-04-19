@@ -9,11 +9,20 @@ public class ParticleNucleusManager : MonoBehaviour {
 	#pragma warning restore 0414
 	public Mesh sphere, triangle, square;			// shape meshes
 	private MeshRenderer rend;						// mesh renderer (for colour changes)
+	private PlayerStatePattern psp;					// psp ref
+	private bool light; 							// is light flag
 
 	void Awake () {
-		anim = GetComponent<Animator>();			// init animator ref
-		mesh = GetComponent<MeshFilter>().mesh;		// init mesh ref
-		rend = GetComponent<MeshRenderer>();		// init mesh renderer ref
+		anim = GetComponent<Animator>();							// init animator ref
+		mesh = GetComponent<MeshFilter>().mesh;						// init mesh ref
+		rend = GetComponent<MeshRenderer>();						// init mesh renderer ref
+		psp = GameObject.Find ("Player")
+			.gameObject.GetComponent<PlayerStatePattern> ();		// init psp ref
+	}
+
+	void Update() {
+		if (light && psp.changeParticles) rend.material.SetColor("_Color", Color.black);			// if light && light world, change to black
+		else if (!light && psp.changeParticles) rend.material.SetColor("_Color", Color.white);		// if not light && light world, change to white
 	}
 
 	public void Nucleus (int fromState, int toState, bool fromLight, bool toLight, int shape) 
@@ -941,9 +950,9 @@ public class ParticleNucleusManager : MonoBehaviour {
 	///</summary>
 	private void SetShape(int shape)
 	{
-		if (shape == 0) mesh = sphere;									// change mesh to sphere
-		else if (shape == 1) mesh = triangle;							// change mesh to triangle
-		else if (shape == 2) mesh = square;								// change mesh to square
+		if (shape == 0) mesh = sphere;								// change mesh to sphere
+		else if (shape == 1) mesh = triangle;						// change mesh to triangle
+		else if (shape == 2) mesh = square;							// change mesh to square
 	}
 
 	///<summary>
@@ -953,8 +962,22 @@ public class ParticleNucleusManager : MonoBehaviour {
 	///</summary>
 	private void SetLight (bool light)
 	{
-		if (light) rend.material.SetColor("_Color", Color.white);		// change to white
-		else rend.material.SetColor("_Color", Color.black);				// change to black
+		if (light && !psp.lightworld) {
+			rend.material.SetColor("_Color", Color.white);			// change to white
+			light = true;											// set is light flag
+		} 
+		else if (!light && !psp.lightworld) {
+			rend.material.SetColor("_Color", Color.black);			// change to white
+			light = false;											// reset is light flag
+		}
+		else if (light && psp.lightworld) {
+			rend.material.SetColor("_Color", Color.black);			// change to white
+			light = true;											// set is light flag
+		}
+		else if (!light && psp.lightworld) {
+			rend.material.SetColor("_Color", Color.white);			// change to white
+			light = false;											// reset is light flag
+		}
 	}
 
 	///<summary>
@@ -965,15 +988,15 @@ public class ParticleNucleusManager : MonoBehaviour {
 	private void ScaleTo (bool devol, string resetState, string setState)
 	{
 		if (devol) {
-			anim.ResetTrigger ("scaleup");											// reset last stage
-			anim.SetTrigger ("scaledown");											// enable scaledown
+			anim.ResetTrigger ("scaleup");							// reset last stage
+			anim.SetTrigger ("scaledown");							// enable scaledown
 		}
 		else {
-			anim.ResetTrigger ("scaledown");										// reset last stage
-			anim.SetTrigger ("scaleup");											// enable scaleup
+			anim.ResetTrigger ("scaledown");						// reset last stage
+			anim.SetTrigger ("scaleup");							// enable scaleup
 
 		}
-		anim.SetBool(resetState, false);											// reset previously active state
-		anim.SetBool(setState, true);												// set active state
+		anim.SetBool(resetState, false);							// reset previously active state
+		anim.SetBool(setState, true);								// set active state
 	}
 }

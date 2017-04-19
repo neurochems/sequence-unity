@@ -9,11 +9,20 @@ public class ParticleCoreManager : MonoBehaviour {
 	#pragma warning restore 0414
 	public Mesh sphere, triangle, square, ring;		// shape meshes
 	private MeshRenderer rend;						// mesh renderer (for colour changes)
+	private PlayerStatePattern psp;					// psp ref
 
 	void Awake () {
-		anim = GetComponent<Animator>();			// init animator ref
-		mesh = GetComponent<MeshFilter>().mesh;		// init mesh ref
-		rend = GetComponent<MeshRenderer>();		// init mesh renderer ref
+		anim = GetComponent<Animator>();							// init animator ref
+		mesh = GetComponent<MeshFilter>().mesh;						// init mesh ref
+		rend = GetComponent<MeshRenderer>();						// init mesh renderer ref
+		psp = GameObject.Find ("Player")
+			.gameObject.GetComponent<PlayerStatePattern> ();		// init psp ref
+	}
+
+	void Update() {
+		if (psp.changeParticles) {
+			rend.material.SetColor("_Color", Color.black);			// change core to black
+		}
 	}
 
 	public void Core (int fromState, int toState, bool fromLight, bool toLight, int shape) 

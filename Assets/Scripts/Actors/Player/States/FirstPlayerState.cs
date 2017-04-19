@@ -53,16 +53,6 @@ public class FirstPlayerState : IParticleState
 		}				
 	}
 
-	public void ToLightWorld(bool toLightWorld)
-	{
-		psp.ToLightWorld(toLightWorld);											// set light world graphics
-		psp.SpawnZero(2);														// spawn 2 zero
-
-		//psp.TransitionTo(1, -1, light, toLight, 0);								// trigger transition effects
-		//ParticleStateEvents.toDead += psp.TransitionToDead;						// flag transition in delegate
-		//psp.currentState = psp.deadState;										// set to new state
-	}
-
 	public void ToZero(bool toLight)
 	{
 		psp.TransitionTo(1, 0, light, toLight, 0);								// trigger transition effects
@@ -125,8 +115,8 @@ public class FirstPlayerState : IParticleState
 		deltaDark = psp.deltaDark;																			// local dark check
 		deltaLight = psp.deltaLight;																		// local light check
 
-		if (!psp.lightworld && evol < 0f) ToLightWorld (true);												// if to light world(if evol < 0), set light world
-		else if (psp.lightworld && evol >= 0f) ToLightWorld (false);										// if to dark world (evol returns to > 0), unset light world
+		if (!psp.lightworld	&& evol < 0f) psp.lightworld = true;											// if to light world (if evol < 0), set light world flag
+		else if (psp.lightworld && evol >= 0f) psp.lightworld = false;										// if to dark world, reset light world flag
 
 		else if (evol == 0f) {																				// to zero (if evol = 0)
 			ToZero (true);																						// to light zero

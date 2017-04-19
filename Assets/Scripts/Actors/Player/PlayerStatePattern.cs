@@ -24,6 +24,7 @@ public class PlayerStatePattern : MonoBehaviour {
 	// new state
 
 	public bool lightworld;													// is light world flag
+	public bool changeParticles;											// change particle colour flag
 
 	// component references
 	private CameraManager cam;													// main camera animator
@@ -287,17 +288,24 @@ public class PlayerStatePattern : MonoBehaviour {
 		lastStateChange = Time.time;												// reset time since last state change
 	}
 
-	public void ToLightWorld (bool toLightWorld) {
-		rendWorld.material.SetColor("_Color", Color.white);							// change world to white
-		rendCore.material.SetColor("_Color", Color.black);							// change core to black
-		rendShell.material.SetColor("_Color", Color.black);							// change shell to black
-		rendNucleus.material.SetColor("_Color", Color.black);							// change nucleus to black
-	}
-
 	// camera - PUT IN SEPARATE SCRIPT
 	private void SetZoomCamera (int fromState, int toState) 
 	{
-		cam.ZoomCamera (fromState, toState);
+		if (lightworld) {
+			cam.ZoomCamera (lightworld, fromState, toState);
+			ToLightWorld ();
+			cam.ZoomCamera (lightworld, fromState, toState);
+		}
+		else cam.ZoomCamera (lightworld, fromState, toState);
+	}
+
+	private void ToLightWorld () {
+		changeParticles = true;
+		rendWorld.material.SetColor("_Color", Color.white);							// change world to white
+		rendCore.material.SetColor("_Color", Color.black);							// change core to black
+		rendShell.material.SetColor("_Color", Color.black);							// change shell to black
+		rendNucleus.material.SetColor("_Color", Color.black);						// change nucleus to black
+		changeParticles = false;
 	}
 
 	// set player parts

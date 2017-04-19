@@ -4,9 +4,20 @@ using System.Collections;
 public class ParticleShellManager : MonoBehaviour {
 
 	private Animator anim;						// animator on core ref
+	private MeshRenderer rend;					// mesh renderer (for colour changes)
+	private PlayerStatePattern psp;				// psp ref
 
 	void Awake () {
-		anim = GetComponent<Animator>();		// init animator ref
+		anim = GetComponent<Animator>();							// init animator ref
+		rend = GetComponent<MeshRenderer>();						// init mesh renderer ref
+		psp = GameObject.Find ("Player")
+			.gameObject.GetComponent<PlayerStatePattern> ();		// init psp ref
+	}
+
+	void Update() {
+		if (psp.changeParticles) {
+			rend.material.SetColor("_Color", Color.black);			// change core to black
+		}
 	}
 
 	public void Shell (int fromState, int toState, bool fromLight, bool toLight, int shape) 

@@ -9,11 +9,20 @@ public class PlayerNucleusManager : MonoBehaviour {
 	#pragma warning restore 0414
 	public Mesh sphere, triangle, square;			// shape meshes
 	private MeshRenderer rend;						// mesh renderer (for colour changes)
+	private PlayerStatePattern psp;					// psp ref
+	private bool light; 							// is light flag
 
 	void Awake () {
-		anim = GetComponent<Animator>();			// init animator ref
-		mesh = GetComponent<MeshFilter>().mesh;		// init mesh ref
-		rend = GetComponent<MeshRenderer>();		// init mesh renderer ref
+		anim = GetComponent<Animator>();							// init animator ref
+		mesh = GetComponent<MeshFilter>().mesh;						// init mesh ref
+		rend = GetComponent<MeshRenderer>();						// init mesh renderer ref
+		psp = GameObject.Find ("Player")
+			.gameObject.GetComponent<PlayerStatePattern> ();		// init psp ref
+	}
+
+	void Update() {
+		if (light && psp.changeParticles) rend.material.SetColor("_Color", Color.black);			// if light && light world, change to black
+		else if (!light && psp.changeParticles) rend.material.SetColor("_Color", Color.white);		// if not light && light world, change to white
 	}
 
 	public void Nucleus (int fromState, int toState, bool fromLight, bool toLight, int shape) 
@@ -953,8 +962,22 @@ public class PlayerNucleusManager : MonoBehaviour {
 	///</summary>
 	private void SetLight (bool light)
 	{
-		if (light) rend.material.SetColor("_Color", Color.white);		// change to white
-		else rend.material.SetColor("_Color", Color.black);				// change to black
+		if (light && !psp.lightworld) {
+			rend.material.SetColor("_Color", Color.white);			// change to white
+			light = true;											// set is light flag
+		} 
+		else if (!light && !psp.lightworld) {
+			rend.material.SetColor("_Color", Color.black);			// change to white
+			light = false;											// reset is light flag
+		}
+		else if (light && psp.lightworld) {
+			rend.material.SetColor("_Color", Color.black);			// change to white
+			light = true;											// set is light flag
+		}
+		else if (!light && psp.lightworld) {
+			rend.material.SetColor("_Color", Color.white);			// change to white
+			light = false;											// reset is light flag
+		}
 	}
 
 	///<summary>
