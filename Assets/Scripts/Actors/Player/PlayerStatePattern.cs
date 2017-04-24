@@ -5,9 +5,10 @@ public class PlayerStatePattern : MonoBehaviour {
 
 	public float evol;														// evolution level
 	public float darkEvol, lightEvol;										// dark & light evolution level
+	public float darkEvolStart, lightEvolStart;								// last dark & light evolution level (for delta calc)
 	public float deltaDark, deltaLight;										// delta dark & light evolution level
 
-	public new bool light = true;											// is light flag
+	public new bool light;													// is light flag
 	public bool toLight;													// to light flag
 
 	[HideInInspector] public IParticleState currentState;					// other object state
@@ -52,11 +53,11 @@ public class PlayerStatePattern : MonoBehaviour {
 	void Awake()
 	{
 		evol = 0f;															// initialize evol
-		darkEvol = 0f;														// initialize dark evol
-		lightEvol = 0f;														// initialize light evol
+		//darkEvol = 0f;														// initialize dark evol
+		//lightEvol = 0f;														// initialize light evol
 
 		deltaDark = 0f;														// initialize delta dark evol
-		deltaLight = 0f;														// initialize delta light evol
+		deltaLight = 0f;													// initialize delta light evol
 
 		//deadState = new DeadPlayerState (this);								// initialize dead state
 		zeroState = new ZeroPlayerState (this);								// initialize zero state
@@ -71,19 +72,19 @@ public class PlayerStatePattern : MonoBehaviour {
 
 		cam = transform.FindChild ("Follow Camera")
 			.gameObject.GetComponent<CameraManager> ();						// initialize camera manager ref
-		pcm = transform.FindChild ("Player Core")
+		pcm = GameObject.Find("Player Core")
 			.gameObject.GetComponent<PlayerCoreManager> ();					// initialize core manager ref
 		psm = transform.FindChild ("Player Shell")
 			.gameObject.GetComponent<PlayerShellManager>();					// initialize shell manager ref
 		pnm = transform.FindChild ("Player Nucleus")
 			.gameObject.GetComponent<PlayerNucleusManager>();				// initialize nucleus manager ref
 
-		sc = transform.FindChild ("Player Core")
+		sc = GameObject.Find("Player Core")
 			.gameObject.GetComponents<SphereCollider> ();					// init sphere collider ref
 
 		rendWorld = GameObject.Find("World")
 			.GetComponent<MeshRenderer>();									// init world mesh renderer ref
-		rendCore = transform.FindChild ("Player Core")
+		rendCore = GameObject.Find("Player Core")
 			.gameObject.GetComponent<MeshRenderer> ();						// init core mesh renderer ref
 		rendShell = transform.FindChild ("Player Shell")
 			.gameObject.GetComponent<MeshRenderer> ();						// init shell mesh renderer ref
@@ -100,7 +101,8 @@ public class PlayerStatePattern : MonoBehaviour {
 	void Start () 
 	{
 		light = true;														// start as light
-		lightEvol = 0.5f;													// start at 0.5 light evol
+		//lightEvol = 0f;													// start at 0.5 light evol
+		//darkEvol = 0f;													// start at 0.5 light evol
 		currentState = zeroState;											// start at zero state
 		TransitionTo(0, 0, light, toLight, 0);								// start at zero size
 	}
@@ -109,9 +111,12 @@ public class PlayerStatePattern : MonoBehaviour {
 	{
 		evol = lightEvol + darkEvol;														// update total evol value
 
-		if (uim.uI.GetComponent<StartOptions> ().inMainMenu) {								// if in menu
+		deltaDark = darkEvol - darkEvolStart;												// calculate deltaDark
+		deltaLight = lightEvol - lightEvolStart;											// calculate deltaLight
+
+		/*if (uim.uI.GetComponent<StartOptions> ().inMainMenu) {								// if in menu
 			evol = 0f;																			// prevent evol changes (no death in menu)
-		}
+		}*/
 
 		currentState.UpdateState ();														// frame updates from current state class
 
@@ -164,13 +169,14 @@ public class PlayerStatePattern : MonoBehaviour {
 
 	// EVOL CHANGES \\ - PUT IN SEPARATE SCRIPT
 
-	public void SubEvol(float changeAmount) 
-	{
-		evol -= changeAmount;												// subtract evol level
-	}
+
 	public void AddEvol(float changeAmount) 
 	{
 		evol += changeAmount;												// add evol level
+	}
+	public void SubEvol(float changeAmount) 
+	{
+		evol -= changeAmount;												// subtract evol level
 	}
 
 	public void AddDark(float changeAmount) {
@@ -186,9 +192,6 @@ public class PlayerStatePattern : MonoBehaviour {
 	public void SubLight(float changeAmount) {
 		lightEvol -= changeAmount;											// subtract light evol level
 	}
-
-	// public float TotalEvol()
-		// darkEvol + lightEvol
 
 	// BEHAVIOURS \\ - PUT IN SEPARATE SCRIPT
 
@@ -221,7 +224,7 @@ public class PlayerStatePattern : MonoBehaviour {
 	public void TransitionTo (int fromState, int toState, bool fromLight, bool toLight, int shape)
 	{
 
-		light = toLight;															// update light value
+		//light = toLight;															// update light value
 
 		if (toState == 0)	{ 														// to zero
 			// rb.mass = 0.2f;															// set mass
@@ -286,6 +289,9 @@ public class PlayerStatePattern : MonoBehaviour {
 		//new state
 
 		lastStateChange = Time.time;												// reset time since last state change
+
+		darkEvolStart = darkEvol;													// store dark evol at start of state
+		lightEvolStart = lightEvol;													// store light evol at start of state 
 	}
 
 	// camera - PUT IN SEPARATE SCRIPT

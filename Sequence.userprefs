@@ -1,13 +1,9 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Actors\Player\PlayerNucleusManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Actors\Particle\States\ZeroParticleState.cs">
     <Files>
-      <File FileName="Assets\Scripts\Actors\Player\PlayerStatePattern.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Actors\Player\PlayerNucleusManager.cs" Line="965" Column="1" />
-      <File FileName="Assets\Scripts\Actors\Particle\ParticleNucleusManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Actors\Particle\ParticleStatePattern.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Actors\Particle\ParticleCoreManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Actors\Particle\ParticleShellManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Actors\Particle\ParticleStatePattern.cs" Line="95" Column="50" />
+      <File FileName="Assets\Scripts\Actors\Particle\States\ZeroParticleState.cs" Line="46" Column="25" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -42,6 +42,8 @@ public class ZeroParticleState : IParticleState
 				psp.SubLight (other.gameObject.GetComponent<PlayerStatePattern>().lightEvol);	// subtract other light
 				canCollide = false;																								// reset can collide trigger	
 				Debug.Log ("particle contact player");
+				Debug.Log ("Particle deltaDark on collision: " + psp.deltaDark);
+				Debug.Log ("Particle deltaLight on collision: " + psp.deltaLight);
 			} 
 			else if (other.gameObject.CompareTag ("Zero")) {								// if collide with zero
 				psp.stunned = true;																// stunned flag

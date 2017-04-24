@@ -5,6 +5,7 @@ public class ParticleStatePattern : MonoBehaviour {
 
 	public float evol;														// evolution level
 	public float darkEvol, lightEvol;										// dark & light evolution level
+	public float darkEvolStart, lightEvolStart;								// last dark & light evolution level (for delta calc)
 	public float deltaDark, deltaLight;										// delta dark & light evolution level
 
 	public new bool light;													// is light flag
@@ -33,15 +34,11 @@ public class ParticleStatePattern : MonoBehaviour {
 	[HideInInspector] public GameObject self;								// reference to this gameobject
 
 	//component references
-	private PlayerStatePattern psp;											// reference to playerstatepattern
-
 	private ParticleCoreManager pcm;										// particle core manager (animations)
 	private ParticleShellManager psm;										// particle core manager (animations)
 	private ParticleNucleusManager pnm;										// particle core manager (animations)
 	//private ParticlePhysicsManager ppm;										// particle physics manager
 	private SphereCollider[] sc;											// sphere colliders
-
-	private MeshRenderer rendCore, rendShell, rendNucleus;					// mesh renderers (for lightworld colour changes)
 
 	private int die;														// roll for collision conflicts
 	public bool stunned;													// stunned?
@@ -80,13 +77,6 @@ public class ParticleStatePattern : MonoBehaviour {
 		//ppm = GetComponent<ParticlePhysicsManager> ();						// init particle physics manager ref
 		sc = transform.FindChild("Core")
 			.gameObject.GetComponents<SphereCollider> ();					// init sphere colliders ref
-
-		rendCore = transform.FindChild ("Core")
-			.gameObject.GetComponent<MeshRenderer> ();						// init core mesh renderer ref
-		rendShell = transform.FindChild ("Shell")
-			.gameObject.GetComponent<MeshRenderer> ();						// init shell mesh renderer ref
-		rendNucleus = transform.FindChild ("Nucleus")
-			.gameObject.GetComponent<MeshRenderer> ();						// init nucleus mesh renderer ref
 	}
 
 	void Start () 
@@ -101,15 +91,10 @@ public class ParticleStatePattern : MonoBehaviour {
 	{
 		evol = lightEvol + darkEvol;										// update total evol value
 
+		deltaDark = darkEvol - darkEvolStart;								// calculate deltaDark
+		deltaLight = lightEvol - lightEvolStart;							// calculate deltaLight
+
 		currentState.UpdateState ();										// frame updates from current state class
-
-		lightworld = psp.lightworld;
-
-		if (psp.changeParticles) {
-			rendCore.material.SetColor("_Color", Color.black);				// change core to black
-			rendShell.material.SetColor("_Color", Color.black);				// change shell to black
-			rendNucleus.material.SetColor("_Color", Color.black);			// change nucleus to black	
-		}
 
 		// stun duration timer
 		if (stunned) {
@@ -246,6 +231,9 @@ public class ParticleStatePattern : MonoBehaviour {
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		//new state
+
+		darkEvolStart = darkEvol;													// store dark evol at start of state
+		lightEvolStart = lightEvol;													// store light evol at start of state
 	}
 		
 	// transitions \\

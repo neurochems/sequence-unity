@@ -41,6 +41,8 @@ public class ZeroPlayerState : IParticleState
 				psp.stunned = true;																// stunned flag
 				if (pspOther.light) psp.AddLight (pspOther.lightEvol);							// if light, add light of other
 				if (!pspOther.light) psp.AddDark (pspOther.darkEvol);							// if dark, add dark of other
+				Debug.Log ("Player deltaDark on collision: " + psp.deltaDark);
+				Debug.Log ("Player deltaLight on collision: " + psp.deltaLight);
 				canCollide = false;																// reset has collided trigger
 			} 
 			else if (other.gameObject.CompareTag("First") 									// collide with first
