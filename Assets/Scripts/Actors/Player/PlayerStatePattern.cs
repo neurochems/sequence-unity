@@ -25,6 +25,7 @@ public class PlayerStatePattern : MonoBehaviour {
 	// new state
 
 	public bool lightworld;													// is light world flag
+	public bool toLightworld, toDarkworld;									// to light world trigger, to dark world trigger
 	public bool changeParticles;											// change particle colour flag
 
 	// component references
@@ -113,6 +114,10 @@ public class PlayerStatePattern : MonoBehaviour {
 
 		deltaDark = darkEvol - darkEvolStart;												// calculate deltaDark
 		deltaLight = lightEvol - lightEvolStart;											// calculate deltaLight
+
+		/*if (toLightworld) {
+			lightworld = true;
+		}*/
 
 		/*if (uim.uI.GetComponent<StartOptions> ().inMainMenu) {								// if in menu
 			evol = 0f;																			// prevent evol changes (no death in menu)
@@ -297,21 +302,45 @@ public class PlayerStatePattern : MonoBehaviour {
 	// camera - PUT IN SEPARATE SCRIPT
 	private void SetZoomCamera (int fromState, int toState) 
 	{
-		if (lightworld) {
-			cam.ZoomCamera (lightworld, fromState, toState);
-			ToLightWorld ();
-			cam.ZoomCamera (lightworld, fromState, toState);
+		if (toLightworld) {															// if light world
+			cam.ZoomCamera (lightworld, fromState, toState);							// zoom camera in from particular state
+			ChangeWorld ();																// switch properties
+			cam.ZoomCamera (lightworld, fromState, toState);							// zoom camera out to appropriate state
 		}
-		else cam.ZoomCamera (lightworld, fromState, toState);
+		else if (!lightworld && toDarkworld) {										// if not light world && switching back to dark world
+			cam.ZoomCamera (lightworld, fromState, toState);							// zoom camera in from particular state
+			ChangeWorld ();																// switch properties
+			cam.ZoomCamera (lightworld, fromState, toState);							// zoom out to appropriate state
+
+		}
+		else cam.ZoomCamera (lightworld, fromState, toState);						// else in dark world, zoom between states
 	}
 
-	private void ToLightWorld () {
-		changeParticles = true;
-		rendWorld.material.SetColor("_Color", Color.white);							// change world to white
-		rendCore.material.SetColor("_Color", Color.black);							// change core to black
-		rendShell.material.SetColor("_Color", Color.black);							// change shell to black
-		rendNucleus.material.SetColor("_Color", Color.black);						// change nucleus to black
-		changeParticles = false;
+	private void ChangeWorld () 
+	{
+		if (toLightworld) {															// if switching to light world from dark world
+			lightworld = true;
+			changeParticles = true;														// set change particle property trigger
+
+			rendWorld.material.SetColor("_Color", Color.white);							// change world to white
+			rendCore.material.SetColor("_Color", Color.black);							// change core to black
+			rendShell.material.SetColor("_Color", Color.black);							// change shell to black
+			rendNucleus.material.SetColor("_Color", Color.black);						// change nucleus to black
+
+			//changeParticles = false;													// reset change particle property trigger
+			toLightworld = false;														// reset to light world trigger
+		}
+		else if (toDarkworld) {														// if switching to dark world from light world
+			lightworld = false;
+			
+			rendWorld.material.SetColor("_Color", Color.black);							// change world to white
+			rendCore.material.SetColor("_Color", Color.white);							// change core to black
+			rendShell.material.SetColor("_Color", Color.white);							// change shell to black
+			rendNucleus.material.SetColor("_Color", Color.white);						// change nucleus to black
+			
+			toDarkworld = false;														// reset to dark world trigger
+		}
+
 	}
 
 	// set player parts

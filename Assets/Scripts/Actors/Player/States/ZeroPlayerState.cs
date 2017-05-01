@@ -130,10 +130,12 @@ public class ZeroPlayerState : IParticleState
 		deltaDark = psp.deltaDark;														// local dark check
 		deltaLight = psp.deltaLight;													// local light check
 
-		if (!psp.lightworld	&& evol < 0f) psp.lightworld = true;						// if to light world (if evol < 0), set light world flag
-		else if (psp.lightworld && evol >= 0f) psp.lightworld = false;					// if to dark world, reset light world flag
+		// switch world triggers
+		if (!psp.lightworld	&& evol < 0f) psp.toLightworld = true;						// if to light world (if evol < 0), set to light world trigger
+		else if (psp.lightworld && evol >= 0f) psp.toDarkworld = true;					// if to dark world (evol >= 0), set dark world flag
 
-		else if (evol == 0.5f || evol == -0.5f) {										// evolve to half zero (if evol = 0.5)
+		// state transition checks
+		if (evol == 0.5f || evol == -0.5f) {											// evolve to half zero (if evol = 0.5)
 			if (deltaDark == 0.5f || deltaDark == -0.5f) ToHalfZero (false);				// if gain dark = to dark zero
 			//else if (deltaLight == 0.5f || deltaLight == -0.5f) ToHalfZero (true);			// if gain light = to light zero
 		}

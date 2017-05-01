@@ -5,19 +5,53 @@ public class ParticleShellManager : MonoBehaviour {
 
 	private Animator anim;						// animator on core ref
 	private MeshRenderer rend;					// mesh renderer (for colour changes)
-	private PlayerStatePattern psp;				// psp ref
+	private ParticleStatePattern psp;				// psp ref
 
 	void Awake () {
 		anim = GetComponent<Animator>();							// init animator ref
 		rend = GetComponent<MeshRenderer>();						// init mesh renderer ref
-		psp = GameObject.Find ("Player")
-			.gameObject.GetComponent<PlayerStatePattern> ();		// init psp ref
+		psp = GetComponentInParent<ParticleStatePattern> ();		// init psp ref
 	}
 
-	void Update() {
-		if (psp.changeParticles) {
-			rend.material.SetColor("_Color", Color.black);			// change core to black
+/*	void Update() {
+		if (psp.lightworld && psp.changeParticles) {				// if particle is to be sent to light world and the timing of the zoom is right
+			rend.material.SetColor("_Color", Color.black);				// change core to black
 		}
+		else if (!psp.lightworld && psp.changeParticles) {		// if particle is to be sent to dark world and the timing of the zoom is right
+			rend.material.SetColor("_Color", Color.white);				// change core to white
+		}
+	}*/
+
+	public void Shell (int fromState, int toState, bool toLight)
+	{
+
+
+		// EVOLUTIONS \\
+
+
+		///// hidden \\\\\
+
+		if (fromState == -1 && toState == 3) ScaleTo (false, "hidden", "third");				// scale to third
+		else if (fromState == -1 && toState == 4) ScaleTo (false, "hidden", "third");			// scale to fourth/third
+		else if (fromState == -1 && toState == 5) ScaleTo (false, "hidden", "third");			// scale to fifth/first
+		else if (fromState == -1 && toState == 6) ScaleTo (false, "hidden", "third");			// scale to sixth/first
+		else if (fromState == -1 && toState == 7) ScaleTo (false, "hidden", "seventh");			// scale to seventh
+		else if (fromState == -1 && toState == 8) ScaleTo (false, "hidden", "seventh");			// scale to eighth/seventh
+		else if (fromState == -1 && toState == 9) ScaleTo (false, "hidden", "ninth");			// scale to ninth
+
+
+		// DEVOLUTIONS \\
+
+
+		///// hidden \\\\\
+
+		if (fromState == 3 && toState == -1) ScaleTo (true, "third", "hidden");					// scale from third
+		else if (fromState == 4 && toState == -1) ScaleTo (true, "third", "hidden");			// scale from fourth/third
+		else if (fromState == 5 && toState == -1) ScaleTo (true, "third", "hidden");			// scale from fifth/first
+		else if (fromState == 6 && toState == -1) ScaleTo (true, "third", "hidden");			// scale from sixth/first
+		else if (fromState == 7 && toState == -1) ScaleTo (true, "seventh", "hidden");			// scale from seventh	
+		else if (fromState == 8 && toState == -1) ScaleTo (true, "seventh", "hidden");			// scale from eighth/seventh
+		else if (fromState == 9 && toState == -1) ScaleTo (true, "ninth", "hidden");			// scale from ninth
 	}
 
 	public void Shell (int fromState, int toState, bool fromLight, bool toLight, int shape) 
@@ -184,25 +218,11 @@ public class ParticleShellManager : MonoBehaviour {
 
 		///// zero \\\\\
 
-		// to dead
-		if (fromState == 0 && toState == -1) {													// to dead
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
-		}
-
 		///// dark zero (0.5) \\\\\
 
 		// to zero (no shell change)
 
 		///// first \\\\\
-
-		// to dead
-		if (fromState == 1 && toState == -1) {													// to dead
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
-		}
 
 		// from dark first
 		// to zero (no shell change)
@@ -213,13 +233,6 @@ public class ParticleShellManager : MonoBehaviour {
 		// to dark zero (0.5) (no shell change)
 
 		///// second \\\\\
-
-		// to dead
-		if (fromState == 2 && toState == -1) {													// to dead
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
-		}
 
 		// from dark second
 		// to zero (no shell change)
@@ -236,13 +249,6 @@ public class ParticleShellManager : MonoBehaviour {
 		// to light first (no shell change)
 
 		///// third \\\\\
-
-		// to dead
-		if (fromState == 3 && toState == -1) {									// to dead
-			anim.ResetTrigger ("scaleup");						// reset next stage
-			anim.SetTrigger("scaledown");						// enable core to black animation
-			anim.SetBool("photon", true);						// enable black core animation state
-		}
 
 		// from dark third	
 		// to zero
@@ -279,13 +285,6 @@ public class ParticleShellManager : MonoBehaviour {
 		// to light second (no shell change)
 
 		///// fourth \\\\\
-
-		// to dead
-		if (fromState == 4 && toState == -1) {									// to dead
-			anim.ResetTrigger ("scaleup");						// reset next stage
-			anim.SetTrigger("scaledown");						// enable core to black animation
-			anim.SetBool("photon", true);						// enable black core animation state
-		}
 
 		// from dark fourth	
 		// to zero
@@ -330,13 +329,6 @@ public class ParticleShellManager : MonoBehaviour {
 		// to light third (no shell change)
 
 		///// fifth \\\\\
-
-		// to dead
-		if (fromState == 5 && toState == -1) {									// to dead
-			anim.ResetTrigger ("scaleup");						// reset next stage
-			anim.SetTrigger("scaledown");						// enable core to black animation
-			anim.SetBool("photon", true);						// enable black core animation state
-		}
 
 		// from dark circle fifth
 		// to zero
@@ -435,13 +427,6 @@ public class ParticleShellManager : MonoBehaviour {
 		// to light fourth (no shell change)
 
 		///// sixth \\\\\
-
-		// to dead
-		if (fromState == 6 && toState == -1) {									// to dead
-			anim.ResetTrigger ("scaleup");						// reset next stage
-			anim.SetTrigger("scaledown");						// enable core to black animation
-			anim.SetBool("photon", true);						// enable black core animation state
-		}
 
 		// from dark circle sixth
 		// to zero
@@ -549,13 +534,6 @@ public class ParticleShellManager : MonoBehaviour {
 		// to square fifth (no shell change)
 
 		///// seventh \\\\\
-
-		// to dead
-		if (fromState == 7 && toState == -1) {									// to dead
-			anim.ResetTrigger ("scaleup");						// reset next stage
-			anim.SetTrigger("scaledown");						// enable core to black animation
-			anim.SetBool("photon", true);						// enable black core animation state
-		}
 
 		// from dark circle seventh
 		// to zero

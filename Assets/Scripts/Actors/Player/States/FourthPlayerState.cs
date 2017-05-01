@@ -7,7 +7,6 @@ public class FourthPlayerState : IParticleState
 	private readonly PlayerStatePattern psp;											// reference to pattern/monobehaviour class
 
 	public bool light = true;															// 'is light' flag
-	public bool circle, triangle, square;												// shape flags
 	public float evol, deltaDark, deltaLight;											// evol tracking refs
 
 	private bool canCollide = true;														// can collide flag
@@ -117,14 +116,13 @@ public class FourthPlayerState : IParticleState
 
 	public void Evol()													
 	{
-
 		evol = psp.evol;																					// local evol check			
 		light = psp.light;																					// update light value
 		deltaDark = psp.deltaDark;																			// local dark check
 		deltaLight = psp.deltaLight;																		// local light check
 
-		if (!psp.lightworld	&& evol < 0f) psp.lightworld = true;											// if to light world (if evol < 0), set light world flag
-		else if (psp.lightworld && evol >= 0f) psp.lightworld = false;										// if to dark world, reset light world flag
+		if (!psp.lightworld	&& evol < 0f) psp.toLightworld = true;											// if to light world (if evol < 0), set to light world trigger
+		else if (psp.lightworld && evol >= 0f) psp.toDarkworld = true;										// if to dark world (evol >= 0), set dark world flag
 
 		else if (evol == 0) {																				// to zero (if evol = 0)
 			ToZero (true);																						// to zero state

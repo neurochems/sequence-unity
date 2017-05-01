@@ -9,25 +9,71 @@ public class ParticleCoreManager : MonoBehaviour {
 	#pragma warning restore 0414
 	public Mesh sphere, triangle, square, ring;		// shape meshes
 	private MeshRenderer rend;						// mesh renderer (for colour changes)
-	private PlayerStatePattern psp;					// psp ref
+	private ParticleStatePattern psp;				// psp ref
 
 	void Awake () {
 		anim = GetComponent<Animator>();							// init animator ref
 		mesh = GetComponent<MeshFilter>().mesh;						// init mesh ref
 		rend = GetComponent<MeshRenderer>();						// init mesh renderer ref
-		psp = GameObject.Find ("Player")
-			.gameObject.GetComponent<PlayerStatePattern> ();		// init psp ref
+		psp = GetComponentInParent<ParticleStatePattern> ();		// init psp ref
 	}
 
-	void Update() {
-		if (psp.changeParticles) {
-			rend.material.SetColor("_Color", Color.black);			// change core to black
+/*	void Update() {
+		if (psp.lightworld && psp.changeParticles) {				// if particle is to be sent to light world and the timing of the zoom is right
+			rend.material.SetColor("_Color", Color.black);				// change core to black
+			psp.changeParticles = false;								// reset change colour flag
 		}
+		else if (!psp.lightworld && psp.changeParticles) {		// if particle is to be sent to dark world and the timing of the zoom is right
+			rend.material.SetColor("_Color", Color.white);				// change core to white
+			psp.changeParticles = false;								// reset change colour flag
+		}
+	}*/
+
+	///<summary>
+	///<para> method for world changing anims </para>
+	///</summary>
+	public void Core (int fromState, int toState, bool toLight) 
+	{
+
+		// EVOLUTIONS \\
+
+
+		///// hidden \\\\\
+
+		if (fromState == -1 && toState == 0) ScaleTo (false, "hidden", "zero");					// scale to zero
+		else if (fromState == -1 && toState == 1) ScaleTo (false, "hidden", "first");			// scale to first
+		else if (fromState == -1 && toState == 2) ScaleTo (false, "hidden", "first");			// scale to second/first
+		else if (fromState == -1 && toState == 3) ScaleTo (false, "hidden", "third");			// scale to third
+		else if (fromState == -1 && toState == 4) ScaleTo (false, "hidden", "third");			// scale to fourth/third
+		else if (fromState == -1 && toState == 5) ScaleTo (false, "hidden", "first");			// scale to fifth/first
+		else if (fromState == -1 && toState == 6) ScaleTo (false, "hidden", "first");			// scale to sixth/first
+		else if (fromState == -1 && toState == 7) ScaleTo (false, "hidden", "seventh");			// scale to seventh
+		else if (fromState == -1 && toState == 8) ScaleTo (false, "hidden", "seventh");			// scale to eighth/seventh
+		else if (fromState == -1 && toState == 9) ScaleTo (false, "hidden", "ninth");			// scale to ninth
+
+
+		// DEVOLUTIONS \\
+
+
+		///// hidden \\\\\
+
+		if (fromState == 0 && toState == -1) ScaleTo (true, "zero", "hidden");					// scale from zero
+		else if (fromState == 1 && toState == -1) ScaleTo (true, "first", "hidden");			// scale from first
+		else if (fromState == 2 && toState == -1) ScaleTo (true, "first", "hidden");			// scale from second/first
+		else if (fromState == 3 && toState == -1) ScaleTo (true, "third", "hidden");			// scale from third
+		else if (fromState == 4 && toState == -1) ScaleTo (true, "third", "hidden");			// scale from fourth/third
+		else if (fromState == 5 && toState == -1) ScaleTo (true, "first", "hidden");			// scale from fifth/first
+		else if (fromState == 6 && toState == -1) ScaleTo (true, "first", "hidden");			// scale from sixth/first
+		else if (fromState == 7 && toState == -1) ScaleTo (true, "seventh", "hidden");			// scale from seventh	
+		else if (fromState == 8 && toState == -1) ScaleTo (true, "seventh", "hidden");			// scale from eighth/seventh
+		else if (fromState == 9 && toState == -1) ScaleTo (true, "ninth", "hidden");			// scale from ninth
 	}
 
 	public void Core (int fromState, int toState, bool fromLight, bool toLight, int shape) 
 	{
+
 		// EVOLUTIONS \\
+
 
 		///// zero \\\\\
 
@@ -245,7 +291,9 @@ public class ParticleCoreManager : MonoBehaviour {
 		///// ninth \\\\\
 		///// tenth \\\\\
 
+
 		// DEVOLUTIONS \\
+
 
 		///// zero \\\\\
 

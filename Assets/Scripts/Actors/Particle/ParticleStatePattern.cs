@@ -26,6 +26,8 @@ public class ParticleStatePattern : MonoBehaviour {
 	// new state
 
 	public bool lightworld;													// is light world flag
+	public bool toLightworld, toDarkworld, inLightworld;					// to light world trigger, to dark world trigger, in light world flag
+	public bool changeParticles;											// timing trigger for colour change
 
 	//public float attractionRange = 20f;										// particle sensing distance
 	//[HideInInspector] public Transform attractionTarget;					// particle sensing target
@@ -34,11 +36,15 @@ public class ParticleStatePattern : MonoBehaviour {
 	[HideInInspector] public GameObject self;								// reference to this gameobject
 
 	//component references
+	private PlayerStatePattern psp;											// player state pattern (lightworld)
+
 	private ParticleCoreManager pcm;										// particle core manager (animations)
 	private ParticleShellManager psm;										// particle core manager (animations)
 	private ParticleNucleusManager pnm;										// particle core manager (animations)
 	//private ParticlePhysicsManager ppm;										// particle physics manager
 	private SphereCollider[] sc;											// sphere colliders
+
+	private MeshRenderer rendCore, rendShell, rendNucleus;					// mesh renderers (for lightworld colour changes)
 
 	private int die;														// roll for collision conflicts
 	public bool stunned;													// stunned?
@@ -67,6 +73,9 @@ public class ParticleStatePattern : MonoBehaviour {
 		seventhState = new SeventhParticleState (this);						// initialize seventh state
 		// new state
 
+		psp = GameObject.Find ("Player").
+			gameObject.GetComponent<PlayerStatePattern> ();					// init player state pattern ref
+
 		pcm = transform.FindChild("Core")
 			.gameObject.GetComponent<ParticleCoreManager> ();				// initialize core manager ref
 		psm = transform.FindChild ("Shell")
@@ -75,8 +84,14 @@ public class ParticleStatePattern : MonoBehaviour {
 			.gameObject.GetComponent<ParticleNucleusManager>();				// initialize nucleus manager ref
 
 		//ppm = GetComponent<ParticlePhysicsManager> ();						// init particle physics manager ref
-		sc = transform.FindChild("Core")
-			.gameObject.GetComponents<SphereCollider> ();					// init sphere colliders ref
+		sc = GetComponents<SphereCollider> ();								// init sphere colliders ref
+
+		rendCore = transform.FindChild("Core")
+			.gameObject.GetComponent<MeshRenderer> ();						// init core mesh renderer ref
+		rendShell = transform.FindChild("Shell")
+			.gameObject.GetComponent<MeshRenderer> ();						// init shell mesh renderer ref
+		rendNucleus = transform.FindChild("Nucleus")
+			.gameObject.GetComponent<MeshRenderer> ();						// init nucleus mesh renderer ref
 	}
 
 	void Start () 
@@ -93,6 +108,14 @@ public class ParticleStatePattern : MonoBehaviour {
 
 		deltaDark = darkEvol - darkEvolStart;								// calculate deltaDark
 		deltaLight = lightEvol - lightEvolStart;							// calculate deltaLight
+
+		//if (toLightworld) ChangeWorld (true);
+		//if (toDarkworld) ChangeWorld (false);
+
+		lightworld = psp.lightworld;										// update if lightworld
+
+		if (!changeParticles) psp.changeParticles = false;					// if changeParticles is false for one frame, reset in player state pattern
+		if (changeParticles) changeParticles = psp.changeParticles;			// if changeParticles is true, update from player state pattern
 
 		currentState.UpdateState ();										// frame updates from current state class
 
@@ -235,15 +258,47 @@ public class ParticleStatePattern : MonoBehaviour {
 		darkEvolStart = darkEvol;													// store dark evol at start of state
 		lightEvolStart = lightEvol;													// store light evol at start of state
 	}
-		
-	// transitions \\
 
-	// set player parts
+	public void ChangeWorld(bool toLW, int fromState, int toState, bool toLight) 
+	{
+		if (toLW) {														// if to light world
+			SetParts(fromState, -1, toLight);								// shrink from fromState to hidden
+			rendCore.material.SetColor("_Color", Color.black);				// change core to black
+			rendShell.material.SetColor("_Color", Color.black);				// change shell to black
+			rendNucleus.material.SetColor("_Color", Color.black);			// change nucleus to black
+			SetParts(-1, toState, toLight);									// grow from hidden to toState
+			toLightworld = false;											// reset toLightworld flag
+			//if (!lightworld) sc[0].enabled = false;							// if still dark world, disable collision trigger
+		}
+			
+		else if (!toLW)	{												// if to dark world
+			SetParts(fromState, -1, toLight);								// shrink from fromState to hidden
+			rendCore.material.SetColor("_Color", Color.white);				// change core to white
+			rendShell.material.SetColor("_Color", Color.white);				// change shell to white
+			rendNucleus.material.SetColor("_Color", Color.white);			// change nucleus to white
+			SetParts(-1, toState, toLight);									// grow from hidden to toState
+			toDarkworld = false;											// reset toDarkworld flag
+			//if (!lightworld) sc[0].enabled = true;							// if still in dark world, enable collision trigger
+		}									
+
+		// if !lightworld && inLightworld, nucleus = opposite colour
+		// if lightworld && inLightworld, nucleus = correct colour
+	}
+
+	// set particle parts (world change)
+	private void SetParts(int fromState, int toState, bool toLight)
+	{
+		pcm.Core (fromState, toState, toLight);										// change circle
+		psm.Shell (fromState, toState, toLight);									// change shell
+		pnm.Nucleus (fromState, toState, toLight);									// change nucleus
+	}
+
+	// set particle parts (normal state transitions)
 	private void SetParts(int fromState, int toState, bool fromLight, bool toLight, int shape)
 	{
 		pcm.Core (fromState, toState, fromLight, toLight, shape);					// change circle
 		psm.Shell (fromState, toState, fromLight, toLight, shape);					// change shell
-		pnm.Nucleus(fromState, toState, fromLight, toLight, shape);					// change nucleus
+		pnm.Nucleus (fromState, toState, fromLight, toLight, shape);				// change nucleus
 	}
 
 }

@@ -1,10 +1,36 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Actors\Particle\States\ZeroParticleState.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Actors\Particle\ParticleStatePattern.cs">
     <Files>
-      <File FileName="Assets\Scripts\Actors\Particle\ParticleStatePattern.cs" Line="95" Column="50" />
-      <File FileName="Assets\Scripts\Actors\Particle\States\ZeroParticleState.cs" Line="46" Column="25" />
+      <File FileName="Assets\Scripts\Actors\Player\PlayerStatePattern.cs" Line="46" Column="23" />
+      <File FileName="Assets\Scripts\Actors\Particle\ParticleStatePattern.cs" Line="278" Column="9" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Sequence" expanded="True">
+            <Node name="Assembly-CSharp" expanded="True">
+              <Node name="Scripts" expanded="True">
+                <Node name="Actors" expanded="True">
+                  <Node name="Particle" expanded="True">
+                    <Node name="States" expanded="True" />
+                    <Node name="ParticleStatePattern.cs" selected="True" />
+                  </Node>
+                  <Node name="Player" expanded="True">
+                    <Node name="States" expanded="True" />
+                  </Node>
+                </Node>
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State name="__root__">
+          <Node name="Sequence" expanded="True" selected="True" />
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

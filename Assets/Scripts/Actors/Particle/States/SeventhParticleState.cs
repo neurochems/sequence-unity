@@ -7,7 +7,9 @@ public class SeventhParticleState : IParticleState
 	private readonly ParticleStatePattern psp;											// reference to pattern/monobehaviour class
 
 	public bool light = true;															// 'is light' flag
+	private bool lightworld;															// is light world ref
 	public bool circle, triangle, square;												// shape flags flag
+	public float evol, deltaDark, deltaLight;											// evol tracking refs
 
 	private bool canCollide = true;														// can collide flag
 	private float collisionTimer;														// reset collision timer
@@ -28,7 +30,7 @@ public class SeventhParticleState : IParticleState
 			psp.stunned = false;															// reset stunned flag
 		}
 	}
-
+		
 	public void OnTriggerEnter(Collider other)
 	{
 		ParticleStatePattern pspOther 
@@ -63,13 +65,20 @@ public class SeventhParticleState : IParticleState
 		}
 	}
 
-	public void Death(bool toLight)
+	public void ToOtherWorld(bool toLW, int fromState, int toState, bool toLight)
 	{
-		psp.TransitionTo(7, -1, light, toLight, 0);								// trigger transition effects
-		//ParticleStateEvents.toDead += psp.TransitionToDead;						// flag transition in delegate
-		psp.SpawnFirst(5);														// spawn 5 Firsts
-		psp.SpawnFirst(2);														// spawn 2 Firsts
-		psp.currentState = psp.deadState;										// set to new state
+		psp.ChangeWorld(toLW, fromState, toState, toLight);								// trigger transition effects
+		//psp.SpawnZero(1);																	// spawn 1 zero
+		if (toState == 0) psp.currentState = psp.zeroState;								// set to zero state
+		else if (toState == 1) psp.currentState = psp.firstState;						// set to first state
+		else if (toState == 2) psp.currentState = psp.secondState;						// set to second state
+		else if (toState == 3) psp.currentState = psp.thirdState;						// set to third state
+		else if (toState == 4) psp.currentState = psp.fourthState;						// set to fourth state
+		else if (toState == 5) psp.currentState = psp.fifthState;						// set to fifth state
+		else if (toState == 6) psp.currentState = psp.sixthState;						// set to sixth state
+		else if (toState == 7) psp.currentState = psp.seventhState;						// set to seventh state
+
+		//ParticleStateEvents.toZero += psp.TransitionToZero;						// flag transition in delegate
 	}
 
 	public void ToZero(bool toLight)
@@ -148,70 +157,131 @@ public class SeventhParticleState : IParticleState
 
 	public void Evol()
 	{
-		float deltaDark = psp.deltaDark;																// local dark check
-		float deltaLight = psp.deltaLight;																// local light check
+		evol = psp.evol;																	// local evol check			
+		lightworld = psp.lightworld;														// local lightworld check
+		light = psp.light;																	// update light value
+		deltaDark = psp.deltaDark;															// local dark check
+		deltaLight = psp.deltaLight;														// local light check
 
-		if (psp.evol <= 0f) {																				// to dead (if evol < 0)
-			Death (true);																							// to dead state
-		} 
-		else if (psp.evol == 0) {																			// to zero (if evol = 0)
-			ToZero (true);																						// to zero state
+		//if (!psp.lightworld	&& evol < 0f) psp.inLightworld = true;						// if to light world (if evol < 0), set light world flag
+		//else if (psp.lightworld && evol >= 0f) psp.inLightworld = false;					// if to dark world, reset light world flag
+
+		// zero
+		if (evol == 0f && !lightworld) ToZero (true); 										// devolve to zero within dark world, to zero state
+		//else if (evol == 0f && lightworld) ToOtherWorld(false, 1, 0, false);				// evolve to zero from light world, transition to dark world light zero
+		// half zero
+		if (evol == 0.5f && !lightworld) {													// devolve to dark world dark zero within dark world
+			if (deltaDark > deltaLight) ToZero(false);											// if lose more light than dark = to dark zero
+			// else if (deltaDark < deltaLight) ToZero(true);									// if gain more light than dark = to light zero (no change)
 		}
-		else if (psp.evol == 0.5) {																			// to zero (if evol = 0.5)
-			if (deltaDark <= -12.5 && deltaDark >= -20) ToZero(true);											// if lose dark = to light
-			else if (deltaLight <= -12.5 && deltaLight >= -20) ToZero(false);									// if lose light = to dark
-		} 
-		else if (psp.evol == 1f) {																			// to first (if evol = 1)
-			if (deltaDark <= -12 && deltaDark >= -19.5) ToFirst(true);											// if lose dark = to light
-			else if (deltaLight <= -12 && deltaLight >= -19.5) ToFirst(false);									// if lose light = to dark
-		} 
-		else if (psp.evol == 1.5f) {																		// to second (if evol = 1.5)
-			if (deltaDark <= -11.5 && deltaDark >= -19) ToSecond(true);											// if lose dark = to light
-			else if (deltaLight <= -11.5 && deltaLight >= -19) ToSecond(false);									// if lose light = to dark
-		} 
-		else if (psp.evol >= 2f && psp.evol < 3f) {															// to third (if evol >= 2 and < 3)
-			if (deltaDark <= -11 && deltaDark >= -18) ToThird(true);											// if lose dark = to light			
-			else if (deltaLight <= -11 && deltaLight >= -18) ToThird(false);									// if lose light = to dark
-		} 
-		else if (psp.evol >= 3f && psp.evol < 5f) {															// to fourth (if evol >= 3 and < 5)
-			if (circle && deltaDark <= -10 && deltaDark >= -16) ToFourth(false);								// if circle & lose dark = to dark
-			if (circle && deltaLight <= -10 && deltaLight >= -16) ToFourth(false);								// if circle & lose light = to dark
-			else if ((triangle || square) && deltaDark <= -10 && deltaDark >= -16) ToFourth(true);				// if triangle or square & lose dark = to light
-			else if ((triangle || square) && deltaLight <= -10 && deltaLight >= -16) ToFourth(true);			// if triangle or square & lose light = to light
-		} 
-		else if (psp.evol >= 5f && psp.evol < 8f) {															// to fifth (if evol >= 5 and < 8)
-			if ((circle && !light) && deltaDark <= -8 && deltaDark >= -13) ToFifth(true, 0);					// if dark circle & lose dark = to light circle
-			else if ((circle && !light) && deltaLight <= -8 && deltaLight >= -13) ToFifth(false, 0);			// if dark circle & lose light = to dark circle
-			else if ((circle && light) && deltaDark <= -8 && deltaDark >= -13) ToFifth(true, 0);				// if light circle & lose dark = to light circle
-			else if ((circle && light) && deltaLight <= -8 && deltaLight >= -13) ToFifth(false, 0);				// if light circle & lose light = to dark circle
-			else if (triangle && deltaDark <= -8 && deltaDark >= -13) ToFifth(true, 1);							// if any triangle & lose dark = to triangle
-			else if (triangle && deltaLight <= -8 && deltaLight >= -13) ToFifth(true, 1);						// if any triangle & lose light = to triangle
-			else if (square && deltaDark <= -8 && deltaDark >= -13) ToFifth(true, 2);							// if any square & lose dark = to square
-			else if (square && deltaLight <= -8 && deltaLight >= -13) ToFifth(true, 2);							// if any square & lose light = to square
-		} 
-		else if (psp.evol >= 8f && psp.evol < 13f) {														// to sixth (if evol >= 8 and < 13)
-			if ((circle && !light) && deltaDark <= -5 && deltaDark >= -8) ToSixth(true, 0);						// if dark circle & lose dark = to light circle
-			else if ((circle && !light) && deltaLight <= -5 && deltaLight >= -8) ToSixth(false, 0);				// if dark circle & lose light = to dark circle
-			else if ((circle && light) && deltaDark <= -5 && deltaDark >= -8) ToSixth(true, 0);					// if light circle & lose dark = to light circle
-			else if ((circle && light) && deltaLight <= -5 && deltaLight >= -8) ToSixth(false, 0);				// if light circle & lose light = to dark circle
-			else if (triangle && deltaDark <= -5 && deltaDark >= -8) ToSixth(false, 1);							// if any triangle & lose dark = to triangle2
-			else if (triangle && deltaLight <= -5 && deltaLight >= -8) ToSixth(false, 1);						// if any triangle & lose light = to triangle2
-			else if (square && deltaDark <= -5 && deltaDark >= -8) ToSixth(false, 2);							// if any square & lose dark = to square2
-			else if (square && deltaLight <= -5 && deltaLight >= -8) ToSixth(false, 2);							// if any square & lose light = to square2
+		else if (evol == -0.5f && !lightworld) {											// devolve to light world zero from dark world
+			if (deltaDark < deltaLight) ToOtherWorld(true, 7, 0, true);							// if lose more dark than light = to light zero
+			else if (deltaDark > deltaLight) ToOtherWorld(true, 7, 0, true);					// if lose more light than dark = to dark zero
 		}
-		else if (psp.evol >= 21) {																			// to eighth (if evol >= 21)
-			if ((circle && !light) && (deltaDark >= 0.5 && deltaDark <= 8)) ToEighth(false, 0);					// if dark circle & gain dark = to dark circle
-			else if ((circle && !light) && (deltaLight >= 0.5 && deltaLight <= 8)) ToEighth(true, 0);			// if dark circle & gain light = to light circle
-			else if ((circle && light) && (deltaDark >= 0.5 && deltaDark <= 8)) ToEighth(false, 0);				// if light circle & gain dark = to dark circle
-			else if ((circle && light) && (deltaLight >= 0.5 && deltaLight <= 8)) ToEighth(true, 0);			// if light circle & gain light = to light circle
-			else if ((triangle && !light) && (deltaDark >= 0.5 && deltaDark <= 8)) ToEighth(false, 1);			// if dark triangle & gain dark = to dark triangle
-			else if ((triangle && !light) && (deltaLight >= 0.5 && deltaLight <= 8)) ToEighth(true, 1);			// if dark triangle & gain light = to light triangle
-			else if ((triangle && light) && (deltaDark >= 0.5 && deltaDark <= 8)) ToEighth(false, 1);			// if light triangle & gain dark = to dark triangle
-			else if ((triangle && light) && (deltaLight >= 0.5 && deltaLight <= 8)) ToEighth(true, 1);			// if light triangle & gain light = to light triangle
-			else if ((square && !light) && (deltaDark >= 0.5 && deltaDark <= 8)) ToEighth(false, 2);			// if dark square & gain dark = to dark square
-			else if ((square && !light) && (deltaLight >= 0.5 && deltaLight <= 8)) ToEighth(true, 2);			// if dark square & gain light = to light square
-			else if ((square && light) && (deltaDark >= 0.5 && deltaDark <= 8)) ToEighth(false, 2);				// if light square & gain dark = to dark square
-			else if ((square && light) && (deltaLight >= 0.5 && deltaLight <= 8)) ToEighth(true, 2);			// if light square & gain light = to light square
+		else if (evol == -0.5f && lightworld) {												// evolve to light world zero within light world 
+			ToZero(true);																		// to light zero
+		} 
+		// first
+		if (evol == 1f && !lightworld) {													// devolve to dark world first within dark world
+			if (deltaDark < deltaLight) ToFirst(true);											// if lose more dark than light = to light first
+			else if (deltaDark > deltaLight) ToFirst(false);									// if lose more light than dark = to dark first
+		}
+		else if (evol == -1f && !lightworld) {												// devolve to light world first from dark world
+			if (deltaDark < deltaLight) ToOtherWorld(true, 7, 1, true);							// if lose more dark than light = to light first
+			else if (deltaDark > deltaLight) ToOtherWorld(true, 7, 1, false);					// if lose more light than dark = to dark first
+		}
+		else if (evol == -1f && lightworld) {												// evolve to light world first within light world
+			if (deltaDark > deltaLight) ToFirst(false);											// if gain more dark than light = to light first
+			else if (deltaDark < deltaLight) ToFirst(true);										// if gain more light than dark = to dark first
+		}
+		// second
+		if (evol == 1.5f && !lightworld) {													// devolve to dark world second within dark world
+			if (deltaDark < deltaLight) ToSecond(true);											// if lose more dark than light = to light second
+			else if (deltaDark > deltaLight) ToSecond(false);									// if lose more light than dark = to dark second
+		}
+		else if (evol == -1.5f && !lightworld) {											// devolve to light world second from dark world
+			if (deltaDark < deltaLight) ToOtherWorld(true, 7, 2, true);							// if lose more dark than light = to light world light second
+			else if (deltaDark > deltaLight) ToOtherWorld(true, 7, 2, false);					// if lose more light than dark = to light world dark second
+		}
+		else if (evol == -1.5f && lightworld) {												// evolve to light world second within light world
+			if (deltaDark > deltaLight) ToSecond(false);										// if gain more dark than light = to dark world light second
+			else if (deltaDark < deltaLight) ToSecond(true);									// if gain more light than dark = to light world dark second
+		}
+		// third
+		if ((evol >= 2f && evol < 3f) && !lightworld) {										// devolve to dark or light world third within dark world
+			if (deltaDark < deltaLight) ToThird(true);											// if lose more dark than light = to light third
+			else if (deltaDark > deltaLight) ToThird(false);									// if lose more light than dark = to dark third
+		}
+		else if ((evol <= -2f && evol > -3f) && !lightworld) {								// devolve to light world third from dark world
+			if (deltaDark < deltaLight) ToOtherWorld(true, 7, 3, true);							// if lose more dark than light = to light third
+			else if (deltaDark > deltaLight) ToOtherWorld(true, 7, 3, false);					// if lose more light than dark = to dark third
+		}
+		else if ((evol <= -2f && evol > -3f) && lightworld) {								// evolve to light world third within light world
+			if (deltaDark > deltaLight) ToThird(false);											// if gain more dark than light = to dark world light third
+			else if (deltaDark < deltaLight) ToThird(true);										// if gain more dark than light = to light world dark third
+		}
+		// fourth
+		if ((evol >= 3f && evol < 5f) && !lightworld) {										// devolve to dark world fourth within dark world
+			if (circle && (deltaDark < deltaLight)) ToFourth(false);							// if either circle & lose more dark than light = to dark fourth
+			else if (circle && (deltaDark > deltaLight)) ToFourth(false);						// if either circle & lose more light than dark = to dark fourth
+			else if (triangle && (deltaDark < deltaLight)) ToFourth(true);						// if triangle & lose more dark than light = to light fourth
+			else if (triangle && (deltaDark > deltaLight)) ToFourth(true);						// if triangle & lose more light than dark = to light fourth
+			else if (square && (deltaDark < deltaLight)) ToFourth(true);						// if square & lose more dark than light = to light fourth
+			else if (square && (deltaDark > deltaLight)) ToFourth(true);						// if square & lose more light than dark = to light fourth
+		}
+		else if ((evol <= -3f && evol > -5f) && !lightworld) {								// devolve to light world fourth from dark world
+			if (deltaDark < deltaLight) ToOtherWorld(true, 7, 4, true);							// if lose more dark than light = to light world light fourth
+			else if (deltaDark > deltaLight) ToOtherWorld(true, 7, 4, false);					// if lose more dark than light = to light world dark fourth
+		}
+		else if ((evol <= -3f && evol > -5f) && lightworld) {								// evolve to light world fourth within light world
+			if (deltaDark > deltaLight) ToFourth(false);										// if gain more dark than light = to dark world light fourth
+			else if (deltaDark < deltaLight) ToFourth(true);									// if gain more dark than light = to light world dark fourth
+		}
+		// fifth
+		if ((evol >= 5f && evol < 8f) && !lightworld) {										// devolve to dark world fifth (if evol >= 5 and < 8)
+			if (circle && (deltaDark < deltaLight)) ToFifth(true, 0);							// if either circle & lose more dark than light = to light circle fifth
+			else if (circle && (deltaDark > deltaLight)) ToFifth(false, 0);						// if either circle & lose more light than dark = to dark circle fifth
+			else if (triangle && (deltaDark < deltaLight)) ToFifth(true, 1);					// if triangle & lose more dark than light = to triangle fifth
+			else if (triangle && (deltaDark > deltaLight)) ToFifth(true, 1);					// if triangle & lose more light than dark = to triangle fifth
+			else if (square && (deltaDark < deltaLight)) ToFifth(true, 2);						// if square & lose more dark than light = to square fifth
+			else if (square && (deltaDark > deltaLight)) ToFifth(true, 2);						// if square & lose more light than dark = to square fifth
+		} 
+		else if ((evol <= -5f && evol > -8f) && !lightworld) {								// devolve to light world fifth from dark world
+			if (deltaDark < deltaLight) ToOtherWorld(true, 7, 5, true);							// if lose more dark than light = to light world light circle fifth
+			else if (deltaDark > deltaLight) ToOtherWorld(true, 7, 5, false);					// if lose more light than dark = to light world dark circle fifth
+		}
+		else if ((evol <= -5f && evol > -8f) && lightworld) {								// evolve to light world fifth within light world
+			if (deltaDark > deltaLight) ToFifth(false, 0);										// if gain more dark than light = to dark world light circle fifth
+			else if (deltaDark < deltaLight) ToFifth(true, 0);									// if gain more light than dark = to light world dark circle fifth
+		}
+		// sixth
+		if ((evol >= 8f && evol < 13f) && !lightworld) {									// devolve to dark world sixth (if evol >= 8 and < 13)
+			if (circle && (deltaDark < deltaLight)) ToSixth (true, 0);							// if either circle & lose more dark than light = to light circle sixth
+			else if (circle && (deltaDark > deltaLight)) ToSixth (false, 0);					// if either circle & lose more light than dark = to dark circle sixth
+			else if (triangle && (deltaDark < deltaLight)) ToSixth (false, 1);					// if triangle & lose more dark than light = to triangle sixth
+			else if (triangle && (deltaDark > deltaLight)) ToSixth (false, 1);					// if triangle & lose more light than dark = to triangle sixth
+			else if (square && (deltaDark < deltaLight)) ToSixth (false, 2);					// if square & lose more dark than light = to square sixth
+			else if (square && (deltaDark > deltaLight)) ToSixth (false, 2);					// if square & lose more light than dark = to square sixth
+		} 
+		else if ((evol <= -8f && evol > -13f) && !lightworld) {								// devolve to light world sixth from dark world
+			if (deltaDark < deltaLight) ToOtherWorld(true, 7, 6, true);							// if lose more dark than light = to light world light circle sixth
+			else if (deltaDark > deltaLight) ToOtherWorld(true, 7, 6, false);					// if lose more dark than light = to light world dark circle sixth
+		}
+		else if ((evol <= -8f && evol > -13f) && lightworld) {								// evolve to light world sixth within light world
+			if (deltaDark > deltaLight) ToSixth(false, 0);										// if gain more dark than light = to dark world light circle sixth
+			else if (deltaDark < deltaLight) ToSixth(true, 0);									// if gain more light than dark = to light world dark circle sixth
+		}
+		else if (evol >= 21) {																				// evolve to dark world eighth (if evol >= 21)
+			if (circle && (deltaDark > deltaLight)) ToEighth (false, 0);										// if either circle & gain more dark than light = to dark circle eighth
+			else if (circle && (deltaDark < deltaLight)) ToEighth (true, 0);									// if either circle & gain more light than dark = to light circle eighth
+			else if (triangle && (deltaDark > deltaLight)) ToEighth (false, 1);									// if either triangle & gain more dark than light = to dark triangle eighth
+			else if (triangle && (deltaDark < deltaLight)) ToEighth (true, 1);									// if either triangle & gain more light than dark = to light triangle eighth
+			else if (square && (deltaDark > deltaLight)) ToEighth (false, 2);									// if either square & gain more dark than light = to dark square eighth
+			else if (square && (deltaDark < deltaLight)) ToEighth (true, 2);									// if either square & gain more light than dark = to light square eighth
+		} 
+		else if (evol <= -21 && evol > -34) {																// devolve to light world eighth (if evol = -5)
+			if (deltaDark < deltaLight) ToEighth (true, 0);														// if lose more dark than light = to light circle eighth
+			else if (deltaDark > deltaLight) ToEighth (false, 0);												// if lose more light than dark = to dark circle eighth
 		}
 	}
 }

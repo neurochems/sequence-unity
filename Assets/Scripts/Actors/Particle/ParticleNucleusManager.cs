@@ -9,20 +9,57 @@ public class ParticleNucleusManager : MonoBehaviour {
 	#pragma warning restore 0414
 	public Mesh sphere, triangle, square;			// shape meshes
 	private MeshRenderer rend;						// mesh renderer (for colour changes)
-	private PlayerStatePattern psp;					// psp ref
+	private ParticleStatePattern psp;				// psp ref
 	private bool light; 							// is light flag
 
 	void Awake () {
 		anim = GetComponent<Animator>();							// init animator ref
 		mesh = GetComponent<MeshFilter>().mesh;						// init mesh ref
 		rend = GetComponent<MeshRenderer>();						// init mesh renderer ref
-		psp = GameObject.Find ("Player")
-			.gameObject.GetComponent<PlayerStatePattern> ();		// init psp ref
+		psp = GetComponentInParent<ParticleStatePattern> ();		// init psp ref
 	}
 
-	void Update() {
+/*	void Update() {
 		if (light && psp.changeParticles) rend.material.SetColor("_Color", Color.black);			// if light && light world, change to black
 		else if (!light && psp.changeParticles) rend.material.SetColor("_Color", Color.white);		// if not light && light world, change to white
+
+		if (light && psp.lightworld && psp.changeParticles) {				// if light particle is to be sent to light world and the timing of the zoom is right
+			rend.material.SetColor("_Color", Color.black);						// change nucleus to black
+		}
+		else if (!light && psp.lightworld && psp.changeParticles) {		// if dark particle is to be sent to light world and the timing of the zoom is right
+			rend.material.SetColor("_Color", Color.white);						// change core to white
+		}
+		else if (light && !psp.lightworld && psp.changeParticles) {		// if light particle is to be sent to dark world and the timing of the zoom is right
+			rend.material.SetColor("_Color", Color.white);						// change core to white
+		}
+		else if (!light && !psp.lightworld && psp.changeParticles) {		// if dark particle is to be sent to dark world and the timing of the zoom is right
+			rend.material.SetColor("_Color", Color.black);						// change core to black
+		}
+	}*/
+
+	public void Nucleus (int fromState, int toState, bool toLight) 
+	{
+
+		// EVOLUTIONS \\
+
+
+		///// hidden \\\\\
+
+		if (fromState == -1 && toState == 2) ScaleTo (false, "hidden", "first");				// scale to second/first
+		else if (fromState == -1 && toState == 4) ScaleTo (false, "hidden", "first");			// scale to fourth/first
+		else if (fromState == -1 && toState == 6) ScaleTo (false, "hidden", "first");			// scale to sixth/first
+		else if (fromState == -1 && toState == 8) ScaleTo (false, "hidden", "seventh");			// scale to eighth/seventh
+
+
+		// DEVOLUTIONS \\
+
+
+		///// hidden \\\\\
+
+		if (fromState == 2 && toState == -1) ScaleTo (true, "first", "hidden");					// scale from second/first
+		else if (fromState == 4 && toState == -1) ScaleTo (true, "first", "hidden");			// scale from fourth/first
+		else if (fromState == 6 && toState == -1) ScaleTo (true, "first", "hidden");			// scale from sixth/first
+		else if (fromState == 8 && toState == -1) ScaleTo (true, "seventh", "hidden");			// scale from eighth/seventh
 	}
 
 	public void Nucleus (int fromState, int toState, bool fromLight, bool toLight, int shape) 
