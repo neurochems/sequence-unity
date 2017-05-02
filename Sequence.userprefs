@@ -3,7 +3,11 @@
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Actors\Particle\ParticleStatePattern.cs">
     <Files>
       <File FileName="Assets\Scripts\Actors\Player\PlayerStatePattern.cs" Line="46" Column="23" />
-      <File FileName="Assets\Scripts\Actors\Particle\ParticleStatePattern.cs" Line="278" Column="9" />
+      <File FileName="Assets\Scripts\Actors\Player\PlayerCoreManager.cs" Line="1079" Column="1" />
+      <File FileName="Assets\Scripts\Actors\Player\PlayerNucleusManager.cs" Line="226" Column="136" />
+      <File FileName="Assets\Scripts\Actors\Particle\ParticleStatePattern.cs" Line="290" Column="3" NotebookId="1" />
+      <File FileName="Assets\Scripts\Actors\Particle\ParticleCoreManager.cs" Line="1" Column="1" NotebookId="1" />
+      <File FileName="Assets\Scripts\Actors\Particle\ParticleNucleusManager.cs" Line="1" Column="1" NotebookId="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
