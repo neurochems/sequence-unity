@@ -65,7 +65,7 @@ public class ZeroPlayerState : IParticleState
 
 	public void ToZero(bool toLight)
 	{
-		Debug.Log ("Can't transition to same state");
+		psp.TransitionTo(0, 0, light, toLight, 0);									// trigger transition effects
 	}
 
 	public void ToHalfZero(bool toLight)
@@ -136,8 +136,9 @@ public class ZeroPlayerState : IParticleState
 
 		// state transition checks
 		if (evol == 0.5f || evol == -0.5f) {											// evolve to half zero (if evol = 0.5)
-			if (deltaDark == 0.5f || deltaDark == -0.5f) ToHalfZero (false);				// if gain dark = to dark zero
-			//else if (deltaLight == 0.5f || deltaLight == -0.5f) ToHalfZero (true);			// if gain light = to light zero
+			if (psp.isInit) ToZero(true);													// if is init, start at zero
+			else if (deltaDark == 0.5f || deltaDark == -0.5f) ToHalfZero (false);			// if gain dark = to dark zero
+			//else if (deltaLight == 0.5f || deltaLight == -0.5f) ToHalfZero (true);		// if gain light = to light zero
 		}
 		else if (evol == 1f) {															// evolve to dark world first (if evol == 1)
 			if (deltaDark > deltaLight) ToFirst(false);										// if gain more dark than light = to dark first

@@ -22,8 +22,11 @@ public class PlayerCoreManager : MonoBehaviour {
 
 		///// zero \\\\\
 
+		if (fromState == 0 && toState == 0 && fromLight && toLight) {			// to zero
+			ScaleTo (false, "hidden", "zero");										// scale to first
+		}
+
 		// to dark zero (0.5) (no core change)
-			// from zero
 		// to light zero (0.5) (no core change)
 
 		// to first

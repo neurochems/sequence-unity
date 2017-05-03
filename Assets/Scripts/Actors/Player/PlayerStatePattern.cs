@@ -40,6 +40,7 @@ public class PlayerStatePattern : MonoBehaviour {
 	private MeshRenderer rendWorld, rendCore, rendShell, rendNucleus;		// mesh renderers (for lightworld colour changes)
 
 	// timers & flags
+	public bool isInit = true;												// is init flag
 	private int die;														// roll for collision conflicts
 	public bool stunned;													// stunned?
 	public float stunDuration = 5f;											// duration of post-hit invulnerability
@@ -105,7 +106,7 @@ public class PlayerStatePattern : MonoBehaviour {
 		//lightEvol = 0f;													// start at 0.5 light evol
 		//darkEvol = 0f;													// start at 0.5 light evol
 		currentState = zeroState;											// start at zero state
-		TransitionTo(0, 0, light, toLight, 0);								// start at zero size
+		//TransitionTo(0, 0, light, toLight, 0);								// start at zero size
 	}
 
 	void Update () 
@@ -135,8 +136,9 @@ public class PlayerStatePattern : MonoBehaviour {
 
 		// checks for OVERLAY TEXT
 		if (!uim.uI.GetComponent<StartOptions>().inMainMenu && timeCheck == true) {			// if game start (not in menu)
-			sincePlaytimeBegin = Time.time;																// check time
-			timeCheck = false;																		// check time only once
+			isInit = false;																		// reset is init flag
+			sincePlaytimeBegin = Time.time;														// check time
+			timeCheck = false;																	// check time only once
 		}
 
 	}

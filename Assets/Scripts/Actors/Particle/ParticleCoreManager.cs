@@ -7,7 +7,7 @@ public class ParticleCoreManager : MonoBehaviour {
 	#pragma warning disable 0414
 	private Mesh mesh;								// core mesh
 	#pragma warning restore 0414
-	public Mesh sphere, triangle, square, ring;		// shape meshes
+	public Mesh sphere, triangle, square;			// shape meshes
 	private MeshRenderer rend;						// mesh renderer (for colour changes)
 	private ParticleStatePattern psp;				// psp ref
 
@@ -71,20 +71,12 @@ public class ParticleCoreManager : MonoBehaviour {
 
 	public void Core (int fromState, int toState, bool fromLight, bool toLight, int shape) 
 	{
-
 		// EVOLUTIONS \\
-
 
 		///// zero \\\\\
 
-		// to dark zero (0.5)
-		// from zero
-		if (fromState == 0 && toState == 0 && fromLight && !toLight) {			// to dark zero
-			ScaleTo (true, "zero", "hidden");										// scale to hidden
-			SetShape (3);															// change to ring
-			ScaleTo (false, "hidden", "zero");										// scale to zero
-		}
-		// to light zero (0.5) no change
+		// to dark zero (0.5) (no core change)
+		// to light zero (0.5) (no core change)
 
 		// to first
 		// from dark zero (0.5)
@@ -92,18 +84,14 @@ public class ParticleCoreManager : MonoBehaviour {
 			ScaleTo (false, "zero", "first");										// scale to first
 		}
 		else if (fromState == 0 && toState == 1 && !fromLight && toLight) {		// to light first
-			ScaleTo (true, "zero", "hidden");										// scale to hidden
-			SetShape (0);															// change to ring
-			ScaleTo (false, "hidden", "first");										// scale to first
+			ScaleTo (false, "zero", "first");										// scale to first
 		}
 		// from light zero (0.5)
 		if (fromState == 0 && toState == 1 && fromLight && !toLight) {			// to dark first
-			ScaleTo (true, "zero", "hidden");										// scale to hidden
-			SetShape (3);															// change to ring
-			ScaleTo (false, "hidden", "first");										// scale to first
+			ScaleTo (false, "zero", "first");										// scale to first
 		}
 		else if (fromState == 0 && toState == 1 && fromLight && toLight) {		// to light first
-			ScaleTo (true, "zero", "first");										// scale to first
+			ScaleTo (false, "zero", "first");										// scale to first
 		}
 
 		///// first \\\\\
@@ -112,17 +100,10 @@ public class ParticleCoreManager : MonoBehaviour {
 
 		// from dark first
 		// to dark second (no core change)
-		if (fromState == 1 && toState == 2 && !fromLight && toLight) {			// to light second
-			ScaleTo (true, "first", "hidden");										// scale to hidden
-			SetShape (0);															// change to sphere
-			ScaleTo (false, "hidden", "first");										// scale to first
-		}
+		// to light second (no core change)
+
 		// from light first
-		if (fromState == 1 && toState == 2 && fromLight && !toLight) {			// to dark second
-			ScaleTo (true, "first", "hidden");										// scale to hidden
-			SetShape (3);															// change to ring
-			ScaleTo (false, "hidden", "first");										// scale to first
-		}
+		// to dark second (no core change)
 		// to light second (no core change)
 
 		///// second \\\\\
@@ -131,20 +112,16 @@ public class ParticleCoreManager : MonoBehaviour {
 
 		// from dark second
 		if (fromState == 2 && toState == 3 && !fromLight && !toLight) {			// to dark third
-			ScaleTo (true, "first", "hidden");										// scale to hidden
-			SetShape (0);															// change to sphere
+			ScaleTo (false, "first", "hidden");										// scale to hidden
 		}
 		else if (fromState == 2 && toState == 3 && !fromLight && toLight) {		// to light third
-			ScaleTo (true, "first", "hidden");										// scale to hidden
-			SetShape (0);															// change to sphere
-			ScaleTo (false, "hidden", "third");										// scale to third
+			ScaleTo (false, "first", "third");										// scale to third
 		}
 		// from light second
 		if (fromState == 2 && toState == 3 && fromLight && !toLight) {			// to dark third
-			ScaleTo (true, "first", "hidden");										// scale to hidden
+			ScaleTo (false, "first", "hidden");										// scale to hidden
 		}
 		else if (fromState == 2 && toState == 3 && fromLight && toLight) {		// to light third
-			// scale to third
 			ScaleTo (false, "first", "third");										// scale to third
 		}
 
@@ -169,7 +146,6 @@ public class ParticleCoreManager : MonoBehaviour {
 
 		// from dark fourth
 		if (fromState == 4 && toState == 5 && !fromLight && !toLight && shape == 0) {			// to dark circle fifth
-			SetShape (3);																			// change to ring
 			ScaleTo (false, "hidden", "first");														// scale to first
 		}
 		else if (fromState == 4 && toState == 5 && !fromLight && toLight && shape == 0) {		// to light circle fifth
@@ -193,18 +169,10 @@ public class ParticleCoreManager : MonoBehaviour {
 
 		// from dark circle fifth
 		// to dark circle sixth (no core change)
-		if (fromState == 5 && toState == 6 && !fromLight && toLight && shape == 0) {			// to light circle sixth
-			// change to sphere
-			ScaleTo (true, "zero", "hidden");														// scale to hidden
-			SetShape (0);																			// change to sphere
-			ScaleTo (false, "hidden", "first");														// scale to first
-		}
+		// to light circle sixth (no core change)
 		// from light circle fifth
-		if (fromState == 5 && toState == 6 && fromLight && !toLight && shape == 0) {			// to dark circle sixth
-			ScaleTo (true, "zero", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
-			ScaleTo (false, "hidden", "first");														// scale to first
-		}
+		// to dark circle sixth (no core change)
+		// change shader to add faux nucleus/visual effect
 		// to light circle sixth (no core change)
 
 		// from triangle fifth
@@ -222,15 +190,11 @@ public class ParticleCoreManager : MonoBehaviour {
 			ScaleTo (false, "first", "seventh");														// scale to seventh
 		}
 		else if (fromState == 6 && toState == 7 && !fromLight && toLight && shape == 0) {		// to light circle seventh
-			ScaleTo (true, "zero", "hidden");														// scale to hidden
-			SetShape (0);																			// change to ring
-			ScaleTo (false, "hidden", "seventh");													// scale to seventh
+			ScaleTo (false, "first", "seventh");													// scale to seventh
 		}
 		// from light circle sixth
 		if (fromState == 6 && toState == 7 && fromLight && !toLight && shape == 0) {			// to dark circle seventh
-			ScaleTo (true, "zero", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
-			ScaleTo (false, "hidden", "seventh");													// scale to seventh
+			ScaleTo (false, "first", "seventh");													// scale to seventh
 		}
 		else if (fromState == 6 && toState == 7 && fromLight && toLight && shape == 0) {		// to light circle seventh
 			ScaleTo (false, "first", "seventh");													// scale to seventh
@@ -256,19 +220,10 @@ public class ParticleCoreManager : MonoBehaviour {
 
 		// from dark circle seventh
 		// to dark circle eighth (no core change)
-		if (fromState == 7 && toState == 8 && !fromLight && toLight && shape == 0) {		// to light circle eighth
-			// change to sphere
-			ScaleTo (true, "zero", "hidden");														// scale to hidden
-			SetShape (0);																			// change to ring
-			ScaleTo (false, "hidden", "seventh");													// scale to seventh
-		}
+		// to light circle eighth (no core change)
 
 		// from light circle seventh
-		if (fromState == 7 && toState == 8 && fromLight && !toLight && shape == 0) {			// to dark circle eighth
-			ScaleTo (true, "zero", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
-			ScaleTo (false, "hidden", "seventh");													// scale to seventh
-		}
+		// to dark circle eighth (no core change)
 		// to light circle eighth (no core change)
 
 		// from dark triangle seventh
@@ -291,43 +246,20 @@ public class ParticleCoreManager : MonoBehaviour {
 		///// ninth \\\\\
 		///// tenth \\\\\
 
-
 		// DEVOLUTIONS \\
-
 
 		///// zero \\\\\
 
-		// to dead
-		if (fromState == 0 && toState == -1) {													// to dead
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
-		}
-
 		///// dark zero (0.5) \\\\\
 
-		// to zero
-		if (fromState == 0 && toState == 0 && !fromLight && toLight) {							// to zero
-			ScaleTo (true, "zero", "hidden");														// scale to hidden
-			SetShape (0);																			// change to sphere
-			ScaleTo (false, "hidden", "zero");														// scale to zero
-		}
+		// to zero (no core change)
 
 		///// first \\\\\
-
-		// to dead
-		if (fromState == 1 && toState == -1) {													// to dead
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
-		}
 
 		// from dark first
 		// to zero
 		if (fromState == 1 && toState == 0 && !fromLight && toLight) {							// to zero
-			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (0);																			// change to sphere
-			ScaleTo (false, "hidden", "zero");														// scale to zero
+			ScaleTo (true, "first", "zero");														// scale to zero
 		}
 		// to dark zero (0.5)
 		if (fromState == 1 && toState == 0 && !fromLight && !toLight) {							// to dark zero
@@ -341,26 +273,15 @@ public class ParticleCoreManager : MonoBehaviour {
 		}
 		// to dark zero (0.5)
 		if (fromState == 1 && toState == 0 && fromLight && !toLight) {							// to dark zero
-			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
-			ScaleTo (false, "hidden", "zero");														// scale to zero
+			ScaleTo (true, "first", "zero");														// scale to zero
 		}
 
 		///// second \\\\\
 
-		// to dead
-		if (fromState == 2 && toState == -1) {													// to dead
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
-		}
-
 		// from dark second
 		// to zero
 		if (fromState == 2 && toState == 0 && !fromLight && toLight) {							// to zero
-			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (0);																			// change to sphere
-			ScaleTo (false, "hidden", "zero");														// scale to first
+			ScaleTo (true, "first", "zero");														// scale to zero
 		}
 		// to dark zero
 		if (fromState == 2 && toState == 0 && !fromLight && !toLight) {							// to dark zero
@@ -368,11 +289,7 @@ public class ParticleCoreManager : MonoBehaviour {
 		}
 		// to first
 		// to dark first (no core change)
-		if (fromState == 2 && toState == 1 && !fromLight && toLight) {							// to light first
-			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (0);																			// change to sphere
-			ScaleTo (false, "hidden", "first");														// scale to first
-		}
+		// to light first (no core change)
 
 		// from light second
 		// to zero
@@ -381,26 +298,13 @@ public class ParticleCoreManager : MonoBehaviour {
 		}
 		// to dark zero
 		if (fromState == 2 && toState == 0 && fromLight && !toLight) {							// to dark zero
-			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
-			ScaleTo (false, "hidden", "zero");														// scale to zero
+			ScaleTo (true, "first", "zero");														// scale to zero
 		}
 		// to first
-		if (fromState == 2 && toState == 1 && fromLight && !toLight) {							// to dark first
-			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
-			ScaleTo (false, "hidden", "first");														// scale to first
-		}
+		// to dark first (no core change)
 		// to light first (no core change)
 
 		///// third \\\\\
-
-		// to dead
-		if (fromState == 3 && toState == -1) {									// to dead
-			anim.ResetTrigger ("scaleup");						// reset next stage
-			anim.SetTrigger("scaledown");						// enable core to black animation
-			anim.SetBool("photon", true);						// enable black core animation state
-		}
 
 		// from dark third	
 		// to zero
@@ -409,12 +313,10 @@ public class ParticleCoreManager : MonoBehaviour {
 		}
 		// to dark zero
 		if (fromState == 3 && toState == 0 && !fromLight && !toLight) {							// to dark zero
-			SetShape (3);																			// change to ring
 			ScaleTo (false, "hidden", "zero");														// scale to zero
 		}
 		// to first
 		if (fromState == 3 && toState == 1 && !fromLight && !toLight) {							// to dark first
-			SetShape (3);																			// change to ring
 			ScaleTo (false, "hidden", "first");														// scale to first
 		}
 		else if (fromState == 3 && toState == 1 && !fromLight && toLight) {						// to light first
@@ -422,7 +324,6 @@ public class ParticleCoreManager : MonoBehaviour {
 		}
 		// to second
 		if (fromState == 3 && toState == 2 && !fromLight && !toLight) {							// to dark second
-			SetShape (3);																			// change to ring
 			ScaleTo (false, "hidden", "first");														// scale to first
 		}
 		else if (fromState == 3 && toState == 2 && !fromLight && toLight) {						// to light second
@@ -436,37 +337,24 @@ public class ParticleCoreManager : MonoBehaviour {
 		}
 		// to dark zero
 		if (fromState == 3 && toState == 0 && fromLight && !toLight) {							// to dark zero
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
-			ScaleTo (false, "hidden", "zero");														// scale to zero
+			ScaleTo (true, "third", "zero");														// scale to zero
 		}
 		// to first
 		if (fromState == 3 && toState == 1 && fromLight && !toLight) {							// to dark first
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
-			ScaleTo (false, "hidden", "first");														// scale to first
+			ScaleTo (true, "third", "first");														// scale to first
 		}
 		else if (fromState == 3 && toState == 1 && !fromLight && toLight) {						// to light first
 			ScaleTo (true, "third", "first");														// scale to first
 		}
 		// to second
 		if (fromState == 3 && toState == 2 && fromLight && !toLight) {							// to dark second
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
-			ScaleTo (false, "hidden", "first");														// scale to first
+			ScaleTo (true, "third", "first");														// scale to first
 		}
 		else if (fromState == 3 && toState == 2 && !fromLight && toLight) {						// to light second
 			ScaleTo (true, "third", "first");														// scale to first
 		}
 
 		///// fourth \\\\\
-
-		// to dead
-		if (fromState == 4 && toState == -1) {									// to dead
-			anim.ResetTrigger ("scaleup");						// reset next stage
-			anim.SetTrigger("scaledown");						// enable core to black animation
-			anim.SetBool("photon", true);						// enable black core animation state
-		}
 
 		// from dark fourth	
 		// to zero
@@ -475,12 +363,10 @@ public class ParticleCoreManager : MonoBehaviour {
 		}
 		// to dark zero
 		if (fromState == 4 && toState == 0 && !fromLight && !toLight) {							// to dark zero
-			SetShape (3);																			// change to ring
 			ScaleTo (false, "hidden", "zero");														// scale to zero
 		}
 		// to first
 		if (fromState == 4 && toState == 1 && !fromLight && !toLight) {							// to dark first
-			SetShape (3);																			// change to ring
 			ScaleTo (false, "hidden", "first");														// scale to first
 		}
 		else if (fromState == 4 && toState == 1 && !fromLight && toLight) {						// to light first
@@ -488,7 +374,6 @@ public class ParticleCoreManager : MonoBehaviour {
 		}
 		// to second
 		if (fromState == 4 && toState == 2 && !fromLight && !toLight) {							// to dark second
-			SetShape (3);																			// change to ring
 			ScaleTo (false, "hidden", "first");														// scale to first
 		}
 		else if (fromState == 4 && toState == 2 && !fromLight && toLight) {						// to light second
@@ -507,24 +392,18 @@ public class ParticleCoreManager : MonoBehaviour {
 		}
 		// to dark zero
 		if (fromState == 4 && toState == 0 && fromLight && !toLight) {							// to dark zero
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
-			ScaleTo (false, "hidden", "zero");														// scale to zero
+			ScaleTo (true, "third", "zero");														// scale to zero
 		}
 		// to first
 		if (fromState == 4 && toState == 1 && fromLight && !toLight) {							// to dark first
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
-			ScaleTo (false, "hidden", "zero");														// scale to zero
+			ScaleTo (true, "third", "zero");														// scale to zero
 		}
 		else if (fromState == 4 && toState == 1 && fromLight && toLight) {						// to light first
-			ScaleTo (true, "third", "hidden");														// scale to first
+			ScaleTo (true, "third", "first");														// scale to first
 		}
 		// to second
 		if (fromState == 4 && toState == 2 && fromLight && !toLight) {							// to dark second
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
-			ScaleTo (false, "hidden", "first");														// scale to first
+			ScaleTo (true, "third", "first");														// scale to first
 		}
 		else if (fromState == 4 && toState == 2 && fromLight && toLight) {						// to light second
 			ScaleTo (true, "third", "first");														// scale to first
@@ -537,19 +416,10 @@ public class ParticleCoreManager : MonoBehaviour {
 
 		///// fifth \\\\\
 
-		// to dead
-		if (fromState == 5 && toState == -1) {									// to dead
-			anim.ResetTrigger ("scaleup");						// reset next stage
-			anim.SetTrigger("scaledown");						// enable core to black animation
-			anim.SetBool("photon", true);						// enable black core animation state
-		}
-
 		// from dark circle fifth
 		// to zero
 		if (fromState == 5 && toState == 0 && !fromLight && toLight && shape == 0) {			// to zero
-			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (0);																			// change to sphere
-			ScaleTo (false, "hidden", "zero");														// scale to zero
+			ScaleTo (true, "first", "zero");														// scale to zero
 		}
 		// to dark zero
 		if (fromState == 5 && toState == 0 && !fromLight && !toLight && shape == 0) {			// to dark zero
@@ -557,32 +427,20 @@ public class ParticleCoreManager : MonoBehaviour {
 		}
 		// to first
 		// to dark first (no core change)
-		if (fromState == 5 && toState == 1 && !fromLight && toLight && shape == 0) {		// to light first
-			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (0);																			// change to sphere
-			ScaleTo (false, "hidden", "first");														// scale to first
-		}
+		// to light first (no core change)
 		// to second
 		// to dark second (no core change)
-		if (fromState == 5 && toState == 2 && !fromLight && toLight && shape == 0) {		// to light second
-			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (0);																			// change to sphere
-			ScaleTo (false, "hidden", "first");														// scale to first
-		}
+		// to light second (no core change)
 		// to third
 		if (fromState == 5 && toState == 3 && !fromLight && !toLight && shape == 0) {			// to dark third
 			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (0);																			// change to sphere
 		}
 		else if (fromState == 5 && toState == 3 && !fromLight && toLight && shape == 0) {		// to light third
-			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (0);																			// change to sphere
-			ScaleTo (false, "hidden", "third");														// scale to third
+			ScaleTo (false, "false", "third");														// scale to third
 		}
 		// to fourth
 		if (fromState == 5 && toState == 4 && !fromLight && !toLight && shape == 0) {			// to dark fourth
 			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (0);																			// change to sphere
 		}
 
 		// from light circle fifth
@@ -592,26 +450,14 @@ public class ParticleCoreManager : MonoBehaviour {
 		}
 		// to dark zero
 		if (fromState == 5 && toState == 0 && fromLight && !toLight && shape == 0) {			// to dark zero
-			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
-			ScaleTo (false, "hidden", "zero");														// scale to zero
+			ScaleTo (true, "first", "zero");														// scale to zero
 		}
 		// to first
-		if (fromState == 5 && toState == 1 && fromLight && !toLight && shape == 0) {			// to dark first
-			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
-			ScaleTo (false, "hidden", "first");														// scale to first
-		}
+		// to dark first (no core change)
 		// to light first (no core change)
-
 		// to second
-		if (fromState == 5 && toState == 2 && fromLight && !toLight && shape == 0) {			// to dark second
-			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
-			ScaleTo (false, "hidden", "first");														// scale to first
-		}
+		// to dark second (no core change)
 		// to light second (no core change)
-
 		// to third
 		if (fromState == 5 && toState == 3 && fromLight && !toLight && shape == 0) {			// to dark third
 			ScaleTo (true, "first", "hidden");														// scale to hidden
@@ -635,13 +481,13 @@ public class ParticleCoreManager : MonoBehaviour {
 		// to dark zero
 		if (fromState == 5 && toState == 0 && fromLight && !toLight && shape == 1) {			// to dark zero
 			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
+			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "zero");														// scale to zero
 		}
 		// to first
 		if (fromState == 5 && toState == 1 && fromLight && !toLight && shape == 1) {			// to dark first
 			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
+			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "first");														// scale to first
 		}
 		else if (fromState == 5 && toState == 1 && fromLight && toLight && shape == 1) {		// to light first
@@ -652,7 +498,7 @@ public class ParticleCoreManager : MonoBehaviour {
 		// to second
 		if (fromState == 5 && toState == 2 && fromLight && !toLight && shape == 1) {			// to dark second
 			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
+			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "first");														// scale to first
 		}
 		else if (fromState == 5 && toState == 2 && fromLight && toLight && shape == 1) {		// to light second
@@ -686,13 +532,13 @@ public class ParticleCoreManager : MonoBehaviour {
 		// to dark zero
 		if (fromState == 5 && toState == 0 && fromLight && !toLight && shape == 2) {			// to dark zero
 			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
+			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "zero");														// scale to zero
 		}
 		// to first
 		if (fromState == 5 && toState == 1 && fromLight && !toLight && shape == 2) {			// to dark first
 			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
+			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "first");														// scale to first
 		}
 		else if (fromState == 5 && toState == 1 && fromLight && toLight && shape == 2) {		// to light first
@@ -703,7 +549,7 @@ public class ParticleCoreManager : MonoBehaviour {
 		// to second
 		if (fromState == 5 && toState == 2 && fromLight && !toLight && shape == 2) {			// to dark second
 			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
+			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "first");														// scale to first
 		}
 		else if (fromState == 5 && toState == 2 && fromLight && toLight && shape == 2) {		// to light second
@@ -729,19 +575,10 @@ public class ParticleCoreManager : MonoBehaviour {
 
 		///// sixth \\\\\
 
-		// to dead
-		if (fromState == 6 && toState == -1) {									// to dead
-			anim.ResetTrigger ("scaleup");						// reset next stage
-			anim.SetTrigger("scaledown");						// enable core to black animation
-			anim.SetBool("photon", true);						// enable black core animation state
-		}
-
 		// from dark circle sixth
 		// to zero
 		if (fromState == 6 && toState == 0 && !fromLight && toLight && shape == 0) {			// to zero
-			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (0);																			// change to sphere
-			ScaleTo (false, "hidden", "zero");														// scale to zero
+			ScaleTo (true, "first", "zero");														// scale to zero
 		}
 		// to dark zero
 		if (fromState == 6 && toState == 0 && !fromLight && !toLight && shape == 0) {			// to dark zero
@@ -749,40 +586,24 @@ public class ParticleCoreManager : MonoBehaviour {
 		}
 		// to first
 		// to dark first (no core change)
-		if (fromState == 6 && toState == 1 && !fromLight && toLight && shape == 0) {			// to light first
-			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (0);																			// change to sphere
-			ScaleTo (false, "hidden", "first");														// scale to first
-		}
+		// to light first (no core change)
 		// to second
 		// to dark second (no core change)
-		if (fromState == 6 && toState == 2 && !fromLight && toLight && shape == 0) {		// to light second
-			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (0);																			// change to sphere
-			ScaleTo (false, "hidden", "first");														// scale to first
-		}
+		// to light second (no core change)
 		// to third
 		if (fromState == 6 && toState == 3 && !fromLight && !toLight && shape == 0) {			// to dark third
 			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (0);																			// change to sphere
 		}
 		else if (fromState == 6 && toState == 3 && !fromLight && toLight && shape == 0) {		// to light third
-			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (0);																			// change to sphere
-			ScaleTo (false, "hidden", "third");														// scale to third
+			ScaleTo (false, "first", "third");														// scale to third
 		}
 		// to fourth
 		if (fromState == 6 && toState == 4 && !fromLight && !toLight && shape == 0) {			// to dark fourth
 			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (0);																			// change to sphere
 		}
 		// to fifth
 		// to dark circle fifth (no core change)
-		if (fromState == 6 && toState == 5 && !fromLight && toLight && shape == 0) {		// to light circle fifth
-			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (0);																			// change to sphere
-			ScaleTo (false, "hidden", "first");														// scale to first
-		}
+		// to light circle fifth (no core change)
 
 		// from light circle sixth
 		// to zero
@@ -791,23 +612,13 @@ public class ParticleCoreManager : MonoBehaviour {
 		}
 		// to dark zero
 		if (fromState == 6 && toState == 0 && fromLight && !toLight && shape == 0) {			// to dark zero
-			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
-			ScaleTo (false, "hidden", "zero");														// scale to zero
+			ScaleTo (true, "first", "zero");														// scale to zero
 		}
 		// to first
-		if (fromState == 6 && toState == 1 && fromLight && !toLight && shape == 0) {			// to dark first
-			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
-			ScaleTo (false, "hidden", "first");														// scale to first
-		}
+		// to dark first (no core change)
 		// to light first (no core change)
 		// to second
-		if (fromState == 6 && toState == 2 && fromLight && !toLight && shape == 0) {			// to dark second
-			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
-			ScaleTo (false, "hidden", "first");														// scale to first
-		}
+		// to dark second (no core change)
 		// to light second (no core change)
 		// to third
 		if (fromState == 6 && toState == 3 && fromLight && !toLight && shape == 0) {			// to dark third
@@ -821,16 +632,12 @@ public class ParticleCoreManager : MonoBehaviour {
 			ScaleTo (true, "first", "hidden");														// scale to hidden
 		}
 		// to fifth
-		if (fromState == 6 && toState == 5 && fromLight && !toLight && shape == 0) {			// to dark circle fifth
-			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
-			ScaleTo (false, "hidden", "first");														// scale to first
-		}
+		// to dark circle fifth (no core change)
 		// to light circle fifth (no core change)
 
 		// from triangle sixth
 		// to zero
-		if (fromState == 6 && toState == 0 && !fromLight && toLight && shape == 1) {				// to zero
+		if (fromState == 6 && toState == 0 && !fromLight && toLight && shape == 1) {			// to zero
 			ScaleTo (true, "first", "hidden");														// scale to hidden
 			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "zero");														// scale to zero
@@ -838,13 +645,13 @@ public class ParticleCoreManager : MonoBehaviour {
 		// to dark zero
 		if (fromState == 6 && toState == 0 && !fromLight && !toLight && shape == 1) {			// to dark zero
 			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
+			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "zero");														// scale to zero
 		}
 		// to first
 		if (fromState == 6 && toState == 1 && !fromLight && !toLight && shape == 1) {			// to dark first
 			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
+			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "first");														// scale to first
 		}
 		else if (fromState == 6 && toState == 1 && !fromLight && toLight && shape == 1) {		// to light first
@@ -855,7 +662,7 @@ public class ParticleCoreManager : MonoBehaviour {
 		// to second
 		if (fromState == 6 && toState == 2 && !fromLight && !toLight && shape == 1) {			// to dark second
 			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
+			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "first");														// scale to first
 		}
 		else if (fromState == 6 && toState == 2 && !fromLight && toLight && shape == 1) {		// to light second
@@ -883,7 +690,7 @@ public class ParticleCoreManager : MonoBehaviour {
 
 		// from square sixth
 		// to zero
-		if (fromState == 6 && toState == 0 && !fromLight && toLight && shape == 2) {				// to zero
+		if (fromState == 6 && toState == 0 && !fromLight && toLight && shape == 2) {			// to zero
 			ScaleTo (true, "first", "hidden");														// scale to hidden
 			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "zero");														// scale to zero
@@ -891,13 +698,13 @@ public class ParticleCoreManager : MonoBehaviour {
 		// to dark zero
 		if (fromState == 6 && toState == 0 && !fromLight && !toLight && shape == 2) {			// to dark zero
 			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
+			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "zero");														// scale to zero
 		}
 		// to first
 		if (fromState == 6 && toState == 1 && !fromLight && !toLight && shape == 2) {			// to dark first
 			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
+			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "first");														// scale to first
 		}
 		else if (fromState == 6 && toState == 1 && !fromLight && toLight && shape == 2) {		// to light first
@@ -908,7 +715,7 @@ public class ParticleCoreManager : MonoBehaviour {
 		// to second
 		if (fromState == 6 && toState == 2 && !fromLight && !toLight && shape == 2) {			// to dark second
 			ScaleTo (true, "first", "hidden");														// scale to hidden
-			SetShape (3);																			// change to ring
+			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "first");														// scale to first
 		}
 		else if (fromState == 6 && toState == 2 && !fromLight && toLight && shape == 2) {		// to light second
@@ -936,19 +743,10 @@ public class ParticleCoreManager : MonoBehaviour {
 
 		///// seventh \\\\\
 
-		// to dead
-		if (fromState == 7 && toState == -1) {									// to dead
-			anim.ResetTrigger ("scaleup");						// reset next stage
-			anim.SetTrigger("scaledown");						// enable core to black animation
-			anim.SetBool("photon", true);						// enable black core animation state
-		}
-
 		// from dark circle seventh
 		// to zero
 		if (fromState == 7 && toState == 0 && !fromLight && toLight && shape == 0) {			// to zero
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-			SetShape (0);																			// change to sphere
-			ScaleTo (false, "hidden", "zero");														// scale to zero
+			ScaleTo (true, "seventh", "zero");														// scale to zero
 		}
 		// to dark zero
 		if (fromState == 7 && toState == 0 && !fromLight && !toLight && shape == 0) {			// to dark zero
@@ -956,52 +754,42 @@ public class ParticleCoreManager : MonoBehaviour {
 		}
 		// to first
 		if (fromState == 7 && toState == 1 && !fromLight && !toLight && shape == 0) {			// to dark first
-			ScaleTo (true, "seventh", "first");													// scale to first
+			ScaleTo (true, "seventh", "first");														// scale to first
 		}
 		else if (fromState == 7 && toState == 1 && !fromLight && toLight && shape == 0) {		// to light first
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-			SetShape (0);																			// change to sphere
-			ScaleTo (false, "hidden", "first");														// scale to first
+			ScaleTo (true, "seventh", "first");														// scale to first
 		}
 		// to second
 		if (fromState == 7 && toState == 2 && !fromLight && !toLight && shape == 0) {			// to dark second
 			ScaleTo (true, "seventh", "first");														// scale to first
 		}
 		else if (fromState == 7 && toState == 2 && !fromLight && toLight && shape == 0) {		// to light second
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-			SetShape (0);																			// change to sphere
-			ScaleTo (false, "hidden", "first");														// scale to first
+			ScaleTo (true, "seventh", "first");														// scale to first
 		}
 		// to third
 		if (fromState == 7 && toState == 3 && !fromLight && !toLight && shape == 0) {			// to dark third
 			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-			SetShape (0);																			// change to sphere
 		}
 		else if (fromState == 7 && toState == 3 && !fromLight && toLight && shape == 0) {		// to light third
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-			SetShape (0);																			// change to sphere
-			ScaleTo (false, "hidden", "third");														// scale to third
+			ScaleTo (true, "seventh", "third");														// scale to third
 		}
 		// to fourth
 		if (fromState == 7 && toState == 4 && !fromLight && !toLight && shape == 0) {			// to dark fourth
 			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-			SetShape (0);																			// change to sphere
 		}
 		// to fifth
 		if (fromState == 7 && toState == 5 && !fromLight && !toLight && shape == 0) {			// to dark circle fifth
 			ScaleTo (true, "seventh", "first");														// scale to first
 		}
 		else if (fromState == 7 && toState == 5 && !fromLight && toLight && shape == 0) {		// to light circle fifth
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-			SetShape (0);																			// change to sphere
-			ScaleTo (false, "hidden", "first");														// scale to first
+			ScaleTo (true, "seventh", "first");														// scale to first
 		}
 		// to sixth
 		if (fromState == 7 && toState == 6 && !fromLight && !toLight && shape == 0) {			// to dark circle sixth
 			ScaleTo (true, "seventh", "first");														// scale to first
 		}
 		else if (fromState == 7 && toState == 6 && !fromLight && toLight && shape == 0) {		// to light circle sixth
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
+			ScaleTo (true, "seventh", "first");														// scale to first
 			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "first");														// scale to first
 		}
@@ -1013,24 +801,18 @@ public class ParticleCoreManager : MonoBehaviour {
 		}
 		// to dark zero
 		if (fromState == 7 && toState == 0 && fromLight && !toLight && shape == 0) {			// to dark zero
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-			SetShape (3);																			// change to ring
-			ScaleTo (false, "hidden", "zero");														// scale to zero
+			ScaleTo (true, "seventh", "zero");													// scale to zero
 		}
 		// to first
 		if (fromState == 7 && toState == 1 && fromLight && !toLight && shape == 0) {			// to dark first
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-			SetShape (3);																			// change to ring
-			ScaleTo (false, "hidden", "first");														// scale to first
+			ScaleTo (true, "seventh", "first");														// scale to first
 		}
 		else if (fromState == 7 && toState == 1 && fromLight && toLight && shape == 0) {		// to light first
 			ScaleTo (true, "seventh", "first");														// scale to first
 		}
 		// to second
 		if (fromState == 7 && toState == 2 && fromLight && !toLight && shape == 0) {			// to dark second
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-			SetShape (3);																			// change to ring
-			ScaleTo (false, "hidden", "first");														// scale to first
+			ScaleTo (true, "seventh", "first");														// scale to first
 		}
 		else if (fromState == 7 && toState == 2 && fromLight && toLight && shape == 0) {		// to light second
 			ScaleTo (true, "seventh", "first");														// scale to first
@@ -1048,18 +830,14 @@ public class ParticleCoreManager : MonoBehaviour {
 		}
 		// to fifth
 		if (fromState == 7 && toState == 5 && fromLight && !toLight && shape == 0) {			// to dark circle fifth
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-			SetShape (3);																			// change to ring
-			ScaleTo (false, "hidden", "first");														// scale to first
+			ScaleTo (true, "seventh", "first");														// scale to first
 		}
 		else if (fromState == 7 && toState == 5 && fromLight && toLight && shape == 0) {		// to light circle fifth
 			ScaleTo (true, "seventh", "first");														// scale to first
 		}
 		// to sixth
 		if (fromState == 7 && toState == 6 && fromLight && !toLight && shape == 0) {			// to dark circle sixth
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-			SetShape (3);																			// change to ring
-			ScaleTo (false, "hidden", "first");														// scale to first
+			ScaleTo (true, "seventh", "first");														// scale to first
 		}
 		else if (fromState == 7 && toState == 6 && fromLight && toLight && shape == 0) {		// to light circle sixth
 			ScaleTo (true, "seventh", "first");													// scale to first
@@ -1075,13 +853,13 @@ public class ParticleCoreManager : MonoBehaviour {
 		// to dark zero
 		if (fromState == 7 && toState == 0 && !fromLight && !toLight && shape == 1) {			// to dark zero
 			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-			SetShape (3);																			// change to ring
+			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "zero");														// scale to zero
 		}
 		// to first
 		if (fromState == 7 && toState == 1 && !fromLight && !toLight && shape == 1) {			// to dark first
 			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-			SetShape (3);																			// change to ring
+			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "first");														// scale to first
 		}
 		else if (fromState == 7 && toState == 1 && !fromLight && toLight && shape == 1) {		// to light first
@@ -1092,7 +870,7 @@ public class ParticleCoreManager : MonoBehaviour {
 		// to second
 		if (fromState == 7 && toState == 2 && !fromLight && !toLight && shape == 1) {			// to dark second
 			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-			SetShape (3);																			// change to ring
+			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "first");														// scale to first
 		}
 		else if (fromState == 7 && toState == 2 && !fromLight && toLight && shape == 1) {		// to light second
@@ -1108,7 +886,7 @@ public class ParticleCoreManager : MonoBehaviour {
 		else if (fromState == 7 && toState == 3 && !fromLight && toLight && shape == 1) {		// to light third
 			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 			SetShape (0);																			// change to sphere
-			ScaleTo (false, "hidden", "third");														// scale to first
+			ScaleTo (false, "hidden", "third");														// scale to third
 		}
 		// to fourth
 		if (fromState == 7 && toState == 4 && !fromLight && toLight && shape == 1) {			// to light fourth
@@ -1134,13 +912,13 @@ public class ParticleCoreManager : MonoBehaviour {
 		// to dark zero
 		if (fromState == 7 && toState == 0 && fromLight && !toLight && shape == 1) {			// to dark zero
 			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-			SetShape (3);																			// change to ring
+			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "zero");														// scale to zero
 		}
 		// to first
 		if (fromState == 7 && toState == 1 && fromLight && !toLight && shape == 1) {			// to dark first
 			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-			SetShape (3);																			// change to ring
+			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "first");														// scale to first
 		}
 		else if (fromState == 7 && toState == 1 && fromLight && toLight && shape == 1) {		// to light first
@@ -1151,7 +929,7 @@ public class ParticleCoreManager : MonoBehaviour {
 		// to second
 		if (fromState == 7 && toState == 2 && fromLight && !toLight && shape == 1) {			// to dark second
 			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-			SetShape (3);																			// change to ring
+			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "first");														// scale to first
 		}
 		else if (fromState == 7 && toState == 2 && fromLight && toLight && shape == 1) {		// to light second
@@ -1194,13 +972,13 @@ public class ParticleCoreManager : MonoBehaviour {
 		// to dark zero
 		if (fromState == 7 && toState == 0 && !fromLight && !toLight && shape == 2) {			// to dark zero
 			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-			SetShape (3);																			// change to ring
+			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "zero");														// scale to zero
 		}
 		// to first
 		if (fromState == 7 && toState == 1 && !fromLight && !toLight && shape == 2) {			// to dark first
 			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-			SetShape (3);																			// change to ring
+			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "first");														// scale to first
 		}
 		else if (fromState == 7 && toState == 1 && !fromLight && toLight && shape == 2) {		// to light first
@@ -1211,7 +989,7 @@ public class ParticleCoreManager : MonoBehaviour {
 		// to second
 		if (fromState == 7 && toState == 2 && !fromLight && !toLight && shape == 2) {			// to dark second
 			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-			SetShape (3);																			// change to ring
+			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "first");														// scale to first
 		}
 		else if (fromState == 7 && toState == 2 && !fromLight && toLight && shape == 2) {		// to light second
@@ -1255,13 +1033,13 @@ public class ParticleCoreManager : MonoBehaviour {
 		// to dark zero
 		if (fromState == 7 && toState == 0 && fromLight && !toLight && shape == 2) {			// to dark zero
 			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-			SetShape (3);																			// change to ring
+			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "zero");														// scale to zero
 		}
 		// to first
 		if (fromState == 7 && toState == 1 && fromLight && !toLight && shape == 2) {			// to dark first
 			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-			SetShape (3);																			// change to ring
+			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "first");														// scale to first
 		}
 		else if (fromState == 7 && toState == 1 && fromLight && toLight && shape == 2) {		// to light first
@@ -1272,7 +1050,7 @@ public class ParticleCoreManager : MonoBehaviour {
 		// to second
 		if (fromState == 7 && toState == 2 && fromLight && !toLight && shape == 2) {			// to dark second
 			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-			SetShape (3);																			// change to ring
+			SetShape (0);																			// change to sphere
 			ScaleTo (false, "hidden", "first");														// scale to first
 		}
 		else if (fromState == 7 && toState == 2 && fromLight && toLight && shape == 2) {		// to light second
@@ -1310,14 +1088,12 @@ public class ParticleCoreManager : MonoBehaviour {
 	///<para>0 = circle</para>
 	///<para>1 = triangle</para>
 	///<para>2 = square</para>
-	///<para>3 = ring</para>
 	///</summary>
 	private void SetShape(int shape)
 	{
 		if (shape == 0) mesh = sphere;									// change mesh to sphere
 		else if (shape == 1) mesh = triangle;							// change mesh to triangle
 		else if (shape == 2) mesh = square;								// change mesh to square
-		else if (shape == 3) mesh = ring;								// change mesh to ring
 	}
 
 	///<summary>
