@@ -22,7 +22,7 @@ public class PlayerCoreManager : MonoBehaviour {
 
 		///// zero \\\\\
 
-		if (fromState == 0 && toState == 0 && fromLight && toLight) {			// to zero
+		if (fromState == 0 && toState == 0 && fromLight && toLight) {			// to zero (init)
 			ScaleTo (false, "hidden", "zero");										// scale to first
 		}
 

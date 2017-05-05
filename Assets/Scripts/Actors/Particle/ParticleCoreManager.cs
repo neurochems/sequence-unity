@@ -32,41 +32,46 @@ public class ParticleCoreManager : MonoBehaviour {
 	///<summary>
 	///<para> method for world changing anims </para>
 	///</summary>
-	public void Core (int fromState, int toState, bool toLight) 
+	public void ToOtherWorld (bool toLW, int fromState, int toState, bool toLight) 
 	{
+		if (toLW) {
+			// from changes
+			if (fromState == 0) ScaleTo (true, "zero", "hidden");																	// scale from zero
+			else if (fromState == 1 || fromState == 2 || fromState == 5 || fromState == 6) ScaleTo (true, "first", "hidden");		// scale from first
+			else if (fromState == 3 || fromState == 4) ScaleTo (true, "third", "hidden");											// scale from third
+			else if (fromState == 7 || fromState == 8) ScaleTo (true, "seventh", "hidden");											// scale from seventh
+			else if (fromState == 9) ScaleTo (true, "ninth", "hidden");																// scale from ninth
 
-		// EVOLUTIONS \\
+			// to changes
+			if (toState == 0) {																										// to light world zero
+				SetLight(false);																										// change to black
+				ScaleTo (false, "hidden", "zero");																						// scale to zero
+			}
+			else if (toState == 1 || toState == 2 || toState == 5 || toState == 6) {												// to light world first, second, fifth, sixth
+				SetLight(false);																										// change to black
+				ScaleTo (false, "hidden", "first");																						// scale to first
+			}
+			else if (toState == 3 || toState == 4) {																				// to light world third, fourth
+				SetLight(false);																										// change to black
+				ScaleTo (false, "hidden", "third");																						// scale to third
+			}
+			else if (toState == 7 || toState == 8) {																				// to light world seventh, eighth
+				SetLight(false);																										// change to black
+				ScaleTo (false, "hidden", "seventh");																					// scale to seventh
+			}
+			else if (toState == 9) {																								// to light world ninth
+				SetLight(false);																										// change to black
+				ScaleTo (false, "hidden", "ninth");																						// scale to ninth
+			}
+		}
 
-
-		///// hidden \\\\\
-
-		if (fromState == -1 && toState == 0) ScaleTo (false, "hidden", "zero");					// scale to zero
-		else if (fromState == -1 && toState == 1) ScaleTo (false, "hidden", "first");			// scale to first
-		else if (fromState == -1 && toState == 2) ScaleTo (false, "hidden", "first");			// scale to second/first
-		else if (fromState == -1 && toState == 3) ScaleTo (false, "hidden", "third");			// scale to third
-		else if (fromState == -1 && toState == 4) ScaleTo (false, "hidden", "third");			// scale to fourth/third
-		else if (fromState == -1 && toState == 5) ScaleTo (false, "hidden", "first");			// scale to fifth/first
-		else if (fromState == -1 && toState == 6) ScaleTo (false, "hidden", "first");			// scale to sixth/first
-		else if (fromState == -1 && toState == 7) ScaleTo (false, "hidden", "seventh");			// scale to seventh
-		else if (fromState == -1 && toState == 8) ScaleTo (false, "hidden", "seventh");			// scale to eighth/seventh
-		else if (fromState == -1 && toState == 9) ScaleTo (false, "hidden", "ninth");			// scale to ninth
-
-
-		// DEVOLUTIONS \\
-
-
-		///// hidden \\\\\
-
-		if (fromState == 0 && toState == -1) ScaleTo (true, "zero", "hidden");					// scale from zero
-		else if (fromState == 1 && toState == -1) ScaleTo (true, "first", "hidden");			// scale from first
-		else if (fromState == 2 && toState == -1) ScaleTo (true, "first", "hidden");			// scale from second/first
-		else if (fromState == 3 && toState == -1) ScaleTo (true, "third", "hidden");			// scale from third
-		else if (fromState == 4 && toState == -1) ScaleTo (true, "third", "hidden");			// scale from fourth/third
-		else if (fromState == 5 && toState == -1) ScaleTo (true, "first", "hidden");			// scale from fifth/first
-		else if (fromState == 6 && toState == -1) ScaleTo (true, "first", "hidden");			// scale from sixth/first
-		else if (fromState == 7 && toState == -1) ScaleTo (true, "seventh", "hidden");			// scale from seventh	
-		else if (fromState == 8 && toState == -1) ScaleTo (true, "seventh", "hidden");			// scale from eighth/seventh
-		else if (fromState == 9 && toState == -1) ScaleTo (true, "ninth", "hidden");			// scale from ninth
+		else if (!toLW) {
+			if (fromState == 0) {
+				ScaleTo (true, "zero", "hidden");												// scale from zero
+				SetLight(true);																	// change to black
+				ScaleTo (false, "hidden", "zero");												// scale to zero
+			}
+		}
 	}
 
 	public void Core (int fromState, int toState, bool fromLight, bool toLight, int shape) 
@@ -74,6 +79,10 @@ public class ParticleCoreManager : MonoBehaviour {
 		// EVOLUTIONS \\
 
 		///// zero \\\\\
+
+		if (fromState == 0 && toState == 0 && fromLight && toLight) {			// to zero (init)
+			ScaleTo (false, "hidden", "zero");										// scale to first
+		}
 
 		// to dark zero (0.5) (no core change)
 		// to light zero (0.5) (no core change)

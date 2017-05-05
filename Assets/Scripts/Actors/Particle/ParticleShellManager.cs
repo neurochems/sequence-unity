@@ -22,36 +22,26 @@ public class ParticleShellManager : MonoBehaviour {
 		}
 	}*/
 
-	public void Shell (int fromState, int toState, bool toLight)
+	public void ToOtherWorld (bool toLW, int fromState, int toState, bool toLight)
 	{
-
-
-		// EVOLUTIONS \\
-
-
-		///// hidden \\\\\
-
-		if (fromState == -1 && toState == 3) ScaleTo (false, "hidden", "third");				// scale to third
-		else if (fromState == -1 && toState == 4) ScaleTo (false, "hidden", "third");			// scale to fourth/third
-		else if (fromState == -1 && toState == 5) ScaleTo (false, "hidden", "third");			// scale to fifth/first
-		else if (fromState == -1 && toState == 6) ScaleTo (false, "hidden", "third");			// scale to sixth/first
-		else if (fromState == -1 && toState == 7) ScaleTo (false, "hidden", "seventh");			// scale to seventh
-		else if (fromState == -1 && toState == 8) ScaleTo (false, "hidden", "seventh");			// scale to eighth/seventh
-		else if (fromState == -1 && toState == 9) ScaleTo (false, "hidden", "ninth");			// scale to ninth
-
-
-		// DEVOLUTIONS \\
-
-
-		///// hidden \\\\\
-
-		if (fromState == 3 && toState == -1) ScaleTo (true, "third", "hidden");					// scale from third
-		else if (fromState == 4 && toState == -1) ScaleTo (true, "third", "hidden");			// scale from fourth/third
-		else if (fromState == 5 && toState == -1) ScaleTo (true, "third", "hidden");			// scale from fifth/first
-		else if (fromState == 6 && toState == -1) ScaleTo (true, "third", "hidden");			// scale from sixth/first
-		else if (fromState == 7 && toState == -1) ScaleTo (true, "seventh", "hidden");			// scale from seventh	
-		else if (fromState == 8 && toState == -1) ScaleTo (true, "seventh", "hidden");			// scale from eighth/seventh
-		else if (fromState == 9 && toState == -1) ScaleTo (true, "ninth", "hidden");			// scale from ninth
+		if (toLW) {
+			if (fromState == 3 || fromState == 4 || fromState == 5 || fromState == 6) {
+				ScaleTo (true, "third", "hidden");									// scale from third
+				SetLight(false);													// change to black
+				ScaleTo (false, "hidden", "third");									// scale to third
+			}
+			else if (fromState == 7 || fromState == 8) {
+				ScaleTo (true, "seventh", "hidden");								// scale from seventh	
+				SetLight(false);													// change to black
+				ScaleTo (false, "hidden", "seventh");								// scale to seventh
+			}
+			else if (fromState == 9) {
+				ScaleTo (true, "ninth", "hidden");									// scale from ninth
+				SetLight(false);													// change to black
+				ScaleTo (false, "hidden", "ninth");									// scale to ninth
+			}
+		}
+		else if (!toLW) SetLight(true);												// if to dark world, change to white
 	}
 
 	public void Shell (int fromState, int toState, bool fromLight, bool toLight, int shape) 
@@ -760,6 +750,17 @@ public class ParticleShellManager : MonoBehaviour {
 		// to square fifth (no shell change)
 		// to sixth
 		// to dark square sixth (no shell change)
+	}
+
+	///<summary>
+	///<para>set core as light</para>
+	///<para>true = white</para>
+	///<para>false = black</para>
+	///</summary>
+	private void SetLight (bool light)
+	{
+		if (light) rend.material.SetColor("_Color", Color.white);		// change to white
+		else rend.material.SetColor("_Color", Color.black);				// change to black
 	}
 
 	///<summary>

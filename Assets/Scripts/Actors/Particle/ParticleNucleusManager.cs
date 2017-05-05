@@ -10,56 +10,64 @@ public class ParticleNucleusManager : MonoBehaviour {
 	public Mesh sphere, triangle, square;			// shape meshes
 	private MeshRenderer rend;						// mesh renderer (for colour changes)
 	private ParticleStatePattern psp;				// psp ref
+
 	private bool light; 							// is light flag
+	private Shader lightShader, darkShader;			// light/dark shaders
 
 	void Awake () {
 		anim = GetComponent<Animator>();							// init animator ref
 		mesh = GetComponent<MeshFilter>().mesh;						// init mesh ref
 		rend = GetComponent<MeshRenderer>();						// init mesh renderer ref
 		psp = GetComponentInParent<ParticleStatePattern> ();		// init psp ref
+		//lightShader = Shader.Find("light_nucleus");					// init light nucleus shader
+		//darkShader = Shader.Find("dark_nucleus");						// init dark nucleus shader
 	}
 
-/*	void Update() {
-		if (light && psp.changeParticles) rend.material.SetColor("_Color", Color.black);			// if light && light world, change to black
-		else if (!light && psp.changeParticles) rend.material.SetColor("_Color", Color.white);		// if not light && light world, change to white
-
-		if (light && psp.lightworld && psp.changeParticles) {				// if light particle is to be sent to light world and the timing of the zoom is right
-			rend.material.SetColor("_Color", Color.black);						// change nucleus to black
-		}
-		else if (!light && psp.lightworld && psp.changeParticles) {		// if dark particle is to be sent to light world and the timing of the zoom is right
-			rend.material.SetColor("_Color", Color.white);						// change core to white
-		}
-		else if (light && !psp.lightworld && psp.changeParticles) {		// if light particle is to be sent to dark world and the timing of the zoom is right
-			rend.material.SetColor("_Color", Color.white);						// change core to white
-		}
-		else if (!light && !psp.lightworld && psp.changeParticles) {		// if dark particle is to be sent to dark world and the timing of the zoom is right
-			rend.material.SetColor("_Color", Color.black);						// change core to black
-		}
-	}*/
-
-	public void Nucleus (int fromState, int toState, bool toLight) 
+	public void ToOtherWorld (bool toLW, int fromState, int toState, bool toLight) 
 	{
+		if (toLW) {																								// to light world
+			// from changes
+			if (fromState == 0) ScaleTo (true, "zero", "hidden");													// scale from zero to hidden
+			else if (fromState == 1 || fromState == 5) ScaleTo (true, "first", "hidden");							// scale from second/first to hidden
+			else if (fromState == 2 || fromState == 4 || fromState == 6) ScaleTo (true, "first", "hidden");			// scale from second/first to hidden
+			else if (fromState == 7) ScaleTo (true, "seventh", "hidden");											// scale from seventh to hidden
+			else if (fromState == 8) ScaleTo (true, "seventh", "hidden");											// scale from eighth/seventh to hidden
+			else if (fromState == 9) ScaleTo (true, "ninth", "hidden");												// scale from ninth to hidden
 
-		// EVOLUTIONS \\
-
-
-		///// hidden \\\\\
-
-		if (fromState == -1 && toState == 2) ScaleTo (false, "hidden", "first");				// scale to second/first
-		else if (fromState == -1 && toState == 4) ScaleTo (false, "hidden", "first");			// scale to fourth/first
-		else if (fromState == -1 && toState == 6) ScaleTo (false, "hidden", "first");			// scale to sixth/first
-		else if (fromState == -1 && toState == 8) ScaleTo (false, "hidden", "seventh");			// scale to eighth/seventh
-
-
-		// DEVOLUTIONS \\
-
-
-		///// hidden \\\\\
-
-		if (fromState == 2 && toState == -1) ScaleTo (true, "first", "hidden");					// scale from second/first
-		else if (fromState == 4 && toState == -1) ScaleTo (true, "first", "hidden");			// scale from fourth/first
-		else if (fromState == 6 && toState == -1) ScaleTo (true, "first", "hidden");			// scale from sixth/first
-		else if (fromState == 8 && toState == -1) ScaleTo (true, "seventh", "hidden");			// scale from eighth/seventh
+			// to changes
+			if (toState == 0) {																						// to zero
+				SetLight (false, true);																					// change to white
+				ScaleTo (false, "hidden", "zero");																		// scale to zero
+			} 
+			else if (toState == 1 || toState == 5) {																// to first or fifth
+				SetLight (false, true);																					// change to white
+				ScaleTo (false, "hidden", "first");																		// scale to first
+			} 
+			else if (toState == 2 || toState == 4 || toState == 6) {												// to second or fourth or sixth
+				SetLight (true, true);																					// change to black dot shader
+				ScaleTo (false, "hidden", "first");																		// scale to first
+			} 
+			else if (toState == 3) SetLight (false, true);															// to third, change to white
+			else if (toState == 7) {																				// to seventh
+				SetLight (false, true);																					// change to white
+				ScaleTo (false, "hidden", "seventh");																	// scale to seventh
+			} 
+			else if (toState == 8) {																				// to eighth
+				SetLight (true, true);																					// change to white + black shader
+				ScaleTo (false, "hidden", "seventh");																	// scale to seventh
+			} 
+			else if (toState == 9) {																				// to ninth
+				SetLight (false, true);																					// change to white
+				ScaleTo (false, "hidden", "ninth");																		// scale to ninth
+			} 
+		}
+		else if (!toLW) {																						// to dark world
+			if (fromState == 0) {																					// from light world zero		
+				ScaleTo (true, "zero", "hidden");																		// scale from zero
+				SetLight (false, false);																						// change to black
+				ScaleTo (false, "hidden", "zero");																		// scale to zero
+			}
+		}
 	}
 
 	public void Nucleus (int fromState, int toState, bool fromLight, bool toLight, int shape) 
@@ -1048,25 +1056,55 @@ public class ParticleNucleusManager : MonoBehaviour {
 	}
 
 	///<summary>
-	///<para>set core as light</para>
-	///<para>true = white</para>
-	///<para>false = black</para>
+	///<para>set nucleus light into dark world</para>
+	///<para>white = dark, black = light</para>
+	///<para>true, true = black dot shader</para>
+	///<para>true, false = solid white</para>
+	///<para>false, true = white dot shader</para>
+	///<para>false, false = solid black</para>
 	///</summary>
-	private void SetLight (bool light)
+	private void SetLight (bool lite, bool toLW)
 	{
-		if (light && !psp.lightworld) {
-			rend.material.SetColor("_Color", Color.white);			// change to white
-			light = true;											// set is light flag
+		if (lite && toLW) {												// if to light world and light (as in second, fourth, etc)
+			rend.material.shader = darkShader;								// change to black shader
+			light = true;													// set is light flag
 		} 
-		else if (!light && !psp.lightworld) {
-			rend.material.SetColor("_Color", Color.black);			// change to white
-			light = false;											// reset is light flag
+		else if (!lite && toLW) {										// if to light world and dark (as in dark zero, first, etc)
+			rend.material.SetColor("_Color", Color.white);					// change to white
+			light = false;													// reset is light flag
 		}
-		else if (light && psp.lightworld) {
-			rend.material.SetColor("_Color", Color.black);			// change to white
-			light = true;											// set is light flag
+		else if (lite && !toLW) {										// if to dark world and light (as in second, fourth, etc)
+			rend.material.shader = lightShader;								// change to white shader
+			light = true;													// set is light flag
 		}
-		else if (!light && psp.lightworld) {
+		else if (!lite && !toLW) {										// if to dark world and dark (as in dark zero, first, etc)
+			rend.material.SetColor("_Color", Color.black);					// change to black
+			light = false;													// reset is light flag
+		}
+	}
+
+	///<summary>
+	///<para>set core as light</para>
+	///<para>true (in dark world) = white dot shader</para>
+	///<para>false (in dark world) = solid black</para>
+	///<para>true (in light world) = black dot shader</para>
+	///<para>false (in light world) = solid white</para>
+	///</summary>
+	private void SetLight (bool lite)
+	{
+		if (lite && !psp.lightworld) {
+			rend.material.shader = lightShader;							// change to white shader
+			light = true;												// set is light flag
+		} 
+		else if (!lite && !psp.lightworld) {
+			rend.material.SetColor("_Color", Color.black);				// change to black
+			light = false;												// reset is light flag
+		}
+		else if (lite && psp.lightworld) {
+			rend.material.shader = darkShader;							// change to black shader
+			light = true;												// set is light flag
+		}
+		else if (!lite && psp.lightworld) {
 			rend.material.SetColor("_Color", Color.white);			// change to white
 			light = false;											// reset is light flag
 		}

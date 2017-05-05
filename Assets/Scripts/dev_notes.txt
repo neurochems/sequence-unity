@@ -1,0 +1,301 @@
+﻿
+NOTES	
+
+- needs attn: updating shape flags in state class Evol() / shape flag in StatePattern - [in LIGHT WORLD, below]
+	
+- shell 
+	- third = 0.75
+- nucleus
+	- zero = 0.25
+	- first/eighth = 0.8
+	- seventh = 2.5
+	- ninth = 3.25
+	- tenth = 
+- core collider
+	- zero 0.205
+	- first 0.51
+	
+┌─────┐  
+│blaze│
+│  it │
+└∩───∩┘
+ (`･ω･´)
+
+/ IDEAS \
+
+ -  for death world: invert controls? (experimental)
+ -  shader to soften edges of shapes, maybe adjusted by slider in options menu
+ -  add options menu	
+	
+// NEXT \\
+	 
+ -  AUDIO SYSTEM
+ 
+ -  SHADERS
+	- dark world / light world
+	- dark skybox / light skybox
+	- change in light world player psp code
+	- second stage nucleus
+		- white / black
+		- also for core
+ 
+ -  TEXT
+	- up to level 10
+	- light world
+		
+ -  TEST
+	- play test
+		- me
+		- others
+			- experienced
+			- novices
+	
+	
+/// ACTIVE TASK \\\
+
+		
+  DEBUG
+ 
+  STATES TO 10 / ENDING SEQUENCE
+	- update physics/add mass - DEBUG
+	- core/shell/nucleus anim (player and particle): ninth to tenth
+	- camera: rotate around to side
+	- instantiate other world spheres
+		- gravitate them to world
+	- adding states
+		- parts
+			- nucleus: anim tree is set up, add to NucleusManager according to it
+	
+	
+//// DEBUG \\\\
+
+  PHYSICS
+	- update Player/ParticlePhysicsManagers
+	- SetPhysics(...) method in StatePattern
+	  alongside SetZoomCamera/SetParts in TransitionTo
+	- update sphere collider radii
+	- update mass
+  
+  ANIM
+	- investigate devolve from 5th to 4th: appropriate change shape back to sphere?
+  
+  LIGHT WORLD
+	- return from light world to dark world
+		- camera zoom
+		- switch colours
+	- collision with opposite world's particles
+		- disable sphere collider if (isLightWorld && !lightworld)
+	- debug
+		- particle to light world
+			- move colour change to managers - DONE
+			- update NucleusManager SetLight - DONE
+				- add second level shader
+				- player[DONE] / particle[DONE]
+			- move colour change to anim
+	
+  SPAWN PARTICLE
+	- review spawning at devolutions
+		- esp at transitions to light world
+	
+  CAMERA
+	- add CameraManager script to the Main Camera to trigger animations and changes with state - DONE
+		- take and remove parts from PlayerStateManager - DONE
+	- add zoom fully in to player to switch to light world, then zoom out - DONE
+	
+	- debug:
+
+	
+- debug first pass DONE -
+	
+	
+  PARTS
+	- remove ring, switch to using nucleus
+		- CoreManager
+			- update logic - DONE
+		- NucleusManager
+			- update logic - DONE
+			- update anim tree - DONE
+			- make new animations - DONE
+				HiddenToTenth[DONE]			FirstToZero[DONE]			NinthToHidden[DONE]
+																		NinthToZero[DONE]	
+				ZeroToHidden[DONE]			SeventhToZero[DONE]			NinthToFirst[DONE]
+				ZeroToFirst[DONE]			SeventhToNinth[DONE]		NinthToSeventh[DONE]
+				ZeroToSeventh[DONE]				
+																										
+				
+		- add to particles
+			- CoreManager
+				- logic - DONE
+			- NucleusManager
+				- logic - DONE
+				- anim tree - DONE
+			
+	- POLISH: dark nuclei - shader on NUCLEUS for the inner dot/inner dot representation - PUT IN
+		- light nuclei - similar shader on core
+  
+  COLLISION
+	- player/particle 
+		- adding/subtracting dark/light evol
+	- particle/particle 
+		- adding/subtracting dark/light evol
+	- CALCULATE DELTA
+		- player - DONE
+		- particle - DONE
+		
+	- restore particle death (send particles to light world)
+		- on evol < 0 and evol => 0
+			1) anim to hidden
+			2)  change colour
+				- core --> black
+				- shell --> black
+				- nucleus --> opposite
+			3) anim to prev state
+			- part managers: make simpler methods for hidden transitions - DONE
+				core - DONE
+				shell - DONE
+				nucleus - DONE
+			- update particle state class evol / add ToOtherWorld() - DONE
+				zero[DONE] first[DONE] second[DONE] third[DONE] fourth[DONE] fifth[DONE] sixth[DONE] seventh[DONE]
+				- evol(): add logic for negative of current state (see: ThirdParticleState.Evol()// third) - DONE
+				first[DONE] second[DONE]
+		- stop changing particle colours on light world switch - DONE
+		- debug:
+			- 
+
+\\ IMPLEMENTATION DONE //
+
+ -  LIGHT WORLD
+	- state classes
+		- change Death to ToLightWorld in state classes - DONE
+			- call psp method - DONE
+		- add checks for negative numbers in Evol() - DONE
+			- add more states - DONE
+			zero[DONE] first[DONE] second[DONE] third[DONE] fourth[DONE] fifth[DONE] sixth[DONE] seventh[DONE]
+		- fix Evol logic involving shapes (negative and positive evol) - DONE
+			ex. at first (evol 1), get hit for 6 (evol -5), go to fifth --> decide which properties, transitions
+			- always circle?? can't devolve into the cool shapes, can we?? - yes, always circle
+			zero[DONE] first[DONE] second[DONE] third[DONE] fourth[DONE] fifth[DONE] sixth[] seventh[]
+			- second fix - DONE
+			zero[DONE] first[DONE] second[DONE] third[DONE] fourth[DONE] fifth[DONE] sixth[DONE] seventh[DONE]
+	- player psp method
+		- snap colour to opposite - DONE
+			- world - DONE
+			- core - DONE
+			- shell - DONE
+			- nucleus - DONE
+	- camera zooming
+		- on cross into light world: zoom in to player to fill screen, change colour, zoom back out
+			- add to CameraManager
+			- as per anim tree otherwise
+		- update anim tree - DONE
+			- add lightworld states - DONE
+		- update CameraManager triggers - DONE
+			- lightworld bool - DONE
+		- make animations
+			- zoom in and out in different curves - DONE
+			- finish normal camera anims - DONE
+			
+			ZeroToFirst			DONE	FirstToZero			DONE	ThirdToZero			DONE		1 jump = 2 sec
+			ZeroToThird			DONE	FirstToThird		DONE	ThirdToFirst		DONE		2 jump = 3 sec
+			ZeroToFifth			DONE	FirstToFifth		DONE	ThirdToFifth		DONE		3 jump = 4 sec
+			ZeroToSeventh		DONE	FirstToSeventh		DONE	ThirdToSeventh		DONE		4 jump = 5 sec
+			ZeroToNinth			DONE	FirstToNinth		DONE	ThirdToNinth		DONE		5 jump = 6 sec
+			
+			FifthToZero			DONE	SeventhToZero		DONE	NinthToZero			DONE
+			FifthToFirst		DONE	SeventhToFirst		DONE	NinthToFirst		DONE
+			FifthToThird		DONE	SeventhToThird		DONE	NinthToThird		DONE
+			FifthToSeventh		DONE	SeventhToFifth		DONE	NinthToFifth		DONE
+			FifthToNinth		DONE	SeventhToNinth		DONE	NinthToSeventh		DONE
+			
+			ZeroToLW			DONE	LWToZero			DONE
+			FirstToLW			DONE	LWToFirst			DONE
+			ThirdToLW			DONE	LWToThird			DONE
+			FifthToLW			DONE	LWToFifth			DONE
+			SeventhToLW			DONE	LWToSeventh			DONE
+			NinthToLW			DONE	LWToNinth			DONE
+		- update player psp
+			- 2-stage light world transition - DONE
+				zoom in
+				ToLightWorld
+				zoom out
+	- particle psp method	
+		- listen to player psp for lightworld = true - DONE
+		- fade colour to opposite in respective Manager - DONE
+			- core - DONE
+			- shell	- DONE			
+	- nucleus colour changes
+		- swap if light world
+			- player - DONE
+			- particle - DONE
+
+ -  Animation Controllers
+	- new logic trees - DONE
+	- new parameters
+		- core 
+			- scale - DONE
+			- colour - DONE
+		- shell - DONE
+		- nucleus - DONE
+ 
+ -  Update Code
+	- skim and plan
+		- core - DONE
+		- shell - DONE
+		- nucleus - DONE
+			HOT FIX: 	Remove any fading b/t black and white - DONE
+						replace: scaling to zero / changing value / scaling back	(also this for changing core shape)
+							 or, changing value / scaling back 						(if already at zero)
+			<REFAC>:	change nucleus scale increment names from "second/fourth/eighth" to "first/third/seventh"
+			
+	- implement managers
+		- core
+			- anim tree -
+				- add hidden state - DONE
+			- action methods - DONE
+			- code - DONE
+		- shell
+			- anim tree - DONE
+			- action methods - DONE
+			- code - DONE
+		- nucleus
+			- anim tree - DONE
+			- action methods - DONE
+			- code - DONE
+	
+ -  Animations
+	- new scales
+		- core - DONE
+		- shell - DONE
+		- nucleus - DONE
+	- for polish - animation curves: overshoot and return - DONE
+			
+ -  MAKE CORE A SEPARATE CHILD OF PLAYER
+	- mostly done
+	- troubleshoot ongoing
+			
+ -  Transfer to Particles
+	- separate core from parent gameobject - DONE
+		- update particlestatepattern - DONE
+		- add managers - DONE
+	- animation controllers
+		- state trees - DONE
+		- parameters - DONE
+	- update code
+		- implement managers
+			- core - DONE
+			- shell - DONE
+			- nucleus - DONE
+	- animations
+		- shape changes - DONE
+		- curves - DONE
+		
+
+ -  move new evol system over to particles
+	- new scripts
+	- StatePattern
+	- state classes
+
+ -  in core/shell/nucleus manager: make methods for each action
+	- Core: SetShape(int) / SetLight(bool) / GrowTo(float) / ShrinkTo(float)
+	- Shell: SetActive(bool) / SetLight(bool) / GrowTo(float) / ShrinkTo(float)
+	- Nucleus: SetActive(bool) / SetShape(int) / SetLight(bool) / GrowTo(float) / ShrinkTo(float)

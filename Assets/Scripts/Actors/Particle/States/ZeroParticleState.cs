@@ -37,10 +37,13 @@ public class ZeroParticleState : IParticleState
 			= other.gameObject.GetComponent<ParticleStatePattern>();					// ref other ParticleStatePattern
 
 		if (canCollide) {																								// if collision allowed
-			if (other.gameObject.CompareTag ("Player")) {									// colide with player
-				psp.stunned = true;																// stunned flag
-				psp.SubDark (other.gameObject.GetComponent<PlayerStatePattern>().darkEvol);		// subtract other dark
-				psp.SubLight (other.gameObject.GetComponent<PlayerStatePattern>().lightEvol);	// subtract other light
+			if (other.gameObject.CompareTag ("Player")) {																	// if colide with player
+				psp.stunned = true;																								// stunned flag
+				if (other.gameObject.GetComponent<PlayerStatePattern>().evol == 0) psp.SubLight(0.5f);							// if player evol = 0, sub 0.5 light
+				else {																											// else
+					psp.SubDark (other.gameObject.GetComponent<PlayerStatePattern>().darkEvol);										// subtract other dark
+					psp.SubLight (other.gameObject.GetComponent<PlayerStatePattern>().lightEvol);									// subtract other light
+				}
 				canCollide = false;																								// reset can collide trigger	
 				Debug.Log ("particle contact player");
 				Debug.Log ("Particle deltaDark on collision: " + psp.deltaDark);
@@ -48,8 +51,16 @@ public class ZeroParticleState : IParticleState
 			} 
 			else if (other.gameObject.CompareTag ("Zero")) {								// if collide with zero
 				psp.stunned = true;																// stunned flag
-				psp.AddDark (pspOther.darkEvol);												// add dark of other
-				psp.AddLight (pspOther.lightEvol);												// add light of other
+				if (pspOther.light) {															// if light
+					if (pspOther.evol == 0) psp.AddLight (0.5f);									// if other evol = 0, add 0.5 to light
+					else psp.AddLight (pspOther.lightEvol);											// else, add light of other
+				}
+				if (!pspOther.light) {															// if dark
+					if (pspOther.evol == 0) psp.AddDark (0.5f);										// if other evol = 0, add 0.5 to dark
+					else psp.AddDark (pspOther.darkEvol);											// else, add dark of other
+				}
+				//psp.AddDark (pspOther.darkEvol);												// add dark of other
+				//psp.AddLight (pspOther.lightEvol);												// add light of other
 				canCollide = false;																// reset has collided trigger
 			} 
 			else if (other.gameObject.CompareTag("First") 										// collide with first
@@ -87,7 +98,7 @@ public class ZeroParticleState : IParticleState
 
 	public void ToZero(bool toLight)
 	{
-		Debug.Log ("Can't transition to same state");
+		psp.TransitionTo(0, 0, light, toLight, 0);									// trigger transition effects
 	}
 
 	public void ToHalfZero(bool toLight)
@@ -157,6 +168,7 @@ public class ZeroParticleState : IParticleState
 		//else if (psp.lightworld && evol >= 0f) psp.toDarkworld = true;						// if to dark world, reset light world flag
 
 		// zero
+		if (evol == 0f && psp.psp.isInit) ToZero (true);									// init to light zero
 		if (evol == 0f && lightworld) {														// evolve to dark world light zero from light world dark zero
 			ToOtherWorld (false, 0, 0, true);													// to dark world light zero
 		}

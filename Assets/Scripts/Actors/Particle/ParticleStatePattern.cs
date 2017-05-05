@@ -36,7 +36,7 @@ public class ParticleStatePattern : MonoBehaviour {
 	[HideInInspector] public GameObject self;								// reference to this gameobject
 
 	//component references
-	private PlayerStatePattern psp;											// player state pattern (lightworld)
+	[HideInInspector] public PlayerStatePattern psp;						// player state pattern (lightworld)
 
 	private ParticleCoreManager pcm;										// particle core manager (animations)
 	private ParticleShellManager psm;										// particle core manager (animations)
@@ -97,9 +97,9 @@ public class ParticleStatePattern : MonoBehaviour {
 	void Start () 
 	{
 		light = true;														// init light
-		lightEvol = 0.5f;													// init 0.5 evol
+		//lightEvol = 0.5f;													// init 0.5 evol
 		currentState = zeroState;											// start at zero state
-		TransitionTo(0, 0, light, toLight, 0);								// CORE: shrink to zero size, fade to white
+		//TransitionTo(0, 0, light, toLight, 0);								// CORE: shrink to zero size, fade to white
 	}
 
 	void Update () 
@@ -261,36 +261,14 @@ public class ParticleStatePattern : MonoBehaviour {
 
 	public void ChangeWorld(bool toLW, int fromState, int toState, bool toLight) 
 	{
-		if (toLW) {														// if to light world
-			SetParts(fromState, -1, toLight);								// shrink from fromState to hidden
-			rendCore.material.SetColor("_Color", Color.black);				// change core to black
-			rendShell.material.SetColor("_Color", Color.black);				// change shell to black
-			rendNucleus.material.SetColor("_Color", Color.black);			// change nucleus to black
-			SetParts(-1, toState, toLight);									// grow from hidden to toState
-			toLightworld = false;											// reset toLightworld flag
-			//if (!lightworld) sc[0].enabled = false;							// if still dark world, disable collision trigger
-		}
-			
-		else if (!toLW)	{												// if to dark world
-			SetParts(fromState, -1, toLight);								// shrink from fromState to hidden
-			rendCore.material.SetColor("_Color", Color.white);				// change core to white
-			rendShell.material.SetColor("_Color", Color.white);				// change shell to white
-			rendNucleus.material.SetColor("_Color", Color.white);			// change nucleus to white
-			SetParts(-1, toState, toLight);									// grow from hidden to toState
-			toDarkworld = false;											// reset toDarkworld flag
-			//if (!lightworld) sc[0].enabled = true;							// if still in dark world, enable collision trigger
-		}									
+		pcm.ToOtherWorld (toLW, fromState, toState, toLight);								// change core
+		psm.ToOtherWorld (toLW, fromState, toState, toLight);								// change shell
+		pnm.ToOtherWorld (toLW, fromState, toState, toLight);								// change nucleus
+		if (toLW) toLightworld = false;												// if to light world, reset toLightworld flag
+		else if (!toLW)	toDarkworld = false;										// if to dark world, reset toDarkworld flag
 
 		// if !lightworld && inLightworld, nucleus = opposite colour
 		// if lightworld && inLightworld, nucleus = correct colour
-	}
-
-	// set particle parts (world change)
-	private void SetParts(int fromState, int toState, bool toLight)
-	{
-		pcm.Core (fromState, toState, toLight);										// change circle
-		psm.Shell (fromState, toState, toLight);									// change shell
-		pnm.Nucleus (fromState, toState, toLight);									// change nucleus
 	}
 
 	// set particle parts (normal state transitions)

@@ -10,7 +10,9 @@ public class PlayerNucleusManager : MonoBehaviour {
 	public Mesh sphere, triangle, square;			// shape meshes
 	private MeshRenderer rend;						// mesh renderer (for colour changes)
 	private PlayerStatePattern psp;					// psp ref
+
 	private bool light; 							// is light flag
+	private Shader lightShader, darkShader;			// light/dark shaders
 
 	void Awake () {
 		anim = GetComponent<Animator>();							// init animator ref
@@ -18,6 +20,8 @@ public class PlayerNucleusManager : MonoBehaviour {
 		rend = GetComponent<MeshRenderer>();						// init mesh renderer ref
 		psp = GameObject.Find ("Player")
 			.gameObject.GetComponent<PlayerStatePattern> ();		// init psp ref
+		//lightShader = Shader.Find("light_nucleus");					// init light nucleus shader
+		//darkShader = Shader.Find("dark_nucleus");						// init dark nucleus shader
 	}
 
 	/*void Update() {
@@ -1011,28 +1015,25 @@ public class PlayerNucleusManager : MonoBehaviour {
 
 	///<summary>
 	///<para>set core as light</para>
-	///<para>true = white</para>
-	///<para>false = black</para>
+	///<para>light: true = white, false = black</para>
 	///</summary>
-	private void SetLight (bool light)
+	private void SetLight (bool lite)
 	{
-		// CHANGE TO UPDATING SHADER OR RETURNING TO BLACK
-
-		if (light && !psp.lightworld) {
-			rend.material.SetColor("_Color", Color.white);			// change to white
-			light = true;											// set is light flag
+		if (lite && !psp.lightworld) {
+			rend.material.shader = lightShader;							// change to white shader
+			light = true;												// set is light flag
 		} 
-		else if (!light && !psp.lightworld) {
-			rend.material.SetColor("_Color", Color.black);			// change to white
-			light = false;											// reset is light flag
+		else if (!lite && !psp.lightworld) {
+			rend.material.SetColor("_Color", Color.black);				// change to black
+			light = false;												// reset is light flag
 		}
-		else if (light && psp.lightworld) {
-			rend.material.SetColor("_Color", Color.black);			// change to white
-			light = true;											// set is light flag
+		else if (lite && psp.lightworld) {
+			rend.material.shader = darkShader;							// change to black shader
+			light = true;												// set is light flag
 		}
-		else if (!light && psp.lightworld) {
-			rend.material.SetColor("_Color", Color.white);			// change to white
-			light = false;											// reset is light flag
+		else if (!lite && psp.lightworld) {
+			rend.material.SetColor("_Color", Color.white);				// change to white
+			light = false;												// reset is light flag
 		}
 	}
 
