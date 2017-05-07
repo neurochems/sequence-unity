@@ -23,7 +23,7 @@ public class ZeroParticleState : IParticleState
 	{
         //Evol ();
 
-        if (psp.psp.isInit) Init();
+        if (psp.psp.isInit) Init();                                                     // if player init, particle init
 
 		// allow collisions timer
 		if (!canCollide) collisionTimer += Time.deltaTime;								// start timer

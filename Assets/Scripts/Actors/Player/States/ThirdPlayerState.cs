@@ -19,8 +19,6 @@ public class ThirdPlayerState : IParticleState
 
 	public void UpdateState()															// updated each frame in PlayerStatePattern
 	{
-		Evol ();																		// check evol
-
 		// allow collisions timer
 		if (!canCollide) collisionTimer += Time.deltaTime;								// start timer
 		if (collisionTimer >= psp.stunDuration) {										// if timer is up
@@ -42,14 +40,21 @@ public class ThirdPlayerState : IParticleState
 				|| other.gameObject.CompareTag ("Third")) {									// collide with third
 				psp.stunned = true;																// set stunned flag
 				psp.AddDark (pspOther.darkEvol);												// add dark of other
-				psp.AddLight (pspOther.lightEvol);												// add light of other
-				canCollide = false;																// reset has collided trigger
+				psp.AddLight (pspOther.lightEvol);                                              // add light of other
+
+                Evol();																	    	// check evol
+
+                canCollide = false;																// reset has collided trigger
 			} 
 			else {																			// collide with any other
-				psp.stunned = true;																// set stunned flag
-				psp.SubDark (pspOther.darkEvol);												// subtract other dark
-				psp.SubLight (pspOther.lightEvol);												// subtract other light
-				canCollide = false;																// reset has collided trigger
+				psp.stunned = true;                                                             // set stunned flag
+
+                psp.SubDark (pspOther.darkEvol);												// subtract other dark
+				psp.SubLight (pspOther.lightEvol);                                              // subtract other light
+
+                Evol();																		    // check evol
+
+                canCollide = false;																// reset has collided trigger
 			}
 		}
 	}
@@ -122,10 +127,12 @@ public class ThirdPlayerState : IParticleState
 		if (!psp.lightworld	&& evol < 0f) psp.toLightworld = true;											// if to light world (if evol < 0), set to light world trigger
 		else if (psp.lightworld && evol >= 0f) psp.toDarkworld = true;										// if to dark world (evol >= 0), set dark world flag
 
-		else if (evol == 0) {																				// to zero (if evol = 0)
+        // zero
+		if (evol == 0) {																			    	// to zero (if evol = 0)
 			ToZero (true);																						// to zero state
 		}
-		else if (evol == 0.5f) {																			// devolve to dark world dark zero (if evol = 0.5)
+        // half zero
+        if (evol == 0.5f) {																		        	// devolve to dark world dark zero (if evol = 0.5)
 			if (deltaDark > deltaLight) ToZero(false);															// if lose more light than dark = to dark zero
 			// else if (deltaDark < deltaLight) ToZero(true);													// if gain more light than dark = to light zero (no change)
 		}
@@ -133,15 +140,18 @@ public class ThirdPlayerState : IParticleState
 			if (deltaDark < deltaLight) ToZero(true);															// if lose more dark than light = to light zero
 			else if (deltaDark > deltaLight) ToZero(false);														// if lose more light than dark = to dark zero
 		} 
-		else if ((evol == 1f) || (evol == -1f)) {															// devolve to dark or light world first (if evol == 1)
+        // first
+		if ((evol == 1f) || (evol == -1f)) {													    		// devolve to dark or light world first (if evol == 1)
 			if (deltaDark < deltaLight) ToFirst(true);															// if lose more dark than light = to light first
 			else if (deltaDark > deltaLight) ToFirst(false);													// if lose more light than dark = to dark first
 		}
-		else if ((evol == 1.5f) || (evol == -1.5f)) {														// devolve to dark or light world second (if evol == 1.5)
+        // second
+		if ((evol == 1.5f) || (evol == -1.5f)) {													    	// devolve to dark or light world second (if evol == 1.5)
 			if (deltaDark < deltaLight) ToSecond(true);															// if lose more dark than light = to light second
 			else if (deltaDark > deltaLight) ToSecond(false);													// if lose more light than dark = to dark second
 		}
-		else if (evol >= 3f) {																				// evolve to dark world fourth (if evol >= 3)
+        // fourth
+        if (evol >= 3f) {																			    	// evolve to dark world fourth (if evol >= 3)
 			if (deltaDark > deltaLight) ToFourth(false);														// if gain more dark than light = to dark fourth
 			else if (deltaDark < deltaLight) ToFourth(true);													// if gain more light than dark = to light fourth
 		}
@@ -149,19 +159,23 @@ public class ThirdPlayerState : IParticleState
 			if (deltaDark < deltaLight) ToFourth(true);															// if lose more dark than light = to light fourth
 			else if (deltaDark > deltaLight) ToFourth(false);													// if lose more light than dark = to dark fourth
 		}
-		else if (evol <= -5f && evol > -8f) {																// devolve to light world fifth (if evol = -5)
+        // fifth
+		if (evol <= -5f && evol > -8f) {														    		// devolve to light world fifth (if evol = -5)
 			if (deltaDark < deltaLight) ToFifth(true, 0);														// if lose more dark than light = to light circle fifth
 			else if (deltaDark > deltaLight) ToFifth(false, 0);													// if lose more light than dark = to dark circle fifth
 		}
-		else if (evol <= -8f && evol > -13f) {																// devolve to light world sixth (if evol = -8)
+        // sixth
+		if (evol <= -8f && evol > -13f) {														    		// devolve to light world sixth (if evol = -8)
 			if (deltaDark < deltaLight) ToSixth(true, 0);														// if lose more dark than light = to light circle sixth
 			else if (deltaDark > deltaLight) ToSixth(false, 0);													// if lose more dark than light = to dark circle sixth
 		}
-		else if (evol <= -13f && evol > -21f) {																// devolve to light world seventh (if evol = -13)
+        // seventh
+		if (evol <= -13f && evol > -21f) {															    	// devolve to light world seventh (if evol = -13)
 			if (deltaDark < deltaLight) ToSeventh(true, 0);														// if lose more dark than light = to light circle seventh
 			else if (deltaDark > deltaLight) ToSeventh(false, 0);												// if lose more dark than light = to dark circle seventh
 		}
-		/*else if (evol <= -21f && evol > -34f) {															// devolve to light world eighth (if evol = -21)
+        // eighth
+		/*♥if (evol <= -21f && evol > -34f) {													    		// devolve to light world eighth (if evol = -21)
 			if (deltaDark < deltaLight) ToEighth(true, 0);														// if lose more dark than light = to light circle eighth
 			else if (deltaDark > deltaLight) ToEighth(false, 0);												// if lose more dark than light = to dark circle eighth
 		}*/
