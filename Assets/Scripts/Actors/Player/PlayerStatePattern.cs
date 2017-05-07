@@ -103,10 +103,11 @@ public class PlayerStatePattern : MonoBehaviour {
 	void Start () 
 	{
 		light = true;														// start as light
-		//lightEvol = 0f;													// start at 0.5 light evol
-		//darkEvol = 0f;													// start at 0.5 light evol
+		//lightEvol = 0f;													        // start at 0.5 light evol
+		//darkEvol = 0f;													    // start at 0.5 light evol
 		currentState = zeroState;											// start at zero state
 		//TransitionTo(0, 0, light, toLight, 0);								// start at zero size
+		isInit = false;														// reset is init flag
 	}
 
 	void Update () 
@@ -136,7 +137,6 @@ public class PlayerStatePattern : MonoBehaviour {
 
 		// checks for OVERLAY TEXT
 		if (!uim.uI.GetComponent<StartOptions>().inMainMenu && timeCheck == true) {			// if game start (not in menu)
-			isInit = false;																		// reset is init flag
 			sincePlaytimeBegin = Time.time;														// check time
 			timeCheck = false;																	// check time only once
 		}

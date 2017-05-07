@@ -68,6 +68,15 @@ NOTES
 	
 	
 //// DEBUG \\\\
+  
+  EVOLUTION
+	- move Evol() calls to OnTriggerEnter
+		player: zero[] first[] second[] third[] fourth[] fifth[] sixth[] seventh[]
+		particle: zero[DONE] first[] second[] third[] fourth[] fifth[] sixth[] seventh[]
+	- zero state: make Init()
+		- call at start - DONE
+			- triggered in update
+		- move init logic out of Evol() - DONE
 
   PHYSICS
 	- update Player/ParticlePhysicsManagers

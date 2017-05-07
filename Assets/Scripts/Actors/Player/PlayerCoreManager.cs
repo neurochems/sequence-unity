@@ -1065,7 +1065,8 @@ public class PlayerCoreManager : MonoBehaviour {
 	///</summary>
 	private void ScaleTo (bool devol, string resetState, string setState)
 	{
-		if (devol) {
+        //Debug.Log("PlayerCore ScaleTo");
+        if (devol) {
 			anim.ResetTrigger ("scaleup");								// reset last stage
 			anim.SetTrigger ("scaledown");								// enable scaledown
 		}
