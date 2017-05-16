@@ -16,9 +16,11 @@ public class CameraManager : MonoBehaviour {
 
 		// from zero
 			// to first
-		if (switchworld) {
-			if (fromState == 0 && toState == 1)	ZoomTo (switchworld, true, "zero", "first");		// zoom out
+		//if (switchworld) {
+		if (fromState == 0 && toState == 1) {
+			ZoomTo (switchworld, false, "zero", "first");		// zoom out
 		}
+		//}
 			// to third
 		else if (fromState == 0 && toState == 3) ZoomTo (switchworld, false, "zero", "third");		// zoom out
 			// to fifth
@@ -128,8 +130,10 @@ public class CameraManager : MonoBehaviour {
 		}
 			
 		else {
+
+			Debug.Log ("camera zoom out");
+
 			anim.SetBool ("lightworld", false);													// reset lightworld to not switch worlds
-			
 
 			if (devol) {																				// if devol true
 				anim.ResetTrigger ("zoomout");																// reset scale up trigger

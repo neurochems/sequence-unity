@@ -84,6 +84,12 @@ NOTES
 	- zero state: make Init()
 		- triggered in update, flagged by player init
 		player [DONE] particle [DONE]
+	- state classes: update gameobject tag in ToState methods - DONE
+	- collision logic
+		- update same-state/same-evol checks (as in FirstParticleState)
+			zero[] first[DONE] second[] third[] fourth[] fifth[] sixth[] seventh[]
+		- update player checks (as in FirstParticleState)
+			zero[] first[DONE] second[] third[] fourth[] fifth[] sixth[] seventh[]
 
   PHYSICS
 	- update Player/ParticlePhysicsManagers

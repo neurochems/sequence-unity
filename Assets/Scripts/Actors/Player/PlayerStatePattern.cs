@@ -191,11 +191,11 @@ public class PlayerStatePattern : MonoBehaviour {
 		darkEvol += changeAmount;											// add dark evol level
 	}
 	public void SubDark(float changeAmount) {
-		lightEvol -= changeAmount;											// subtract dark evol level
+		darkEvol -= changeAmount;											// subtract dark evol level
 	}
 
 	public void AddLight(float changeAmount) {
-		darkEvol += changeAmount;											// add light evol level
+		lightEvol += changeAmount;											// add light evol level
 	}
 	public void SubLight(float changeAmount) {
 		lightEvol -= changeAmount;											// subtract light evol level
@@ -309,14 +309,15 @@ public class PlayerStatePattern : MonoBehaviour {
 			cam.ZoomCamera (lightworld, fromState, toState);							// zoom camera in from particular state
 			ChangeWorld ();																// switch properties
 			cam.ZoomCamera (lightworld, fromState, toState);							// zoom camera out to appropriate state
-		}
+		} 
 		else if (!lightworld && toDarkworld) {										// if not light world && switching back to dark world
 			cam.ZoomCamera (lightworld, fromState, toState);							// zoom camera in from particular state
 			ChangeWorld ();																// switch properties
 			cam.ZoomCamera (lightworld, fromState, toState);							// zoom out to appropriate state
-
+		} 
+		else {
+			cam.ZoomCamera (false, fromState, toState);						// else in dark world, zoom between states
 		}
-		else cam.ZoomCamera (lightworld, fromState, toState);						// else in dark world, zoom between states
 	}
 
 	private void ChangeWorld () 

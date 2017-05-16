@@ -46,7 +46,7 @@ public class ParticleStatePattern : MonoBehaviour {
 
 	private MeshRenderer rendCore, rendShell, rendNucleus;					// mesh renderers (for lightworld colour changes)
 
-	private int die;														// roll for collision conflicts
+	public int die;															// collision conflict check
 	public bool stunned;													// stunned?
 	public float stunDuration = 3f;											// duration of post-hit invulnerability
 	private float stunTimer = 0f;											// stun timer
@@ -203,18 +203,22 @@ public class ParticleStatePattern : MonoBehaviour {
 	{
 		if (toState == 0)	{ 														// to zero
 			// rb.mass = 0.2f;															// set mass
+			gameObject.tag = "Zero";													// set tag
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 1) {													// to first
 			// rb.mass = 0.2f;															// set mass
+			gameObject.tag = "First";													// set tag
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 2) {													// to second
 			//rb.mass = 0.2f;															// set mass
+			gameObject.tag = "Second";													// set tag
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 3) {													// to third
 			//rb.mass = 0.2f;															// set mass
+			gameObject.tag = "Third";													// set tag
 			sc[0].radius = 0.51f;														// shrink collision radius in
 			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
 			sc[1].radius = 0.51f;														// shrink collision radius in
@@ -223,6 +227,7 @@ public class ParticleStatePattern : MonoBehaviour {
 		}
 		else if (toState == 4) {													// to fourth
 			//rb.mass = 0.2f;															// set mass
+			gameObject.tag = "Fourth";													// set tag
 			sc[0].radius = 0.51f;														// shrink collision radius in
 			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
 			sc[1].radius = 0.51f;														// shrink collision radius in
@@ -231,6 +236,7 @@ public class ParticleStatePattern : MonoBehaviour {
 		}
 		else if (toState == 5) {													// to fifth
 			//rb.mass = 0.2f;															// set mass
+			gameObject.tag = "Fifth";													// set tag
 			sc[0].radius = 0.51f;														// shrink collision radius in
 			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
 			sc[1].radius = 0.51f;														// shrink collision radius in
@@ -239,6 +245,7 @@ public class ParticleStatePattern : MonoBehaviour {
 		}
 		else if (toState == 6) {													// to sixth
 			//rb.mass = 0.2f;															// set mass
+			gameObject.tag = "Sixth";													// set tag
 			sc[0].radius = 0.51f;														// shrink collision radius in
 			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
 			sc[1].radius = 0.51f;														// shrink collision radius in
@@ -247,6 +254,7 @@ public class ParticleStatePattern : MonoBehaviour {
 		}
 		else if (toState == 7) {													// to seventh
 			// rb.mass = 0.2f;															// set mass
+			gameObject.tag = "Seventh";													// set tag
 			sc[0].radius = 0.51f;														// shrink collision radius in
 			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
 			sc[1].radius = 0.51f;														// shrink collision radius in

@@ -8,6 +8,7 @@ public class ZeroPlayerState : IParticleState
 
 	public bool light = true;															// 'is light' flag
 	public float evol, deltaDark, deltaLight;											// evol tracking refs
+	private bool checkEvol;																// check evol flag
 
 	private bool canCollide = true;														// can collide flag
 	private float collisionTimer;														// reset collision timer
@@ -20,7 +21,12 @@ public class ZeroPlayerState : IParticleState
 
 	public void UpdateState()															// called every frame in PlayerStatePattern
 	{
-		
+		// check evol
+		if (checkEvol) {
+			Evol();																		// check evol logic
+			Debug.Log("check player evol");
+			checkEvol = false;															// reset check evol flag
+		}
 
         if (psp.isInit) Init();                                                         // if init, init
 
@@ -49,10 +55,10 @@ public class ZeroPlayerState : IParticleState
 					if (pspOther.evol == 0) psp.AddDark (0.5f);										// if other evol = 0, add 0.5 to dark
 					else psp.AddDark (pspOther.darkEvol);											// else, add dark of other
 				}
-				Debug.Log ("Player deltaDark on collision: " + psp.deltaDark);
-				Debug.Log ("Player deltaLight on collision: " + psp.deltaLight);
+				//Debug.Log ("Player deltaDark on collision: " + psp.deltaDark);
+				//Debug.Log ("Player deltaLight on collision: " + psp.deltaLight);
 
-                Evol();																	    	// check evol
+				checkEvol = true;																// set check evol flag
 
                 canCollide = false;																// reset has collided trigger
 			} 
@@ -70,7 +76,7 @@ public class ZeroPlayerState : IParticleState
 				psp.SubDark (pspOther.darkEvol);												// subtract other dark
 				psp.SubLight (pspOther.lightEvol);                                              // subtract other light
 
-                Evol();																		    // check evol
+				checkEvol = true;																// set check evol flag
 
                 canCollide = false;																// reset has collided trigger
 			}
@@ -193,8 +199,12 @@ public class ZeroPlayerState : IParticleState
 		}
         // first
         if (evol == 1f) {                                                               // evolve to dark world first
+			Debug.Log("player to first");
             if (deltaDark > deltaLight) ToFirst(false);                                     // if gain more dark than light = to dark first
-            else if (deltaDark < deltaLight) ToFirst(true);                                 // if gain more light than dark = to light first
+			else if (deltaDark < deltaLight) {
+				Debug.Log("player to light first");
+				ToFirst(true);                                 // if gain more light than dark = to light first
+			}
         }
         else if (evol == -1f) {                                                         // devolve to light world first
             if (deltaDark < deltaLight) ToFirst(true);                                      // if lose more dark than light = to light first

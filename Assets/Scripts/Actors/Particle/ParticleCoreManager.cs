@@ -52,7 +52,7 @@ public class ParticleCoreManager : MonoBehaviour {
             // from changes
             if (f == 0) {
                 ScaleTo(true, "zero", "hidden");                                                        // scale from zero
-                Debug.Log("ZERO TO HIDDEN");
+               // Debug.Log("ZERO TO HIDDEN");
             }
 			else if (f == 1 || f == 2 || f == 5 || f == 6) ScaleTo(true, "first", "hidden");        	// scale from first
 			else if (f == 3 || f == 4) ScaleTo(true, "third", "hidden");                                // scale from third
@@ -1145,7 +1145,7 @@ public class ParticleCoreManager : MonoBehaviour {
 	///</summary>
 	private void ScaleTo (bool devol, string resetState, string setState)
 	{
-        Debug.Log("ParticleCore ScaleTo");
+        //Debug.Log("ParticleCore ScaleTo");
         if (devol) {
 			anim.ResetTrigger ("scaleup");								// reset last stage
 			anim.SetTrigger ("scaledown");								// enable scaledown

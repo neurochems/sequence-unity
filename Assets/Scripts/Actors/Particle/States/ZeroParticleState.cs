@@ -25,7 +25,7 @@ public class ZeroParticleState : IParticleState
         // check evol
 		if (checkEvol) {
 			Evol();																		// check evol logic
-			Debug.Log("check particle evol");
+			//Debug.Log("check particle evol");
 			checkEvol = false;															// reset check evol flag
 		}
 
@@ -53,15 +53,13 @@ public class ZeroParticleState : IParticleState
 					psp.SubLight (other.gameObject.GetComponent<PlayerStatePattern>().lightEvol);									// subtract other light
 				}
 
-                //Evol();                                                                                                         // check evol logic
-
 				checkEvol = true;																								// check evol flag
 
                 canCollide = false;                                                                                             // reset can collide trigger	
 
                 Debug.Log ("particle contact player");
-				Debug.Log ("Particle deltaDark on collision: " + psp.deltaDark);
-				Debug.Log ("Particle deltaLight on collision: " + psp.deltaLight);
+				//Debug.Log ("Particle deltaDark on collision: " + psp.deltaDark);
+				//Debug.Log ("Particle deltaLight on collision: " + psp.deltaLight);
 			} 
 			else if (other.gameObject.CompareTag ("Zero")) {								                                // if collide with zero
 				psp.stunned = true;													    			                            // stunned flag
@@ -216,7 +214,7 @@ public class ZeroParticleState : IParticleState
 	public void Evol()									// all states here for init 
 	{
 
-		Debug.Log ("particle Evol() on collision");
+		//Debug.Log ("particle Evol() on collision");
 
 		evol = psp.evol;																	// local evol check			
 		lightworld = psp.lightworld;														// local lightworld check
@@ -236,7 +234,7 @@ public class ZeroParticleState : IParticleState
 			if (psp.darkEvol == -0.5f) ToOtherWorld(true, 0, 0, true);							// if lose more dark than light = to light world light zero
 			else if (psp.lightEvol == -0.5f) {
 				ToOtherWorld(true, 0, 0, false);					// if lose more light than dark = to light world dark zero
-				Debug.Log ("particle to other world, deltaLight < deltaDark");
+				//Debug.Log ("particle to other world, deltaLight < deltaDark");
 			}
 		}
 		else if (evol == -0.5f && lightworld) {												// devolve to light world half zero from dark world
