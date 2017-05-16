@@ -7,41 +7,43 @@ public class ParticleShellManager : MonoBehaviour {
 	private MeshRenderer rend;					// mesh renderer (for colour changes)
 	private ParticleStatePattern psp;				// psp ref
 
+	private int toState;							// to state indicator
+	private bool resetScale = false;				// timer trigger for resetting scale after world switch
+	public float resetScaleTimer;					// reset scale timer
+
 	void Awake () {
 		anim = GetComponent<Animator>();							// init animator ref
 		rend = GetComponent<MeshRenderer>();						// init mesh renderer ref
 		psp = GetComponentInParent<ParticleStatePattern> ();		// init psp ref
 	}
 
-/*	void Update() {
-		if (psp.lightworld && psp.changeParticles) {				// if particle is to be sent to light world and the timing of the zoom is right
-			rend.material.SetColor("_Color", Color.black);				// change core to black
+	void Update() {
+		// reset scale timer
+		if (resetScale) resetScaleTimer += Time.deltaTime;													// start timer
+		if (resetScaleTimer >= 4.0f) {
+			//anim.ResetTrigger("colour");
+			if (toState == 3 || toState == 4 || toState == 5 || toState == 6) ScaleTo (false, "hidden", "third");
+			if (toState == 7 || toState == 8) ScaleTo (false, "hidden", "seventh");
+			if (toState == 9) ScaleTo (false, "hidden", "ninth");
+			resetScale = false;
+			resetScaleTimer = 0f;
 		}
-		else if (!psp.lightworld && psp.changeParticles) {		// if particle is to be sent to dark world and the timing of the zoom is right
-			rend.material.SetColor("_Color", Color.white);				// change core to white
-		}
-	}*/
+	}
 
-	public void ToOtherWorld (bool toLW, int fromState, int toState, bool toLight)
+	public void ToOtherWorld (bool lw, int f, int t, bool l)
 	{
-		if (toLW) {
-			if (fromState == 3 || fromState == 4 || fromState == 5 || fromState == 6) {
-				ScaleTo (true, "third", "hidden");									// scale from third
-				SetLight(false);													// change to black
-				ScaleTo (false, "hidden", "third");									// scale to third
-			}
-			else if (fromState == 7 || fromState == 8) {
-				ScaleTo (true, "seventh", "hidden");								// scale from seventh	
-				SetLight(false);													// change to black
-				ScaleTo (false, "hidden", "seventh");								// scale to seventh
-			}
-			else if (fromState == 9) {
-				ScaleTo (true, "ninth", "hidden");									// scale from ninth
-				SetLight(false);													// change to black
-				ScaleTo (false, "hidden", "ninth");									// scale to ninth
-			}
+		toState = t;																			// set to state
+		if (lw) {																				// if to light world
+			// from changes
+			if (f == 3 || f == 4 || f == 5 || f == 6) ScaleTo (true, "third", "hidden");			// scale from third
+			else if (f == 7 || f == 8) ScaleTo (true, "seventh", "hidden");							// scale from seventh	
+			else if (f == 9) ScaleTo (true, "ninth", "hidden");										// scale from ninth
+			// to changes
+			if (f == 3 || f == 4 || f == 5 || f == 6) SetLight(false);								// change to black
+			else if (f == 7 || f == 8) SetLight(false);												// change to black
+			else if (f == 9) SetLight(false);														// change to black
 		}
-		else if (!toLW) SetLight(true);												// if to dark world, change to white
+		else if (!lw) SetLight(true);															// if to dark world, change to white
 	}
 
 	public void Shell (int fromState, int toState, bool fromLight, bool toLight, int shape) 

@@ -11,6 +11,10 @@ public class ParticleCoreManager : MonoBehaviour {
 	private MeshRenderer rend;						// mesh renderer (for colour changes)
 	private ParticleStatePattern psp;				// psp ref
 
+	private int toState;							// to state indicator
+	private bool resetScale = false;				// timer trigger for resetting scale after world switch
+	public float resetScaleTimer;					// reset scale timer
+
     private Shader lightShader, darkShader;         // light/dark shaders
 
     void Awake () {
@@ -23,62 +27,51 @@ public class ParticleCoreManager : MonoBehaviour {
         //darkShader = Shader.Find("dark_nucleus");						// init dark nucleus shader
     }
 
-    /*	void Update() {
-            if (psp.lightworld && psp.changeParticles) {				// if particle is to be sent to light world and the timing of the zoom is right
-                rend.material.SetColor("_Color", Color.black);				// change core to black
-                psp.changeParticles = false;								// reset change colour flag
-            }
-            else if (!psp.lightworld && psp.changeParticles) {		// if particle is to be sent to dark world and the timing of the zoom is right
-                rend.material.SetColor("_Color", Color.white);				// change core to white
-                psp.changeParticles = false;								// reset change colour flag
-            }
-        }*/
+	void Update() {
+		// reset scale timer
+		if (resetScale) resetScaleTimer += Time.deltaTime;															// start timer
+		if (resetScaleTimer >= 4.0f) {																				// when timer >= 4 sec
+			//anim.ResetTrigger("colour");	
+			if (toState == 0) ScaleTo (false, "hidden", "zero");														// if to zero, grow to zero
+			if (toState == 1 || toState == 2 || toState == 5 || toState == 6) ScaleTo (false, "hidden", "first");		// if to first/second/fifth/sixth, grow to first
+			if (toState == 3 || toState == 4) ScaleTo (false, "hidden", "third");										// if to third/fourth, grow to third
+			if (toState == 7 || toState == 8) ScaleTo (false, "hidden", "seventh");										// if to seventh/eighth, grow to seventh
+			if (toState == 9) ScaleTo (false, "hidden", "ninth");														// if to ninth, grow to ninth
+			resetScale = false;																							// reset reset scale flag
+			resetScaleTimer = 0f;																						// reset timer
+		}
+	}
 
     ///<summary>
     ///<para> method for world changing anims </para>
     ///</summary>
-    public void ToOtherWorld (bool toLW, int fromState, int toState, bool toLight) 
+    public void ToOtherWorld (bool lw, int f, int t, bool l) 
 	{
-		if (toLW) {
+		toState = t;																				// set to state																		
+		if (lw) {																					// if to light world
             // from changes
-            if (fromState == 0)
-            {
-                ScaleTo(true, "zero", "hidden");                                                                    // scale from zero
-                //Debug.Log("ZERO TO HIDDEN");
+            if (f == 0) {
+                ScaleTo(true, "zero", "hidden");                                                        // scale from zero
+                Debug.Log("ZERO TO HIDDEN");
             }
-            else if (fromState == 1 || fromState == 2 || fromState == 5 || fromState == 6) ScaleTo(true, "first", "hidden");        // scale from first
-            else if (fromState == 3 || fromState == 4) ScaleTo(true, "third", "hidden");                                            // scale from third
-            else if (fromState == 7 || fromState == 8) ScaleTo(true, "seventh", "hidden");                                          // scale from seventh
-            else if (fromState == 9) ScaleTo(true, "ninth", "hidden");																// scale from ninth
+			else if (f == 1 || f == 2 || f == 5 || f == 6) ScaleTo(true, "first", "hidden");        	// scale from first
+			else if (f == 3 || f == 4) ScaleTo(true, "third", "hidden");                                // scale from third
+			else if (f == 7 || f == 8) ScaleTo(true, "seventh", "hidden");                              // scale from seventh
+			else if (f == 9) ScaleTo(true, "ninth", "hidden");											// scale from ninth
 
 			// to changes
-			if (toState == 0) {																										// to light world zero
-				SetLight(false, false);																									// change to black
-				ScaleTo (false, "hidden", "zero");																						// scale to zero
-			}
-			else if (toState == 1 || toState == 2 || toState == 5 || toState == 6) {												// to light world first, second, fifth, sixth
-				SetLight(false, false);																										// change to black
-				ScaleTo (false, "hidden", "first");																						// scale to first
-			}
-			else if (toState == 3 || toState == 4) {																				// to light world third, fourth
-				SetLight(false, false);																										// change to black
-				ScaleTo (false, "hidden", "third");																						// scale to third
-			}
-			else if (toState == 7 || toState == 8) {																				// to light world seventh, eighth
-				SetLight(false, false);																										// change to black
-				ScaleTo (false, "hidden", "seventh");																					// scale to seventh
-			}
-			else if (toState == 9) {																								// to light world ninth
-				SetLight(false, false);																										// change to black
-				ScaleTo (false, "hidden", "ninth");																						// scale to ninth
-			}
+			if (t == 0) SetLight(false, false);															// if to light world zero, change to black
+			else if (t == 1 || t == 2 || t == 5 || t == 6) SetLight(false, false);						// if to light world first/second/fifth/sixth, change to black
+			else if (t == 3 || t == 4) SetLight(false, false);											// if to light world third/fourth, change to black
+			else if (t == 7 || t == 8) SetLight(false, false);											// if to light world seventh/eighth, change to black
+			else if (t == 9) SetLight(false, false);													// if to light world ninth, change to black
 		}
 
-		else if (!toLW) {
-			if (fromState == 0) {
-				ScaleTo (true, "zero", "hidden");												                                    // scale from zero
-				SetLight(true, false);																	                            // change to white
-				ScaleTo (false, "hidden", "zero");												                                    // scale to zero
+		else if (!lw) {																				// if to dark world
+			if (f == 0) {																				// if from zero
+				ScaleTo (true, "zero", "hidden");															// scale from zero
+				SetLight(true, false);																		// change to white
+				ScaleTo (false, "hidden", "zero");															// scale to zero
 			}
 		}
 	}
@@ -1101,7 +1094,7 @@ public class ParticleCoreManager : MonoBehaviour {
 		}
 
 	}
-
+		
 	///<summary>
 	///<para>0 = circle</para>
 	///<para>1 = triangle</para>
@@ -1124,14 +1117,14 @@ public class ParticleCoreManager : MonoBehaviour {
         if (light)
         {
             //rend.material.SetColor("_Color", Color.white);		        // change to white
-            anim.SetTrigger("colour");                                  // set colour change trigger
+            //anim.SetTrigger("colour");                                  // set colour change trigger
             anim.SetBool("black", false);                               // reset previously active state
             anim.SetBool("white", true);                                // set active state
         }
         else
         {
             //rend.material.SetColor("_Color", Color.black);              // change to black
-            anim.SetTrigger("colour");                                  // set colour change trigger
+            //anim.SetTrigger("colour");                                  // set colour change trigger
             anim.SetBool("white", false);                               // reset previously active state
             anim.SetBool("black", true);                                // set active state
         }
@@ -1139,6 +1132,10 @@ public class ParticleCoreManager : MonoBehaviour {
 
         if (shade && light) rend.material.shader = lightShader;			// change to white shader
         else if (shade && !light) rend.material.shader = darkShader;    // change to white shader
+
+
+		resetScale = true;
+
     }
 
 	///<summary>
@@ -1148,7 +1145,7 @@ public class ParticleCoreManager : MonoBehaviour {
 	///</summary>
 	private void ScaleTo (bool devol, string resetState, string setState)
 	{
-        //Debug.Log("ParticleCore ScaleTo");
+        Debug.Log("ParticleCore ScaleTo");
         if (devol) {
 			anim.ResetTrigger ("scaleup");								// reset last stage
 			anim.SetTrigger ("scaledown");								// enable scaledown

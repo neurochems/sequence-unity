@@ -9,6 +9,7 @@ public class ZeroParticleState : IParticleState
 	public bool light = true;															// 'is light' flag
 	private bool lightworld;															// is light world ref
 	public float evol, deltaDark, deltaLight;											// evol tracking refs
+	private bool checkEvol;																// check evol flag
 
 	private bool canCollide = false;													// can collide flag (false to stun on new spawn)
 	private float collisionTimer;														// reset can collide timer	
@@ -21,7 +22,12 @@ public class ZeroParticleState : IParticleState
 
 	public void UpdateState()
 	{
-        //Evol ();
+        // check evol
+		if (checkEvol) {
+			Evol();																		// check evol logic
+			Debug.Log("check particle evol");
+			checkEvol = false;															// reset check evol flag
+		}
 
         if (psp.psp.isInit) Init();                                                     // if player init, particle init
 
@@ -47,7 +53,9 @@ public class ZeroParticleState : IParticleState
 					psp.SubLight (other.gameObject.GetComponent<PlayerStatePattern>().lightEvol);									// subtract other light
 				}
 
-                Evol();                                                                                                         // check evol logic
+                //Evol();                                                                                                         // check evol logic
+
+				checkEvol = true;																								// check evol flag
 
                 canCollide = false;                                                                                             // reset can collide trigger	
 
@@ -170,7 +178,10 @@ public class ZeroParticleState : IParticleState
 
     public void Init()
     {
-        evol = psp.evol;                                                                    // local evol check	
+        
+		//Evol ();																			// check evol logic
+
+		evol = psp.evol;                                                                    // local evol check	
 
         if (evol == 0f) ToZero(true);               									    // init to light zero
         else if (evol == 1f) ToFirst(true);               									// init to light zero
@@ -204,6 +215,9 @@ public class ZeroParticleState : IParticleState
 
 	public void Evol()									// all states here for init 
 	{
+
+		Debug.Log ("particle Evol() on collision");
+
 		evol = psp.evol;																	// local evol check			
 		lightworld = psp.lightworld;														// local lightworld check
 		light = psp.light;																	// update light value
@@ -219,8 +233,11 @@ public class ZeroParticleState : IParticleState
 			//else if (deltaDark < deltaLight) ToHalfZero (true);								// if gain more light than dark = to dark world light zero
 		}
 		else if (evol == -0.5f && !lightworld) {											// devolve to light world half zero from dark world
-			if (deltaDark < deltaLight) ToOtherWorld(true, 0, 0, true);							// if lose more dark than light = to light world light zero
-			else if (deltaDark > deltaLight) ToOtherWorld(true, 0, 0, false);					// if lose more light than dark = to light world dark zero
+			if (psp.darkEvol == -0.5f) ToOtherWorld(true, 0, 0, true);							// if lose more dark than light = to light world light zero
+			else if (psp.lightEvol == -0.5f) {
+				ToOtherWorld(true, 0, 0, false);					// if lose more light than dark = to light world dark zero
+				Debug.Log ("particle to other world, deltaLight < deltaDark");
+			}
 		}
 		else if (evol == -0.5f && lightworld) {												// devolve to light world half zero from dark world
 			if (deltaDark < deltaLight) ToHalfZero(true);										// if lose more dark than light = to light world light zero

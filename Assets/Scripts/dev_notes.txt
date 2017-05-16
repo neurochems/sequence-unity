@@ -3,11 +3,19 @@ NOTES
 
 - needs attn: updating shape flags in state class Evol() / shape flag in StatePattern - [in LIGHT WORLD, below]
 	
+- core
+	- zero = 0.4
+	- first = 1
+	- third = 2
+	- seventh = 3
+	- ninth = 4
 - shell 
 	- third = 0.75
+	- seventh = 2.5
+	- ninth = 3.5
 - nucleus
 	- zero = 0.25
-	- first/eighth = 0.8
+	- first = 0.8
 	- seventh = 2.5
 	- ninth = 3.25
 	- tenth = 
@@ -71,13 +79,11 @@ NOTES
   
   EVOLUTION
 	- move Evol() calls to OnTriggerEnter
-		player: zero[DONE] first[] second[] third[] fourth[] fifth[] sixth[] seventh[]
-		particle: zero[DONE] first[] second[] third[] fourth[] fifth[] sixth[] seventh[]
+		player: zero[DONE] first[DONE] second[] third[] fourth[] fifth[] sixth[] seventh[]
+		particle: zero[DONE] first[DONE] second[DONE] third[DONE] fourth[DONE] fifth[DONE] sixth[DONE] seventh[DONE]
 	- zero state: make Init()
+		- triggered in update, flagged by player init
 		player [DONE] particle [DONE]
-		- call at start
-			- triggered in update, flagged by player init
-		- move init logic out of Evol()
 
   PHYSICS
 	- update Player/ParticlePhysicsManagers
@@ -102,7 +108,15 @@ NOTES
 				- add second level shader
 				- player[DONE] / particle[DONE]
 			- move colour change to anim
-	
+				- create black anim tree
+					core[DONE] shell[DONE] nucleus[DONE]
+				- create black animations
+					core[DONE] shell[DONE] nucleus[DONE]
+				- update Managers
+					- Update() timer / ToOtherWorld changes
+					core[DONE] shell[DONE] nucleus[DONE]
+		- particle from light world
+		
   SPAWN PARTICLE
 	- review spawning at devolutions
 		- esp at transitions to light world

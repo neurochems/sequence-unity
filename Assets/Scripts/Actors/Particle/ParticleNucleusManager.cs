@@ -11,6 +11,10 @@ public class ParticleNucleusManager : MonoBehaviour {
 	private MeshRenderer rend;						// mesh renderer (for colour changes)
 	private ParticleStatePattern psp;				// psp ref
 
+	private int toState;							// to state indicator
+	private bool resetScale = false;				// timer trigger for resetting scale after world switch
+	public float resetScaleTimer;					// reset scale timer
+
 	private bool light; 							// is light flag
 	private Shader lightShader, darkShader;			// light/dark shaders
 
@@ -23,49 +27,44 @@ public class ParticleNucleusManager : MonoBehaviour {
 		//darkShader = Shader.Find("dark_nucleus");						// init dark nucleus shader
 	}
 
-	public void ToOtherWorld (bool toLW, int fromState, int toState, bool toLight) 
+	void Update() {
+		// reset scale timer
+		if (resetScale) resetScaleTimer += Time.deltaTime;																			// start timer
+		if (resetScaleTimer >= 4.0f) {																								// when timer >= 4 sec
+			//anim.ResetTrigger("colour");	
+			if (toState == 0) ScaleTo (false, "hidden", "zero");																		// if to zero, grow to zero
+			if (toState == 1 || toState == 2 || toState == 4 || toState == 5 || toState == 6) ScaleTo (false, "hidden", "first");		// if to first/second/fifth/sixth, grow to first
+			if (toState == 7 || toState == 8) ScaleTo (false, "hidden", "seventh");														// if to seventh/eighth, grow to seventh
+			if (toState == 9) ScaleTo (false, "hidden", "ninth");																		// if to ninth, grow to ninth
+			resetScale = false;																											// reset reset scale flag
+			resetScaleTimer = 0f;																										// reset timer
+		}
+	}
+
+	public void ToOtherWorld (bool lw, int f, int t, bool l) 
 	{
-		if (toLW) {																								// to light world
+		toState = t;																					// set to state
+		if (lw) {																						// to light world
 			// from changes
-			if (fromState == 0) ScaleTo (true, "zero", "hidden");													// scale from zero to hidden
-			else if (fromState == 1 || fromState == 5) ScaleTo (true, "first", "hidden");							// scale from second/first to hidden
-			else if (fromState == 2 || fromState == 4 || fromState == 6) ScaleTo (true, "first", "hidden");			// scale from second/first to hidden
-			else if (fromState == 7) ScaleTo (true, "seventh", "hidden");											// scale from seventh to hidden
-			else if (fromState == 8) ScaleTo (true, "seventh", "hidden");											// scale from eighth/seventh to hidden
-			else if (fromState == 9) ScaleTo (true, "ninth", "hidden");												// scale from ninth to hidden
+			if (f == 0) ScaleTo (true, "zero", "hidden");													// scale from zero to hidden
+			else if (f == 1 || f == 2 || f == 4 || f == 5 || f == 6) ScaleTo (true, "first", "hidden");		// scale from second/first to hidden
+			else if (f == 7 || f == 8) ScaleTo (true, "seventh", "hidden");									// scale from seventh to hidden
+			else if (f == 9) ScaleTo (true, "ninth", "hidden");												// scale from ninth to hidden
 
 			// to changes
-			if (toState == 0) {																						// to zero
-				SetLight (false, true);																					// change to white
-				ScaleTo (false, "hidden", "zero");																		// scale to zero
-			} 
-			else if (toState == 1 || toState == 5) {																// to first or fifth
-				SetLight (false, true);																					// change to white
-				ScaleTo (false, "hidden", "first");																		// scale to first
-			} 
-			else if (toState == 2 || toState == 4 || toState == 6) {												// to second or fourth or sixth
-				SetLight (true, true);																					// change to black dot shader
-				ScaleTo (false, "hidden", "first");																		// scale to first
-			} 
-			else if (toState == 3) SetLight (false, true);															// to third, change to white
-			else if (toState == 7) {																				// to seventh
-				SetLight (false, true);																					// change to white
-				ScaleTo (false, "hidden", "seventh");																	// scale to seventh
-			} 
-			else if (toState == 8) {																				// to eighth
-				SetLight (true, true);																					// change to white + black shader
-				ScaleTo (false, "hidden", "seventh");																	// scale to seventh
-			} 
-			else if (toState == 9) {																				// to ninth
-				SetLight (false, true);																					// change to white
-				ScaleTo (false, "hidden", "ninth");																		// scale to ninth
-			} 
+			if (t == 0) SetLight (false, true);																// if to zero, change to white
+			else if (t == 1 || t == 5) SetLight (false, true);												// if to first/fifth, change to white
+			else if (t == 2 || t == 4 || t == 6) SetLight (true, true);										// if to second/fourth/sixth, change to black dot shader
+			else if (t == 3) SetLight (false, true);														// to third, change to white
+			else if (t == 7) SetLight (false, true);														// if to seventh, change to white
+			else if (t == 8) SetLight (true, true);															// if to eighth, change to white + black shader
+			else if (t == 9) SetLight (false, true);														// if to ninth, change to white
 		}
-		else if (!toLW) {																						// to dark world
-			if (fromState == 0) {																					// from light world zero		
-				ScaleTo (true, "zero", "hidden");																		// scale from zero
-				SetLight (false, false);																						// change to black
-				ScaleTo (false, "hidden", "zero");																		// scale to zero
+		else if (!lw) {																					// to dark world
+			if (f == 0) {																					// from light world zero		
+				ScaleTo (true, "zero", "hidden");															// scale from zero
+				SetLight (false, false);																	// change to black
+				ScaleTo (false, "hidden", "zero");															// scale to zero
 			}
 		}
 	}

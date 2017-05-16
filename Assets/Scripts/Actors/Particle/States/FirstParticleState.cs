@@ -20,7 +20,7 @@ public class FirstParticleState : IParticleState
 
 	public void UpdateState()
 	{
-		Evol ();
+		//Evol ();
 
 		// allow collisions timer
 		if (!canCollide) collisionTimer += Time.deltaTime;								// start timer
@@ -39,6 +39,9 @@ public class FirstParticleState : IParticleState
 			
 			if (other.gameObject.CompareTag ("Player")) {										// colide with player
 				psp.stunned = true;																// stun for duration
+
+				Evol();																			// check evol logic
+
 				canCollide = false;																// reset can collide trigger	
 				Debug.Log ("particle contact player");
 			}
@@ -47,12 +50,18 @@ public class FirstParticleState : IParticleState
 				psp.stunned = true;																// stun for duration
 				psp.AddDark (pspOther.darkEvol);												// add dark of other
 				psp.AddLight (pspOther.lightEvol);												// add light of other
+
+				Evol();																			// check evol logic
+
 				canCollide = false;																// reset has collided trigger
 			}
 			else {																			// collide with any other
 				psp.stunned = true;																// stun for duration
 				psp.SubDark (pspOther.darkEvol);												// subtract other dark
 				psp.SubLight (pspOther.lightEvol);												// subtract other light
+
+				Evol();																			// check evol logic
+
 				canCollide = false;																// reset has collided trigger
 			}
 		}

@@ -262,13 +262,12 @@ public class ParticleStatePattern : MonoBehaviour {
 	public void ChangeWorld(bool toLW, int fromState, int toState, bool toLight) 
 	{
 		pcm.ToOtherWorld (toLW, fromState, toState, toLight);								// change core
+		//pcm.ScaleTo(false, "hidden", "zero");
 		psm.ToOtherWorld (toLW, fromState, toState, toLight);								// change shell
 		pnm.ToOtherWorld (toLW, fromState, toState, toLight);								// change nucleus
 		if (toLW) toLightworld = false;												// if to light world, reset toLightworld flag
 		else if (!toLW)	toDarkworld = false;										// if to dark world, reset toDarkworld flag
 
-		// if !lightworld && inLightworld, nucleus = opposite colour
-		// if lightworld && inLightworld, nucleus = correct colour
 	}
 
 	// set particle parts (normal state transitions)
