@@ -9,6 +9,7 @@ public class SixthPlayerState : IParticleState
 	public bool light = true;															// 'is light' flag
 	public bool circle, triangle, square;												// shape flags flag
 	public float evol, deltaDark, deltaLight;											// evol tracking refs
+	private bool checkEvol;																// check evol flag
 
 	private bool canCollide = true;														// can collide flag
 	private float collisionTimer;														// reset collision timer
@@ -20,6 +21,13 @@ public class SixthPlayerState : IParticleState
 
 	public void UpdateState()															// updated each frame in PlayerStatePattern
 	{
+		// check evol
+		if (checkEvol) {
+			Evol();																		// check evol logic
+			Debug.Log("check player evol");
+			checkEvol = false;															// reset check evol flag
+		}
+
 		// allow collisions timer
 		if (!canCollide) collisionTimer += Time.deltaTime;								// start timer
 		if (collisionTimer >= psp.stunDuration) {										// if timer is up
@@ -47,7 +55,7 @@ public class SixthPlayerState : IParticleState
                 psp.AddDark (pspOther.darkEvol);														// add dark of other
 				psp.AddLight (pspOther.lightEvol);                                                      // add light of other
 
-                Evol();																		            // check evol
+				checkEvol = true;																		// set check evol flag
 
                 canCollide = false;																		// reset has collided trigger
 			} 
@@ -57,7 +65,7 @@ public class SixthPlayerState : IParticleState
                 psp.SubDark (pspOther.darkEvol);														// subtract other dark
 				psp.SubLight (pspOther.lightEvol);                                                      // subtract other light
 
-                Evol();																		            // check evol
+				checkEvol = true;																		// set check evol flag
 
                 canCollide = false;																		// reset has collided trigger
 			}

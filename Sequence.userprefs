@@ -1,18 +1,6 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Actors\Particle\States\FirstParticleState.cs">
-    <Files>
-      <File FileName="Assets\Scripts\Actors\Player\PlayerStatePattern.cs" Line="315" Column="26" />
-      <File FileName="Assets\Scripts\Actors\Player\States\ZeroPlayerState.cs" Line="27" Column="27" />
-      <File FileName="Assets\Scripts\Actors\Player\States\FirstPlayerState.cs" Line="26" Column="27" />
-      <File FileName="Assets\Scripts\Camera\CameraManager.cs" Line="137" Column="1" />
-      <File FileName="Assets\Scripts\Actors\Particle\ParticleStatePattern.cs" Line="40" Column="2" NotebookId="1" />
-      <File FileName="Assets\Scripts\Actors\Particle\ParticleCoreManager.cs" Line="1148" Column="11" NotebookId="1" />
-      <File FileName="Assets\Scripts\Actors\Particle\States\ZeroParticleState.cs" Line="50" Column="5" NotebookId="1" />
-      <File FileName="Assets\Scripts\Actors\Particle\States\FirstParticleState.cs" Line="59" Column="1" NotebookId="1" />
-      <File FileName="Assets\Scripts\Actors\Particle\ParticleManager.cs" Line="30" Column="39" NotebookId="1" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

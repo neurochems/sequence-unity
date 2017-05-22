@@ -79,18 +79,20 @@ NOTES
   
   EVOLUTION
 	- move Evol() calls to OnTriggerEnter
-		player: zero[DONE] first[DONE] second[] third[] fourth[] fifth[] sixth[] seventh[]
+		player: zero[DONE] first[DONE] second[DONE] third[DONE] fourth[DONE] fifth[DONE] sixth[DONE] seventh[DONE]
 		particle: zero[DONE] first[DONE] second[DONE] third[DONE] fourth[DONE] fifth[DONE] sixth[DONE] seventh[DONE]
 	- zero state: make Init()
 		- triggered in update, flagged by player init
 		player [DONE] particle [DONE]
 	- state classes: update gameobject tag in ToState methods - DONE
-	- collision logic
+	- particle collision logic
 		- update same-state/same-evol checks (as in FirstParticleState)
-			zero[] first[DONE] second[] third[] fourth[] fifth[] sixth[] seventh[]
-		- update player checks (as in FirstParticleState)
-			zero[] first[DONE] second[] third[] fourth[] fifth[] sixth[] seventh[]
-
+		  update player checks (as in FirstParticleState)
+			zero[DONE] first[DONE] second[DONE] third[DONE] fourth[DONE] fifth[DONE] sixth[DONE] seventh[DONE]
+	- change Evol() calls to checkEvol flag/add update condition
+		player: zero[DONE] first[DONE] second[DONE] third[DONE] fourth[DONE] fifth[DONE] sixth[DONE] seventh[DONE]
+		particle: zero[DONE] first[DONE] second[DONE] third[DONE] fourth[DONE] fifth[DONE] sixth[DONE] seventh[DONE]
+		
   PHYSICS
 	- update Player/ParticlePhysicsManagers
 	- SetPhysics(...) method in StatePattern
