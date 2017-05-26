@@ -15,6 +15,10 @@ public class CameraManager : MonoBehaviour {
 		// EVOLUTIONS \\
 
 		// from zero
+			// to zero
+		if (fromState == 0 && toState == 0) {
+			ZoomTo (switchworld, true, "zero", "zero");		// zoom out
+		}
 			// to first
 		//if (switchworld) {
 		if (fromState == 0 && toState == 1) {
@@ -131,7 +135,7 @@ public class CameraManager : MonoBehaviour {
 			
 		else {
 
-			Debug.Log ("camera zoom out");
+			//Debug.Log ("camera zoom out");
 
 			anim.SetBool ("lightworld", false);													// reset lightworld to not switch worlds
 

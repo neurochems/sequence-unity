@@ -8,13 +8,14 @@ public class ParticleStatePattern : MonoBehaviour {
 	public float darkEvolStart, lightEvolStart;								// last dark & light evolution level (for delta calc)
 	public float deltaDark, deltaLight;										// delta dark & light evolution level
 
+	public float evolC, darkEvolC, lightEvolC;								// evol values at start of collision
+
 	public new bool light;													// is light flag
 	public bool toLight;													// to light flag
 
 	[HideInInspector] public IParticleState currentState;					// other object state
 	//[HideInInspector] public int previousState;								// previous state index / Fn
 
-	[HideInInspector] public DeadParticleState deadState;					// instance of dead state
 	[HideInInspector] public ZeroParticleState zeroState;					// instance of zero state
 	[HideInInspector] public FirstParticleState firstState;					// instance of first state
 	[HideInInspector] public SecondParticleState secondState;				// instance of second state
@@ -42,7 +43,7 @@ public class ParticleStatePattern : MonoBehaviour {
 	private ParticleShellManager psm;										// particle core manager (animations)
 	private ParticleNucleusManager pnm;										// particle core manager (animations)
 	//private ParticlePhysicsManager ppm;										// particle physics manager
-	private SphereCollider[] sc;											// sphere colliders
+	[HideInInspector] public SphereCollider[] sc;											// sphere colliders
 
 	private MeshRenderer rendCore, rendShell, rendNucleus;					// mesh renderers (for lightworld colour changes)
 
@@ -55,14 +56,13 @@ public class ParticleStatePattern : MonoBehaviour {
 
 	void Awake()
 	{
-		evol = 0f;															// initialize evol
-		darkEvol = 0f;														// initialize dark evol
-		lightEvol = 0f;														// initialize light evol
+		//evol = 0f;															// initialize evol
+		//darkEvol = 0f;														// initialize dark evol
+		//lightEvol = 0f;														// initialize light evol
 
 		deltaDark = 0f;														// initialize delta dark evol
 		deltaLight = 0f;													// initialize delta light evol
 
-		deadState = new DeadParticleState (this);							// initialize dead state
 		zeroState = new ZeroParticleState (this);							// initialize zero state
 		firstState = new FirstParticleState (this);							// initialize first state
 		secondState = new SecondParticleState (this);						// initialize second state
@@ -131,6 +131,10 @@ public class ParticleStatePattern : MonoBehaviour {
 
 	private void OnTriggerEnter(Collider other)
 	{
+		evolC = evol;																		// store evol before collision changes
+		darkEvolC = darkEvol;																// store dark evol before collision changes
+		lightEvolC = lightEvol;																// store light evol before collision changes	
+
 		currentState.OnTriggerEnter (other);								// pass collider into state class
 	}
 
@@ -269,13 +273,24 @@ public class ParticleStatePattern : MonoBehaviour {
 
 	public void ChangeWorld(bool toLW, int fromState, int toState, bool toLight) 
 	{
-		pcm.ToOtherWorld (toLW, fromState, toState, toLight);								// change core
+		pcm.ToOtherWorld (toLW, fromState, toState, toLight);						// change core
 		//pcm.ScaleTo(false, "hidden", "zero");
-		psm.ToOtherWorld (toLW, fromState, toState, toLight);								// change shell
-		pnm.ToOtherWorld (toLW, fromState, toState, toLight);								// change nucleus
+		psm.ToOtherWorld (toLW, fromState, toState, toLight);						// change shell
+		pnm.ToOtherWorld (toLW, fromState, toState, toLight);						// change nucleus
+
 		if (toLW) toLightworld = false;												// if to light world, reset toLightworld flag
 		else if (!toLW)	toDarkworld = false;										// if to dark world, reset toDarkworld flag
 
+		if (toState == 0) gameObject.tag = "Zero";									// if zero, set tag
+		else if (toState == 1) gameObject.tag = "First";							// if first, set tag
+		else if (toState == 2) gameObject.tag = "Second";							// if second, set tag
+		else if (toState == 3) gameObject.tag = "Third";							// if third, set tag
+		else if (toState == 4) gameObject.tag = "Fourth";							// if fourth, set tag
+		else if (toState == 5) gameObject.tag = "Fifth";							// if fifth, set tag
+		else if (toState == 6) gameObject.tag = "Sixth";							// if sixth, set tag
+		else if (toState == 7) gameObject.tag = "Seventh";							// if seventh, set tag
+		else if (toState == 8) gameObject.tag = "Eighth";							// if eighth, set tag
+		else if (toState == 9) gameObject.tag = "Ninth";							// if ninth, set tag
 	}
 
 	// set particle parts (normal state transitions)

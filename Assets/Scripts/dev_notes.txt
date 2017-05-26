@@ -22,6 +22,9 @@ NOTES
 - core collider
 	- zero 0.205
 	- first 0.51
+	- third 1.02
+	- seventh 1.53
+	- ninth 2.04
 	
 ┌─────┐  
 │blaze│
@@ -38,6 +41,16 @@ NOTES
 // NEXT \\
 	 
  -  AUDIO SYSTEM
+ 
+ -	STATES TO 10 / ENDING SEQUENCE
+	- update physics/add mass - DEBUG
+	- core/shell/nucleus anim (player and particle): ninth to tenth
+	- camera: rotate around to side
+	- instantiate other world spheres
+		- gravitate them to world
+	- adding states
+		- parts
+			- nucleus: anim tree is set up, add to NucleusManager according to it
  
  -  SHADERS
 	- dark world / light world
@@ -63,21 +76,24 @@ NOTES
 
 		
   DEBUG
- 
-  STATES TO 10 / ENDING SEQUENCE
-	- update physics/add mass - DEBUG
-	- core/shell/nucleus anim (player and particle): ninth to tenth
-	- camera: rotate around to side
-	- instantiate other world spheres
-		- gravitate them to world
-	- adding states
-		- parts
-			- nucleus: anim tree is set up, add to NucleusManager according to it
 	
+  POPULATE WORLD
+  
 	
 //// DEBUG \\\\
   
+  
   EVOLUTION
+	
+	zero		first		second		third		fourth		fifth		sixth		seventh		eighth		ninth		tenth
+1st	DONE		DONE		DONE		DONE		DONE		NEXT
+2nd	DONE		DONE		DONE		DONE		DONE									
+3rd	
+	
+	1st: light only, collect zero
+	2nd: light only, collect zero/first/second
+	3rd: light/dark, collect zero/first/second
+	
 	- move Evol() calls to OnTriggerEnter
 		player: zero[DONE] first[DONE] second[DONE] third[DONE] fourth[DONE] fifth[DONE] sixth[DONE] seventh[DONE]
 		particle: zero[DONE] first[DONE] second[DONE] third[DONE] fourth[DONE] fifth[DONE] sixth[DONE] seventh[DONE]
@@ -92,8 +108,22 @@ NOTES
 	- change Evol() calls to checkEvol flag/add update condition
 		player: zero[DONE] first[DONE] second[DONE] third[DONE] fourth[DONE] fifth[DONE] sixth[DONE] seventh[DONE]
 		particle: zero[DONE] first[DONE] second[DONE] third[DONE] fourth[DONE] fifth[DONE] sixth[DONE] seventh[DONE]
+	- update collision checks for evol = 0
+		player: zero[DONE] first[DONE] second[DONE] third[DONE] fourth[DONE] fifth[DONE] sixth[DONE] seventh[DONE]
+		particle: zero[DONE] first[DONE] second[DONE] third[DONE] fourth[DONE] fifth[DONE] sixth[DONE] seventh[DONE]
+	- add collider disable/enable, canCollide init to false
+		player: zero[DONE] first[DONE] second[DONE] third[DONE] fourth[DONE] fifth[DONE] sixth[DONE] seventh[DONE]
+		particle: zero[DONE] first[DONE] second[DONE] third[DONE] fourth[DONE] fifth[DONE] sixth[DONE] seventh[DONE]
+	- animate nucleus to +1 y: 3rd to 4th - DONE
+	- fix particle anim triggering order - DONE
+	- fix core shape change
+		solve [DONE]
+		- roll out in CoreManagers
+		player [DONE] particle [DONE]
 		
-  PHYSICS
+		
+  PHYSICS/FEEL
+	- fix controls
 	- update Player/ParticlePhysicsManagers
 	- SetPhysics(...) method in StatePattern
 	  alongside SetZoomCamera/SetParts in TransitionTo
@@ -137,7 +167,7 @@ NOTES
 	- debug:
 
 	
-- debug first pass DONE -
+- debug DONE -
 	
 	
   PARTS

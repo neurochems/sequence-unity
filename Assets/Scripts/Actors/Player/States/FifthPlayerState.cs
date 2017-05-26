@@ -11,7 +11,7 @@ public class FifthPlayerState : IParticleState
 	public float evol, deltaDark, deltaLight;											// evol tracking refs
 	private bool checkEvol;																// check evol flag
 
-	private bool canCollide = true;														// can collide flag
+	private bool canCollide = false;													// can collide flag (init false to begin stunned)
 	private float collisionTimer;														// reset collision timer
 
 	public FifthPlayerState (PlayerStatePattern playerStatePattern)						// constructor
@@ -24,7 +24,7 @@ public class FifthPlayerState : IParticleState
 		// check evol
 		if (checkEvol) {
 			Evol();																		// check evol logic
-			Debug.Log("check player evol");
+			Debug.Log("player fifth: check evol");
 			checkEvol = false;															// reset check evol flag
 		}
 
@@ -32,38 +32,55 @@ public class FifthPlayerState : IParticleState
 		if (!canCollide) collisionTimer += Time.deltaTime;								// start timer
 		if (collisionTimer >= psp.stunDuration) {										// if timer is up
 			canCollide = true;																// set collision ability
+			psp.sc[0].enabled = true;														// enable trigger collider
 			psp.stunned = false;															// reset stunned trigger
+			collisionTimer = 0f;															// reset collision timer
 		}
 	}
 
 	public void OnTriggerEnter(Collider other)
 	{
-		ParticleStatePattern pspOther 
-			= other.gameObject.GetComponent<ParticleStatePattern>();							// ref other ParticleStatePattern
-
 		if (canCollide) {																		// if collision allowed
-			
 			if (other.gameObject.CompareTag ("Zero")												// collide with zero
 				|| other.gameObject.CompareTag ("First")											// collide with first
 				|| other.gameObject.CompareTag ("Second")											// collide with second
 				|| other.gameObject.CompareTag ("Third")											// collide with third
 				|| other.gameObject.CompareTag ("Fourth")											// collide with fourth
 				|| other.gameObject.CompareTag ("Fifth")) {											// collide with fifth
-				psp.stunned = true;                                                                     // set stunned flag
-
-                psp.AddDark (pspOther.darkEvol);														// add dark of other
-				psp.AddLight (pspOther.lightEvol);                                                      // add light of other
-
-				checkEvol = true;																		// set check evol flag
-
-                canCollide = false;																		// reset has collided trigger
-			} 
-			else {																					// collide with any other
-				psp.stunned = true;																		// set stunned flag
-				psp.SubDark (pspOther.darkEvol);														// subtract other dark
-				psp.SubLight (pspOther.lightEvol);														// subtract other light
-				checkEvol = true;																		// set check evol flag
+				ParticleStatePattern pspOther 
+					= other.gameObject.GetComponent<ParticleStatePattern>();							// ref other ParticleStatePattern
 				canCollide = false;																		// reset has collided trigger
+				psp.sc[0].enabled = false;																// disable trigger collider
+				psp.stunned = true;                                                                     // set stunned flag
+				if (pspOther.evolC == 0f) {																// if other = 0
+					Debug.Log ("player fifth + other=0: add evol");
+					psp.AddLight (0.5f);																	// add 0.5 light
+				}
+				else if (pspOther.evolC > 0f) {															// if other > 0
+					Debug.Log ("player fifth + other>0: add evol");
+					if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC);							// add dark of other
+					if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC);                      // add light of other
+				}
+				else if (pspOther.evolC < 0f) {															// if other < 0
+					Debug.Log ("player fourth + other<0: add evol");
+					if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC * -1);					// add positive dark of other
+					if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC * -1);					// add positive light of other
+				}
+				checkEvol = true;																		// set check evol flag
+			} 
+			else if (other.gameObject.CompareTag("Sixth")											// collide with sixth
+				|| other.gameObject.CompareTag("Seventh")											// collide with seventh
+				|| other.gameObject.CompareTag("Eighth")											// collide with eighth
+				|| other.gameObject.CompareTag("Ninth"))											// collide with ninth
+			{	
+				ParticleStatePattern pspOther 
+					= other.gameObject.GetComponent<ParticleStatePattern>();							// ref other ParticleStatePattern
+				canCollide = false;																		// reset has collided trigger
+				psp.sc[0].enabled = false;																// disable trigger collider
+				psp.stunned = true;																		// set stunned flag
+				if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);							// subtract other dark
+				if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);						// subtract other light
+				checkEvol = true;																		// set check evol flag
 			}
 		}
 	}

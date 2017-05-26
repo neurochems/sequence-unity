@@ -65,6 +65,16 @@ public class PlayerNucleusManager : MonoBehaviour {
 		if (fromState == 1 && toState == 2 && !fromLight && !toLight) SetLight(true);											// change to white shader
 		// to light second
 		else if (fromState == 1 && toState == 2 && !fromLight && toLight) ScaleTo (false, "hidden", "zero");					// scale to zero
+		// to dark third
+		if (fromState == 1 && toState == 3 && !fromLight && !toLight) {			
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			SetLight(false);																									// change to black
+		} 
+		// to light third
+		else if (fromState == 1 && toState == 3 && !fromLight && toLight) {		 
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			SetLight(false);																									// change to black
+		}
 
 	// from light first
 		// to dark second
@@ -74,6 +84,11 @@ public class PlayerNucleusManager : MonoBehaviour {
 		}
 		// to light second
 		else if (fromState == 1 && toState == 2 && fromLight && toLight) ScaleTo (false, "hidden", "zero");						// scale to first
+		// to dark third
+		else if (fromState == 1 && toState == 3 && fromLight && !toLight) ScaleTo (true, "zero", "hidden");						// scale to hidden
+		// to light third
+		else if (fromState == 1 && toState == 3 && fromLight && toLight) ScaleTo (true, "zero", "hidden");						// scale to hidden
+
 
 
 ///// second \\\\\

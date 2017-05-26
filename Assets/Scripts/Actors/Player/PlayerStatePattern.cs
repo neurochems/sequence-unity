@@ -8,12 +8,13 @@ public class PlayerStatePattern : MonoBehaviour {
 	public float darkEvolStart, lightEvolStart;								// last dark & light evolution level (for delta calc)
 	public float deltaDark, deltaLight;										// delta dark & light evolution level
 
+	public float evolC, darkEvolC, lightEvolC;								// evol values at start of collision
+
 	public new bool light;													// is light flag
 	public bool toLight;													// to light flag
 
 	[HideInInspector] public IParticleState currentState;					// other object state
 
-	//[HideInInspector] public DeadPlayerState deadState;						// instance of dead state
 	[HideInInspector] public ZeroPlayerState zeroState;						// instance of photon state
 	[HideInInspector] public FirstPlayerState firstState;					// instance of electron state
 	[HideInInspector] public SecondPlayerState secondState;					// instance of electron2 state
@@ -35,7 +36,7 @@ public class PlayerStatePattern : MonoBehaviour {
 	private PlayerNucleusManager pnm;										// player nucleus manager (for animations)
 	private UIManager uim;													// UI manager
 	//private PlayerPhysicsManager ppm;										// player physics manager
-	private SphereCollider[] sc;											// sphere colliders
+	[HideInInspector] public SphereCollider[] sc;											// sphere colliders
 
 	private MeshRenderer rendWorld, rendCore, rendShell, rendNucleus;		// mesh renderers (for lightworld colour changes)
 
@@ -54,14 +55,13 @@ public class PlayerStatePattern : MonoBehaviour {
 
 	void Awake()
 	{
-		evol = 0f;															// initialize evol
+		//evol = 0f;															// initialize evol
 		//darkEvol = 0f;														// initialize dark evol
 		//lightEvol = 0f;														// initialize light evol
 
 		deltaDark = 0f;														// initialize delta dark evol
 		deltaLight = 0f;													// initialize delta light evol
 
-		//deadState = new DeadPlayerState (this);								// initialize dead state
 		zeroState = new ZeroPlayerState (this);								// initialize zero state
 		firstState = new FirstPlayerState (this);							// initialize first state
 		secondState = new SecondPlayerState (this);							// initialize second state
@@ -81,8 +81,7 @@ public class PlayerStatePattern : MonoBehaviour {
 		pnm = transform.FindChild ("Player Nucleus")
 			.gameObject.GetComponent<PlayerNucleusManager>();				// initialize nucleus manager ref
 
-		sc = GameObject.Find("Player Core")
-			.gameObject.GetComponents<SphereCollider> ();					// init sphere collider ref
+		sc = GetComponents<SphereCollider> ();								// init sphere collider ref
 
 		rendWorld = GameObject.Find("World")
 			.GetComponent<MeshRenderer>();									// init world mesh renderer ref
@@ -146,6 +145,10 @@ public class PlayerStatePattern : MonoBehaviour {
 
 	private void OnTriggerEnter(Collider other)
 	{
+		evolC = evol;																		// store evol before collision changes
+		darkEvolC = darkEvol;																// store dark evol before collision changes
+		lightEvolC = lightEvol;																// store light evol before collision changes	
+
 		currentState.OnTriggerEnter (other);								// pass collider into state class
 	}
 
@@ -233,38 +236,47 @@ public class PlayerStatePattern : MonoBehaviour {
 	{
 
 		//light = toLight;															// update light value
+		
+		Debug.Log ("player transition to");
 
-		if (toState == 0)	{ 														// to zero
+		if (toState == 0) { 														// to zero
 			// rb.mass = 0.2f;															// set mass
+			sc[0].radius = 0.205f;														// shrink collision radius in	
+			sc[1].radius = 0.205f;														// shrink collision radius in	
 			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 1) {													// to first
 			// rb.mass = 0.2f;															// set mass
+			sc[0].radius = 0.51f;														// shrink collision radius in	
+			sc[1].radius = 0.51f;														// shrink collision radius in
+			//sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world	
 			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 2) {													// to second
 			//rb.mass = 0.2f;															// set mass
+			sc[0].radius = 0.51f;														// shrink collision radius in	
+			sc[1].radius = 0.51f;														// shrink collision radius in	
 			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 3) {													// to third
 			//rb.mass = 0.2f;															// set mass
 			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			sc[0].radius = 0.51f;														// shrink collision radius in
+			sc[0].radius = 1.02f;														// shrink collision radius in
 			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
-			sc[1].radius = 0.51f;														// shrink collision radius in
-			sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
+			sc[1].radius = 1.02f;														// shrink collision radius in
+			//sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 4) {													// to fourth
 			//rb.mass = 0.2f;															// set mass
 			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			sc[0].radius = 0.51f;														// shrink collision radius in
+			sc[0].radius = 1.02f;														// shrink collision radius in
 			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
-			sc[1].radius = 0.51f;														// shrink collision radius in
-			sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
+			sc[1].radius = 1.02f;														// shrink collision radius in
+			//sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 5) {													// to fifth
@@ -273,7 +285,7 @@ public class PlayerStatePattern : MonoBehaviour {
 			sc[0].radius = 0.51f;														// shrink collision radius in
 			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
 			sc[1].radius = 0.51f;														// shrink collision radius in
-			sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
+			//sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 6) {													// to sixth
@@ -282,16 +294,16 @@ public class PlayerStatePattern : MonoBehaviour {
 			sc[0].radius = 0.51f;														// shrink collision radius in
 			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
 			sc[1].radius = 0.51f;														// shrink collision radius in
-			sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
+			//sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 7) {													// to seventh
 			// rb.mass = 0.2f;															// set mass
 			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			sc[0].radius = 0.51f;														// shrink collision radius in
+			sc[0].radius = 1.53f;														// shrink collision radius in
 			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
-			sc[1].radius = 0.51f;														// shrink collision radius in
-			sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
+			sc[1].radius = 1.53f;														// shrink collision radius in
+			//sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		//new state

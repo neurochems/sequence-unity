@@ -42,6 +42,20 @@ public class PlayerShellManager : MonoBehaviour {
 			// to dark second (no shell change)
 			// to light second (no shell change)
 
+		// to third
+
+		// from dark first
+		if (fromState == 1 && toState == 3 && !fromLight && !toLight) {			// to dark third
+			ScaleTo (false, "hidden", "third");										// scale to third
+		}
+		// to light third (no shell change)
+
+		// from light first
+		if (fromState == 1 && toState == 3 && fromLight && !toLight) {			// to dark third
+			ScaleTo (false, "hidden", "third");										// scale to third
+		}
+		// to light third (no shell change)
+
 		///// second \\\\\
 
 		// to third
