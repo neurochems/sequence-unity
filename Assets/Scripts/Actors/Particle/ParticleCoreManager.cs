@@ -90,10 +90,10 @@ public class ParticleCoreManager : MonoBehaviour {
 
 	///// zero \\\\\
 
-			// to zero (init)
+		// to zero (init)
 		if (f == 0 && t == 0 && fl && tl) ScaleTo (false, "hidden", "zero");										// scale to first
-
-		// to dark zero (0.5) (no core change)
+		// to dark zero (init)
+		else if (f == 0 && t == 0 && !fl && !tl) ScaleTo (false, "hidden", "zero");									// scale to first
 		// to light zero (0.5) (no core change)
 
 		// to first
@@ -108,7 +108,10 @@ public class ParticleCoreManager : MonoBehaviour {
 			// to dark first
 		if (f == 0 && t == 1 && fl && !tl) ScaleTo (false, "zero", "first");										// scale to first
 			// to light first
-		else if (f == 0 && t == 1 && fl && tl) ScaleTo (false, "zero", "first");									// scale to first
+		else if (f == 0 && t == 1 && fl && tl) {
+			ScaleTo (false, "zero", "first");																		// scale to first
+			anim.SetBool("hidden", false);																			// init: reset hidden
+			}
 
 	///// first \\\\\
 
@@ -270,7 +273,10 @@ public class ParticleCoreManager : MonoBehaviour {
 		// from light first
 
 		// to zero
-		if (f == 1 && t == 0 && fl && tl) ScaleTo (true, "first", "zero");											// scale to zero
+		if (f == 1 && t == 0 && fl && tl) {
+			//Debug.Log ("why do you set scaleup??");
+			ScaleTo (true, "first", "zero");											// scale to zero
+		}
 		// to dark zero (0.5)
 		if (f == 1 && t == 0 && fl && !tl) ScaleTo (true, "first", "zero");											// scale to zero
 
@@ -1096,7 +1102,7 @@ public class ParticleCoreManager : MonoBehaviour {
 	///</summary>
 	private void ScaleTo (bool devol, string resetState, string setState)
 	{
-        //Debug.Log("ParticleCore ScaleTo");
+		Debug.Log("devol: " + devol);
         if (devol) {
 			anim.ResetTrigger ("scaleup");								// reset last stage
 			anim.SetTrigger ("scaledown");								// enable scaledown

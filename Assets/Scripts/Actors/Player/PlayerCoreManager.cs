@@ -84,12 +84,12 @@ public class PlayerCoreManager : MonoBehaviour {
 
 		// from dark first
 			// to dark third
-		if (f == 1 && t == 3 && !fl && !tl) ScaleTo (false, "first", "hidden");										// scale to hidden
+		if (f == 1 && t == 3 && !fl && !tl) ScaleTo (true, "first", "hidden");										// scale to hidden
 			// to light third
 		else if (f == 1 && t == 3 && !fl && tl) ScaleTo (false, "first", "third");									// scale to third
 		// from light first
 			// to dark third
-		if (f == 1 && t == 3 && fl && !tl) ScaleTo (false, "first", "hidden");										// scale to hidden
+		if (f == 1 && t == 3 && fl && !tl) ScaleTo (true, "first", "hidden");										// scale to hidden
 			// to light third
 		else if (f == 1 && t == 3 && fl && tl) ScaleTo (false, "first", "third");									// scale to third
 
@@ -99,12 +99,12 @@ public class PlayerCoreManager : MonoBehaviour {
 
 		// from dark second
 			// to dark third
-		if (f == 2 && t == 3 && !fl && !tl) ScaleTo (false, "first", "hidden");										// scale to hidden
+		if (f == 2 && t == 3 && !fl && !tl) ScaleTo (true, "first", "hidden");										// scale to hidden
 			// to light third
 		else if (f == 2 && t == 3 && !fl && tl) ScaleTo (false, "first", "third");									// scale to third
 		// from light second
 			// to dark third
-		if (f == 2 && t == 3 && fl && !tl) ScaleTo (false, "first", "hidden");										// scale to hidden
+		if (f == 2 && t == 3 && fl && !tl) ScaleTo (true, "first", "hidden");										// scale to hidden
 			// to light third
 		else if (f == 2 && t == 3 && fl && tl) ScaleTo (false, "first", "third");									// scale to third
 

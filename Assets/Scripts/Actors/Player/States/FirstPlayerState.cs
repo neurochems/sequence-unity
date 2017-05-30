@@ -49,12 +49,11 @@ public class FirstPlayerState : IParticleState
 				canCollide = false;																		// reset has collided trigger
 				psp.sc[0].enabled = false;																// disable trigger collider
 				psp.stunned = true;                                                     		        // stun for duration
-				Debug.Log ("player first +zero/first: add evol");
 				if (pspOther.evolC == 0f) {																// if other = 0
 					psp.AddLight (0.5f);																	// add 0.5 light
 				}
 				else if (pspOther.evolC > 0f) {															// if other > 0
-					Debug.Log ("player first + 0/1>0: add evol");
+					//Debug.Log ("player first + 0/1>0: add evol");
 					if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC);							// add dark of other
 					if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC);            		    // add light of other
 					Debug.Log ("player first + 0/1>0: add " + pspOther.lightEvolC + " light");

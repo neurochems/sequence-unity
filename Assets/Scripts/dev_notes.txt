@@ -120,6 +120,10 @@ NOTES
 		solve [DONE]
 		- roll out in CoreManagers
 		player [DONE] particle [DONE]
+	- dark counting/particles
+		- init to dark - DONE
+		- count dark evol - DONE
+		- verify nucleus changes - DONE
 		
 		
   PHYSICS/FEEL
@@ -127,7 +131,7 @@ NOTES
 	- update Player/ParticlePhysicsManagers
 	- SetPhysics(...) method in StatePattern
 	  alongside SetZoomCamera/SetParts in TransitionTo
-	- update sphere collider radii
+	- update sphere collider radii - DONE
 	- update mass
   
   ANIM
@@ -153,7 +157,9 @@ NOTES
 				- update Managers
 					- Update() timer / ToOtherWorld changes
 					core[DONE] shell[DONE] nucleus[DONE]
+			- disable trigger collider if dark world (!lightworld)
 		- particle from light world
+		
 		
   SPAWN PARTICLE
 	- review spawning at devolutions

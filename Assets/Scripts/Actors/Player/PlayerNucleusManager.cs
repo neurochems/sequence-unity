@@ -20,7 +20,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 		rend = GetComponent<MeshRenderer>();						// init mesh renderer ref
 		psp = GameObject.Find ("Player")
 			.gameObject.GetComponent<PlayerStatePattern> ();		// init psp ref
-		//lightShader = Shader.Find("light_nucleus");					// init light nucleus shader
+		lightShader = Shader.Find("Unlit/light_nucleus");					// init light nucleus shader
 		//darkShader = Shader.Find("dark_nucleus");						// init dark nucleus shader
 	}
 
@@ -49,7 +49,11 @@ public class PlayerNucleusManager : MonoBehaviour {
 	// from dark zero
 		// to dark first
 		if (fromState == 0 && toState == 1 && !fromLight && !toLight) ScaleTo (false, "zero", "first");							// scale to first
-		// to light first (no nucleus change)
+		// to light first
+		if (fromState == 0 && toState == 1 && !fromLight && toLight) {
+			Debug.Log("player nucleus: scale zero to hidden");
+			ScaleTo (true, "zero", "hidden");							// scale to hidden
+		}
 			
 	// from light zero (0.5)
 		// to dark first
@@ -180,7 +184,10 @@ public class PlayerNucleusManager : MonoBehaviour {
 			ScaleTo (false, "hidden", "first");																					// scale to first
 		}
 		// to light circle sixth
-		else if (fromState == 5 && toState == 6 && fromLight && toLight && shape == 0) ScaleTo (false, "hidden", "zero");		// scale to zero
+		else if (fromState == 5 && toState == 6 && fromLight && toLight && shape == 0) {
+			ScaleTo (false, "hidden", "zero");		// scale to zero
+			Debug.Log("player nucleus: light circle fifth to light circle sixth");
+		}
 
 	// from triangle fifth
 		// to dark triangle sixth
@@ -1021,32 +1028,32 @@ public class PlayerNucleusManager : MonoBehaviour {
 	///<para>1 = triangle</para>
 	///<para>2 = square</para>
 	///</summary>
-	private void SetShape(int shape)
+	private void SetShape(int s)
 	{
-		if (shape == 0) mesh = sphere;									// change mesh to sphere
-		else if (shape == 1) mesh = triangle;							// change mesh to triangle
-		else if (shape == 2) mesh = square;								// change mesh to square
+		if (s == 0) GetComponent<MeshFilter>().mesh = sphere;									// change mesh to sphere
+		else if (s == 1) GetComponent<MeshFilter>().mesh = triangle;							// change mesh to triangle
+		else if (s == 2) GetComponent<MeshFilter>().mesh = square;								// change mesh to square
 	}
 
 	///<summary>
 	///<para>set core as light</para>
 	///<para>light: true = white, false = black</para>
 	///</summary>
-	private void SetLight (bool lite)
+	private void SetLight (bool l)
 	{
-		if (lite && !psp.lightworld) {
+		if (l && !psp.lightworld) {
 			rend.material.shader = lightShader;							// change to white shader
 			light = true;												// set is light flag
 		} 
-		else if (!lite && !psp.lightworld) {
+		else if (!l && !psp.lightworld) {
 			rend.material.SetColor("_Color", Color.black);				// change to black
 			light = false;												// reset is light flag
 		}
-		else if (lite && psp.lightworld) {
+		else if (l && psp.lightworld) {
 			rend.material.shader = darkShader;							// change to black shader
 			light = true;												// set is light flag
 		}
-		else if (!lite && psp.lightworld) {
+		else if (!l && psp.lightworld) {
 			rend.material.SetColor("_Color", Color.white);				// change to white
 			light = false;												// reset is light flag
 		}

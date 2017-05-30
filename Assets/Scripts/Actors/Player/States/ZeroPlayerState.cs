@@ -202,9 +202,12 @@ public class ZeroPlayerState : IParticleState
         // first
         if (evol == 1f) {                                                               // evolve to dark world first
 			//Debug.Log("player to first");
-            if (deltaDark > deltaLight) ToFirst(false);                                     // if gain more dark than light = to dark first
-			else if (deltaDark < deltaLight) {
-				//Debug.Log("player to light first");
+			if (deltaDark > deltaLight) {
+				Debug.Log("player to dark first");
+				ToFirst(false);                                     // if gain more dark than light = to dark first
+			}
+			else if (deltaDark <= deltaLight) {
+				Debug.Log("player to light first");
 				ToFirst(true);                                 // if gain more light than dark = to light first
 			}
         }

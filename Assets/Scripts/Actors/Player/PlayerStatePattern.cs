@@ -149,7 +149,7 @@ public class PlayerStatePattern : MonoBehaviour {
 		darkEvolC = darkEvol;																// store dark evol before collision changes
 		lightEvolC = lightEvol;																// store light evol before collision changes	
 
-		currentState.OnTriggerEnter (other);								// pass collider into state class
+		currentState.OnTriggerEnter (other);												// pass collider into state class
 	}
 
 	void OnDisable()
@@ -241,72 +241,65 @@ public class PlayerStatePattern : MonoBehaviour {
 
 		if (toState == 0) { 														// to zero
 			// rb.mass = 0.2f;															// set mass
-			sc[0].radius = 0.205f;														// shrink collision radius in	
-			sc[1].radius = 0.205f;														// shrink collision radius in	
+			//ZeroStateAudio.TransitionTo(5.0f);
+			sc[0].radius = 0.205f;														// update collision radius	
+			sc[1].radius = 0.205f;														// update collision radius
 			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 1) {													// to first
 			// rb.mass = 0.2f;															// set mass
-			sc[0].radius = 0.51f;														// shrink collision radius in	
-			sc[1].radius = 0.51f;														// shrink collision radius in
+			sc[0].radius = 0.51f;														// update collision radius
+			sc[1].radius = 0.51f;														// update collision radius
 			//sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world	
 			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 2) {													// to second
 			//rb.mass = 0.2f;															// set mass
-			sc[0].radius = 0.51f;														// shrink collision radius in	
-			sc[1].radius = 0.51f;														// shrink collision radius in	
+			sc[0].radius = 0.51f;														// update collision radius
+			sc[1].radius = 0.51f;														// update collision radius
 			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 3) {													// to third
 			//rb.mass = 0.2f;															// set mass
 			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			sc[0].radius = 1.02f;														// shrink collision radius in
-			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
-			sc[1].radius = 1.02f;														// shrink collision radius in
-			//sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
+			sc[0].radius = 1.02f;														// update collision radius
+			sc[1].radius = 1.02f;														// update collision radius
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 4) {													// to fourth
 			//rb.mass = 0.2f;															// set mass
 			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			sc[0].radius = 1.02f;														// shrink collision radius in
-			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
-			sc[1].radius = 1.02f;														// shrink collision radius in
-			//sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
+			sc[0].radius = 1.02f;														// update collision radius
+			sc[1].radius = 1.02f;														// update collision radius
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 5) {													// to fifth
 			//rb.mass = 0.2f;															// set mass
 			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			sc[0].radius = 0.51f;														// shrink collision radius in
-			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
-			sc[1].radius = 0.51f;														// shrink collision radius in
-			//sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
+			sc[0].radius = 0.51f;														// update collision radius
+			sc[1].radius = 0.51f;														// update collision radius
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 6) {													// to sixth
 			//rb.mass = 0.2f;															// set mass
 			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			sc[0].radius = 0.51f;														// shrink collision radius in
-			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
-			sc[1].radius = 0.51f;														// shrink collision radius in
-			//sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
+			sc[0].radius = 0.51f;														// update collision radius
+			sc[1].radius = 0.51f;														// update collision radius
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 7) {													// to seventh
 			// rb.mass = 0.2f;															// set mass
 			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			sc[0].radius = 1.53f;														// shrink collision radius in
-			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
-			sc[1].radius = 1.53f;														// shrink collision radius in
-			//sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
+			sc[0].radius = 1.53f;														// update collision radius
+			sc[1].radius = 1.53f;														// update collision radius
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		//new state
+
+		light = toLight;															// set light flag
 
 		lastStateChange = Time.time;												// reset time since last state change
 

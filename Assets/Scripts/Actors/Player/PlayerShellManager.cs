@@ -11,9 +11,10 @@ public class PlayerShellManager : MonoBehaviour {
 
 	public void Shell (int fromState, int toState, bool fromLight, bool toLight, int shape) 
 	{
-		// EVOLUTIONS \\
 
-		///// zero \\\\\
+// EVOLUTIONS \\
+
+	///// zero \\\\\
 
 		// to dark zero (0.5)
 
@@ -30,7 +31,7 @@ public class PlayerShellManager : MonoBehaviour {
 			// to dark first (no shell change)
 			// to light first (no shell change)
 
-		///// first \\\\\
+	///// first \\\\\
 
 		// to second
 
@@ -46,6 +47,7 @@ public class PlayerShellManager : MonoBehaviour {
 
 		// from dark first
 		if (fromState == 1 && toState == 3 && !fromLight && !toLight) {			// to dark third
+			Debug.Log("player shell first to third");
 			ScaleTo (false, "hidden", "third");										// scale to third
 		}
 		// to light third (no shell change)
@@ -56,7 +58,7 @@ public class PlayerShellManager : MonoBehaviour {
 		}
 		// to light third (no shell change)
 
-		///// second \\\\\
+	///// second \\\\\
 
 		// to third
 
@@ -72,7 +74,7 @@ public class PlayerShellManager : MonoBehaviour {
 		}
 			// to light third (no shell change)
 
-		///// third \\\\\
+	///// third \\\\\
 
 		// to fourth
 
@@ -87,7 +89,7 @@ public class PlayerShellManager : MonoBehaviour {
 		}
 			// to light fourth (no shell change)
 			
-		///// fourth \\\\\
+	///// fourth \\\\\
 
 		// to fifth
 
@@ -99,7 +101,7 @@ public class PlayerShellManager : MonoBehaviour {
 			// to triangle fifth (no shell change)
 			// to square fifth (no shell change)
 
-		///// fifth \\\\\
+	///// fifth \\\\\
 
 		// to sixth
 
@@ -117,7 +119,7 @@ public class PlayerShellManager : MonoBehaviour {
 		// from square fifth
 			// to dark square sixth (no shell change)
 
-		///// sixth \\\\\
+	///// sixth \\\\\
 
 		// to seventh
 
@@ -147,7 +149,7 @@ public class PlayerShellManager : MonoBehaviour {
 		}
 			// to light square seventh (no shell change)
 
-		///// seventh \\\\\
+	///// seventh \\\\\
 
 		// to eighth
 
@@ -183,9 +185,9 @@ public class PlayerShellManager : MonoBehaviour {
 		}
 		// to light square eighth (no shell change)
 
-		// DEVOLUTIONS \\
+// DEVOLUTIONS \\
 
-		///// zero \\\\\
+	///// zero \\\\\
 
 		// to dead
 		if (fromState == 0 && toState == -1) {													// to dead
@@ -194,11 +196,11 @@ public class PlayerShellManager : MonoBehaviour {
 			anim.SetBool("photon", true);										// enable black core animation state
 		}
 
-		///// dark zero (0.5) \\\\\
+	///// half zero (0.5) \\\\\
 
 		// to zero (no shell change)
 
-		///// first \\\\\
+	///// first \\\\\
 
 		// to dead
 		if (fromState == 1 && toState == -1) {													// to dead
@@ -215,7 +217,7 @@ public class PlayerShellManager : MonoBehaviour {
 			// to zero (no shell change)
 			// to dark zero (0.5) (no shell change)
 
-		///// second \\\\\
+	///// second \\\\\
 
 		// to dead
 		if (fromState == 2 && toState == -1) {													// to dead
@@ -238,7 +240,7 @@ public class PlayerShellManager : MonoBehaviour {
 			// to dark first (no shell change)
 			// to light first (no shell change)
 
-		///// third \\\\\
+	///// third \\\\\
 
 		// to dead
 		if (fromState == 3 && toState == -1) {									// to dead
@@ -281,7 +283,7 @@ public class PlayerShellManager : MonoBehaviour {
 			// to dark second (no shell change)
 			// to light second (no shell change)
 			
-		///// fourth \\\\\
+	///// fourth \\\\\
 
 		// to dead
 		if (fromState == 4 && toState == -1) {									// to dead
@@ -332,7 +334,7 @@ public class PlayerShellManager : MonoBehaviour {
 		}
 		// to light third (no shell change)
 
-		///// fifth \\\\\
+	///// fifth \\\\\
 
 		// to dead
 		if (fromState == 5 && toState == -1) {									// to dead
@@ -437,7 +439,7 @@ public class PlayerShellManager : MonoBehaviour {
 		// to fourth
 			// to light fourth (no shell change)
 
-		///// sixth \\\\\
+	///// sixth \\\\\
 
 		// to dead
 		if (fromState == 6 && toState == -1) {									// to dead
@@ -551,7 +553,7 @@ public class PlayerShellManager : MonoBehaviour {
 		// to fifth
 			// to square fifth (no shell change)
 			
-		///// seventh \\\\\
+	///// seventh \\\\\
 
 		// to dead
 		if (fromState == 7 && toState == -1) {									// to dead
@@ -792,7 +794,7 @@ public class PlayerShellManager : MonoBehaviour {
 	///<para> resetState = state to set to false </para>
 	///<para> setState = state to set to true </para>
 	///</summary>
-	private void ScaleTo (bool devol, string setState, string resetState)
+	private void ScaleTo (bool devol, string resetState, string setState)
 	{
 		if (devol) {
 			anim.ResetTrigger ("scaleup");											// reset last stage

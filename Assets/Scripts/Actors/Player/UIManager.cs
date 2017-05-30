@@ -129,9 +129,10 @@ public class UIManager : MonoBehaviour {
 			//overlayTextTrigger [4].SetActive (true);																	// activate text
 			//overlayTextTrigger [4].GetComponent<Animator> ().SetTrigger ("fade");
 
-			if (!endless) 																								// if not endless
+			if (!endless) {																								// if not endless
 				endgame = true;
 				deathFade.SetActive(true);																					// fade screen to black
+			}
 		}	
 	}
 

@@ -96,7 +96,7 @@ public class ParticleStatePattern : MonoBehaviour {
 
 	void Start () 
 	{
-		light = true;														// init light
+		//light = true;														// init light
 		//lightEvol = 0.5f;													// init 0.5 evol
 		currentState = zeroState;											// start at zero state
 		//TransitionTo(0, 0, light, toLight, 0);								// CORE: shrink to zero size, fade to white
@@ -208,64 +208,62 @@ public class ParticleStatePattern : MonoBehaviour {
 		if (toState == 0)	{ 														// to zero
 			// rb.mass = 0.2f;															// set mass
 			gameObject.tag = "Zero";													// set tag
+			sc[0].radius = 0.205f;														// update collision radius
+			sc[1].radius = 0.205f;														// update collision radius
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 1) {													// to first
 			// rb.mass = 0.2f;															// set mass
 			gameObject.tag = "First";													// set tag
+			sc[0].radius = 0.51f;														// update collision radius
+			sc[1].radius = 0.51f;														// update collision radius
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 2) {													// to second
 			//rb.mass = 0.2f;															// set mass
 			gameObject.tag = "Second";													// set tag
+			sc[0].radius = 0.51f;														// update collision radius
+			sc[1].radius = 0.51f;														// update collision radius
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 3) {													// to third
 			//rb.mass = 0.2f;															// set mass
 			gameObject.tag = "Third";													// set tag
-			sc[0].radius = 0.51f;														// shrink collision radius in
-			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
-			sc[1].radius = 0.51f;														// shrink collision radius in
-			sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
+			sc[0].radius = 1.02f;														// update collision radius
+			sc[1].radius = 1.02f;														// update collision radius
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 4) {													// to fourth
 			//rb.mass = 0.2f;															// set mass
 			gameObject.tag = "Fourth";													// set tag
-			sc[0].radius = 0.51f;														// shrink collision radius in
-			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
-			sc[1].radius = 0.51f;														// shrink collision radius in
-			sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
+			sc[0].radius = 1.02f;														// update collision radius
+			sc[1].radius = 1.02f;														// update collision radius
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 5) {													// to fifth
 			//rb.mass = 0.2f;															// set mass
 			gameObject.tag = "Fifth";													// set tag
-			sc[0].radius = 0.51f;														// shrink collision radius in
-			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
-			sc[1].radius = 0.51f;														// shrink collision radius in
-			sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
+			sc[0].radius = 0.51f;														// update collision radius
+			sc[1].radius = 0.51f;														// update collision radius
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 6) {													// to sixth
 			//rb.mass = 0.2f;															// set mass
 			gameObject.tag = "Sixth";													// set tag
-			sc[0].radius = 0.51f;														// shrink collision radius in
-			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
-			sc[1].radius = 0.51f;														// shrink collision radius in
-			sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
+			sc[0].radius = 0.51f;														// update collision radius
+			sc[1].radius = 0.51f;														// update collision radius
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 7) {													// to seventh
 			// rb.mass = 0.2f;															// set mass
 			gameObject.tag = "Seventh";													// set tag
-			sc[0].radius = 0.51f;														// shrink collision radius in
-			//sc[0].center = new Vector3(0f, 0f, 0f);									// level circle collider on world
-			sc[1].radius = 0.51f;														// shrink collision radius in
-			sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world
+			sc[0].radius = 1.53f;														// update collision radius
+			sc[1].radius = 1.53f;														// update collision radius
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		//new state
+
+		light = toLight;															// set light flag
 
 		darkEvolStart = darkEvol;													// store dark evol at start of state
 		lightEvolStart = lightEvol;													// store light evol at start of state
