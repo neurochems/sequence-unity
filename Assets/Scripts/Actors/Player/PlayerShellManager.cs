@@ -189,25 +189,11 @@ public class PlayerShellManager : MonoBehaviour {
 
 	///// zero \\\\\
 
-		// to dead
-		if (fromState == 0 && toState == -1) {													// to dead
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
-		}
-
 	///// half zero (0.5) \\\\\
 
 		// to zero (no shell change)
 
 	///// first \\\\\
-
-		// to dead
-		if (fromState == 1 && toState == -1) {													// to dead
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
-		}
 
 		// from dark first
 			// to zero (no shell change)
@@ -218,13 +204,6 @@ public class PlayerShellManager : MonoBehaviour {
 			// to dark zero (0.5) (no shell change)
 
 	///// second \\\\\
-
-		// to dead
-		if (fromState == 2 && toState == -1) {													// to dead
-			anim.ResetTrigger ("scaleup");										// reset next stage
-			anim.SetTrigger("scaledown");										// enable core to black animation
-			anim.SetBool("photon", true);										// enable black core animation state
-		}
 
 		// from dark second
 			// to zero (no shell change)
@@ -241,13 +220,6 @@ public class PlayerShellManager : MonoBehaviour {
 			// to light first (no shell change)
 
 	///// third \\\\\
-
-		// to dead
-		if (fromState == 3 && toState == -1) {									// to dead
-			anim.ResetTrigger ("scaleup");						// reset next stage
-			anim.SetTrigger("scaledown");						// enable core to black animation
-			anim.SetBool("photon", true);						// enable black core animation state
-		}
 
 		// from dark third	
 		// to zero
@@ -284,13 +256,6 @@ public class PlayerShellManager : MonoBehaviour {
 			// to light second (no shell change)
 			
 	///// fourth \\\\\
-
-		// to dead
-		if (fromState == 4 && toState == -1) {									// to dead
-			anim.ResetTrigger ("scaleup");						// reset next stage
-			anim.SetTrigger("scaledown");						// enable core to black animation
-			anim.SetBool("photon", true);						// enable black core animation state
-		}
 
 		// from dark fourth	
 		// to zero
@@ -335,13 +300,6 @@ public class PlayerShellManager : MonoBehaviour {
 		// to light third (no shell change)
 
 	///// fifth \\\\\
-
-		// to dead
-		if (fromState == 5 && toState == -1) {									// to dead
-			anim.ResetTrigger ("scaleup");						// reset next stage
-			anim.SetTrigger("scaledown");						// enable core to black animation
-			anim.SetBool("photon", true);						// enable black core animation state
-		}
 
 		// from dark circle fifth
 		// to zero
@@ -440,13 +398,6 @@ public class PlayerShellManager : MonoBehaviour {
 			// to light fourth (no shell change)
 
 	///// sixth \\\\\
-
-		// to dead
-		if (fromState == 6 && toState == -1) {									// to dead
-			anim.ResetTrigger ("scaleup");						// reset next stage
-			anim.SetTrigger("scaledown");						// enable core to black animation
-			anim.SetBool("photon", true);						// enable black core animation state
-		}
 
 		// from dark circle sixth
 		// to zero
@@ -554,13 +505,6 @@ public class PlayerShellManager : MonoBehaviour {
 			// to square fifth (no shell change)
 			
 	///// seventh \\\\\
-
-		// to dead
-		if (fromState == 7 && toState == -1) {									// to dead
-			anim.ResetTrigger ("scaleup");						// reset next stage
-			anim.SetTrigger("scaledown");						// enable core to black animation
-			anim.SetBool("photon", true);						// enable black core animation state
-		}
 
 		// from dark circle seventh
 		// to zero

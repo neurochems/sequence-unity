@@ -1032,7 +1032,7 @@ public class PlayerCoreManager : MonoBehaviour {
 	///<para>true = white</para>
 	///<para>false = black</para>
 	///</summary>
-	private void SetLight (bool light)
+	public void SetLight (bool light)
 	{
 		if (light) rend.material.SetColor("_Color", Color.white);		// change to white
 		else rend.material.SetColor("_Color", Color.black);				// change to black

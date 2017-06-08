@@ -78,6 +78,7 @@
      <Compile Include="Assets\Scripts\Actors\Player\States\ZeroPlayerState.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\UIManager.cs" />
      <Compile Include="Assets\Scripts\Actors\SpawnParticle.cs" />
+     <Compile Include="Assets\Scripts\Audio\EffectsBlender.cs" />
      <Compile Include="Assets\Scripts\Camera\CameraManager.cs" />
      <Compile Include="Assets\Scripts\Camera\OrthoSmoothFollow.cs" />
      <Compile Include="Assets\Scripts\Environment\FauxGravityAttractor.cs" />

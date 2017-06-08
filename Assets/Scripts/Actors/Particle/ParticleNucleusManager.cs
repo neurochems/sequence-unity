@@ -3,295 +3,331 @@ using System.Collections;
 
 public class ParticleNucleusManager : MonoBehaviour {
 
-	private Animator anim;							// animator on core ref
-	#pragma warning disable 0414
-	private Mesh mesh;								// core mesh
-	#pragma warning restore 0414
-	public Mesh sphere, triangle, square;			// shape meshes
-	private MeshRenderer rend;						// mesh renderer (for colour changes)
-	private ParticleStatePattern psp;				// psp ref
+	private Animator anim;																										// animator on core ref
+	public Mesh sphere, triangle, square;																						// shape meshes
+	private MeshRenderer rend;																									// mesh renderer (for colour changes)
+	private ParticleStatePattern psp;																							// psp ref
 
-	private int toState;							// to state indicator
-	private bool resetScale = false;				// timer trigger for resetting scale after world switch
-	public float resetScaleTimer;					// reset scale timer
+	private int toState, shape;																									// to state indicator
+	private bool colour; 																										// colour indicator
+	private bool changeColour = false, changeShape = false, resetScale = false;													// timer trigger for resetting scale after world switch
+	public float changeColourTimer, changeShapeTimer, resetScaleTimer;															// reset scale timer
 
-	private bool light; 							// is light flag
-	private Shader lightShader, darkShader;			// light/dark shaders
+	private Shader lightShader, darkShader;																						// light/dark shaders
 
 	void Awake () {
-		anim = GetComponent<Animator>();							// init animator ref
-		mesh = GetComponent<MeshFilter>().mesh;						// init mesh ref
-		rend = GetComponent<MeshRenderer>();						// init mesh renderer ref
-		psp = GetComponentInParent<ParticleStatePattern> ();		// init psp ref
-		//lightShader = Shader.Find("light_nucleus");					// init light nucleus shader
-		//darkShader = Shader.Find("dark_nucleus");						// init dark nucleus shader
+		anim = GetComponent<Animator>();																						// init animator ref
+		rend = GetComponent<MeshRenderer>();																					// init mesh renderer ref
+		psp = GetComponentInParent<ParticleStatePattern> ();																	// init psp ref
+		lightShader = Shader.Find("Unlit/light_nucleus");																		// init light nucleus shader
+		//darkShader = Shader.Find("dark_nucleus");																					// init dark nucleus shader
 	}
 
 	void Update() {
+		// change colour timer
+		if (changeColour) changeColourTimer += Time.deltaTime;																	// start timer
+		if (changeColourTimer >= 2.0f) {																						// when timer >= 4 sec
+			Debug.Log("set colour: " + colour);
+			SetLight(colour);																										// set shape
+			changeColour = false;																									// reset reset scale flag
+			changeColourTimer = 0f;																									// reset timer
+		}
+		// change shape timer
+		if (changeShape) changeShapeTimer += Time.deltaTime;																	// start timer
+		if (changeShapeTimer >= 2.0f) {																							// when timer >= 4 sec
+			Debug.Log("set shape: " + shape);
+			SetShape(shape);																										// set shape
+			changeShape = false;																									// reset reset scale flag
+			changeShapeTimer = 0f;																									// reset timer
+		}
 		// reset scale timer
-		if (resetScale) resetScaleTimer += Time.deltaTime;																			// start timer
-		if (resetScaleTimer >= 4.0f) {																								// when timer >= 4 sec
+		if (resetScale) resetScaleTimer += Time.deltaTime;																		// start timer
+		if (resetScaleTimer >= 4.0f) {																							// when timer >= 4 sec
 			//anim.ResetTrigger("colour");	
-			if (toState == 0) ScaleTo (false, "hidden", "zero");																		// if to zero, grow to zero
-			if (toState == 1 || toState == 2 || toState == 4 || toState == 5 || toState == 6) ScaleTo (false, "hidden", "first");		// if to first/second/fifth/sixth, grow to first
-			if (toState == 7 || toState == 8) ScaleTo (false, "hidden", "seventh");														// if to seventh/eighth, grow to seventh
-			if (toState == 9) ScaleTo (false, "hidden", "ninth");																		// if to ninth, grow to ninth
-			resetScale = false;																											// reset reset scale flag
-			resetScaleTimer = 0f;																										// reset timer
+			if (toState == 0) ScaleTo (false, "hidden", "zero");																	// if to zero, grow to zero
+			if (toState == 1 || toState == 2 || toState == 4 || toState == 5 || toState == 6) 
+				ScaleTo (false, "hidden", "first");																					// if to first/second/fifth/sixth, grow to first
+			if (toState == 7 || toState == 8) ScaleTo (false, "hidden", "seventh");													// if to seventh/eighth, grow to seventh
+			if (toState == 9) ScaleTo (false, "hidden", "ninth");																	// if to ninth, grow to ninth
+			resetScale = false;																										// reset reset scale flag
+			resetScaleTimer = 0f;																									// reset timer
 		}
 	}
 
 	public void ToOtherWorld (bool lw, int f, int t, bool l) 
 	{
-		toState = t;																					// set to state
-		if (lw) {																						// to light world
+		toState = t;																											// set to state
+		if (lw) {																												// to light world
 			// from changes
-			if (f == 0) ScaleTo (true, "zero", "hidden");													// scale from zero to hidden
-			else if (f == 1 || f == 2 || f == 4 || f == 5 || f == 6) ScaleTo (true, "first", "hidden");		// scale from second/first to hidden
-			else if (f == 7 || f == 8) ScaleTo (true, "seventh", "hidden");									// scale from seventh to hidden
-			else if (f == 9) ScaleTo (true, "ninth", "hidden");												// scale from ninth to hidden
+			if (f == 0) ScaleTo (true, "zero", "hidden");																			// scale from zero to hidden
+			else if (f == 1 || f == 2 || f == 4 || f == 5 || f == 6) ScaleTo (true, "first", "hidden");								// scale from second/first to hidden
+			else if (f == 7 || f == 8) ScaleTo (true, "seventh", "hidden");															// scale from seventh to hidden
+			else if (f == 9) ScaleTo (true, "ninth", "hidden");																		// scale from ninth to hidden
 
 			// to changes
-			if (t == 0) SetLight (false, true);																// if to zero, change to white
-			else if (t == 1 || t == 5) SetLight (false, true);												// if to first/fifth, change to white
-			else if (t == 2 || t == 4 || t == 6) SetLight (true, true);										// if to second/fourth/sixth, change to black dot shader
-			else if (t == 3) SetLight (false, true);														// to third, change to white
-			else if (t == 7) SetLight (false, true);														// if to seventh, change to white
-			else if (t == 8) SetLight (true, true);															// if to eighth, change to white + black shader
-			else if (t == 9) SetLight (false, true);														// if to ninth, change to white
+			if (t == 0) SetLight (false, true);																						// if to zero, change to white
+			else if (t == 1 || t == 5) SetLight (false, true);																		// if to first/fifth, change to white
+			else if (t == 2 || t == 4 || t == 6) SetLight (true, true);																// if to second/fourth/sixth, change to black dot shader
+			else if (t == 3) SetLight (false, true);																				// to third, change to white
+			else if (t == 7) SetLight (false, true);																				// if to seventh, change to white
+			else if (t == 8) SetLight (true, true);																					// if to eighth, change to white + black shader
+			else if (t == 9) SetLight (false, true);																				// if to ninth, change to white
 		}
-		else if (!lw) {																					// to dark world
-			if (f == 0) {																					// from light world zero		
-				ScaleTo (true, "zero", "hidden");															// scale from zero
-				SetLight (false, false);																	// change to black
-				ScaleTo (false, "hidden", "zero");															// scale to zero
+		else if (!lw) {																												// to dark world
+			if (f == 0) {																												// from light world zero		
+				ScaleTo (true, "zero", "hidden");																						// scale from zero
+				SetLight (false, false);																								// change to black
+				ScaleTo (false, "hidden", "zero");																						// scale to zero
 			}
 		}
 	}
 
-	public void Nucleus (int fromState, int toState, bool fromLight, bool toLight, int shape) 
+	public void Nucleus (int f, int t, bool fl, bool tl, int s) 
 	{
+		// set up
+		toState = t;																											// set to state
+		shape = s;																												// set s
 
 
 		///////////////////// EVOLUTIONS \\\\\\\\\\\\\\\\\\\\\\
 
 
-		///// zero \\\\\
+///// zero \\\\\
 
 
 		// to dark zero
-		if (fromState == 0 && toState == 0 && fromLight && !toLight) ScaleTo (false, "hidden", "zero");							// scale to zero
+		if (f == 0 && t == 0 && !fl && !tl) ScaleTo (false, "hidden", "zero");													// scale to zero
+
+		// to dark first (init)
+		if (f == 0 && t == 1 && !fl && !tl) ScaleTo (false, "hidden", "first");													// scale to first
 
 
-		///// half zero \\\\\
+///// half zero \\\\\
 
 
-		// from dark zero
-		// to dark first
-		if (fromState == 0 && toState == 1 && !fromLight && !toLight) ScaleTo (false, "zero", "first");							// scale to first
+	// from dark zero
+		// to dark first 
+		if (f == 0 && t == 1 && !fl && !tl) ScaleTo (false, "zero", "first");													// scale to first
 		// to light first (no nucleus change)
 
-		// from light zero (0.5)
+	// from light zero (0.5)
 		// to dark first
-		if (fromState == 0 && toState == 1 && fromLight && !toLight) ScaleTo (false, "hidden", "first");						// scale to first
+		if (f == 0 && t == 1 && fl && !tl) ScaleTo (false, "hidden", "first");													// scale to first
 		// to light first (no nucleus change)
 
 
-		///// first \\\\\
+///// first \\\\\
 
 
-		// from dark first
+	// from dark first
 		// to dark second
-		if (fromState == 1 && toState == 2 && !fromLight && !toLight) SetLight(true);											// change to white shader
-		// to light second
-		else if (fromState == 1 && toState == 2 && !fromLight && toLight) ScaleTo (false, "hidden", "zero");					// scale to zero
-
-		// from light first
-		// to dark second
-		if (fromState == 1 && toState == 2 && fromLight && !toLight) {			
-			SetLight(true);																										// change to white shader
-			ScaleTo (false, "hidden", "first");																					// scale to first
+		if (f == 1 && t == 2 && !fl && !tl) {
+			colour = true;																										// change to white shader
+			changeColour = true;																								// set change colour flag
 		}
 		// to light second
-		else if (fromState == 1 && toState == 2 && fromLight && toLight) ScaleTo (false, "hidden", "zero");						// scale to first
+		else if (f == 1 && t == 2 && !fl && tl) ScaleTo (false, "hidden", "zero");												// scale to zero
+
+	// from light first
+		// to dark second
+		if (f == 1 && t == 2 && fl && !tl) {			
+			SetLight(true);																										// change to white shader
+			resetScale = true;																									// set reset scale flag
+		}
+		// to light second
+		else if (f == 1 && t == 2 && fl && tl) ScaleTo (false, "hidden", "zero");												// scale to first
 
 
-		///// second \\\\\
+///// second \\\\\
 
 
-		// from dark second
+	// from dark second
 		// to dark third
-		if (fromState == 2 && toState == 3 && !fromLight && !toLight) {			
+		if (f == 2 && t == 3 && !fl && !tl) {			
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			SetLight(false);																									// change to black
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
 		} 
 		// to light third
-		else if (fromState == 2 && toState == 3 && !fromLight && toLight) {		 
+		else if (f == 2 && t == 3 && !fl && tl) {		 
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			SetLight(false);																									// change to black
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
 		}
 
-		// from light second
+	// from light second
 		// to dark third
-		else if (fromState == 2 && toState == 3 && fromLight && !toLight) ScaleTo (true, "zero", "hidden");						// scale to hidden
+		else if (f == 2 && t == 3 && fl && !tl) ScaleTo (true, "zero", "hidden");												// scale to hidden
 		// to light third
-		else if (fromState == 2 && toState == 3 && fromLight && toLight) ScaleTo (true, "zero", "hidden");						// scale to hidden
+		else if (f == 2 && t == 3 && fl && tl) ScaleTo (true, "zero", "hidden");												// scale to hidden
 
 
-		///// third \\\\\
+///// third \\\\\
 
 
-		// from dark third
+	// from dark third
 		// to dark fourth
-		if (fromState == 3 && toState == 4 && !fromLight && !toLight) {							
+		if (f == 3 && t == 4 && !fl && !tl) {							
 			SetLight(true);																										// change to white shader
-			ScaleTo (false, "hidden", "first");																					// scale to first
+			resetScale = true;																									// set reset scale flag
 		}
 		// to light fourth
-		else if (fromState == 3 && toState == 4 && !fromLight && toLight) ScaleTo (false, "hidden", "zero");					// scale to zero
+		else if (f == 3 && t == 4 && !fl && tl) ScaleTo (false, "hidden", "zero");												// scale to zero
 
-		// from light third
+	// from light third
 		// to dark fourth
-		if (fromState == 3 && toState == 4 && fromLight && !toLight) {							
+		if (f == 3 && t == 4 && fl && !tl) {							
 			SetLight(true);																										// change to white shader
-			ScaleTo (false, "hidden", "first");																					// scale to first
+			resetScale = true;																									// set reset scale flag
 		}
 		// to light fourth
-		else if (fromState == 3 && toState == 4 && fromLight && toLight) ScaleTo (false, "hidden", "zero");						// scale to first
+		else if (f == 3 && t == 4 && fl && tl) ScaleTo (false, "hidden", "zero");												// scale to first
 
 
-		///// fourth \\\\\
+///// fourth \\\\\
 
 
-		// from dark fourth
+	// from dark fourth
 		// to dark circle fifth
-		if (fromState == 4 && toState == 5 && !fromLight && !toLight && shape == 0) {			
+		if (f == 4 && t == 5 && !fl && !tl && s == 0) {			
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			SetLight(false);																									// change to black
-			ScaleTo (false, "hidden", "first");																					// scale to first
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
 		}
 		// to light circle fifth
-		else if (fromState == 4 && toState == 5 && !fromLight && toLight && shape == 0) {		
+		else if (f == 4 && t == 5 && !fl && tl && s == 0) {		
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			SetLight(false);																									// change to black
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
 		}
 
 		// from light fourth
 		// to triangle fifth
-		if (fromState == 4 && toState == 5 && fromLight && toLight && shape == 1) {			
+		if (f == 4 && t == 5 && fl && tl && s == 1) {			
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			SetShape(1);																										// change to triangle
+			shape = 1;																											// change to triangle
+			changeShape = true;																									// set change shape flag
 		}
 		// to square fifth
-		else if (fromState == 4 && toState == 5 && fromLight && toLight && shape == 2) {		
+		else if (f == 4 && t == 5 && fl && tl && s == 2) {		
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			SetShape(2);																										// change to square
+			shape = 2;																											// change to square
+			changeShape = true;																									// set change shape flag
 		}
 
 
-		///// fifth \\\\\
+///// fifth \\\\\
 
 
-		// from dark circle fifth
+	// from dark circle fifth
 		// to dark circle sixth
-		if (fromState == 5 && toState == 6 && !fromLight && !toLight && shape == 0) SetLight(true);								// change to white shader
+		if (f == 5 && t == 6 && !fl && !tl && s == 0) {
+			colour = true;																										// change to white shader
+			changeColour = true;																								// set change colour flag
+		}
 		// to light circle sixth
-		else if (fromState == 5 && toState == 6 && !fromLight && toLight && shape == 0) ScaleTo (false, "first", "zero");		// scale to first
+		else if (f == 5 && t == 6 && !fl && tl && s == 0) ScaleTo (false, "first", "zero");										// scale to first
 
-		// from light circle fifth
+	// from light circle fifth
 		// to dark circle sixth
-		if (fromState == 5 && toState == 6 && fromLight && !toLight && shape == 0) {			
+		if (f == 5 && t == 6 && fl && !tl && s == 0) {			
 			SetLight(true);																										// change to white
-			ScaleTo (false, "hidden", "first");																					// scale to first
+			resetScale = true;																									// set reset scale flag
 		}
 		// to light circle sixth
-		else if (fromState == 5 && toState == 6 && fromLight && toLight && shape == 0) ScaleTo (false, "hidden", "zero");		// scale to zero
+		else if (f == 5 && t == 6 && fl && tl && s == 0) ScaleTo (false, "hidden", "zero");										// scale to zero
 
-		// from triangle fifth
+	// from triangle fifth
 		// to dark triangle sixth
-		if (fromState == 5 && toState == 6 && fromLight && shape == 1) ScaleTo (false, "hidden", "first");						// scale to first
+		if (f == 5 && t == 6 && fl && s == 1) ScaleTo (false, "hidden", "first");												// scale to first
 
-		// from square fifth
+	// from square fifth
 		// to dark square sixth
-		if (fromState == 5 && toState == 6 && fromLight && shape == 2) ScaleTo (false, "hidden", "first");						// scale to first
+		if (f == 5 && t == 6 && fl && s == 2) ScaleTo (false, "hidden", "first");												// scale to first
 
 
-		//// sixth \\\\\
+//// sixth \\\\\
 
 
-		// from dark circle sixth
+	// from dark circle sixth
 		// to dark circle seventh
-		if (fromState == 6 && toState == 7 && !fromLight && !toLight && shape == 0) {			
+		if (f == 6 && t == 7 && !fl && !tl && s == 0) {			
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			SetLight(false);																									// change to black
-			ScaleTo (false, "hidden", "seventh");																				// scale to seventh
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
 		}
 		// to light circle seventh
-		else if (fromState == 6 && toState == 7 && !fromLight && toLight && shape == 0) {		
+		else if (f == 6 && t == 7 && !fl && tl && s == 0) {		
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			SetLight(false);																									// change to black
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
 		}
 
-		// from light circle sixth
+	// from light circle sixth
 		// to dark circle seventh
-		if (fromState == 6 && toState == 7 && fromLight && !toLight && shape == 0) ScaleTo (false, "zero", "seventh");			// scale to seventh
+		if (f == 6 && t == 7 && fl && !tl && s == 0) ScaleTo (false, "zero", "seventh");										// scale to seventh
 		// to light circle seventh
-		else if (fromState == 6 && toState == 7 && fromLight && toLight && shape == 0) ScaleTo (true, "zero", "hidden");		// scale to hidden
+		else if (f == 6 && t == 7 && fl && tl && s == 0) ScaleTo (true, "zero", "hidden");										// scale to hidden
 
-		// from dark triangle sixth
+	// from dark triangle sixth
 		// to dark triangle seventh
-		if (fromState == 6 && toState == 7 && !fromLight && !toLight && shape == 1) ScaleTo (false, "first", "hidden");			// scale to hidden
+		if (f == 6 && t == 7 && !fl && !tl && s == 1) ScaleTo (false, "first", "hidden");										// scale to hidden
 		// to light triangle seventh
-		else if (fromState == 6 && toState == 7 && !fromLight && toLight && shape == 1) ScaleTo (false, "first", "hidden");		// scale to hidden
+		else if (f == 6 && t == 7 && !fl && tl && s == 1) ScaleTo (false, "first", "hidden");									// scale to hidden
 
-		// from dark square sixth
+	// from dark square sixth
 		// to dark square seventh
-		if (fromState == 6 && toState == 7 && !fromLight && !toLight && shape == 2) ScaleTo (false, "first", "hidden");			// scale to hidden
+		if (f == 6 && t == 7 && !fl && !tl && s == 2) ScaleTo (false, "first", "hidden");										// scale to hidden
 		// to light square seventh
-		else if (fromState == 6 && toState == 7 && !fromLight && toLight && shape == 2) ScaleTo (false, "first", "hidden");		// scale to hidden
+		else if (f == 6 && t == 7 && !fl && tl && s == 2) ScaleTo (false, "first", "hidden");									// scale to hidden
 
 
-		///// seventh \\\\\
+///// seventh \\\\\
 
 
-		// from dark circle seventh
+	// from dark circle seventh
 		// to dark circle eighth
-		if (fromState == 7 && toState == 8 && !fromLight && !toLight && shape == 0) SetLight(true);								// change to white shader
-		// to light circle eighth
-		else if (fromState == 7 && toState == 8 && !fromLight && toLight && shape == 0) ScaleTo (true, "seventh", "first");		// scale to first
-
-		// from light circle seventh
-		// to dark circle eighth
-		if (fromState == 7 && toState == 8 && fromLight && !toLight && shape == 0) {			
-			SetLight(true);																										// change to white shader
-			ScaleTo (false, "hidden", "seventh");																				// scale to seventh
+		if (f == 7 && t == 8 && !fl && !tl && s == 0) {
+			colour = true;																										// change to white shader
+			changeColour = true;																								// set change colour flag
 		}
 		// to light circle eighth
-		else if (fromState == 7 && toState == 8 && fromLight && toLight && shape == 0) ScaleTo (false, "hidden", "first");		// scale to first
+		else if (f == 7 && t == 8 && !fl && tl && s == 0) ScaleTo (true, "seventh", "first");									// scale to first
 
-		// from dark triangle seventh
+	// from light circle seventh
+		// to dark circle eighth
+		if (f == 7 && t == 8 && fl && !tl && s == 0) {			
+			SetLight(true);																										// change to white shader
+			resetScale = true;																									// set reset scale flag
+		}
+		// to light circle eighth
+		else if (f == 7 && t == 8 && fl && tl && s == 0) ScaleTo (false, "hidden", "first");									// scale to first
+
+	// from dark triangle seventh
 		// to dark triangle eighth
-		if (fromState == 7 && toState == 8 && !fromLight && !toLight && shape == 1) ScaleTo (false, "hidden", "seventh");		// scale to seventh
+		if (f == 7 && t == 8 && !fl && !tl && s == 1) ScaleTo (false, "hidden", "seventh");										// scale to seventh
 		// to light triangle eighth
-		else if (fromState == 7 && toState == 8 && !fromLight && toLight && shape == 1) ScaleTo (false, "hidden", "seventh");	// scale to seventh
+		else if (f == 7 && t == 8 && !fl && tl && s == 1) ScaleTo (false, "hidden", "seventh");									// scale to seventh
 
-		// from light triangle seventh
+	// from light triangle seventh
 		// to dark triangle eighth
-		if (fromState == 7 && toState == 8 && fromLight && !toLight && shape == 1) ScaleTo (false, "hidden", "seventh");		// scale to seventh
+		if (f == 7 && t == 8 && fl && !tl && s == 1) ScaleTo (false, "hidden", "seventh");										// scale to seventh
 		// to light triangle eighth
-		else if (fromState == 7 && toState == 8 && fromLight && toLight && shape == 1) ScaleTo (false, "hidden", "seventh");	// scale to seventh
+		else if (f == 7 && t == 8 && fl && tl && s == 1) ScaleTo (false, "hidden", "seventh");									// scale to seventh
 
-		// from dark square seventh
+	// from dark square seventh
 		// to dark square eighth
-		if (fromState == 7 && toState == 8 && !fromLight && !toLight && shape == 2) ScaleTo (false, "hidden", "seventh");		// scale to seventh
+		if (f == 7 && t == 8 && !fl && !tl && s == 2) ScaleTo (false, "hidden", "seventh");										// scale to seventh
 		// to light square eighth
-		else if (fromState == 7 && toState == 8 && !fromLight && toLight && shape == 2) ScaleTo (false, "hidden", "seventh");	// scale to seventh
+		else if (f == 7 && t == 8 && !fl && tl && s == 2) ScaleTo (false, "hidden", "seventh");									// scale to seventh
 
-		// from light square seventh
+	// from light square seventh
 		// to dark square eighth
-		if (fromState == 7 && toState == 8 && fromLight && !toLight && shape == 2) ScaleTo (false, "hidden", "seventh");		// scale to seventh
+		if (f == 7 && t == 8 && fl && !tl && s == 2) ScaleTo (false, "hidden", "seventh");										// scale to seventh
 		// to light square eighth
-		else if (fromState == 7 && toState == 8 && fromLight && toLight && shape == 2) ScaleTo (false, "hidden", "seventh");	// scale to seventh
+		else if (f == 7 && t == 8 && fl && tl && s == 2) ScaleTo (false, "hidden", "seventh");									// scale to seventh
 
 
 
@@ -299,746 +335,848 @@ public class ParticleNucleusManager : MonoBehaviour {
 
 
 
-		///// zero \\\\\
+///// zero \\\\\
 
 
-		///// dark zero (0.5) \\\\\
+///// dark zero (0.5) \\\\\
 
 
 		// to zero
-		if (fromState == 0 && toState == 0 && !fromLight && toLight) ScaleTo (true, "zero", "hidden");							// scale to hidden
+		if (f == 0 && t == 0 && !fl && tl) ScaleTo (true, "zero", "hidden");													// scale to hidden
 
 
-		///// first \\\\\
+///// first \\\\\
 
 
-		// from dark first
+	// from dark first
 		// to zero
-		if (fromState == 1 && toState == 0 && !fromLight && toLight) ScaleTo (true, "first", "hidden");							// scale to hidden
+		if (f == 1 && t == 0 && !fl && tl) ScaleTo (true, "first", "hidden");													// scale to hidden
 		// to dark zero
-		if (fromState == 1 && toState == 0 && !fromLight && !toLight) ScaleTo (true, "first", "zero");							// scale to zero
+		if (f == 1 && t == 0 && !fl && !tl) ScaleTo (true, "first", "zero");													// scale to zero
 
-		// from light first
+	// from light first
 		// to zero (no nucleus change)
 		// to dark zero
-		if (fromState == 1 && toState == 0 && fromLight && !toLight) ScaleTo (true, "first", "zero");							// scale to zero
+		if (f == 1 && t == 0 && fl && !tl) ScaleTo (true, "first", "zero");														// scale to zero
 
 
-		///// second \\\\\
+///// second \\\\\
 
 
-		// from dark second
+	// from dark second
 		// to zero
-		if (fromState == 2 && toState == 0 && !fromLight && toLight) {
+		if (f == 2 && t == 0 && !fl && tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			SetLight(false);																									// change to black
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
 		}
 		// to dark zero
-		else if (fromState == 2 && toState == 0 && !fromLight && !toLight) {
+		else if (f == 2 && t == 0 && !fl && !tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			SetLight(false);																									// change to black
-			ScaleTo (false, "hidden", "zero");																					// scale to zero
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
 		}
 		// to first
-		if (fromState == 2 && toState == 1 && !fromLight && !toLight) {															// to dark first
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetLight(false);																										// change to black
-			ScaleTo (false, "hidden", "first");																						// scale to hidden
+			// to dark first
+		if (f == 2 && t == 1 && !fl && !tl) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
 		}
-		else if (fromState == 2 && toState == 1 && !fromLight && toLight) {														// to light first
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetLight(false);																										// change to black
+			// to light first
+		else if (f == 2 && t == 1 && !fl && tl) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
 		}
 
-		// from light second
+	// from light second
 		// to zero
-		if (fromState == 2 && toState == 0 && fromLight && toLight) ScaleTo (true, "zero", "hidden");							// scale to hidden
+		if (f == 2 && t == 0 && fl && tl) ScaleTo (true, "zero", "hidden");														// scale to hidden
 		// to dark zero (no nucleus change)
 		// to first
-		// to dark first
-		if (fromState == 2 && toState == 1 && fromLight && !toLight) ScaleTo (true, "zero", "first");							// scale to hidden
-		// to light first
-		else if (fromState == 2 && toState == 1 && fromLight && toLight) ScaleTo (true, "zero", "hidden");						// scale to hidden
+			// to dark first
+		if (f == 2 && t == 1 && fl && !tl) ScaleTo (true, "zero", "first");														// scale to first
+			// to light first
+		else if (f == 2 && t == 1 && fl && tl) ScaleTo (true, "zero", "hidden");												// scale to hidden
 
 
-		///// third \\\\\
+///// third \\\\\
 
 
-		// from dark third	
+	// from dark third	
 		// to zero (no nucleus change)
 		// to dark zero
-		if (fromState == 3 && toState == 0 && !fromLight && !toLight) ScaleTo (false, "hidden", "zero");						// scale to zero
+		if (f == 3 && t == 0 && !fl && !tl) ScaleTo (false, "hidden", "zero");													// scale to zero
 		// to first 
-		// to dark first
-		if (fromState == 3 && toState == 1 && !fromLight && !toLight) ScaleTo (false, "hidden", "first");						// scale to first
-		// to light first (no nucleus change)
+			// to dark first
+		if (f == 3 && t == 1 && !fl && !tl) ScaleTo (false, "hidden", "first");													// scale to first
+			// to light first (no nucleus change)
 		// to second
-		if (fromState == 3 && toState == 2 && !fromLight && !toLight) {															// to dark second
-			SetLight(true);																											// change to white shader
-			ScaleTo (false, "hidden", "first");																						// scale to first
+			// to dark second
+		if (f == 3 && t == 2 && !fl && !tl) {
+			SetLight(true);																										// change to white shader
+			resetScale = true;																									// set reset scale flag
 		}
-		// to light second
-		else if (fromState == 3 && toState == 2 && !fromLight && toLight) ScaleTo (false, "hidden", "zero");					// scale to zero
+			// to light second
+		else if (f == 3 && t == 2 && !fl && tl) ScaleTo (false, "hidden", "zero");												// scale to zero
 
-		// from light third	
+	// from light third	
 		// to zero ((no nucleus change)
 		// to dark zero
-		if (fromState == 3 && toState == 0 && fromLight && !toLight) ScaleTo (false, "hidden", "zero");							// scale to zero
+		if (f == 3 && t == 0 && fl && !tl) ScaleTo (false, "hidden", "zero");													// scale to zero
 		// to first
-		// to dark first
-		if (fromState == 3 && toState == 1 && fromLight && !toLight) ScaleTo (false, "hidden", "first");						// scale to first
-		// to light first (no nucleus change)
+			// to dark first
+		if (f == 3 && t == 1 && fl && !tl) ScaleTo (false, "hidden", "first");													// scale to first
+			// to light first (no nucleus change)
 		// to second
-		if (fromState == 3 && toState == 2 && fromLight && !toLight) {															// to dark second					
-			SetLight(true);																											// change to white
-			ScaleTo (false, "hidden", "first");																						// scale to first
+			// to dark second
+		if (f == 3 && t == 2 && fl && !tl) {
+			SetLight(true);																										// change to white
+			resetScale = true;																									// set reset scale flag
 		}
-		else if (fromState == 3 && toState == 2 && !fromLight && toLight) {														// to light second
-			ScaleTo (false, "hidden", "zero");																						// scale to first
-		}
+			// to light second
+		else if (f == 3 && t == 2 && !fl && tl) ScaleTo (false, "hidden", "zero");												// scale to zero
 
 
-		///// fourth \\\\\
+///// fourth \\\\\
 
 
-		// from dark fourth	
+	// from dark fourth	
 		// to zero
-		if (fromState == 4 && toState == 0 && !fromLight && toLight) {															// to light zero
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetLight(false);																										// change to black
+		if (f == 4 && t == 0 && !fl && tl) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
 		}
 		// to dark zero
-		if (fromState == 4 && toState == 0 && !fromLight && !toLight) {															// to dark zero
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetLight(false);																										// change to black
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
+		if (f == 4 && t == 0 && !fl && !tl) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
 		}
 		// to first
-		if (fromState == 4 && toState == 1 && !fromLight && !toLight) {															// to dark first
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetLight(false);																										// change to black
-			ScaleTo (false, "hidden", "first");																						// scale to first
+			// to dark first
+		if (f == 4 && t == 1 && !fl && !tl) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
 		}
-		else if (fromState == 4 && toState == 1 && !fromLight && toLight) {														// to light first
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetLight(false);																										// change to black
+			// to light first
+		else if (f == 4 && t == 1 && !fl && tl) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
 		}
 		// to second
-		// to dark second (no nucleus change)
-		if (fromState == 4 && toState == 2 && !fromLight && toLight) {															// to light second
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetLight(false);																										// change to black
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
+			// to dark second (no nucleus change)
+			// to light second
+		if (f == 4 && t == 2 && !fl && tl) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
 		}
 		// to third
-		if (fromState == 4 && toState == 3 && !fromLight && !toLight) {															// to dark third
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetLight(false);																										// change to black
+			// to dark third
+		if (f == 4 && t == 3 && !fl && !tl) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
 		}
-		else if (fromState == 4 && toState == 3 && !fromLight && toLight) {														// to light third
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetLight(false);																										// change to black
+			// to light third
+		else if (f == 4 && t == 3 && !fl && tl) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
 		}
 
-		// from light fourth	
+	// from light fourth	
 		// to zero
-		if (fromState == 4 && toState == 0 && fromLight && toLight) ScaleTo (true, "zero", "hidden");							// scale to hidden
+		if (f == 4 && t == 0 && fl && tl) ScaleTo (true, "zero", "hidden");														// scale to hidden
 		// to dark zero (no nucleus change)
 		// to first
-		// to dark first
-		if (fromState == 4 && toState == 1 && fromLight && !toLight) ScaleTo (false, "zero", "first");							// scale to first
-		// to light first
-		else if (fromState == 4 && toState == 1 && fromLight && toLight) ScaleTo (true, "zero", "hidden");						// scale to hidden
+			// to dark first
+		if (f == 4 && t == 1 && fl && !tl) ScaleTo (false, "zero", "first");													// scale to first
+			// to light first
+		else if (f == 4 && t == 1 && fl && tl) ScaleTo (true, "zero", "hidden");												// scale to hidden
 		// to second
-		if (fromState == 4 && toState == 2 && fromLight && !toLight) {															// to dark second
-			ScaleTo (true, "zero", "hidden");																						// scale to hidden
-			SetLight(true);																											// change to white shader
-			ScaleTo (false, "hidden", "first");																						// scale to first
+			// to dark second
+		if (f == 4 && t == 2 && fl && !tl) {
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			colour = true;																										// change to white shader
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
 		}
-		// to light second (no nucleus change)
+			// to light second (no nucleus change)
 		// to third
-		// to dark third
-		if (fromState == 4 && toState == 3 && fromLight && !toLight) ScaleTo (true, "first", "hidden");							// scale to hidden
-		// to light third
-		else if (fromState == 4 && toState == 3 && fromLight && toLight) ScaleTo (true, "first", "hidden");						// scale to hidden
+			// to dark third
+		if (f == 4 && t == 3 && fl && !tl) ScaleTo (true, "first", "hidden");													// scale to hidden
+			// to light third
+		else if (f == 4 && t == 3 && fl && tl) ScaleTo (true, "first", "hidden");												// scale to hidden
 
 
-		///// fifth \\\\\
+///// fifth \\\\\
 
 
-		// from dark circle fifth
+	// from dark circle fifth
 		// to zero
-		if (fromState == 5 && toState == 0 && !fromLight && toLight) ScaleTo (true, "first", "hidden");							// scale to hidden
+		if (f == 5 && t == 0 && !fl && tl) ScaleTo (true, "first", "hidden");													// scale to hidden
 		// to dark zero
-		if (fromState == 5 && toState == 0 && !fromLight && !toLight) ScaleTo (true, "first", "zero");							// scale to zero
+		if (f == 5 && t == 0 && !fl && !tl) ScaleTo (true, "first", "zero");													// scale to zero
 		// to first
-		// to dark first (no nucleus change)
-		// to light first (no nucleus change)
-		if (fromState == 5 && toState == 1 && !fromLight && toLight) ScaleTo (true, "first", "hidden");							// scale to hidden
+			// to dark first (no nucleus change)
+			// to light first
+		if (f == 5 && t == 1 && !fl && tl) ScaleTo (true, "first", "hidden");													// scale to hidden
 		// to second
-		// to dark second
-		if (fromState == 5 && toState == 2 && !fromLight && !toLight && shape == 0) SetLight(true);								// change to white shader
-		// to light second
-		else if (fromState == 5 && toState == 2 && !fromLight && toLight && shape == 0) ScaleTo (true, "first", "zero");		// scale to zero
+			// to dark second
+		if (f == 5 && t == 2 && !fl && !tl && s == 0) SetLight(true);															// change to white shader
+			// to light second
+		else if (f == 5 && t == 2 && !fl && tl && s == 0) ScaleTo (true, "first", "zero");										// scale to zero
 		// to third
-		// to dark third
-		if (fromState == 5 && toState == 3 && !fromLight && !toLight && shape == 0) ScaleTo (true, "first", "hidden");			// scale to hidden
-		// to light third
-		else if (fromState == 5 && toState == 3 && !fromLight && toLight && shape == 0) ScaleTo (true, "first", "hidden");		// scale to hidden
+			// to dark third
+		if (f == 5 && t == 3 && !fl && !tl && s == 0) ScaleTo (true, "first", "hidden");										// scale to hidden
+			// to light third
+		else if (f == 5 && t == 3 && !fl && tl && s == 0) ScaleTo (true, "first", "hidden");									// scale to hidden
 		// to fourth
-		// to dark fourth
-		if (fromState == 5 && toState == 4 && !fromLight && !toLight && shape == 0) SetLight(true);								// change to white shader
+			// to dark fourth
+		if (f == 5 && t == 4 && !fl && !tl && s == 0) SetLight(true);															// change to white shader
 
-		// from light circle fifth
+	// from light circle fifth
 		// to zero (no nucleus change)
 		// to dark zero
-		if (fromState == 5 && toState == 0 && fromLight && !toLight) ScaleTo (false, "hidden", "zero");							// scale to zero
+		if (f == 5 && t == 0 && fl && !tl) ScaleTo (false, "hidden", "zero");													// scale to zero
 		// to first
-		// to dark first (no nucleus change)
-		// to light first (no nucleus change)
+			// to dark first (no nucleus change)
+			// to light first (no nucleus change)
 		// to second
-		if (fromState == 5 && toState == 2 && fromLight && !toLight && shape == 0) {											// to dark second
-			SetLight(true);																											// change to white shader	
-			ScaleTo (false, "hidden", "first");																						// scale to zero
+			// to dark second
+		if (f == 5 && t == 2 && fl && !tl && s == 0) {
+			SetLight(true);																										// change to white shader	
+			resetScale = true;																									// set reset scale flag
 		}
-		// to light second
-		else if (fromState == 5 && toState == 2 && fromLight && toLight && shape == 0) ScaleTo (false, "hidden", "zero");		// scale to zero
+			// to light second
+		else if (f == 5 && t == 2 && fl && tl && s == 0) ScaleTo (false, "hidden", "zero");										// scale to zero
 		// to third
-		// to dark third (no nucleus change)
-		// to light third (no nucleus change)
+			// to dark third (no nucleus change)
+			// to light third (no nucleus change)
 		// to fourth
-		if (fromState == 5 && toState == 4 && fromLight && !toLight && shape == 0) {											// to dark fourth
-			SetLight(true);																											// change to white
-			ScaleTo (false, "hidden", "first");																						// scale to first
+			// to dark fourth
+		if (f == 5 && t == 4 && fl && !tl && s == 0) {
+			SetLight(true);																										// change to white
+			resetScale = true;																									// set reset scale flag
 		}
 
-		// from triangle fifth
+	// from triangle fifth
 		// to zero 
 		// to light zero
-		if (fromState == 5 && toState == 0 && fromLight && toLight && shape == 1) SetShape(0);									// change to sphere
+		if (f == 5 && t == 0 && fl && tl && s == 1) SetShape(0);																// change to sphere
 		// to dark zero
-		else if (fromState == 5 && toState == 0 && fromLight && !toLight && shape == 1) {										// to dark zero
-			SetShape(0);																											// change to sphere
-			ScaleTo (true, "hidden", "zero");																						// scale to zero
+		else if (f == 5 && t == 0 && fl && !tl && s == 1) {
+			SetShape(0);																										// change to sphere
+			resetScale = true;																									// set reset scale flag
 		}
 		// to first
-		if (fromState == 5 && toState == 1 && fromLight && !toLight && shape == 1) {											// to dark first
-			SetShape(0);																											// change to sphere
-			ScaleTo (true, "hidden", "first");																						// scale to zero
+			// to dark first
+		if (f == 5 && t == 1 && fl && !tl && s == 1) {
+			SetShape(0);																										// change to sphere
+			resetScale = true;																									// set reset scale flag
 		}
-		// to light first
-		else if (fromState == 5 && toState == 1 && fromLight && toLight && shape == 1) SetShape(0);								// change to sphere
+			// to light first
+		else if (f == 5 && t == 1 && fl && tl && s == 1) SetShape(0);															// change to sphere
 		// to second
-		if (fromState == 5 && toState == 2 && fromLight && !toLight && shape == 1) {											// to dark second
-			SetShape(0);																											// change to sphere
-			SetLight(true);																											// change to white
-			ScaleTo (false, "hidden", "first");																						// scale to first
+			// to dark second
+		if (f == 5 && t == 2 && fl && !tl && s == 1) {
+			SetShape(0);																										// change to sphere
+			colour = true;																										// change to white shader
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
 		} 
-		else if (fromState == 5 && toState == 2 && fromLight && toLight && shape == 1) {										// to light second
-			SetShape(0);																											// change to sphere
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
+			// to light second
+		else if (f == 5 && t == 2 && fl && tl && s == 1) {
+			SetShape(0);																										// change to sphere
+			resetScale = true;																									// set reset scale flag
 		}
 		// to third
-		// to dark third
-		if (fromState == 5 && toState == 3 && fromLight && !toLight && shape == 1) SetShape(0);									// change to sphere
-		// to light third
-		else if (fromState == 5 && toState == 3 && fromLight && toLight && shape == 1) SetShape(0);								// change to sphere
+			// to dark third
+		if (f == 5 && t == 3 && fl && !tl && s == 1) SetShape(0);																// change to sphere
+			// to light third
+		else if (f == 5 && t == 3 && fl && tl && s == 1) SetShape(0);															// change to sphere
 		// to fourth
-		if (fromState == 5 && toState == 4 && fromLight && toLight && shape == 1) {												// to light fourth
-			SetShape(0);																											// change to sphere
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
+			// to light fourth
+		if (f == 5 && t == 4 && fl && tl && s == 1) {
+			SetShape(0);																										// change to sphere
+			resetScale = true;																									// set reset scale flag
 		}
 
-		// from square fifth
+	// from square fifth
 		// to zero
-		if (fromState == 5 && toState == 0 && fromLight && toLight && shape == 2) SetShape(0);									// change to sphere
+		if (f == 5 && t == 0 && fl && tl && s == 2) SetShape(0);																// change to sphere
+		// to dark zero
+		else if (f == 5 && t == 0 && fl && !tl && s == 2) {
+			SetShape(0);																										// change to sphere
+			resetScale = true;																									// set reset scale flag
+		}
+		// to first
+			// to dark first
+		if (f == 5 && t == 1 && fl && !tl && s == 2) {
+			SetShape(0);																										// change to sphere
+			resetScale = true;																									// set reset scale flag
+		}
+			// to light first 
+		else if (f == 5 && t == 1 && fl && tl && s == 2) SetShape(0);															// change to sphere
+		// to second
+			// to dark second
+		if (f == 5 && t == 2 && fl && !tl && s == 2) {
+			SetShape(0);																										// change to sphere
+			colour = true;																										// change to white shader
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		} 
+			// to light second
+		else if (f == 5 && t == 2 && fl && tl && s == 2) {
+			SetShape(0);																										// change to sphere
+			resetScale = true;																									// set reset scale flag
+		}
+		// to third
+			// to dark third
+		if (f == 5 && t == 3 && fl && !tl && s == 2) SetShape(0);																// change to sphere
+			// to light third
+		else if (f == 5 && t == 3 && fl && tl && s == 2) SetShape(0);															// change to sphere
+		// to fourth
+			// to light fourth
+		if (f == 5 && t == 4 && fl && tl && s == 2) {
+			SetShape(0);																										// change to sphere
+			resetScale = true;																									// set reset scale flag
+		}
+
+
+///// sixth \\\\\
+
+
+	// from dark circle sixth
+		// to zero
+		if (f == 6 && t == 0 && !fl && tl && s == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
+		}
+		// to dark zero
+		if (f == 6 && t == 0 && !fl && !tl && s == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		// to first
+			// to dark first
+		if (f == 6 && t == 1 && !fl && !tl && s == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		} 
+			// to light first
+		else if (f == 6 && t == 1 && !fl && tl && s == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
+		}
+		// to second
+			// to dark second (no nucleus change)
+			// to light second
+		if (f == 6 && t == 2 && !fl && tl && s == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		// to third
+			// to dark third
+		if (f == 6 && t == 3 && !fl && !tl && s == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
+		} 
+			// to light third
+		else if (f == 6 && t == 3 && !fl && tl && s == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
+		}
+		// to fourth
+			// to dark fourth (no nucleus change)
+		// to fifth
+			// to dark circle fifth
+		if (f == 6 && t == 5 && !fl && !tl && s == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+			// to light circle fifth
+		else if (f == 6 && t == 5 && !fl && tl && s == 0) {										
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
+		}
+
+	// from light circle sixth
+		// to zero
+		if (f == 6 && t == 0 && fl && tl && s == 0) ScaleTo (true, "zero", "hidden");											// scale to hidden
 		// to dark zero (no nucleus change)
-		else if (fromState == 5 && toState == 0 && fromLight && !toLight && shape == 2) {										// to dark zero
-			SetShape(0);																											// change to sphere
-			ScaleTo (true, "hidden", "zero");																						// scale to zero
-		}
 		// to first
-		if (fromState == 5 && toState == 1 && fromLight && !toLight && shape == 2) {											// to dark first
-			SetShape(0);																											// change to sphere
-			ScaleTo (true, "hidden", "first");																						// scale to zero
-		}
-		// to light first 
-		else if (fromState == 5 && toState == 1 && fromLight && toLight && shape == 2) SetShape(0);								// change to sphere
+			// to dark first
+		if (f == 6 && t == 1 && fl && !tl && s == 0) ScaleTo (false, "zero", "first");											// scale to first
+			// to light first
+		else if (f == 6 && t == 1 && fl && tl && s == 0) ScaleTo (true, "zero", "hidden");										// scale to hidden
 		// to second
-		if (fromState == 5 && toState == 2 && fromLight && !toLight && shape == 2) {											// to dark second
-			SetShape(0);																											// change to sphere
-			SetLight(true);																											// change to white
-			ScaleTo (false, "hidden", "first");																						// scale to first
-		} 
-		else if (fromState == 5 && toState == 2 && fromLight && toLight && shape == 2) {										// to light second
-			SetShape(0);																											// change to sphere
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
+			// to dark second
+		if (f == 6 && t == 2 && fl && !tl && s == 0) {
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			colour = true;																										// change to white shader
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
 		}
+			// to light second (no nucleus change)
 		// to third
-		// to dark third
-		if (fromState == 5 && toState == 3 && fromLight && !toLight && shape == 2) SetShape(0);									// change to sphere
-		// to light third
-		else if (fromState == 5 && toState == 3 && fromLight && toLight && shape == 2) SetShape(0);								// change to sphere
+			// to dark third
+		if (f == 6 && t == 3 && fl && !tl && s == 0) ScaleTo (true, "zero", "hidden");											// scale to hidden
+			// to light third
+		else if (f == 6 && t == 3 && fl && tl && s == 0) ScaleTo (true, "zero", "hidden");										// scale to hidden
 		// to fourth
-		if (fromState == 5 && toState == 4 && fromLight && toLight && shape == 2) {												// to light fourth
-			SetShape(0);																											// change to sphere
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
+			// to dark fourth
+		if (f == 6 && t == 4 && fl && !tl && s == 0) {
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			colour = true;																										// change to white shader
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
 		}
+		// to fifth
+			// to dark circle fifth
+		if (f == 6 && t == 5 && fl && !tl && s == 0) ScaleTo (false, "zero", "first");											// scale to first
+			// to light circle fifth
+		else if (f == 6 && t == 5 && fl && tl && s == 0) ScaleTo (true, "zero", "hidden");										// scale to hidden
 
-
-		///// sixth \\\\\
-
-
-		// from dark circle sixth
+	// from triangle sixth
 		// to zero
-		if (fromState == 6 && toState == 0 && !fromLight && toLight && shape == 0) {											// to zero
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetLight(false);																										// change to black
+		if (f == 6 && t == 0 && !fl && tl && s == 1) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			shape = 0;																											// change to sphere
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
 		}
 		// to dark zero
-		if (fromState == 6 && toState == 0 && !fromLight && !toLight && shape == 0) {											// to dark zero
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetLight(false);																										// change to black
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
+		if (f == 6 && t == 0 && !fl && !tl && s == 1) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			shape = 0;																											// change to sphere
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
 		}
 		// to first
-		if (fromState == 6 && toState == 1 && !fromLight && !toLight && shape == 0) {											// to dark first
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetLight(false);																										// change to black
-			ScaleTo (false, "hidden", "first");																						// scale to first
-		} 
-		else if (fromState == 6 && toState == 1 && !fromLight && toLight && shape == 0) {										// to light first
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetLight(false);																										// change to black
+			// to dark first
+		if (f == 6 && t == 1 && !fl && !tl && s == 1) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			shape = 0;																											// change to sphere
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
+		}
+			// to light first
+		else if (f == 6 && t == 1 && !fl && tl && s == 1) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			shape = 0;																											// change to sphere
+			changeShape = true;																									// set change shape flag
 		}
 		// to second
-		// to dark second (no nucleus change)
-		if (fromState == 6 && toState == 2 && !fromLight && toLight && shape == 0) {											// to light second
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetLight(false);																										// change to black
-			ScaleTo (false, "hidden", "first");																						// scale to first
-		}
-		// to third
-		if (fromState == 6 && toState == 3 && !fromLight && !toLight && shape == 0) {											// to dark third
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetLight(false);																										// change to black
+			// to dark second
+		if (f == 6 && t == 2 && !fl && !tl && s == 1) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			shape = 0;																											// change to sphere
+			changeShape = true;																									// set change shape flag
+			colour = true;																										// change to white shader
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
 		} 
-		else if (fromState == 6 && toState == 3 && !fromLight && toLight && shape == 0) {										// to light third
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetLight(false);																										// change to black
+			// to light second
+		else if (f == 6 && t == 2 && !fl && tl && s == 1) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			shape = 0;																											// change to sphere
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
 		}
-		// to fourth
-		// to dark fourth (no nucleus change)
-		// to fifth
-		if (fromState == 6 && toState == 5 && !fromLight && !toLight && shape == 0) {											// to dark circle fifth
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetLight(false);																										// change to black
-			ScaleTo (false, "hidden", "first");																						// scale to hidden
-		}
-		else if (fromState == 6 && toState == 5 && !fromLight && toLight && shape == 0) {										// to light circle fifth
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetLight(false);																										// change to black
-		}
-
-		// from light circle sixth
-		// to zero
-		if (fromState == 6 && toState == 0 && fromLight && toLight && shape == 0) ScaleTo (true, "zero", "hidden");				// scale to hidden
-		// to dark zero (no nucleus change)
-		// to first
-		// to dark first
-		if (fromState == 6 && toState == 1 && fromLight && !toLight && shape == 0) ScaleTo (false, "zero", "first");			// scale to first
-		// to light first
-		else if (fromState == 6 && toState == 1 && fromLight && toLight && shape == 0) ScaleTo (true, "zero", "hidden");		// scale to hidden
-		// to second
-		if (fromState == 6 && toState == 2 && fromLight && !toLight && shape == 0) {											// to dark second
-			ScaleTo (true, "zero", "hidden");																						// scale to hidden
-			SetLight(true);																											// change to white shader
-			ScaleTo (false, "hidden", "first");																						// scale to first
-		}
-		// to light second (no nucleus change)
 		// to third
-		// to dark third
-		if (fromState == 6 && toState == 3 && fromLight && !toLight && shape == 0) ScaleTo (true, "zero", "hidden");			// scale to hidden
-		// to light third
-		else if (fromState == 6 && toState == 3 && fromLight && toLight && shape == 0) ScaleTo (true, "zero", "hidden");		// scale to hidden
+			// to dark third
+		if (f == 6 && t == 3 && !fl && !tl && s == 1) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			shape = 0;																											// change to sphere
+			changeShape = true;																									// set change shape flag
+		}
+			// to light third
+		else if (f == 6 && t == 3 && !fl && tl && s == 1) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			shape = 0;																											// change to sphere
+			changeShape = true;																									// set change shape flag
+		}
 		// to fourth
-		if (fromState == 6 && toState == 4 && fromLight && !toLight && shape == 0) {											// to dark fourth
-			ScaleTo (true, "zero", "hidden");																						// scale to hidden
-			SetLight(true);																											// change to white
-			ScaleTo (false, "hidden", "first");																						// scale to first
+			// to light fourth
+		if (f == 6 && t == 4 && !fl && tl && s == 1) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			shape = 0;																											// change to sphere
+			changeShape = true;																									// set change shape flag
+			colour = true;																										// change to white shader
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
 		}
 		// to fifth
-		// to dark circle fifth
-		if (fromState == 6 && toState == 5 && fromLight && !toLight && shape == 0) ScaleTo (false, "zero", "first");			// scale to first
-		// to light circle fifth
-		else if (fromState == 6 && toState == 5 && fromLight && toLight && shape == 0) ScaleTo (true, "zero", "hidden");		// scale to hidden
+			// to triangle fifth
+		if (f == 6 && t == 5 && !fl && !tl && s == 1) ScaleTo (true, "first", "hidden");										// scale to hidden
 
-		// from triangle sixth
+	// from square sixth
 		// to zero
-		if (fromState == 6 && toState == 0 && !fromLight && toLight && shape == 1) {											// to zero
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetShape(0);																											// change to sphere	
+		if (f == 6 && t == 0 && !fl && tl && s == 2) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			shape = 0;																											// change to sphere
+			changeShape = true;																									// set change shape flag
 		}
 		// to dark zero
-		if (fromState == 6 && toState == 0 && !fromLight && !toLight && shape == 1) {											// to dark zero
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetShape(0);																											// change to sphere	
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
+		if (f == 6 && t == 0 && !fl && !tl && s == 2) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			shape = 0;																											// change to sphere
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
 		}
 		// to first
-		if (fromState == 6 && toState == 1 && !fromLight && !toLight && shape == 1) {											// to dark first
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetShape(0);																											// change to sphere	
-			ScaleTo (true, "hidden", "first");																						// scale to hidden
+			// to dark first
+		if (f == 6 && t == 1 && !fl && !tl && s == 2) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			shape = 0;																											// change to sphere
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
 		}
-		else if (fromState == 6 && toState == 1 && !fromLight && toLight && shape == 1) {										// to light first
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetShape(0);																											// change to sphere	
+			// to light first
+		else if (f == 6 && t == 1 && !fl && tl && s == 2) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			shape = 0;																											// change to sphere
+			changeShape = true;																									// set change shape flag
 		}
 		// to second
-		if (fromState == 6 && toState == 2 && !fromLight && !toLight && shape == 1) {											// to dark second
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetShape(0);																											// change to sphere	
-			SetLight(true);																											// change to white shader
-			ScaleTo (false, "hidden", "first");																						// scale to first
-		} 
-		else if (fromState == 6 && toState == 2 && !fromLight && toLight && shape == 1) {										// to light second
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetShape(0);																											// change to sphere	
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
+			// to dark second
+		if (f == 6 && t == 2 && !fl && !tl && s == 2) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			shape = 0;																											// change to sphere
+			changeShape = true;																									// set change shape flag
+			colour = true;																										// change to white shader
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+			// to light second
+		else if (f == 6 && t == 2 && !fl && tl && s == 2) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			shape = 0;																											// change to sphere
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
 		}
 		// to third
-		if (fromState == 6 && toState == 3 && !fromLight && !toLight && shape == 1) {											// to dark third
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetShape(0);																											// change to sphere	
+			// to dark third
+		if (f == 6 && t == 3 && !fl && !tl && s == 2) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			shape = 0;																											// change to sphere
+			changeShape = true;																									// set change shape flag
 		}
-		else if (fromState == 6 && toState == 3 && !fromLight && toLight && shape == 1) {										// to light third
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetShape(0);																											// change to sphere	
+			// to light third
+		else if (f == 6 && t == 3 && !fl && tl && s == 2) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			shape = 0;																											// change to sphere
+			changeShape = true;																									// set change shape flag
 		}
 		// to fourth
-		if (fromState == 6 && toState == 4 && !fromLight && toLight && shape == 1) {											// to light fourth
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetShape(0);																											// change to sphere	
-			SetLight(true);																											// change to white shader
-			ScaleTo (false, "hidden", "first");																						// scale to first
+			// to light fourth
+		if (f == 6 && t == 4 && !fl && tl && s == 2) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			shape = 0;																											// change to sphere
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
 		}
 		// to fifth
-		// to triangle fifth
-		if (fromState == 6 && toState == 5 && !fromLight && !toLight && shape == 1) ScaleTo (true, "first", "hidden");			// scale to hidden
+			// to square fifth
+		if (f == 6 && t == 5 && !fl && tl && s == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			shape = 0;																											// change to sphere
+			changeShape = true;																									// set change shape flag
+		}
 
-		// from square sixth
+
+///// seventh \\\\\
+
+
+	// from dark circle seventh
 		// to zero
-		if (fromState == 6 && toState == 0 && !fromLight && toLight && shape == 2) {											// to zero
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetShape(0);																											// change to sphere	
-		}
+		if (f == 7 && t == 0 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");										// scale to hidden
 		// to dark zero
-		if (fromState == 6 && toState == 0 && !fromLight && !toLight && shape == 2) {											// to dark zero
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetShape(0);																											// change to sphere	
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
-		}
+		if (f == 7 && t == 0 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "zero");										// scale to zero
 		// to first
-		if (fromState == 6 && toState == 1 && !fromLight && !toLight && shape == 2) {											// to dark first
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetShape(0);																											// change to sphere	
-			ScaleTo (false, "hidden", "first");																						// scale to hidden
-		}
-		else if (fromState == 6 && toState == 1 && !fromLight && toLight && shape == 2) {										// to light first
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetShape(0);																											// change to sphere	
-		}
+			// to dark first
+		if (f == 7 && t == 1 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "first");										// scale to first
+			// to light first
+		else if (f == 7 && t == 1 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
 		// to second
-		if (fromState == 6 && toState == 2 && !fromLight && !toLight && shape == 2) {											// to dark second
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetShape(0);																											// change to sphere	
-			SetLight(true);																											// change to white
-			ScaleTo (false, "hidden", "first");																						// scale to first
+			// to dark second
+		if (f == 7 && t == 2 && !fl && !tl && s == 0) {
+			SetLight(true);																										// change to white shader
+			resetScale = true;																									// set reset scale flag
 		}
-		else if (fromState == 6 && toState == 2 && !fromLight && toLight && shape == 2) {										// to light second
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetShape(0);																											// change to sphere	
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
-		}
+			// to light second
+		else if (f == 7 && t == 2 && !fl && tl && s == 0) ScaleTo (true, "seventh", "zero");									// scale to zero
 		// to third
-		if (fromState == 6 && toState == 3 && !fromLight && !toLight && shape == 2) {											// to dark third
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetShape(0);																											// change to sphere	
-		}
-		else if (fromState == 6 && toState == 3 && !fromLight && toLight && shape == 2) {										// to light third
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetShape(0);																											// change to sphere	
-		}
+			// to dark third
+		if (f == 7 && t == 3 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+			// to light third
+		else if (f == 7 && t == 3 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
 		// to fourth
-		if (fromState == 6 && toState == 4 && !fromLight && toLight && shape == 2) {											// to light fourth
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetShape(0);																											// change to sphere	
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
+			// to dark fourth
+		if (f == 7 && t == 4 && !fl && !tl && s == 0) {
+			SetLight(true);																										// change to white shader
+			resetScale = true;																									// set reset scale flag
 		}
 		// to fifth
-		if (fromState == 6 && toState == 5 && !fromLight && toLight && shape == 0) {											// to square fifth
-			ScaleTo (true, "first", "hidden");																						// scale to hidden
-			SetShape(0);																											// change to sphere	
-		}
-
-
-		///// seventh \\\\\
-
-
-		// from dark circle seventh
-		// to zero
-		if (fromState == 7 && toState == 0 && !fromLight && toLight && shape == 0) ScaleTo (true, "seventh", "hidden");			// scale to hidden
-		// to dark zero
-		if (fromState == 7 && toState == 0 && !fromLight && !toLight && shape == 0) ScaleTo (true, "seventh", "zero");			// scale to zero
-		// to first
-		// to dark first
-		if (fromState == 7 && toState == 1 && !fromLight && !toLight && shape == 0) ScaleTo (true, "seventh", "first");			// scale to first
-		// to light first
-		else if (fromState == 7 && toState == 1 && !fromLight && toLight && shape == 0) ScaleTo (true, "seventh", "hidden");	// scale to hidden
-		// to second
-		// to dark second
-		if (fromState == 7 && toState == 2 && !fromLight && !toLight && shape == 0) {											// to dark second
-			SetLight(true);																											// change to white shader
-			ScaleTo (true, "seventh", "first");																						// scale to first
-		}
-		// to light second
-		else if (fromState == 7 && toState == 2 && !fromLight && toLight && shape == 0) ScaleTo (true, "seventh", "zero");		// scale to zero
-		// to third
-		// to dark third
-		if (fromState == 7 && toState == 3 && !fromLight && !toLight && shape == 0) ScaleTo (true, "seventh", "hidden");		// scale to hidden
-		// to light third
-		else if (fromState == 7 && toState == 3 && !fromLight && toLight && shape == 0) ScaleTo (true, "seventh", "hidden");	// scale to hidden
-		// to fourth
-		if (fromState == 7 && toState == 4 && !fromLight && !toLight && shape == 0) {											// to dark fourth
-			SetLight(true);																											// change to white shader
-			ScaleTo (false, "seventh", "first");																					// scale to first
-		}
-		// to fifth
-		// to dark circle fifth
-		if (fromState == 7 && toState == 5 && !fromLight && !toLight && shape == 0) ScaleTo (true, "seventh", "first");			// scale to first
-		// to light circle fifth
-		if (fromState == 7 && toState == 5 && !fromLight && toLight && shape == 0) ScaleTo (true, "seventh", "hidden");			// scale to hidden
+			// to dark circle fifth
+		if (f == 7 && t == 5 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "first");										// scale to first
+			// to light circle fifth
+		if (f == 7 && t == 5 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");										// scale to hidden
 		// to sixth
-		// to dark circle sixth
-		if (fromState == 7 && toState == 6 && !fromLight && !toLight && shape == 0) {											// to dark circle sixth
-			SetLight(true);																											// change to white shader
-			ScaleTo (false, "seventh", "first");																					// scale to first
+			// to dark circle sixth
+		if (f == 7 && t == 6 && !fl && !tl && s == 0) {
+			SetLight(true);																										// change to white shader
+			resetScale = true;																									// set reset scale flag
 		}
-		// to light circle sixth
-		else if (fromState == 7 && toState == 6 && !fromLight && toLight && shape == 0) ScaleTo (false, "seventh", "zero");		// scale to first
+			// to light circle sixth
+		else if (f == 7 && t == 6 && !fl && tl && s == 0) ScaleTo (false, "seventh", "zero");									// scale to first
 
-		// from light circle seventh
+	// from light circle seventh
 		// to zero (no nucleus change)
 		// to dark zero (no nucleus change)
-		if (fromState == 7 && toState == 0 && fromLight && !toLight && shape == 0) ScaleTo (true, "hidden", "zero");			// scale to zero
+		if (f == 7 && t == 0 && fl && !tl && s == 0) ScaleTo (true, "hidden", "zero");											// scale to zero
 		// to first
-		// to dark first (no nucleus change)
-		if (fromState == 7 && toState == 1 && fromLight && !toLight && shape == 0) ScaleTo (true, "hidden", "first");			// scale to first
-		// to light first (no nucleus change)
+			// to dark first (no nucleus change)
+		if (f == 7 && t == 1 && fl && !tl && s == 0) ScaleTo (true, "hidden", "first");											// scale to first
+			// to light first (no nucleus change)
 		// to second
-		// to dark second
-		if (fromState == 7 && toState == 2 && fromLight && !toLight && shape == 0) {											// to dark second
-			SetLight(true);																											// change to white shader
-			ScaleTo (false, "hidden", "first");																						// scale to first
+			// to dark second
+		if (f == 7 && t == 2 && fl && !tl && s == 0) {
+			SetLight(true);																										// change to white shader
+			resetScale = true;																									// set reset scale flag
 		}
-		// to light second
-		else if (fromState == 7 && toState == 2 && fromLight && toLight && shape == 0) ScaleTo (false, "hidden", "zero");		// scale to zero
+			// to light second
+		else if (f == 7 && t == 2 && fl && tl && s == 0) ScaleTo (false, "hidden", "zero");										// scale to zero
 		// to third
-		// to dark third (no nucleus change)
-		// to light third (no nucleus change)
+			// to dark third (no nucleus change)
+			// to light third (no nucleus change)
 		// to fourth
-		if (fromState == 7 && toState == 4 && fromLight && !toLight && shape == 0) {											// to dark fourth
-			SetLight(true);																											// change to white shader
-			ScaleTo (false, "hidden", "first");																						// scale to first
+			// to dark fourth
+		if (f == 7 && t == 4 && fl && !tl && s == 0) {
+			SetLight(true);																										// change to white shader
+			resetScale = true;																									// set reset scale flag
 		}
 		// to fifth
-		// to dark circle fifth (no nucleus change)
-		if (fromState == 7 && toState == 5 && fromLight && !toLight && shape == 0) ScaleTo (true, "hidden", "first");			// scale to first
-		// to light circle fifth (no nucleus change)
+			// to dark circle fifth
+		if (f == 7 && t == 5 && fl && !tl && s == 0) ScaleTo (true, "hidden", "first");											// scale to first
+			// to light circle fifth (no nucleus change)
 		// to sixth
-		if (fromState == 7 && toState == 6 && fromLight && !toLight && shape == 0) {											// to dark circle sixth
-			SetLight(true);																											// change to white shader
-			ScaleTo (false, "hidden", "first");																						// scale to first
+			// to dark circle sixth
+		if (f == 7 && t == 6 && fl && !tl && s == 0) {
+			SetLight(true);																										// change to white shader
+			resetScale = true;																									// set reset scale flag
 		}
-		else if (fromState == 7 && toState == 6 && fromLight && toLight && shape == 0) {										// to light circle sixth
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
-		}
+			// to light circle sixth
+		else if (f == 7 && t == 6 && fl && tl && s == 0) ScaleTo (false, "hidden", "zero");										// scale to zero
 
-		// from dark triangle seventh
+	// from dark triangle seventh
 		// to zero
-		if (fromState == 7 && toState == 0 && !fromLight && toLight && shape == 1) SetShape(0);									// change to sphere
+		if (f == 7 && t == 0 && !fl && tl && s == 1) SetShape(0);																// change to sphere
 		// to dark zero
-		if (fromState == 7 && toState == 0 && !fromLight && !toLight && shape == 1) {											// to dark zero
-			SetShape(0);																											// change to sphere
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
+		if (f == 7 && t == 0 && !fl && !tl && s == 1) {
+			SetShape(0);																										// change to sphere
+			resetScale = true;																									// set reset scale flag
 		}
 		// to first
-		// to dark first
-		if (fromState == 7 && toState == 1 && !fromLight && !toLight && shape == 1) {											// to dark first
-			SetShape(0);																											// change to sphere
-			ScaleTo (false, "hidden", "first");																						// scale to first
+			// to dark first
+		if (f == 7 && t == 1 && !fl && !tl && s == 1) {
+			SetShape(0);																										// change to sphere
+			resetScale = true;																									// set reset scale flag
 		}
-		// to light first
-		else if (fromState == 7 && toState == 1 && !fromLight && toLight && shape == 1) SetShape(0);							// change to sphere
+			// to light first
+		else if (f == 7 && t == 1 && !fl && tl && s == 1) SetShape(0);															// change to sphere
 		// to second
-		// to dark second
-		if (fromState == 7 && toState == 2 && !fromLight && !toLight && shape == 1) {											// to dark second
-			SetShape(0);																											// change to sphere
-			SetLight(true);																											// change to white shader
-			ScaleTo (false, "hidden", "first");																						// scale to first
+			// to dark second
+		if (f == 7 && t == 2 && !fl && !tl && s == 1) {
+			SetShape(0);																										// change to sphere
+			colour = true;																										// change to white shader
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
 		}
-		// to light second
-		else if (fromState == 7 && toState == 2 && !fromLight && toLight && shape == 1) {										// to light second
-			SetShape(0);																											// change to sphere
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
+			// to light second
+		else if (f == 7 && t == 2 && !fl && tl && s == 1) {
+			SetShape(0);																										// change to sphere
+			resetScale = true;																									// set reset scale flag
 		}
 		// to third
-		// to dark third
-		if (fromState == 7 && toState == 3 && !fromLight && !toLight && shape == 1) SetShape(0);								// change to sphere
-		// to light third
-		else if (fromState == 7 && toState == 3 && !fromLight && toLight && shape == 1) SetShape(0);							// change to sphere
+			// to dark third
+		if (f == 7 && t == 3 && !fl && !tl && s == 1) SetShape(0);																// change to sphere
+			// to light third
+		else if (f == 7 && t == 3 && !fl && tl && s == 1) SetShape(0);															// change to sphere
 		// to fourth
-		if (fromState == 7 && toState == 4 && !fromLight && toLight && shape == 1) {											// to light fourth
-			SetShape(0);																											// change to sphere
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
+			// to light fourth
+		if (f == 7 && t == 4 && !fl && tl && s == 1) {
+			SetShape(0);																										// change to sphere
+			resetScale = true;																									// set reset scale flag
 		}
 		// to fifth
-		// to triangle fifth (no nucleus change)
+			// to triangle fifth (no nucleus change)
 		// to sixth
-		// to dark triangle sixth
-		if (fromState == 7 && toState == 6 && !fromLight && !toLight && shape == 1) ScaleTo (false, "hidden", "first");			// scale to first
+			// to dark triangle sixth
+		if (f == 7 && t == 6 && !fl && !tl && s == 1) ScaleTo (false, "hidden", "first");										// scale to first
 
-		// from light triangle seventh
+	// from light triangle seventh
 		// to zero
-		if (fromState == 7 && toState == 0 && fromLight && toLight && shape == 1) SetShape(0);									// change to sphere
+		if (f == 7 && t == 0 && fl && tl && s == 1) SetShape(0);																// change to sphere
 		// to dark zero
-		if (fromState == 7 && toState == 0 && fromLight && !toLight && shape == 1) {											// to dark zero
-			SetShape(0);																											// change to sphere
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
+		if (f == 7 && t == 0 && fl && !tl && s == 1) {
+			SetShape(0);																										// change to sphere
+			resetScale = true;																									// set reset scale flag
 		}
 		// to first
-		// to dark first
-		if (fromState == 7 && toState == 1 && fromLight && !toLight && shape == 1) {											// to dark first
-			SetShape(0);																											// change to sphere
-			ScaleTo (false, "hidden", "first");																						// scale to first
+			// to dark first
+		if (f == 7 && t == 1 && fl && !tl && s == 1) {
+			SetShape(0);																										// change to sphere
+			resetScale = true;																									// set reset scale flag
 		}
-		// to light first
-		else if (fromState == 7 && toState == 1 && fromLight && toLight && shape == 1) SetShape(0);								// change to sphere
+			// to light first
+		else if (f == 7 && t == 1 && fl && tl && s == 1) SetShape(0);															// change to sphere
 		// to second
-		// to dark second
-		if (fromState == 7 && toState == 2 && fromLight && !toLight && shape == 1) {											// to dark second
-			SetShape(0);																											// change to sphere
-			SetLight(true);																											// change to white shader
-			ScaleTo (false, "hidden", "first");																						// scale to first
+			// to dark second
+		if (f == 7 && t == 2 && fl && !tl && s == 1) {
+			SetShape(0);																										// change to sphere
+			colour = true;																										// change to white shader
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
 		}
-		// to light second
-		else if (fromState == 7 && toState == 2 && fromLight && toLight && shape == 1) {										// to light second
-			SetShape(0);																											// change to sphere
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
+			// to light second
+		else if (f == 7 && t == 2 && fl && tl && s == 1) {
+			SetShape(0);																										// change to sphere
+			resetScale = true;																									// set reset scale flag
 		}
 		// to third
-		// to dark third
-		if (fromState == 7 && toState == 3 && fromLight && !toLight && shape == 1) SetShape(0);									// change to sphere
-		// to light third
-		else if (fromState == 7 && toState == 3 && fromLight && toLight && shape == 1) SetShape(0);								// change to sphere
+			// to dark third
+		if (f == 7 && t == 3 && fl && !tl && s == 1) SetShape(0);																// change to sphere
+			// to light third
+		else if (f == 7 && t == 3 && fl && tl && s == 1) SetShape(0);															// change to sphere
 		// to fourth
-		if (fromState == 7 && toState == 4 && fromLight && toLight && shape == 1) {												// to light fourth
-			SetShape(0);																											// change to sphere
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
+			// to light fourth
+		if (f == 7 && t == 4 && fl && tl && s == 1) {
+			SetShape(0);																										// change to sphere
+			resetScale = true;																									// set reset scale flag
 		}
 		// to fifth
-		// to triangle fifth (no nucleus change)
+			// to triangle fifth (no nucleus change)
 		// to sixth
-		if (fromState == 7 && toState == 6 && fromLight && !toLight && shape == 1) {											// to dark triangle sixth
-			ScaleTo (false, "hidden", "first");																						// scale to first
-		}	
-		// from dark square seventh
+			// to dark triangle sixth
+		if (f == 7 && t == 6 && fl && !tl && s == 1)ScaleTo (false, "hidden", "first");											// scale to first
+
+	// from dark square seventh
 		// to zero
-		if (fromState == 7 && toState == 0 && !fromLight && toLight && shape == 2) SetShape(0);									// change to sphere
-		// to dark zero (no nucleus change)
-		if (fromState == 7 && toState == 0 && !fromLight && !toLight && shape == 2) {											// to dark zero
-			SetShape(0);																											// change to sphere
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
+		if (f == 7 && t == 0 && !fl && tl && s == 2) SetShape(0);																// change to sphere
+		// to dark zero
+		if (f == 7 && t == 0 && !fl && !tl && s == 2) {
+			SetShape(0);																										// change to sphere
+			resetScale = true;																									// set reset scale flag
 		}
 		// to first
-		// to dark first
-		if (fromState == 7 && toState == 1 && !fromLight && toLight && shape == 2) {											// to dark first
-			SetShape(0);																											// change to sphere
-			ScaleTo (false, "hidden", "first");																						// scale to first
+			// to dark first
+		if (f == 7 && t == 1 && !fl && tl && s == 2) {
+			SetShape(0);																										// change to sphere
+			resetScale = true;																									// set reset scale flag
 		}
-		// to light first
-		else if (fromState == 7 && toState == 1 && !fromLight && toLight && shape == 2) SetShape(0);							// change to sphere
+			// to light first
+		else if (f == 7 && t == 1 && !fl && tl && s == 2) SetShape(0);															// change to sphere
 		// to second
-		if (fromState == 7 && toState == 2 && !fromLight && !toLight && shape == 2) {											// to dark second
-			SetShape(0);																											// change to sphere
-			SetLight(true);																											// change to white
-			ScaleTo (false, "hidden", "first");																						// scale to first
+			// to dark second
+		if (f == 7 && t == 2 && !fl && !tl && s == 2) {
+			SetShape(0);																										// change to sphere
+			colour = true;																										// change to white shader
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
 		} 
-		else if (fromState == 7 && toState == 2 && !fromLight && toLight && shape == 2) {										// to light second
-			SetShape(0);																											// change to sphere
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
+			// to light second
+		else if (f == 7 && t == 2 && !fl && tl && s == 2) {
+			SetShape(0);																										// change to sphere
+			resetScale = true;																									// set reset scale flag
 		}
 		// to third
-		// to dark third
-		if (fromState == 7 && toState == 3 && !fromLight && !toLight && shape == 2) SetShape(0);								// change to sphere
-		// to light third
-		else if (fromState == 7 && toState == 3 && !fromLight && toLight && shape == 2) SetShape(0);							// change to sphere
+			// to dark third
+		if (f == 7 && t == 3 && !fl && !tl && s == 2) SetShape(0);																// change to sphere
+			// to light third
+		else if (f == 7 && t == 3 && !fl && tl && s == 2) SetShape(0);															// change to sphere
 		// to fourth
-		if (fromState == 7 && toState == 4 && !fromLight && toLight && shape == 2) {											// to light fourth
-			SetShape(0);																											// change to sphere
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
+			// to light fourth
+		if (f == 7 && t == 4 && !fl && tl && s == 2) {
+			SetShape(0);																										// change to sphere
+			resetScale = true;																									// set reset scale flag
 		}
 		// to fifth
-		// to square fifth (no nucleus change)
+			// to square fifth (no nucleus change)
 		// to sixth
-		if (fromState == 7 && toState == 6 && !fromLight && !toLight && shape == 2) {											// to dark square sixth
-			ScaleTo (false, "hidden", "first");																						// scale to first
-		}
+			// to dark square sixth
+		if (f == 7 && t == 6 && !fl && !tl && s == 2) ScaleTo (false, "hidden", "first");										// scale to first
 
-		// from light square seventh
+	// from light square seventh
 		// to zero
-		if (fromState == 7 && toState == 0 && fromLight && toLight && shape == 2) SetShape(0);									// change to sphere
+		if (f == 7 && t == 0 && fl && tl && s == 2) SetShape(0);																// change to sphere
 		// to dark zero
-		if (fromState == 7 && toState == 0 && fromLight && !toLight && shape == 2) {											// to dark zero
-			SetShape(0);																											// change to sphere
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
+		if (f == 7 && t == 0 && fl && !tl && s == 2) {
+			SetShape(0);																										// change to sphere
+			resetScale = true;																									// set reset scale flag
 		}
 		// to first
-		// to dark first
-		if (fromState == 7 && toState == 1 && fromLight && !toLight && shape == 2) {											// to dark first
-			SetShape(0);																											// change to sphere
-			ScaleTo (false, "hidden", "first");																						// scale to first
+			// to dark first
+		if (f == 7 && t == 1 && fl && !tl && s == 2) {
+			SetShape(0);																										// change to sphere
+			resetScale = true;																									// set reset scale flag
 		}
-		// to light first
-		else if (fromState == 7 && toState == 1 && fromLight && toLight && shape == 2) SetShape(0);								// change to sphere
+			// to light first
+		else if (f == 7 && t == 1 && fl && tl && s == 2) SetShape(0);															// change to sphere
 		// to second
-		// to dark second
-		if (fromState == 7 && toState == 2 && fromLight && !toLight && shape == 2) {											// to dark second
-			SetShape(0);																											// change to sphere
-			SetLight(true);																											// change to white
-			ScaleTo (false, "hidden", "first");																						// scale to first
+			// to dark second
+		if (f == 7 && t == 2 && fl && !tl && s == 2) {
+			SetShape(0);																										// change to sphere
+			colour = true;																										// change to white shader
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
 		}
-		else if (fromState == 7 && toState == 2 && fromLight && toLight && shape == 2) {										// to light second
-			SetShape(0);																											// change to sphere
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
+			// to light second
+		else if (f == 7 && t == 2 && fl && tl && s == 2) {
+			SetShape(0);																										// change to sphere
+			resetScale = true;																									// set reset scale flag
 		}
 		// to third
-		// to dark third
-		if (fromState == 7 && toState == 3 && fromLight && !toLight && shape == 2) SetShape(0);									// change to sphere
-		// to light third
-		else if (fromState == 7 && toState == 3 && fromLight && toLight && shape == 2) SetShape(0);								// change to sphere
+			// to dark third
+		if (f == 7 && t == 3 && fl && !tl && s == 2) SetShape(0);																// change to sphere
+			// to light third
+		else if (f == 7 && t == 3 && fl && tl && s == 2) SetShape(0);															// change to sphere
 		// to fourth
-		if (fromState == 7 && toState == 4 && fromLight && toLight && shape == 2) {												// to light fourth
-			SetShape(0);																											// change to sphere
-			ScaleTo (false, "hidden", "zero");																						// scale to zero
+			// to light fourth
+		if (f == 7 && t == 4 && fl && tl && s == 2) {
+			SetShape(0);																										// change to sphere
+			resetScale = true;																									// set reset scale flag
 		}
 		// to fifth
-		// to square fifth (no nucleus change)
+			// to square fifth (no nucleus change)
 		// to sixth
-		if (fromState == 7 && toState == 6 && fromLight && !toLight && shape == 2) {											// to dark square sixth
-			ScaleTo (false, "hidden", "first");																						// scale to first
-		}
+			// to dark square sixth
+		if (f == 7 && t == 6 && fl && !tl && s == 2) ScaleTo (false, "hidden", "first");										// scale to first
 	}
 
 	///<summary>
@@ -1047,11 +1185,11 @@ public class ParticleNucleusManager : MonoBehaviour {
 	///<para>2 = square</para>
 	///<para>3 = ring</para>
 	///</summary>
-	private void SetShape(int shape)
+	private void SetShape(int s)
 	{
-		if (shape == 0) mesh = sphere;								// change mesh to sphere
-		else if (shape == 1) mesh = triangle;						// change mesh to triangle
-		else if (shape == 2) mesh = square;							// change mesh to square
+		if (s == 0) GetComponent<MeshFilter>().mesh = sphere;								// change mesh to sphere
+		else if (s == 1) GetComponent<MeshFilter>().mesh = triangle;						// change mesh to triangle
+		else if (s == 2) GetComponent<MeshFilter>().mesh = square;							// change mesh to square
 	}
 
 	///<summary>
@@ -1093,19 +1231,19 @@ public class ParticleNucleusManager : MonoBehaviour {
 	{
 		if (lite && !psp.lightworld) {
 			rend.material.shader = lightShader;							// change to white shader
-			light = true;												// set is light flag
+			//light = true;												// set is light flag
 		} 
 		else if (!lite && !psp.lightworld) {
 			rend.material.SetColor("_Color", Color.black);				// change to black
-			light = false;												// reset is light flag
+			//light = false;												// reset is light flag
 		}
 		else if (lite && psp.lightworld) {
 			rend.material.shader = darkShader;							// change to black shader
-			light = true;												// set is light flag
+			//light = true;												// set is light flag
 		}
 		else if (!lite && psp.lightworld) {
 			rend.material.SetColor("_Color", Color.white);			// change to white
-			light = false;											// reset is light flag
+			//light = false;											// reset is light flag
 		}
 	}
 

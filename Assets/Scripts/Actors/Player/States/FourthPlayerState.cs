@@ -162,28 +162,28 @@ public class FourthPlayerState : IParticleState
 			// else if (deltaDark < deltaLight) ToZero(true);													// if gain more light than dark = to light zero (no change)
 		}
 		else if (evol == -0.5f) {																			// devolve to light world zero (if evol = -0.5)
-			if (deltaDark < deltaLight) ToZero(true);															// if lose more dark than light = to light zero
+			if (deltaDark <= deltaLight) ToZero(true);															// if lose more dark than light = to light zero
 			else if (deltaDark > deltaLight) ToZero(false);														// if lose more light than dark = to dark zero
 		} 
         // first
 		if ((evol == 1f) || (evol == -1f)) {												    			// devolve to dark or light world first (if evol == 1)
-			if (deltaDark < deltaLight) ToFirst(true);															// if lose more dark than light = to light first
+			if (deltaDark <= deltaLight) ToFirst(true);															// if lose more dark than light = to light first
 			else if (deltaDark > deltaLight) ToFirst(false);													// if lose more light than dark = to dark first
 		}
         // second
 		if ((evol == 1.5f) || (evol == -1.5f)) {												    		// devolve to dark or light world second (if evol == 1.5)
-			if (deltaDark < deltaLight) ToSecond(true);															// if lose more dark than light = to light second
+			if (deltaDark <= deltaLight) ToSecond(true);															// if lose more dark than light = to light second
 			else if (deltaDark > deltaLight) ToSecond(false);													// if lose more light than dark = to dark second
 		}
         // third
 		if ((evol >= 2f && evol < 3f) || (evol <= -2f && evol > -3f)) {						        		// devolve to dark or light world third (if evol = 2)
-			if (deltaDark < deltaLight) ToThird(true);															// if lose more dark than light = to light third
+			if (deltaDark <= deltaLight) ToThird(true);															// if lose more dark than light = to light third
 			else if (deltaDark > deltaLight) ToThird(false);													// if lose more light than dark = to dark third
 		}
         // fifth
 		if (evol >= 5f && evol < 8f) {														    			// evolve to dark world fifth (if evol >= 5 and < 8)
 			if (!light && (deltaDark > deltaLight)) ToFifth(false, 0);											// if dark & gain more dark than light = to dark circle fifth
-			else if (!light && (deltaDark < deltaLight)) ToFifth(true, 0);										// if dark & gain more light than dark = to light circle fifth
+			else if (!light && (deltaDark <= deltaLight)) ToFifth(true, 0);										// if dark & gain more light than dark = to light circle fifth
 			else if (light && (deltaDark > deltaLight)) ToFifth(true, 1);										// if light & gain more dark than light = to triangle fifth
 			else if (light && (deltaDark < deltaLight)) ToFifth(true, 2);										// if light & gain more light than dark = to square fifth
 		}

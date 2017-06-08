@@ -7,9 +7,9 @@ using UnityEngine.SceneManagement;
 
 public class StartOptions : MonoBehaviour {
 
-	public int sceneToStart = 0;										//Index number in build settings of scene to load if changeScenes is true
-	public bool changeScenes;											//If true, load a new scene when Start is pressed, if false, fade out UI and continue in single scene
-	public bool changeMusicOnStart;										//Choose whether to continue playing menu music or start a new music clip
+	//public int sceneToStart = 0;										//Index number in build settings of scene to load if changeScenes is true
+	//public bool changeScenes;											//If true, load a new scene when Start is pressed, if false, fade out UI and continue in single scene
+	//public bool changeMusicOnStart;										//Choose whether to continue playing menu music or start a new music clip
 
 
 	public bool inMainMenu = true;					//If true, pause button disabled in main menu (Cancel in input manager, default escape key)
@@ -43,42 +43,42 @@ public class StartOptions : MonoBehaviour {
 	{
 		//If changeMusicOnStart is true, fade out volume of music group of AudioMixer by calling FadeDown function of PlayMusic, using length of fadeColorAnimationClip as time. 
 		//To change fade time, change length of animation "FadeToColor"
-		if (changeMusicOnStart) 
+		/*if (changeMusicOnStart) 
 		{
 			playMusic.FadeDown(fadeColorAnimationClip.length);
-		}
+		}*/
 
 		//If changeScenes is true, start fading and change scenes halfway through animation when screen is blocked by FadeImage
-		if (changeScenes) 
+		/*if (changeScenes) 
 		{
 			//Use invoke to delay calling of LoadDelayed by half the length of fadeColorAnimationClip
 			Invoke ("LoadDelayed", fadeColorAnimationClip.length * .5f);
 
 			//Set the trigger of Animator animColorFade to start transition to the FadeToOpaque state.
 			animColorFade.SetTrigger ("fade");
-		} 
+		} */
 
 		//If changeScenes is false, call StartGameInScene
-		else 
-		{
+		/*else 
+		{*/
 			//Call the StartGameInScene function to start game without loading a new scene.
 			StartGameInScene();
-		}
+		//}
 
 	}
 
 	//Once the level has loaded, check if we want to call PlayLevelMusic
-	void OnLevelWasLoaded()
+	/*void OnLevelWasLoaded()
 	{
 		//if changeMusicOnStart is true, call the PlayLevelMusic function of playMusic
 		if (changeMusicOnStart)
 		{
 			playMusic.PlayLevelMusic ();
 		}	
-	}
+	}*/
 
 
-	public void LoadDelayed()
+	/*public void LoadDelayed()
 	{
 		//Pause button now works if escape is pressed since we are no longer in Main menu.
 		inMainMenu = false;
@@ -88,7 +88,7 @@ public class StartOptions : MonoBehaviour {
 
 		//Load the selected scene, by scene index number in build settings
 		SceneManager.LoadScene (sceneToStart);
-	}
+	}*/
 
 	public void HideDelayed()
 	{
@@ -103,11 +103,11 @@ public class StartOptions : MonoBehaviour {
 
 		//If changeMusicOnStart is true, fade out volume of music group of AudioMixer by calling FadeDown function of PlayMusic, using length of fadeColorAnimationClip as time. 
 		//To change fade time, change length of animation "FadeToColor"
-		if (changeMusicOnStart) 
+		/*	if (changeMusicOnStart) 
 		{
 			//Wait until game has started, then play new music
 			Invoke ("PlayNewMusic", fadeAlphaAnimationClip.length);
-		}
+		}*/
 		//Set trigger for animator to start animation fading out Menu UI
 		animMenuAlpha.SetTrigger ("fade");
 		animColorFade.SetTrigger ("fade");
@@ -116,11 +116,12 @@ public class StartOptions : MonoBehaviour {
 	}
 
 
-	public void PlayNewMusic()
+	/*public void PlayNewMusic()
 	{
 		//Fade up music nearly instantly without a click 
 		playMusic.FadeUp (fadeIn);
 		//Play music clip assigned to mainMusic in PlayMusic script
+		//Debug.Log("start new music");
 		playMusic.PlaySelectedMusic (1);
-	}
+	}*/
 }
