@@ -6,7 +6,7 @@ public class FirstPlayerState : IParticleState
 
 	private readonly PlayerStatePattern psp;											// reference to pattern/monobehaviour class
 
-	public bool light = true;															// 'is light' flag
+	public bool isLight = true;															// 'is light' flag
 	public float evol, deltaDark, deltaLight;											// evol tracking refs
 
 	private bool checkEvol;																// check evol flag
@@ -89,7 +89,7 @@ public class FirstPlayerState : IParticleState
 
 	public void ToZero(bool toLight)
 	{
-		psp.TransitionTo(1, 0, light, toLight, 0);								// trigger transition effects
+		psp.TransitionTo(1, 0, isLight, toLight, 0);								// trigger transition effects
 		//ParticleStateEvents.toZero += psp.TransitionToZero;						// flag transition in delegate
 		Debug.Log ("player first to zero");
 		//psp.SpawnZero(1);														// spawn 1 zero
@@ -103,42 +103,43 @@ public class FirstPlayerState : IParticleState
 
 	public void ToSecond(bool toLight)
 	{
-		psp.TransitionTo(1, 2, light, toLight, 0);								// trigger transition effects
+		psp.TransitionTo(1, 2, isLight, toLight, 0);								// trigger transition effects
+		Debug.Log ("player first to second");
 		//ParticleStateEvents.toSecond += psp.TransitionToSecond;					// flag transition in delegate
 		psp.currentState = psp.secondState;										// set to new state
 	}
 
 	public void ToThird(bool toLight)
 	{
-		psp.TransitionTo(1, 3, light, toLight, 0);								// trigger transition effects
+		psp.TransitionTo(1, 3, isLight, toLight, 0);								// trigger transition effects
 		//ParticleStateEvents.toThird += psp.TransitionToThird;						// flag transition in delegate
 		psp.currentState = psp.thirdState;										// set to new state
 	}
 
 	public void ToFourth(bool toLight)
 	{
-		psp.TransitionTo(1, 4, light, toLight, 0);								// trigger transition effects
+		psp.TransitionTo(1, 4, isLight, toLight, 0);								// trigger transition effects
 		//ParticleStateEvents.toFourth += psp.TransitionToFourth;					// flag transition in delegate
 		psp.currentState = psp.fourthState;										// set to new state
 	}
 
 	public void ToFifth(bool toLight, int shape)
 	{
-		psp.TransitionTo(1, 5, light, toLight, shape);							// trigger transition effects
+		psp.TransitionTo(1, 5, isLight, toLight, shape);							// trigger transition effects
 		//ParticleStateEvents.toFifth += psp.TransitionToFifth;						// flag transition in delegate
 		psp.currentState = psp.fifthState;										// set to new state
 	}
 
 	public void ToSixth(bool toLight, int shape)
 	{
-		psp.TransitionTo(1, 6, light, toLight, shape);							// trigger transition effects
+		psp.TransitionTo(1, 6, isLight, toLight, shape);							// trigger transition effects
 		//ParticleStateEvents.toSixth += psp.TransitionToSixth;						// flag transition in delegate
 		psp.currentState = psp.sixthState;										// set to new state
 	}
 
 	public void ToSeventh(bool toLight, int shape)
 	{
-		psp.TransitionTo(1, 7, light, toLight, shape);							// trigger transition effects
+		psp.TransitionTo(1, 7, isLight, toLight, shape);							// trigger transition effects
 		//ParticleStateEvents.toSixth += psp.TransitionToSixth;						// flag transition in delegate
 		psp.currentState = psp.seventhState;										// set to new state
 	}
@@ -146,7 +147,7 @@ public class FirstPlayerState : IParticleState
 	public void Evol()							
 	{
 		evol = psp.evol;																					// local evol check			
-		light = psp.light;																					// update light value
+		isLight = psp.isLight;																					// update light value
 		deltaDark = psp.deltaDark;																			// local dark check
 		deltaLight = psp.deltaLight;																		// local light check
 
@@ -169,7 +170,7 @@ public class FirstPlayerState : IParticleState
         // second
         if (evol >= 1.5f) {																	        		// evolve to dark world second (if evol = 1.5)
 			if (deltaDark > deltaLight) ToSecond(false);														// if gain more dark than light = to dark second
-			else if (deltaDark < deltaLight) ToSecond(true);													// if gain more light than dark = to light second
+			else if (deltaDark <= deltaLight) ToSecond(true);													// if gain more light than dark = to light second
 		}
 		else if (evol == -1.5f) {																			// devolve to light world second (if evol = -1.5)
 			if (deltaDark < deltaLight) ToSecond(true);															// if lose more dark than light = to light second

@@ -14,7 +14,7 @@ public class ParticleCoreManager : MonoBehaviour {
 
     private Shader lightShader, darkShader;         // light/dark shaders
 
-    void Awake () {
+    void Start () {
 		anim = GetComponent<Animator>();																			// init animator ref
 		rend = GetComponent<MeshRenderer>();																		// init mesh renderer ref
 		//psp = GetComponentInParent<ParticleStatePattern> ();        													// init psp ref

@@ -6,7 +6,7 @@ public class SixthPlayerState : IParticleState
 
 	private readonly PlayerStatePattern psp;											// reference to pattern/monobehaviour class
 
-	public bool light = true;															// 'is light' flag
+	public bool isLight = true;															// 'is light' flag
 	public bool circle, triangle, square;												// shape flags flag
 	public float evol, deltaDark, deltaLight;											// evol tracking refs
 	private bool checkEvol;																// check evol flag
@@ -24,7 +24,7 @@ public class SixthPlayerState : IParticleState
 		// check evol
 		if (checkEvol) {
 			Evol();																		// check evol logic
-			Debug.Log("check player evol");
+			Debug.Log("player sixth: check evol");
 			checkEvol = false;															// reset check evol flag
 		}
 
@@ -40,6 +40,10 @@ public class SixthPlayerState : IParticleState
 
 	public void OnTriggerEnter(Collider other)
 	{
+		circle = psp.circle;																	// set current circle flag
+		triangle = psp.triangle;																// set current triangle flag
+		square = psp.square;																	// set current square flag
+
 		if (canCollide) {																		// if collision allowed
 			if (other.gameObject.CompareTag ("Zero")												// collide with zero
 				|| other.gameObject.CompareTag ("First")											// collide with first
@@ -84,7 +88,7 @@ public class SixthPlayerState : IParticleState
 
 	public void ToZero(bool toLight)
 	{
-		psp.TransitionTo(6, 0, light, toLight, 0);								// trigger transition effects
+		psp.TransitionTo(6, 0, isLight, toLight, 0);								// trigger transition effects
 		//ParticleStateEvents.toZero += psp.TransitionToZero;						// flag transition in delegate
 		psp.SpawnFirst(2);														// spawn 2 Firsts
 		psp.SpawnZero(3);														// spawn 3 Zeros
@@ -93,7 +97,7 @@ public class SixthPlayerState : IParticleState
 		
 	public void ToFirst(bool toLight)
 	{
-		psp.TransitionTo(6, 1, light, toLight, 0);								// trigger transition effects
+		psp.TransitionTo(6, 1, isLight, toLight, 0);								// trigger transition effects
 		//ParticleStateEvents.toFirst += psp.TransitionToFirst;					// flag transition in delegate
 		psp.SpawnFirst(2);														// spawn 1 First
 		psp.currentState = psp.firstState;										// set to new state
@@ -101,7 +105,7 @@ public class SixthPlayerState : IParticleState
 
 	public void ToSecond(bool toLight)
 	{
-		psp.TransitionTo(6, 2, light, toLight, 0);								// trigger transition effects
+		psp.TransitionTo(6, 2, isLight, toLight, 0);								// trigger transition effects
 		//ParticleStateEvents.toSecond += psp.TranitionToSecond;					// flag transition in delegate
 		psp.SpawnFirst(1);														// spawn 1 First
 		psp.SpawnZero(3);														// spawn 3 Zero
@@ -110,7 +114,7 @@ public class SixthPlayerState : IParticleState
 
 	public void ToThird(bool toLight)
 	{
-		psp.TransitionTo(6, 3, light, toLight, 0);								// trigger transition effects
+		psp.TransitionTo(6, 3, isLight, toLight, 0);								// trigger transition effects
 		//ParticleStateEvents.toThird += psp.TransitionToThird;					// flag transition in delegate
 		psp.SpawnFirst(1);														// spawn 1 First
 		psp.SpawnZero(2);														// spawn 2 Zero
@@ -119,7 +123,7 @@ public class SixthPlayerState : IParticleState
 
 	public void ToFourth(bool toLight)
 	{
-		psp.TransitionTo(6, 4, light, toLight, 0);								// trigger transition effects
+		psp.TransitionTo(6, 4, isLight, toLight, 0);								// trigger transition effects
 		//ParticleStateEvents.toFourth += psp.TransitionToFourth;					// flag transition in delegate
 		psp.SpawnFirst(1);														// spawn 1 First
 		psp.SpawnZero(1);														// spawn 1 Zero
@@ -128,7 +132,7 @@ public class SixthPlayerState : IParticleState
 
 	public void ToFifth(bool toLight, int shape)
 	{
-		psp.TransitionTo(6, 5, light, toLight, shape);							// trigger transition effects
+		psp.TransitionTo(6, 5, isLight, toLight, shape);							// trigger transition effects
 		//ParticleStateEvents.toFifth += psp.TransitionToFifth;					// flag transition in delegate
 		psp.SpawnFirst(1);														// spawn 1 First
 		psp.currentState = psp.fifthState;										// set to new state
@@ -141,7 +145,7 @@ public class SixthPlayerState : IParticleState
 
 	public void ToSeventh(bool toLight, int shape)
 	{
-		psp.TransitionTo(6, 7, light, toLight, shape);							// trigger transition effects
+		psp.TransitionTo(6, 7, isLight, toLight, shape);							// trigger transition effects
 		//ParticleStateEvents.toSeventh += psp.TransitionToSeventh;					// flag transition in delegate
 		psp.currentState = psp.seventhState;										// set to new state
 	}
@@ -149,7 +153,7 @@ public class SixthPlayerState : IParticleState
 	public void Evol()
 	{
 		evol = psp.evol;																					// local evol check			
-		light = psp.light;																					// update light value
+		isLight = psp.isLight;																					// update light value
 		deltaDark = psp.deltaDark;																			// local dark check
 		deltaLight = psp.deltaLight;																		// local light check
 

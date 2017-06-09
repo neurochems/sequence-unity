@@ -5,15 +5,17 @@ using UnityEngine.Audio;
 public class PlayerStatePattern : MonoBehaviour {
 
 	public float evol;														// evolution level
+	public int state;														// state indicator for inspector
+	public new bool isLight;													// is light flag
 	public float darkEvol, lightEvol;										// dark & light evolution level
 	public float darkEvolStart, lightEvolStart;								// last dark & light evolution level (for delta calc)
 	public float deltaDark, deltaLight;										// delta dark & light evolution level
 
 	public float evolC, darkEvolC, lightEvolC;								// evol values at start of collision
 
-	public new bool light;													// is light flag
-	public bool toLight;													// to light flag
+	public bool circle = true, triangle, square;							// shape flags
 
+	private bool updateStateIndicator;										// update state indicator flag
 	[HideInInspector] public IParticleState currentState;					// other object state
 
 	[HideInInspector] public ZeroPlayerState zeroState;						// instance of photon state
@@ -115,7 +117,7 @@ public class PlayerStatePattern : MonoBehaviour {
 		//darkEvol = 0f;													    // start at 0.5 light evol
 		currentState = zeroState;											// start at zero state
 		//TransitionTo(0, 0, light, toLight, 0);								// start at zero size
-
+		state = 0;
 	}
 
 	void Update () 
@@ -131,6 +133,22 @@ public class PlayerStatePattern : MonoBehaviour {
 		}*/
 
 		currentState.UpdateState ();														// frame updates from current state class
+
+		// debug - show current state
+		if (updateStateIndicator) {
+			if (currentState == zeroState) state = 0;
+			else if (currentState == firstState) state = 1;
+			else if (currentState == secondState) state = 2;
+			else if (currentState == thirdState) state = 3;
+			else if (currentState == fourthState) state = 4;
+			else if (currentState == fifthState) state = 5;
+			else if (currentState == sixthState) state = 6;
+			else if (currentState == seventhState) state = 7;
+			//else if (currentState == eighthState) state = 8;
+			//else if (currentState == ninthState) state = 9;
+			//else if (currentState == tenthState) state = 10;
+			updateStateIndicator = false;
+		}
 
 		// trigger timed stun
 		if (stunned) {
@@ -256,8 +274,24 @@ public class PlayerStatePattern : MonoBehaviour {
 	public void TransitionTo (int fromState, int toState, bool fromLight, bool toLight, int shape)
 	{
 
-		light = toLight;															// update light value
-		
+		updateStateIndicator = true;
+
+		if (shape == 0) {															// if shape is circle
+			circle = true;																// set circle flag
+			triangle = false;															// reset triangle flag
+			square = false;																// reset square flag
+		}
+		else if (shape == 1) {														// if shape is circle
+			circle = false;																// reset circle flag
+			triangle = true;															// set triangle flag
+			square = false;																// reset square flag
+		}
+		else if (shape == 2) {														// if shape is circle
+			circle = false;																// reset circle flag
+			triangle = false;															// reset triangle flag
+			square = true;																// set square flag
+		}
+
 		Debug.Log ("player transition to");
 
 		if (toState == 0) { 														// to zero
@@ -308,8 +342,8 @@ public class PlayerStatePattern : MonoBehaviour {
 		else if (toState == 5) {													// to fifth
 			//rb.mass = 0.2f;															// set mass
 			musicSnapshots[6].TransitionTo(5.0f);										// AUDIO: transition to fifth state music snapshot
-			if (shape == 0 && !light) effectsSnapshots[1].TransitionTo(5.0f);			// AUDIO: transition to dark circle effects snapshot
-			if (shape == 0 && light) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
+			if (shape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);			// AUDIO: transition to dark circle effects snapshot
+			if (shape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
 			if (shape == 1) effectsSnapshots[3].TransitionTo(5.0f);						// AUDIO: transition to triangle effects snapshot
 			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot
 			sc[0].radius = 0.51f;														// update collision radius
@@ -320,8 +354,8 @@ public class PlayerStatePattern : MonoBehaviour {
 		else if (toState == 6) {													// to sixth
 			//rb.mass = 0.2f;															// set mass
 			musicSnapshots[7].TransitionTo(5.0f);										// AUDIO: transition to sixth state music snapshot
-			if (shape == 0 && !light) effectsSnapshots[1].TransitionTo(5.0f);			// AUDIO: transition to dark circle effects snapshot
-			if (shape == 0 && light) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
+			if (shape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);			// AUDIO: transition to dark circle effects snapshot
+			if (shape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
 			if (shape == 1) effectsSnapshots[3].TransitionTo(5.0f);						// AUDIO: transition to triangle effects snapshot
 			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot	
 			sc[0].radius = 0.51f;														// update collision radius
@@ -332,8 +366,8 @@ public class PlayerStatePattern : MonoBehaviour {
 		else if (toState == 7) {													// to seventh
 			// rb.mass = 0.2f;															// set mass
 			musicSnapshots[5].TransitionTo(5.0f);										// AUDIO: transition to seventh state music snapshot
-			if (shape == 0 && !light) effectsSnapshots[1].TransitionTo(5.0f);			// AUDIO: transition to dark circle effects snapshot
-			if (shape == 0 && light) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
+			if (shape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);			// AUDIO: transition to dark circle effects snapshot
+			if (shape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
 			if (shape == 1) effectsSnapshots[3].TransitionTo(5.0f);						// AUDIO: transition to triangle effects snapshot
 			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot
 			sc[0].radius = 1.53f;														// update collision radius
@@ -342,6 +376,8 @@ public class PlayerStatePattern : MonoBehaviour {
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		//new state
+
+		isLight = toLight;															// update light value
 
 		lastStateChange = Time.time;												// reset time since last state change
 

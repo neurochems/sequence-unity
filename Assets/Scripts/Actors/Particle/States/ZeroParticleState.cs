@@ -5,7 +5,7 @@ public class ZeroParticleState : IParticleState
 {
 	private readonly ParticleStatePattern psp;											// reference to pattern/monobehaviour class
 
-	public bool light;																	// 'is light' flag
+	public bool isLight;																	// 'is light' flag
 	private bool lightworld;															// is light world ref
 	public float evol, deltaDark, deltaLight;											// evol tracking refs
 	private bool checkEvol = false;																// check evol flag
@@ -144,60 +144,60 @@ public class ZeroParticleState : IParticleState
 
 	public void ToZero(bool toLight)
 	{
-		psp.TransitionTo(0, 0, light, toLight, 0);								        	// trigger transition effects
+		psp.TransitionTo(0, 0, isLight, toLight, 0);								        	// trigger transition effects
 	}
 
 	public void ToHalfZero(bool toLight)
 	{
-		psp.TransitionTo(0, 0, light, toLight, 0);                                          // trigger transition effects
+		psp.TransitionTo(0, 0, isLight, toLight, 0);                                          // trigger transition effects
 		//ParticleStateEvents.toLightZero += psp.TransitionToLightZero;
 	}
 
 	public void ToFirst(bool toLight)
 	{
-		psp.TransitionTo(0, 1, light, toLight, 0);								         	// trigger transition effects
+		psp.TransitionTo(0, 1, isLight, toLight, 0);								         	// trigger transition effects
 		//ParticleStateEvents.toFirst += psp.TransitionToFirst;				        			// flag transition in delegate
 		psp.currentState = psp.firstState;									        		// set to new state
 	}
 
 	public void ToSecond(bool toLight)
 	{
-		psp.TransitionTo(0, 2, light, toLight, 0);							        		// trigger transition effects
+		psp.TransitionTo(0, 2, isLight, toLight, 0);							        		// trigger transition effects
 		//ParticleStateEvents.toSecond += psp.TransitionToSecond;		    		    		// flag transition in delegate
 		psp.currentState = psp.secondState;							    			    	// set to new state
 	}
 
 	public void ToThird(bool toLight)
 	{
-		psp.TransitionTo(0, 3, light, toLight, 0);					    			    	// trigger transition effects
+		psp.TransitionTo(0, 3, isLight, toLight, 0);					    			    	// trigger transition effects
 		//ParticleStateEvents.toThird += psp.TransitionToThird;			    		    		// flag transition in delegate
 		psp.currentState = psp.thirdState;									           		// set to new state
 	}
 
 	public void ToFourth(bool toLight)
 	{
-		psp.TransitionTo(0, 4, light, toLight, 0);					    			    	// trigger transition effects
+		psp.TransitionTo(0, 4, isLight, toLight, 0);					    			    	// trigger transition effects
 		//ParticleStateEvents.toFourth += psp.TransitionToFourth;		    	    			// flag transition in delegate
 		psp.currentState = psp.fourthState;									      	    	// set to new state
 	}
 
 	public void ToFifth(bool toLight, int shape)
 	{
-		psp.TransitionTo(0, 5, light, toLight, shape);				    			    	// trigger transition effects
+		psp.TransitionTo(0, 5, isLight, toLight, shape);				    			    	// trigger transition effects
 		//ParticleStateEvents.toFifth += psp.TransitionToFifth;			    	    			// flag transition in delegate
 		psp.currentState = psp.fifthState;									        		// set to new state
 	}
 
 	public void ToSixth(bool toLight, int shape)
 	{
-		psp.TransitionTo(0, 6, light, toLight, shape);				    		    		// trigger transition effects
+		psp.TransitionTo(0, 6, isLight, toLight, shape);				    		    		// trigger transition effects
 		//ParticleStateEvents.toSixth += psp.TransitionToSixth;			        				// flag transition in delegate
 		psp.currentState = psp.sixthState;								    	    		// set to new state
 	}
 
 	public void ToSeventh(bool toLight, int shape)
 	{
-		psp.TransitionTo(0, 7, light, toLight, shape);					    		    	// trigger transition effects
+		psp.TransitionTo(0, 7, isLight, toLight, shape);					    		    	// trigger transition effects
 		//ParticleStateEvents.toSeventh += psp.TransitionToSeventh;			        			// flag transition in delegate
 		psp.currentState = psp.seventhState;								    	    	// set to new stateebug.Log ("Can't transition to same state");
 	}
@@ -205,17 +205,17 @@ public class ZeroParticleState : IParticleState
     public void Init()
     {
 		evol = psp.evol;                                                                    // local evol check
-		light = psp.light;																	// update light value
+		isLight = psp.isLight;																	// update light value
 
         if (evol == 0f) ToZero(true);               									    // init to light zero
 		else if (evol == 0.5f) ToHalfZero(false);               							// init to half zero
 		else if (evol == 1f) {																// if first
-			if (light) ToFirst(true);               											// init to light first
-			if (!light) ToFirst(false);															// init to dark first
+			if (isLight) ToFirst(true);               											// init to light first
+			if (!isLight) ToFirst(false);															// init to dark first
 		}
 		else if (evol == 1.5f) {															// if second
-			if (light) ToSecond(true);               											// init to light second
-			if (!light) ToSecond(false);														// init to dark second
+			if (isLight) ToSecond(true);               											// init to light second
+			if (!isLight) ToSecond(false);														// init to dark second
 		}
         else if (evol == 2f) ToThird(true);               									// init to light third
         else if (evol == 3f) {																// init to light fourth
@@ -252,7 +252,7 @@ public class ZeroParticleState : IParticleState
 
 		evol = psp.evol;																	// local evol check			
 		lightworld = psp.lightworld;														// local lightworld check
-		light = psp.light;																	// update light value
+		isLight = psp.isLight;																	// update light value
 		deltaDark = psp.deltaDark;															// local dark check
 		deltaLight = psp.deltaLight;														// local light check
 
@@ -261,7 +261,7 @@ public class ZeroParticleState : IParticleState
 
 		if (evol == 0f && !lightworld) {													// devolve to dark world zero within dark world
 			//Debug.Log ("fucking shit up");
-			if (deltaDark == -0.5f || deltaLight == -0.5f) ToZero (true);							// to dark world zero
+			if (deltaDark == -0.5f || deltaLight == -0.5f) ToZero (true);						// to dark world zero
 		}
 		// half zero
 		if (evol == 0.5f && !lightworld) {													// evolve to dark world half zero within dark world

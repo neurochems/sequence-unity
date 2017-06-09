@@ -11,7 +11,7 @@ public class PlayerCoreManager : MonoBehaviour {
 	private bool changeShape = false, resetScale = false;															// timer trigger for changing shape, resetting scale after world switch
 	private float changeShapeTimer, resetScaleTimer;																// change shape timer, reset scale timer
 
-	void Awake () {
+	void Start () {
 		anim = GetComponent<Animator>();																			// init animator ref
 		rend = GetComponent<MeshRenderer>();																		// init mesh renderer ref
 	}
@@ -108,18 +108,16 @@ public class PlayerCoreManager : MonoBehaviour {
 			// to light third
 		else if (f == 2 && t == 3 && fl && tl) ScaleTo (false, "first", "third");									// scale to third
 
-	///// third \\\\\
+///// third \\\\\
 
-		// to fourth
-
-		// from dark third
-			// to dark fourth (no core change)
-			// to light fourth
+	// from dark third
+		// to dark fourth (no core change)
+		// to light fourth
 		if (f == 3 && t == 4 && !fl && tl) ScaleTo (false, "hidden", "third");										// scale to third
-		// from light third
-			// to dark fourth
+	// from light third
+		// to dark fourth
 		if (f == 3 && t == 4 && fl && !tl) ScaleTo (true, "third", "hidden");										// scale to hidden
-			// to light fourth (no core change)
+		// to light fourth (no core change)
 
 	///// fourth \\\\\
 

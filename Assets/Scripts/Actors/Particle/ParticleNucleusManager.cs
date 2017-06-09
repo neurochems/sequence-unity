@@ -15,7 +15,7 @@ public class ParticleNucleusManager : MonoBehaviour {
 
 	private Shader lightShader, darkShader;																						// light/dark shaders
 
-	void Awake () {
+	void Start () {
 		anim = GetComponent<Animator>();																						// init animator ref
 		rend = GetComponent<MeshRenderer>();																					// init mesh renderer ref
 		psp = GetComponentInParent<ParticleStatePattern> ();																	// init psp ref
@@ -1204,19 +1204,19 @@ public class ParticleNucleusManager : MonoBehaviour {
 	{
 		if (lite && toLW) {												// if to light world and light (as in second, fourth, etc)
 			rend.material.shader = darkShader;								// change to black shader
-			light = true;													// set is light flag
+			//light = true;													// set is light flag
 		} 
 		else if (!lite && toLW) {										// if to light world and dark (as in dark zero, first, etc)
 			rend.material.SetColor("_Color", Color.white);					// change to white
-			light = false;													// reset is light flag
+			//light = false;													// reset is light flag
 		}
 		else if (lite && !toLW) {										// if to dark world and light (as in second, fourth, etc)
 			rend.material.shader = lightShader;								// change to white shader
-			light = true;													// set is light flag
+			//light = true;													// set is light flag
 		}
 		else if (!lite && !toLW) {										// if to dark world and dark (as in dark zero, first, etc)
 			rend.material.SetColor("_Color", Color.black);					// change to black
-			light = false;													// reset is light flag
+			//light = false;													// reset is light flag
 		}
 	}
 

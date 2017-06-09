@@ -2,37 +2,11 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Actors\Player\PlayerNucleusManager.cs">
     <Files>
-      <File FileName="Assets\Scripts\Actors\Player\PlayerStatePattern.cs" Line="244" Column="6" />
-      <File FileName="Assets\Scripts\Actors\Player\States\FourthPlayerState.cs" Line="172" Column="4" />
-      <File FileName="Assets\Scripts\Actors\Player\States\FifthPlayerState.cs" Line="30" Column="40" />
-      <File FileName="Assets\Scripts\Actors\Player\PlayerNucleusManager.cs" Line="1193" Column="36" />
-      <File FileName="Assets\Scripts\Actors\Particle\ParticleNucleusManager.cs" Line="1246" Column="6" NotebookId="1" />
-      <File FileName="Assets\Scripts\Actors\Particle\ParticleCoreManager.cs" Line="95" Column="25" NotebookId="1" />
+      <File FileName="Assets\Scripts\Actors\Player\PlayerStatePattern.cs" Line="275" Column="3" />
+      <File FileName="Assets\Scripts\Actors\Player\PlayerShellManager.cs" Line="166" Column="41" />
+      <File FileName="Assets\Scripts\Actors\Player\PlayerNucleusManager.cs" Line="268" Column="29" />
+      <File FileName="Assets\Scripts\Actors\Player\PlayerCoreManager.cs" Line="9" Column="2" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State name="__root__">
-          <Node name="Sequence" expanded="True">
-            <Node name="Assembly-CSharp" expanded="True">
-              <Node name="Scripts" expanded="True">
-                <Node name="Actors" expanded="True">
-                  <Node name="Particle" expanded="True" />
-                  <Node name="Player" expanded="True">
-                    <Node name="States" expanded="True" />
-                    <Node name="PlayerNucleusManager.cs" selected="True" />
-                  </Node>
-                </Node>
-              </Node>
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-      <Pad Id="MonoDevelop.NUnit.TestPad">
-        <State name="__root__">
-          <Node name="Sequence" expanded="True" selected="True" />
-        </State>
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

@@ -4,15 +4,15 @@ using System.Collections;
 public class ParticleStatePattern : MonoBehaviour {
 
 	public float evol;														// evolution level
+	public int state;														// state indicator for inspector
+	public new bool isLight;													// is light flag
 	public float darkEvol, lightEvol;										// dark & light evolution level
 	public float darkEvolStart, lightEvolStart;								// last dark & light evolution level (for delta calc)
 	public float deltaDark, deltaLight;										// delta dark & light evolution level
 
 	public float evolC, darkEvolC, lightEvolC;								// evol values at start of collision
 
-	public new bool light;													// is light flag
-	public bool toLight;													// to light flag
-
+	private bool updateStateIndicator;										// update state indicator flag
 	[HideInInspector] public IParticleState currentState;					// other object state
 	//[HideInInspector] public int previousState;								// previous state index / Fn
 
@@ -119,6 +119,22 @@ public class ParticleStatePattern : MonoBehaviour {
 
 		currentState.UpdateState ();										// frame updates from current state class
 
+		// debug - show current state
+		if (updateStateIndicator) {
+			if (currentState == zeroState) state = 0;
+			else if (currentState == firstState) state = 1;
+			else if (currentState == secondState) state = 2;
+			else if (currentState == thirdState) state = 3;
+			else if (currentState == fourthState) state = 4;
+			else if (currentState == fifthState) state = 5;
+			else if (currentState == sixthState) state = 6;
+			else if (currentState == seventhState) state = 7;
+			//else if (currentState == eighthState) state = 8;
+			//else if (currentState == ninthState) state = 9;
+			//else if (currentState == tenthState) state = 10;
+			updateStateIndicator = false;
+		}
+
 		// stun duration timer
 		if (stunned) {
 			//Stun ();
@@ -205,6 +221,9 @@ public class ParticleStatePattern : MonoBehaviour {
 
 	public void TransitionTo(int fromState, int toState, bool fromLight, bool toLight, int shape)
 	{
+
+		updateStateIndicator = true;
+
 		if (toState == 0)	{ 														// to zero
 			// rb.mass = 0.2f;															// set mass
 			gameObject.tag = "Zero";													// set tag
@@ -263,7 +282,7 @@ public class ParticleStatePattern : MonoBehaviour {
 		}
 		//new state
 
-		light = toLight;															// set light flag
+		isLight = toLight;															// set light flag
 
 		darkEvolStart = darkEvol;													// store dark evol at start of state
 		lightEvolStart = lightEvol;													// store light evol at start of state

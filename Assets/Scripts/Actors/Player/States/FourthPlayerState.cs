@@ -6,7 +6,7 @@ public class FourthPlayerState : IParticleState
 
 	private readonly PlayerStatePattern psp;											// reference to pattern/monobehaviour class
 
-	public bool light = true;															// 'is light' flag
+	public bool isLight = true;															// 'is light' flag
 	public float evol, deltaDark, deltaLight;											// evol tracking refs
 	private bool checkEvol;																// check evol flag
 
@@ -85,7 +85,7 @@ public class FourthPlayerState : IParticleState
 
 	public void ToZero(bool toLight)
 	{
-		psp.TransitionTo(4, 0, light, toLight, 0);								// trigger transition effects
+		psp.TransitionTo(4, 0, isLight, toLight, 0);								// trigger transition effects
 		//ParticleStateEvents.toZero += psp.TransitionToZero;						// flag transition in delegate
 		psp.SpawnFirst(1);														// spawn 1 First
 		psp.SpawnZero(2);														// spawn 2 Zeros
@@ -94,7 +94,7 @@ public class FourthPlayerState : IParticleState
 
 	public void ToFirst(bool toLight)
 	{
-		psp.TransitionTo(4, 1, light, toLight, 0);								// trigger transition effects
+		psp.TransitionTo(4, 1, isLight, toLight, 0);								// trigger transition effects
 		//ParticleStateEvents.toFirst += psp.TransitionToFirst;					// flag transition in delegate
 		psp.SpawnZero(3);														// spawn 3 Zeros
 		psp.currentState = psp.firstState;										// set to new state
@@ -102,7 +102,7 @@ public class FourthPlayerState : IParticleState
 
 	public void ToSecond(bool toLight)
 	{
-		psp.TransitionTo(4, 2, light, toLight, 0);								// trigger transition effects
+		psp.TransitionTo(4, 2, isLight, toLight, 0);								// trigger transition effects
 		//ParticleStateEvents.toSecond += psp.TransitionToSecond;					// flag transition in delegate
 		psp.SpawnZero(2);														// spawn 2 Zeros
 		psp.currentState = psp.secondState;										// set to new state
@@ -110,7 +110,7 @@ public class FourthPlayerState : IParticleState
 
 	public void ToThird(bool toLight)
 	{
-		psp.TransitionTo(4, 3, light, toLight, 0);								// trigger transition effects
+		psp.TransitionTo(4, 3, isLight, toLight, 0);								// trigger transition effects
 		//ParticleStateEvents.toThird += psp.TransitionToThird;					// flag transition in delegate
 		psp.SpawnZero(1);														// spawn 1 Zero
 		psp.currentState = psp.thirdState;										// set to new state
@@ -123,21 +123,21 @@ public class FourthPlayerState : IParticleState
 
 	public void ToFifth(bool toLight, int shape)
 	{
-		psp.TransitionTo(4, 5, light, toLight, shape);							// trigger transition effects
+		psp.TransitionTo(4, 5, isLight, toLight, shape);							// trigger transition effects
 		//ParticleStateEvents.toFifth += psp.TransitionToFifth;					// flag transition in delegate
 		psp.currentState = psp.fifthState;										// set to new state
 	}
 
 	public void ToSixth(bool toLight, int shape)
 	{
-		psp.TransitionTo(4, 6, light, toLight, shape);							// trigger transition effects
+		psp.TransitionTo(4, 6, isLight, toLight, shape);							// trigger transition effects
 		//ParticleStateEvents.toSixth += psp.TransitionToSixth;						// flag transition in delegate
 		psp.currentState = psp.sixthState;										// set to new state
 	}
 
 	public void ToSeventh(bool toLight, int shape)
 	{
-		psp.TransitionTo(4, 7, light, toLight, shape);							// trigger transition effects
+		psp.TransitionTo(4, 7, isLight, toLight, shape);							// trigger transition effects
 		//ParticleStateEvents.toSixth += psp.TransitionToSixth;						// flag transition in delegate
 		psp.currentState = psp.seventhState;										// set to new state
 	}
@@ -145,7 +145,7 @@ public class FourthPlayerState : IParticleState
 	public void Evol()													
 	{
 		evol = psp.evol;																					// local evol check			
-		light = psp.light;																					// update light value
+		isLight = psp.isLight;																					// update light value
 		deltaDark = psp.deltaDark;																			// local dark check
 		deltaLight = psp.deltaLight;																		// local light check
 
@@ -182,10 +182,10 @@ public class FourthPlayerState : IParticleState
 		}
         // fifth
 		if (evol >= 5f && evol < 8f) {														    			// evolve to dark world fifth (if evol >= 5 and < 8)
-			if (!light && (deltaDark > deltaLight)) ToFifth(false, 0);											// if dark & gain more dark than light = to dark circle fifth
-			else if (!light && (deltaDark <= deltaLight)) ToFifth(true, 0);										// if dark & gain more light than dark = to light circle fifth
-			else if (light && (deltaDark > deltaLight)) ToFifth(true, 1);										// if light & gain more dark than light = to triangle fifth
-			else if (light && (deltaDark < deltaLight)) ToFifth(true, 2);										// if light & gain more light than dark = to square fifth
+			if (!isLight && (deltaDark > deltaLight)) ToFifth(false, 0);										// if dark & gain more dark than light = to dark circle fifth
+			else if (!isLight && (deltaDark <= deltaLight)) ToFifth(true, 0);									// if dark & gain more light than dark = to light circle fifth
+			else if (isLight && (deltaDark > deltaLight)) ToFifth(true, 1);										// if light & gain more dark than light = to triangle fifth
+			else if (isLight && (deltaDark < deltaLight)) ToFifth(true, 2);										// if light & gain more light than dark = to square fifth
 		}
 		else if (evol <= -5f && evol > -8f) {																// devolve to light world fifth (if evol = -5)
 			if (deltaDark < deltaLight) ToFifth(true, 0);														// if lose more dark than light = to light circle fifth

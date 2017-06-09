@@ -15,7 +15,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 
 	private Shader lightShader, darkShader;																			// light/dark shaders
 
-	void Awake () {
+	void Start () {
 		anim = GetComponent<Animator>();																			// init animator ref
 		rend = GetComponent<MeshRenderer>();																		// init mesh renderer ref
 		psp = GameObject.Find ("Player")
@@ -100,7 +100,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 			changeColour = true;																								// set change colour flag
 		}
 		// to light second
-		else if (f == 1 && t == 2 && !fl && tl) ScaleTo (false, "hidden", "zero");												// scale to zero
+		else if (f == 1 && t == 2 && !fl && tl) ScaleTo (true, "first", "zero");												// scale to zero
 		// to dark third
 		if (f == 1 && t == 3 && !fl && !tl) {			
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
@@ -118,7 +118,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 		// to dark second
 		if (f == 1 && t == 2 && fl && !tl) {			
 			SetLight (true);																									// change to white shader
-			ScaleTo (false, "hidden", "first");																					// scale to first
+			resetScale = true;																									// set reset scale flag
 		}
 		// to light second
 		else if (f == 1 && t == 2 && fl && tl) ScaleTo (false, "hidden", "zero");												// scale to first
@@ -160,7 +160,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 		// to dark fourth
 		if (f == 3 && t == 4 && !fl && !tl) {							
 			SetLight (true);																									// change to white shader
-			ScaleTo (false, "hidden", "first");																					// scale to first
+			resetScale = true;																									// set reset scale flag
 		}
 		// to light fourth
 		else if (f == 3 && t == 4 && !fl && tl) ScaleTo (false, "hidden", "zero");												// scale to zero
@@ -169,7 +169,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 		// to dark fourth
 		if (f == 3 && t == 4 && fl && !tl) {							
 			SetLight (true);																									// change to white shader
-			ScaleTo (false, "hidden", "first");																					// scale to first
+			resetScale = true;																									// set reset scale flag
 		}
 		// to light fourth
 		else if (f == 3 && t == 4 && fl && tl) ScaleTo (false, "hidden", "zero");												// scale to first
@@ -224,7 +224,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 		// to dark circle sixth
 		if (f == 5 && t == 6 && fl && !tl && s == 0) {			
 			SetLight(true);																										// set to white shader
-			ScaleTo (false, "hidden", "first");																					// scale to first
+			resetScale = true;																									// set reset scale flag
 		}
 		// to light circle sixth
 		else if (f == 5 && t == 6 && fl && tl && s == 0) {
@@ -267,15 +267,15 @@ public class PlayerNucleusManager : MonoBehaviour {
 
 	// from dark triangle sixth
 		// to dark triangle seventh
-		if (f == 6 && t == 7 && !fl && !tl && s == 1) ScaleTo (false, "first", "hidden");										// scale to hidden
+		if (f == 6 && t == 7 && !fl && !tl && s == 1) ScaleTo (true, "first", "hidden");										// scale to hidden
 		// to light triangle seventh
-		else if (f == 6 && t == 7 && !fl && tl && s == 1) ScaleTo (false, "first", "hidden");									// scale to hidden
+		else if (f == 6 && t == 7 && !fl && tl && s == 1) ScaleTo (true, "first", "hidden");									// scale to hidden
 
 	// from dark square sixth
 		// to dark square seventh
-		if (f == 6 && t == 7 && !fl && !tl && s == 2) ScaleTo (false, "first", "hidden");										// scale to hidden
+		if (f == 6 && t == 7 && !fl && !tl && s == 2) ScaleTo (true, "first", "hidden");										// scale to hidden
 		// to light square seventh
-		else if (f == 6 && t == 7 && !fl && tl && s == 2) ScaleTo (false, "first", "hidden");									// scale to hidden
+		else if (f == 6 && t == 7 && !fl && tl && s == 2) ScaleTo (true, "first", "hidden");									// scale to hidden
 
 
 ///// seventh \\\\\
@@ -409,7 +409,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 			// to dark second
 		if (f == 3 && t == 2 && !fl && !tl) {
 			SetLight(true);																										// change to white shader
-			ScaleTo (false, "hidden", "first");																					// scale to first
+			resetScale = true;																									// set reset scale flag
 		}
 			// to light second
 		else if (f == 3 && t == 2 && !fl && tl) ScaleTo (false, "hidden", "zero");												// scale to zero
@@ -426,7 +426,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 			// to dark second					
 		if (f == 3 && t == 2 && fl && !tl) {
 			SetLight(true);																										// change to white
-			ScaleTo (false, "hidden", "first");																					// scale to first
+			resetScale = true;																									// set reset scale flag
 		}
 			// to light second
 		else if (f == 3 && t == 2 && !fl && tl) ScaleTo (false, "hidden", "zero");												// scale to first
@@ -548,7 +548,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 			// to dark second
 		if (f == 5 && t == 2 && fl && !tl && s == 0) {
 			SetLight(true);																										// change to white shader	
-			ScaleTo (false, "hidden", "first");																					// scale to zero
+			resetScale = true;																									// set reset scale flag
 		}
 			// to light second
 		else if (f == 5 && t == 2 && fl && tl && s == 0) ScaleTo (false, "hidden", "zero");										// scale to zero
@@ -559,7 +559,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 			// to dark fourth
 		if (f == 5 && t == 4 && fl && !tl && s == 0) {
 			SetLight(true);																										// change to white
-			ScaleTo (false, "hidden", "first");																					// scale to first
+			resetScale = true;																									// set reset scale flag
 		}
 	
 	// from triangle fifth

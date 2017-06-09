@@ -6,7 +6,7 @@ public class SeventhParticleState : IParticleState
 
 	private readonly ParticleStatePattern psp;											// reference to pattern/monobehaviour class
 
-	public bool light = true;															// 'is light' flag
+	public bool isLight = true;															// 'is light' flag
 	private bool lightworld;															// is light world ref
 	public bool circle, triangle, square;												// shape flags flag
 	public float evol, deltaDark, deltaLight;											// evol tracking refs
@@ -155,7 +155,7 @@ public class SeventhParticleState : IParticleState
 
 	public void ToZero(bool toLight)
 	{
-		psp.TransitionTo(7, 0, light, toLight, 0);								// trigger transition effects
+		psp.TransitionTo(7, 0, isLight, toLight, 0);								// trigger transition effects
 		//ParticleStateEvents.toZero += psp.TransitionToZero;						// flag transition in delegate
 		psp.SpawnFirst(4);														// spawn 4 Firsts
 		psp.SpawnZero(3);														// spawn 3 Zeros
@@ -164,7 +164,7 @@ public class SeventhParticleState : IParticleState
 
 	public void ToFirst(bool toLight)
 	{
-		psp.TransitionTo(7, 1, light, toLight, 0);								// trigger transition effects
+		psp.TransitionTo(7, 1, isLight, toLight, 0);								// trigger transition effects
 		//ParticleStateEvents.toFirst += psp.TransitionToFirst;					// flag transition in delegate
 		psp.SpawnFirst(4);														// spawn 4 First
 		psp.SpawnZero(2);														// spawn 2 Zeros
@@ -173,7 +173,7 @@ public class SeventhParticleState : IParticleState
 
 	public void ToSecond(bool toLight)
 	{
-		psp.TransitionTo(7, 2, light, toLight, 0);								// trigger transition effects
+		psp.TransitionTo(7, 2, isLight, toLight, 0);								// trigger transition effects
 		//ParticleStateEvents.toSecond += psp.TransitionToSecond;					// flag transition in delegate
 		psp.SpawnFirst(3);														// spawn 3 First
 		psp.SpawnZero(3);														// spawn 3 Zero
@@ -182,7 +182,7 @@ public class SeventhParticleState : IParticleState
 
 	public void ToThird(bool toLight)
 	{
-		psp.TransitionTo(7, 3, light, toLight, 0);								// trigger transition effects
+		psp.TransitionTo(7, 3, isLight, toLight, 0);								// trigger transition effects
 		//ParticleStateEvents.toThird += psp.TransitionToThird;					// flag transition in delegate
 		psp.SpawnFirst(3);														// spawn 3 First
 		psp.SpawnZero(2);														// spawn 2 Zero
@@ -191,7 +191,7 @@ public class SeventhParticleState : IParticleState
 
 	public void ToFourth(bool toLight)
 	{
-		psp.TransitionTo(7, 4, light, toLight, 0);								// trigger transition effects
+		psp.TransitionTo(7, 4, isLight, toLight, 0);								// trigger transition effects
 		//ParticleStateEvents.toFourth += psp.TransitionToFourth;					// flag transition in delegate
 		psp.SpawnFirst(2);														// spawn 2 First
 		psp.SpawnZero(3);														// spawn 3 Zero
@@ -200,7 +200,7 @@ public class SeventhParticleState : IParticleState
 
 	public void ToFifth(bool toLight, int shape)
 	{
-		psp.TransitionTo(7, 5, light, toLight, shape);							// trigger transition effects
+		psp.TransitionTo(7, 5, isLight, toLight, shape);							// trigger transition effects
 		//ParticleStateEvents.toFifth += psp.TransitionToFifth;					// flag transition in delegate
 		psp.SpawnFirst(3);														// spawn 3 First
 		psp.currentState = psp.fifthState;										// set to new state
@@ -208,7 +208,7 @@ public class SeventhParticleState : IParticleState
 
 	public void ToSixth(bool toLight, int shape)
 	{
-		psp.TransitionTo(7, 6, light, toLight, shape);							// trigger transition effects
+		psp.TransitionTo(7, 6, isLight, toLight, shape);							// trigger transition effects
 		//ParticleStateEvents.toSixth += psp.TransitionToSixth;					// flag transition in delegate
 		psp.SpawnFirst(2);														// spawn 2 First
 		psp.SpawnZero(1);														// spawn 1 Zero
@@ -231,7 +231,7 @@ public class SeventhParticleState : IParticleState
 	{
 		evol = psp.evol;																	// local evol check			
 		lightworld = psp.lightworld;														// local lightworld check
-		light = psp.light;																	// update light value
+		isLight = psp.isLight;																	// update light value
 		deltaDark = psp.deltaDark;															// local dark check
 		deltaLight = psp.deltaLight;														// local light check
 

@@ -5,7 +5,7 @@ public class PlayerShellManager : MonoBehaviour {
 
 	private Animator anim;						// animator on core ref
 
-	void Awake () {
+	void Start () {
 		anim = GetComponent<Animator>();		// init animator ref
 	}
 
@@ -81,7 +81,7 @@ public class PlayerShellManager : MonoBehaviour {
 		// from dark third
 			// to dark fourth (no shell change)
 		if (fromState == 3 && toState == 4 && !fromLight && toLight) {			// to light fourth
-			ScaleTo (false, "third", "hidden");										// scale to hidden
+			ScaleTo (true, "third", "hidden");										// scale to hidden
 		}
 		// from light third
 		if (fromState == 3 && toState == 4 && fromLight && !toLight) {			// to dark fourth
@@ -164,7 +164,7 @@ public class PlayerShellManager : MonoBehaviour {
 		// from dark triangle seventh
 			// to dark triangle eighth (no shell change)
 		if (fromState == 7 && toState == 8 && !fromLight && toLight && shape == 1) {			// to light triangle eighth
-			ScaleTo (false, "seventh", "hidden");													// scale to hidden
+			ScaleTo (true, "seventh", "hidden");													// scale to hidden
 		}
 
 		// from light triangle seventh
