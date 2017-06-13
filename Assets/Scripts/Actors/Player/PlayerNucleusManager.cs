@@ -21,7 +21,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 		psp = GameObject.Find ("Player")
 			.gameObject.GetComponent<PlayerStatePattern> ();														// init psp ref
 		lightShader = Shader.Find("Unlit/light_nucleus");															// init light nucleus shader
-		//darkShader = Shader.Find("dark_nucleus");																	// init dark nucleus shader
+		darkShader = Shader.Find("Unlit/light_nucleus");															// init dark nucleus shader
 	}
 
 	void Update() {
@@ -218,7 +218,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 			changeColour = true;																								// set change colour flag
 		}
 		// to light circle sixth
-		else if (f == 5 && t == 6 && !fl && tl && s == 0) ScaleTo (false, "first", "zero");										// scale to first
+		else if (f == 5 && t == 6 && !fl && tl && s == 0) ScaleTo (true, "first", "zero");										// scale to first
 
 	// from light circle fifth
 		// to dark circle sixth
@@ -1191,6 +1191,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 			//light = true;												// set is light flag
 		} 
 		else if (!l && !psp.lightworld) {
+			rend.material.shader = Shader.Find("Unlit/Color");			// change to unlit colour shader
 			rend.material.SetColor("_Color", Color.black);				// change to black
 			//light = false;												// reset is light flag
 		}
@@ -1199,6 +1200,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 			//light = true;												// set is light flag
 		}
 		else if (!l && psp.lightworld) {
+			rend.material.shader = Shader.Find("Unlit/Color");			// change to unlit colour shader
 			rend.material.SetColor("_Color", Color.white);				// change to white
 			//light = false;												// reset is light flag
 		}

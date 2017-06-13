@@ -44,7 +44,8 @@ public class PlayerStatePattern : MonoBehaviour {
 	private MeshRenderer rendWorld, rendCore, rendShell, rendNucleus;		// mesh renderers (for lightworld colour changes)
 
 	private int toState, fromState;											// state transitioning to/from (for timers)
-	private bool changeWorld = false, resetScale = false;					// timer trigger for changing colour, resetting scale after world switch
+	private bool changeWorld = false;										// timer trigger for changing colour, 
+	[HideInInspector] public bool resetScale = false;						// timer trigger for resetting scale after world switch (public for camera manager access)
 	private float changeWorldTimer, resetScaleTimer;						// change shape timer, reset scale timer
 
 	// timers & flags
@@ -390,12 +391,7 @@ public class PlayerStatePattern : MonoBehaviour {
 	{
 		fromState = from;
 		toState = to;
-		if (toLightworld) {															// if light world
-			cam.ZoomCamera (true, from, to);											// zoom camera in from particular state
-			changeWorld = true;															// switch properties
-			resetScale = true;															// zoom camera out to appropriate state
-		} 
-		else if (toDarkworld) {														// switching back to dark world
+		if (toLightworld || toDarkworld) {											// if changing worlds
 			cam.ZoomCamera (true, from, to);											// zoom camera in from particular state
 			changeWorld = true;															// switch properties
 			resetScale = true;															// zoom camera out to appropriate state
@@ -412,10 +408,10 @@ public class PlayerStatePattern : MonoBehaviour {
 			changeParticles = true;														// set change particle property trigger
 
 			rendWorld.material.SetColor("_Color", Color.white);							// change world to white
-			
-			pcm.SetLight (false);														// set core to black
+			//pcm.SetLight (false);														// set core to black
+			rendCore.material.SetColor("_Color", Color.black);							// change core to black
 			rendShell.material.SetColor("_Color", Color.black);							// change shell to black
-			rendNucleus.material.SetColor("_Color", Color.black);						// change nucleus to black
+			rendNucleus.material.SetColor("_Color", Color.white);						// change nucleus to white
 
 			effectsSnapshots[5].TransitionTo(5.0f);										// AUDIO: transition to light world effects snapshot
 
@@ -427,7 +423,8 @@ public class PlayerStatePattern : MonoBehaviour {
 			changeParticles = true;
 
 			rendWorld.material.SetColor("_Color", Color.black);							// change world to white
-			pcm.SetLight (true);														// set core to white
+			//pcm.SetLight (true);														// set core to white
+			rendCore.material.SetColor("_Color", Color.white);							// change core to white
 			rendShell.material.SetColor("_Color", Color.white);							// change shell to black
 			rendNucleus.material.SetColor("_Color", Color.white);						// change nucleus to black
 			

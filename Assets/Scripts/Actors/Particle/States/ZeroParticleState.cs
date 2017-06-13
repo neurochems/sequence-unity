@@ -33,6 +33,9 @@ public class ZeroParticleState : IParticleState
 
         if (psp.psp.isInit) Init();                                                     // if player init, particle init
 
+		if (psp.inLightworld && !psp.lightworld) canCollide = false;					// if in lightworld and is dark world, prevent evol counting
+		else if (psp.inLightworld && psp.lightworld) canCollide = true;					// if in lightworld and is light world, start evol counting
+
 		// allow collisions timer
 		if (!canCollide) collisionTimer += Time.deltaTime;								// start timer
 		if (collisionTimer >= psp.stunDuration) {										// if timer is up

@@ -9,7 +9,6 @@ public class FirstParticleState : IParticleState
 	public bool isLight = true;															// 'is light' flag
 	private bool lightworld;															// is light world ref
 	public float evol, deltaDark, deltaLight;											// evol tracking refs
-	public float evolC, darkEvolC, lightEvolC;											// evol values at start of collision
 	private bool checkEvol;																// check evol flag
 
 	private bool canCollide = false;													// can collide flag (init false to begin stunned)
@@ -34,6 +33,9 @@ public class FirstParticleState : IParticleState
 
 		//if (!psp.sc[0].enabled) psp.sc[0].enabled = true;								// enable trigger collider if disabled
 
+		if (psp.inLightworld && !psp.lightworld) canCollide = false;					// if in lightworld and is dark world, prevent evol counting
+		else if (psp.inLightworld && psp.lightworld) canCollide = true;					// if in lightworld and is light world, start evol counting
+
 		// allow collisions timer
 		if (!canCollide) collisionTimer += Time.deltaTime;								// start timer
 		if (collisionTimer >= psp.stunDuration) {										// if timer up
@@ -47,9 +49,6 @@ public class FirstParticleState : IParticleState
 	public void OnTriggerEnter(Collider other)
 	{
 		if (!other.gameObject.CompareTag("World")) Debug.Log ("first particle collision");
-		evolC = psp.evolC;																		// store evol before collision changes
-		//darkEvolC = psp.darkEvolC;																// store dark evol before collision changes
-		//lightEvolC = psp.lightEvolC;																// store light evol before collision changes
 		if (canCollide) {																		// if collision allowed
 			if (other.gameObject.CompareTag ("Player")) {											// colide with player
 				PlayerStatePattern pspOther 
@@ -57,12 +56,12 @@ public class FirstParticleState : IParticleState
 				canCollide = false;																		// reset can collide trigger	
 				psp.sc[0].enabled = false;																// disable trigger collider
 				psp.stunned = true;																		// stun for duration
-				if (evolC > pspOther.evol) {														// if player evol is lower
+				if (psp.evolC > pspOther.evol) {														// if player evol is lower
 					Debug.Log ("first particle>player: add evol");
 					if (pspOther.darkEvolC != 0f) psp.AddDark(pspOther.darkEvolC);							// add player dark evol
 					if (pspOther.lightEvolC != 0f) psp.AddLight(pspOther.lightEvolC);						// add player light evol
 				}
-				else if (evolC <= pspOther.evol) {													// else player is higher
+				else if (psp.evolC <= pspOther.evol) {													// else player is higher
 					Debug.Log ("first particle<player: sub evol");
 					if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);							// subtract player dark
 					if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);						// subtract player light

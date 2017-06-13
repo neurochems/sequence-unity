@@ -73,6 +73,10 @@ public class ParticleStatePattern : MonoBehaviour {
 		seventhState = new SeventhParticleState (this);						// initialize seventh state
 		// new state
 
+	}
+
+	void Start () 
+	{
 		psp = GameObject.Find ("Player").
 			gameObject.GetComponent<PlayerStatePattern> ();					// init player state pattern ref
 
@@ -92,10 +96,7 @@ public class ParticleStatePattern : MonoBehaviour {
 			.gameObject.GetComponent<MeshRenderer> ();						// init shell mesh renderer ref
 		rendNucleus = transform.FindChild("Nucleus")
 			.gameObject.GetComponent<MeshRenderer> ();						// init nucleus mesh renderer ref
-	}
 
-	void Start () 
-	{
 		//light = true;														// init light
 		//lightEvol = 0.5f;													// init 0.5 evol
 		currentState = zeroState;											// start at zero state
@@ -115,7 +116,8 @@ public class ParticleStatePattern : MonoBehaviour {
 		lightworld = psp.lightworld;										// update if lightworld
 
 		if (!changeParticles) psp.changeParticles = false;					// if changeParticles is false for one frame, reset in player state pattern
-		if (changeParticles) changeParticles = psp.changeParticles;			// if changeParticles is true, update from player state pattern
+		changeParticles = psp.changeParticles;								// if changeParticles is true, update from player state pattern
+		if (changeParticles) LightWorldNucleus();							// if changing partcles, change nuclei colour to blend w/ background
 
 		currentState.UpdateState ();										// frame updates from current state class
 
@@ -290,6 +292,9 @@ public class ParticleStatePattern : MonoBehaviour {
 
 	public void ChangeWorld(bool toLW, int fromState, int toState, bool toLight) 
 	{
+		if (toLW) inLightworld = true;												// if to lightworld, set inLightworld
+		if (!toLW) inLightworld = false;											// if not to lightworld, reset inLightworld
+
 		pcm.ToOtherWorld (toLW, fromState, toState, toLight);						// change core
 		//pcm.ScaleTo(false, "hidden", "zero");
 		psm.ToOtherWorld (toLW, fromState, toState, toLight);						// change shell
@@ -308,6 +313,12 @@ public class ParticleStatePattern : MonoBehaviour {
 		else if (toState == 7) gameObject.tag = "Seventh";							// if seventh, set tag
 		else if (toState == 8) gameObject.tag = "Eighth";							// if eighth, set tag
 		else if (toState == 9) gameObject.tag = "Ninth";							// if ninth, set tag
+	}
+
+	private void LightWorldNucleus()
+	{
+		rendNucleus.material.SetColor("_Color", Color.white);						// change nucleus to white
+		changeParticles = false;													// reset change particles flag
 	}
 
 	// set particle parts (normal state transitions)

@@ -86,9 +86,9 @@ NOTES
   EVOLUTION
 	
 	zero		first		second		third		fourth		fifth		sixth		seventh		eighth		ninth		tenth
-1st	DONE		DONE		DONE		DONE		DONE		NEXT
-2nd	DONE		DONE		DONE		DONE		DONE									
-3rd	
+1st	DONE		DONE		DONE		DONE		DONE		DONE		DONE		DONE
+2nd	DONE		DONE		DONE		DONE		DONE		DONE		DONE		DONE							
+3rd	DONE		DONE		DONE		DONE		DONE		DONE		DONE		DONE
 	
 	1st: light only, collect zero
 	2nd: light only, collect zero/first/second
@@ -124,6 +124,8 @@ NOTES
 		- init to dark - DONE
 		- count dark evol - DONE
 		- verify nucleus changes - DONE
+	- prevent evol counting on particles in light world
+		- set canCollide to false if evol < 0 && !lightworld - DONE
 		
 		
   PHYSICS/FEEL

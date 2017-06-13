@@ -32,6 +32,9 @@ public class FifthParticleState : IParticleState
 			checkEvol = false;															// reset check evol flag
 		}
 
+		if (psp.inLightworld && !psp.lightworld) canCollide = false;					// if in lightworld and is dark world, prevent evol counting
+		else if (psp.inLightworld && psp.lightworld) canCollide = true;					// if in lightworld and is light world, start evol counting
+
 		// allow collisions timer
 		if (!canCollide) collisionTimer += Time.deltaTime;								// start timer
 		if (collisionTimer >= psp.stunDuration) {										// if timer is up
