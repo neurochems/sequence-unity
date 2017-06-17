@@ -47,7 +47,6 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Actors\IParticleState.cs" />
      <Compile Include="Assets\Scripts\Actors\Particle\ParticleCoreManager.cs" />
-     <Compile Include="Assets\Scripts\Actors\Particle\ParticleManager.cs" />
      <Compile Include="Assets\Scripts\Actors\Particle\ParticleNucleusManager.cs" />
      <Compile Include="Assets\Scripts\Actors\Particle\ParticlePhysicsManager.cs" />
      <Compile Include="Assets\Scripts\Actors\Particle\ParticleShellManager.cs" />
@@ -63,7 +62,6 @@
      <Compile Include="Assets\Scripts\Actors\ParticleStateEvents.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\PlayerController.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\PlayerCoreManager.cs" />
-     <Compile Include="Assets\Scripts\Actors\Player\PlayerManager.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\PlayerNucleusManager.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\PlayerPhysicsManager.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\PlayerShellManager.cs" />

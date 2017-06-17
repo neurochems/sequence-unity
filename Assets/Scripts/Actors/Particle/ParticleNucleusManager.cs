@@ -11,7 +11,7 @@ public class ParticleNucleusManager : MonoBehaviour {
 	private int toState, shape;																									// to state indicator
 	private bool colour; 																										// colour indicator
 	private bool changeColour = false, changeShape = false, resetScale = false;													// timer trigger for resetting scale after world switch
-	public float changeColourTimer, changeShapeTimer, resetScaleTimer;															// reset scale timer
+	private float changeColourTimer, changeShapeTimer, resetScaleTimer;															// reset scale timer
 
 	private Shader lightShader, darkShader;																						// light/dark shaders
 
@@ -20,15 +20,30 @@ public class ParticleNucleusManager : MonoBehaviour {
 		rend = GetComponent<MeshRenderer>();																					// init mesh renderer ref
 		psp = GetComponentInParent<ParticleStatePattern> ();																	// init psp ref
 		lightShader = Shader.Find("Unlit/light_nucleus");																		// init light nucleus shader
-		//darkShader = Shader.Find("dark_nucleus");																					// init dark nucleus shader
+		darkShader = Shader.Find("Unlit/light_nucleus");																		// init light nucleus shader
 	}
 
 	void Update() {
+
+		if (psp.changeParticles && psp.lightworld && !psp.isLight) {																			// if change particles and light world
+			//Debug.Log ("change particle nucleus");
+			toState = psp.state;																									// set toState to current state
+			ToOtherWorld (true, toState, toState, false);																			// to hidden, change to white
+			resetScale = true;																										// set reset scale flag
+			//psp.psp.changeParticles = false;																						// reset change particles in playerstatepattern
+		} 
+		else if (psp.changeParticles && !psp.lightworld && !psp.isLight) {																		// if change particles and dark world
+			toState = psp.state;																									// set toState to current state
+			ToOtherWorld (false, toState, toState, true);																			// to hidden, change to black
+			resetScale = true;																										// set reset scale flag
+			//psp.psp.changeParticles = false;																						// reset change particles in playerstatepattern
+		}
+
 		// change colour timer
 		if (changeColour) changeColourTimer += Time.deltaTime;																	// start timer
 		if (changeColourTimer >= 2.0f) {																						// when timer >= 4 sec
 			Debug.Log("set colour: " + colour);
-			SetLight(colour);																										// set shape
+			SetLight(colour);																										// set colour
 			changeColour = false;																									// reset reset scale flag
 			changeColourTimer = 0f;																									// reset timer
 		}
@@ -74,11 +89,34 @@ public class ParticleNucleusManager : MonoBehaviour {
 			else if (t == 9) SetLight (false, true);																				// if to ninth, change to white
 		}
 		else if (!lw) {																												// to dark world
-			if (f == 0) {																												// from light world zero		
+			Debug.Log("particle nucleus to dark world");
+			// from changes
+			if (f == 0) ScaleTo (true, "zero", "hidden");																			// scale from zero to hidden
+			else if (f == 1 || f == 2 || f == 4 || f == 5 || f == 6) ScaleTo (true, "first", "hidden");								// scale from second/first to hidden
+			else if (f == 7 || f == 8) ScaleTo (true, "seventh", "hidden");															// scale from seventh to hidden
+			else if (f == 9) ScaleTo (true, "ninth", "hidden");
+
+			// to changes
+			if (t == 0) SetLight (false, false);																					// if to zero, change to black
+			else if (t == 1 || t == 5) SetLight (false, false);																		// if to first/fifth, change to black
+			else if (t == 2 || t == 4 || t == 6) SetLight (true, false);															// if to second/fourth/sixth, change to white dot shader
+			else if (t == 3) SetLight (false, false);																				// to third, change to black
+			else if (t == 7) SetLight (false, false);																				// if to seventh, change to black
+			else if (t == 8) SetLight (true, false);																				// if to eighth, change to black + white shader
+			else if (t == 9) SetLight (false, false);																				// if to ninth, change to black
+
+			/*if (f == 0) {																												// from light world zero		
 				ScaleTo (true, "zero", "hidden");																						// scale from zero
-				SetLight (false, false);																								// change to black
-				ScaleTo (false, "hidden", "zero");																						// scale to zero
+				colour = false;																											// change to black
+				changeColour = true;																									// set change colour flag
+				resetScale = true;																										// set reset scale flag
 			}
+			else if (f == 1) {																												// from light world zero		
+				ScaleTo (true, "first", "hidden");																						// scale from zero
+				colour = false;																											// change to black
+				changeColour = true;																									// set change colour flag
+				resetScale = true;																										// set reset scale flag
+			}*/
 		}
 	}
 
@@ -1196,8 +1234,8 @@ public class ParticleNucleusManager : MonoBehaviour {
 	///<para>set nucleus light into dark world</para>
 	///<para>white = dark, black = light</para>
 	///<para>true, true = black dot shader</para>
-	///<para>true, false = solid white</para>
-	///<para>false, true = white dot shader</para>
+	///<para>false, true = solid white</para>
+	///<para>true, false = white dot shader</para>
 	///<para>false, false = solid black</para>
 	///</summary>
 	private void SetLight (bool lite, bool toLW)
@@ -1207,7 +1245,8 @@ public class ParticleNucleusManager : MonoBehaviour {
 			//light = true;													// set is light flag
 		} 
 		else if (!lite && toLW) {										// if to light world and dark (as in dark zero, first, etc)
-			rend.material.SetColor("_Color", Color.white);					// change to white
+			anim.SetBool("black", false);									// reset previously active state
+			anim.SetBool("white", true);									// set active state
 			//light = false;													// reset is light flag
 		}
 		else if (lite && !toLW) {										// if to dark world and light (as in second, fourth, etc)
@@ -1215,7 +1254,8 @@ public class ParticleNucleusManager : MonoBehaviour {
 			//light = true;													// set is light flag
 		}
 		else if (!lite && !toLW) {										// if to dark world and dark (as in dark zero, first, etc)
-			rend.material.SetColor("_Color", Color.black);					// change to black
+			anim.SetBool("white", false);									// reset previously active state
+			anim.SetBool("black", true);									// set active state
 			//light = false;													// reset is light flag
 		}
 	}

@@ -46,7 +46,7 @@ public class PlayerStatePattern : MonoBehaviour {
 	private int toState, fromState;											// state transitioning to/from (for timers)
 	private bool changeWorld = false;										// timer trigger for changing colour, 
 	[HideInInspector] public bool resetScale = false;						// timer trigger for resetting scale after world switch (public for camera manager access)
-	private float changeWorldTimer, resetScaleTimer;						// change shape timer, reset scale timer
+	private float changeWorldTimer, resetScaleTimer, changeParticlesTimer;	// change shape timer, reset scale timer, change particles timer
 
 	// timers & flags
 	public bool isInit = true;												// is init flag
@@ -157,6 +157,12 @@ public class PlayerStatePattern : MonoBehaviour {
 			stunTimer += Time.deltaTime;													// start timer
 		} 
 
+		// change particles timer
+		if (changeParticles) changeParticlesTimer += Time.deltaTime;														// start timer
+		if (changeParticlesTimer >= 0.5f) {																				// when timer >= 2 sec
+			changeParticles = false;																						// reset change colour flag
+			changeParticlesTimer = 0f;																						// reset timer
+		}
 		// change colour timer
 		if (changeWorld) changeWorldTimer += Time.deltaTime;														// start timer
 		if (changeWorldTimer >= 2.5f) {																				// when timer >= 2 sec
@@ -168,6 +174,7 @@ public class PlayerStatePattern : MonoBehaviour {
 		// reset scale timer
 		if (resetScale) resetScaleTimer += Time.deltaTime;															// start timer
 		if (resetScaleTimer >= 3.0f) {																				// when timer >= 3 sec
+			Debug.Log ("reset camera zoom");
 			cam.ZoomCamera (false, fromState, toState);															// zoom camera out to appropriate state
 			resetScale = false;																							// reset reset scale flag
 			resetScaleTimer = 0f;																						// reset timer
@@ -298,7 +305,8 @@ public class PlayerStatePattern : MonoBehaviour {
 		if (toState == 0) { 														// to zero
 			// rb.mass = 0.2f;															// set mass
 			if (toLightworld) Debug.Log ("player to light world");
-			if (!toLightworld) effectsSnapshots[0].TransitionTo(5.0f);					// AUDIO: transition to default effects snapshot
+			if (toDarkworld) Debug.Log ("player to dark world");
+			if (!toLightworld) effectsSnapshots[0].TransitionTo(5.0f);					// AUDIO: transition to default/dark world effects snapshot
 			if (toLightworld) effectsSnapshots[5].TransitionTo(5.0f);					// AUDIO: transition to light world effects snapshot
 			if (evol == 0f) musicSnapshots[0].TransitionTo(5.0f);						// AUDIO: transition to zero state music snapshot
 			if (evol == 0.5f) musicSnapshots[1].TransitionTo(5.0f);						// AUDIO: transition to half zero state music snapshot
@@ -426,7 +434,7 @@ public class PlayerStatePattern : MonoBehaviour {
 			//pcm.SetLight (true);														// set core to white
 			rendCore.material.SetColor("_Color", Color.white);							// change core to white
 			rendShell.material.SetColor("_Color", Color.white);							// change shell to black
-			rendNucleus.material.SetColor("_Color", Color.white);						// change nucleus to black
+			rendNucleus.material.SetColor("_Color", Color.black);						// change nucleus to black
 			
 			toDarkworld = false;														// reset to dark world trigger
 		}

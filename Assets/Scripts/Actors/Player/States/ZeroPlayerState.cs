@@ -64,6 +64,24 @@ public class ZeroPlayerState : IParticleState
 					}
 					checkEvol = true;																// set check evol flaG
 				}
+				if (pspOther.inLightworld && psp.lightworld) {									// if other in light world and is light world
+					canCollide = false;																// reset has collided trigger
+					psp.sc [0].enabled = false;														// disable trigger collider
+					psp.stunned = true;																// stunned flag
+					if (pspOther.isLight) {															// if light
+						Debug.Log ("player+zero: add light");
+						if (pspOther.evolC == 0) psp.AddLight (0.5f);									// if other evol = 0, add 0.5 to light
+						else if (pspOther.evolC > 0) psp.AddLight (pspOther.lightEvolC);				// else > 0, add light of other
+						else if (pspOther.evolC < 0) psp.AddLight (pspOther.lightEvolC * -1);			// else < 0, add inverse light of other 
+					}
+					else if (!pspOther.isLight) {													// if dark
+						Debug.Log ("player+zero: add dark");
+						if (pspOther.evolC == 0) psp.AddDark (0.5f);									// if other evol = 0, add 0.5 to dark
+						else if (pspOther.evolC > 0) psp.AddDark (pspOther.darkEvolC);					// else > 0, add dark of other
+						else if (pspOther.evolC < 0) psp.AddDark (pspOther.darkEvolC * -1);				// else < 0, add inverse dark of other
+					}
+					checkEvol = true;																// set check evol flaG
+				}
 			}
 			else if (other.gameObject.CompareTag ("First")									// collide with first
 				|| other.gameObject.CompareTag ("Second")									// collide with second
@@ -197,6 +215,11 @@ public class ZeroPlayerState : IParticleState
 		// switch world triggers
 		if (!psp.lightworld	&& evol < 0f) psp.toLightworld = true;						// if to light world (if evol < 0), set to light world trigger
 		else if (psp.lightworld && evol >= 0f) psp.toDarkworld = true;                  // if to dark world (evol >= 0), set dark world flag
+
+		// to dark world zero from light world
+		if (evol == 0f && psp.toDarkworld) {
+			ToZero (true);
+		}
 
         // half zero
         if (evol == 0.5f || evol == -0.5f) {											// evolve to half zero (if evol = 0.5)

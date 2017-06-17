@@ -49,7 +49,7 @@ public class FirstParticleState : IParticleState
 	public void OnTriggerEnter(Collider other)
 	{
 		if (!other.gameObject.CompareTag("World")) Debug.Log ("first particle collision");
-		if (canCollide) {																		// if collision allowed
+		if (canCollide && !psp.psp.stunned) {													// if collision allowed and player is not stunned
 			if (other.gameObject.CompareTag ("Player")) {											// colide with player
 				PlayerStatePattern pspOther 
 					= other.gameObject.GetComponent<PlayerStatePattern>();								// ref other ParticleStatePattern

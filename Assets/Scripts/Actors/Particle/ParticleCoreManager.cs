@@ -53,30 +53,41 @@ public class ParticleCoreManager : MonoBehaviour {
 	{
 		toState = t;																				// set to state																		
 		if (lw) {																					// if to light world
+			// from changes
+			if (f == 0) {
+				ScaleTo(true, "zero", "hidden");                                                        // scale from zero
+				// Debug.Log("ZERO TO HIDDEN");
+			}
+			else if (f == 1 || f == 2 || f == 5 || f == 6) ScaleTo(true, "first", "hidden");        	// scale from first
+			else if (f == 3 || f == 4) ScaleTo(true, "third", "hidden");                                // scale from third
+			else if (f == 7 || f == 8) ScaleTo(true, "seventh", "hidden");                              // scale from seventh
+			else if (f == 9) ScaleTo(true, "ninth", "hidden");											// scale from ninth
+
 			// to changes
 			if (t == 0) SetLight(false, false);															// if to light world zero, change to black
 			else if (t == 1 || t == 2 || t == 5 || t == 6) SetLight(false, false);						// if to light world first/second/fifth/sixth, change to black
 			else if (t == 3 || t == 4) SetLight(false, false);											// if to light world third/fourth, change to black
 			else if (t == 7 || t == 8) SetLight(false, false);											// if to light world seventh/eighth, change to black
 			else if (t == 9) SetLight(false, false);													// if to light world ninth, change to black
+		}
 
+		else if (!lw) {																				// if to dark world
 			// from changes
-            if (f == 0) {
-                ScaleTo(true, "zero", "hidden");                                                        // scale from zero
-               // Debug.Log("ZERO TO HIDDEN");
-            }
+			if (f == 0) {
+				ScaleTo(true, "zero", "hidden");                                                        // scale from zero
+				// Debug.Log("ZERO TO HIDDEN");
+			}
 			else if (f == 1 || f == 2 || f == 5 || f == 6) ScaleTo(true, "first", "hidden");        	// scale from first
 			else if (f == 3 || f == 4) ScaleTo(true, "third", "hidden");                                // scale from third
 			else if (f == 7 || f == 8) ScaleTo(true, "seventh", "hidden");                              // scale from seventh
 			else if (f == 9) ScaleTo(true, "ninth", "hidden");											// scale from ninth
-		}
 
-		else if (!lw) {																				// if to dark world
-			if (f == 0) {																				// if from zero
-				ScaleTo (true, "zero", "hidden");															// scale from zero
-				SetLight(true, false);																		// change to white
-				ScaleTo (false, "hidden", "zero");															// scale to zero
-			}
+			// to changes
+			if (t == 0) SetLight(true, false);															// if to light world zero, change to black
+			else if (t == 1 || t == 2 || t == 5 || t == 6) SetLight(true, false);						// if to light world first/second/fifth/sixth, change to black
+			else if (t == 3 || t == 4) SetLight(true, false);											// if to light world third/fourth, change to black
+			else if (t == 7 || t == 8) SetLight(true, false);											// if to light world seventh/eighth, change to black
+			else if (t == 9) SetLight(true, false);													// if to light world ninth, change to black
 		}
 	}
 
@@ -111,7 +122,7 @@ public class ParticleCoreManager : MonoBehaviour {
 		else if (f == 0 && t == 1 && fl && tl) {
 			ScaleTo (false, "zero", "first");																		// scale to first
 			anim.SetBool("hidden", false);																			// init: reset hidden
-			}
+		}
 
 	///// first \\\\\
 
@@ -1070,16 +1081,16 @@ public class ParticleCoreManager : MonoBehaviour {
 	///<para>true = white</para>
 	///<para>false = black</para>
 	///</summary>
-	private void SetLight (bool light, bool shade)
+	private void SetLight (bool l, bool shade)
 	{
-        if (light)
+        if (l)
         {
             //rend.material.SetColor("_Color", Color.white);				// change to white
             //anim.SetTrigger("colour");									// set colour change trigger
             anim.SetBool("black", false);								// reset previously active state
             anim.SetBool("white", true);								// set active state
         }
-		else if (!light)
+		else if (!l)
         {
             //rend.material.SetColor("_Color", Color.black);				// change to black
             //anim.SetTrigger("colour");									// set colour change trigger

@@ -110,14 +110,8 @@ public class ParticleStatePattern : MonoBehaviour {
 		deltaDark = darkEvol - darkEvolStart;								// calculate deltaDark
 		deltaLight = lightEvol - lightEvolStart;							// calculate deltaLight
 
-		//if (toLightworld) ChangeWorld (true);
-		//if (toDarkworld) ChangeWorld (false);
-
 		lightworld = psp.lightworld;										// update if lightworld
-
-		if (!changeParticles) psp.changeParticles = false;					// if changeParticles is false for one frame, reset in player state pattern
 		changeParticles = psp.changeParticles;								// if changeParticles is true, update from player state pattern
-		if (changeParticles) LightWorldNucleus();							// if changing partcles, change nuclei colour to blend w/ background
 
 		currentState.UpdateState ();										// frame updates from current state class
 
@@ -142,9 +136,6 @@ public class ParticleStatePattern : MonoBehaviour {
 			//Stun ();
 			stunTimer += Time.deltaTime;													// start timer
 		}
-
-		// deactivating shell/nucleus timer
-		//if (shellShrinking || nucleusDeactivating) shrinkTimer += Time.deltaTime;			// start timer
 	}
 
 	private void OnTriggerEnter(Collider other)
@@ -292,11 +283,11 @@ public class ParticleStatePattern : MonoBehaviour {
 
 	public void ChangeWorld(bool toLW, int fromState, int toState, bool toLight) 
 	{
+		Debug.Log ("particle change world");
 		if (toLW) inLightworld = true;												// if to lightworld, set inLightworld
 		if (!toLW) inLightworld = false;											// if not to lightworld, reset inLightworld
 
 		pcm.ToOtherWorld (toLW, fromState, toState, toLight);						// change core
-		//pcm.ScaleTo(false, "hidden", "zero");
 		psm.ToOtherWorld (toLW, fromState, toState, toLight);						// change shell
 		pnm.ToOtherWorld (toLW, fromState, toState, toLight);						// change nucleus
 
@@ -315,11 +306,11 @@ public class ParticleStatePattern : MonoBehaviour {
 		else if (toState == 9) gameObject.tag = "Ninth";							// if ninth, set tag
 	}
 
-	private void LightWorldNucleus()
+	/*private void LightWorldNucleus()
 	{
 		rendNucleus.material.SetColor("_Color", Color.white);						// change nucleus to white
-		changeParticles = false;													// reset change particles flag
-	}
+		//changeParticles = false;													// reset change particles flag
+	}*/
 
 	// set particle parts (normal state transitions)
 	private void SetParts(int fromState, int toState, bool fromLight, bool toLight, int shape)

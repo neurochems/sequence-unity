@@ -9,7 +9,7 @@ public class ParticleShellManager : MonoBehaviour {
 
 	private int toState;							// to state indicator
 	private bool resetScale = false;				// timer trigger for resetting scale after world switch
-	public float resetScaleTimer;					// reset scale timer
+	private float resetScaleTimer;					// reset scale timer
 
 	void Awake () {
 		anim = GetComponent<Animator>();							// init animator ref
@@ -39,11 +39,22 @@ public class ParticleShellManager : MonoBehaviour {
 			else if (f == 7 || f == 8) ScaleTo (true, "seventh", "hidden");							// scale from seventh	
 			else if (f == 9) ScaleTo (true, "ninth", "hidden");										// scale from ninth
 			// to changes
-			if (f == 3 || f == 4 || f == 5 || f == 6) SetLight(false);								// change to black
-			else if (f == 7 || f == 8) SetLight(false);												// change to black
-			else if (f == 9) SetLight(false);														// change to black
+			if (t == 3 || t == 4 || t == 5 || t == 6) SetLight(false);								// change to black
+			else if (t == 7 || t == 8) SetLight(false);												// change to black
+			else if (t == 9) SetLight(false);														// change to black
+			else if (t == 0 || t == 1 || t == 2) SetLight(false);									// change to black
 		}
-		else if (!lw) SetLight(true);															// if to dark world, change to white
+		else if (!lw) {																			// if to dark world
+			// from changes
+			if (f == 3 || f == 4 || f == 5 || f == 6) ScaleTo (true, "third", "hidden");			// scale from third
+			else if (f == 7 || f == 8) ScaleTo (true, "seventh", "hidden");							// scale from seventh	
+			else if (f == 9) ScaleTo (true, "ninth", "hidden");										// scale from ninth
+			// to changes
+			if (t == 3 || t == 4 || t == 5 || t == 6) SetLight(true);								// change to white
+			else if (t == 7 || t == 8) SetLight(true);												// change to white
+			else if (t == 9) SetLight(true);														// change to white
+			else if (t == 0 || t == 1 || t == 2) SetLight(true);									// change to white
+		}
 	}
 
 	public void Shell (int fromState, int toState, bool fromLight, bool toLight, int shape) 

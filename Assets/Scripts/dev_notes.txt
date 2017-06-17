@@ -140,11 +140,12 @@ NOTES
 	- investigate devolve from 5th to 4th: appropriate change shape back to sphere?
   
   LIGHT WORLD
-	- return from light world to dark world
+	- return player from light world to dark world
 		- camera zoom
 		- switch colours
 	- collision with opposite world's particles
-		- disable sphere collider if (isLightWorld && !lightworld)
+		- disable sphere collider if (isLightWorld && !lightworld) - DONE
+		- disable sphere collider if (!isLightWorld && lightworld)
 	- debug
 		- particle to light world
 			- move colour change to managers - DONE
@@ -159,8 +160,11 @@ NOTES
 				- update Managers
 					- Update() timer / ToOtherWorld changes
 					core[DONE] shell[DONE] nucleus[DONE]
-			- disable trigger collider if dark world (!lightworld)
+			- disable trigger collider if dark world (!lightworld) - DONE
+			- changeParticles triggers swap in nucleus colour - DONE
+				- set up path to white half of particle nucleus anim tree - DONE
 		- particle from light world
+			- 
 		
 		
   SPAWN PARTICLE

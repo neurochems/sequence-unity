@@ -22,9 +22,13 @@ public class CameraManager : MonoBehaviour {
 
 		// from light world zero
 			// to dark world zero
-		if (fromState == 0 && toState == 0) {
+		if (switchworld && fromState == 0 && toState == 0) {
 			Debug.Log ("camera zero to zero");
 			ZoomTo (true, "zero", "zero");		// zoom out
+		}
+		if (!switchworld && fromState == 0 && toState == 0) {
+			Debug.Log ("camera zero reset to zero");
+			ZoomTo (false, "zero", "zero");		// zoom out
 		}
 			// to light world first
 		if (switchworld && fromState == 0 && toState == 1) {
