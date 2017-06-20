@@ -9,18 +9,27 @@ public class OrthoSmoothFollow : MonoBehaviour {
 
 	private Vector3 velocity = Vector3.zero;																// velocity of camera
 
+	private Rigidbody rbPlayer;																				// player rigidbody 
+
+	void Start() 
+	{
+		rbPlayer = GetComponentInParent<Rigidbody> ();
+	}
+
 	void Update () {
 
 		Vector3 goalPos = player.position;																	// save player position
 
-		goalPos.x += (player.position.x * xOffset);																		// fix y axis
+		goalPos.x += (player.position.x * xOffset);																		// fix x axis
 		goalPos.y += (player.position.y * yOffset);																		// fix y axis
-		goalPos.z += (player.position.z * zOffset);																		// fix y axis
+		goalPos.z += (player.position.z * zOffset);																		// fix z axis
 
-		transform.position = Vector3.SmoothDamp (transform.position, goalPos, ref velocity, smoothTime);	// perform smoothdamp on camera position
-		//transform.position = Vector3.Lerp (transform.position, goalPos, smoothTime);						// perform lerp on camera position
+		if (rbPlayer.velocity.magnitude > 1.0f) 																		// if velocity > 1
+			transform.position = Vector3.SmoothDamp (transform.position, goalPos, ref velocity, smoothTime);				// perform smoothdamp on camera position
+			//transform.position = Vector3.Lerp (transform.position, goalPos, smoothTime);										// perform lerp on camera position
 
-
+		if (rbPlayer.velocity.magnitude <= 1.0f) 																		// if velocity < 1
+			transform.position = Vector3.SmoothDamp (transform.position, player.position, ref velocity, smoothTime * 5);	// perform smoothdamp on camera position back to player at centre
 
 	}
 }

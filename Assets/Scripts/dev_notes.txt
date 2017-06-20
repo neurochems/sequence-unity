@@ -71,6 +71,11 @@ NOTES
 			- experienced
 			- novices
 	
+ -	RELEASE
+	- set date
+	- itch page
+	- consciousless page
+	- social media shares
 	
 /// ACTIVE TASK \\\
 
@@ -129,12 +134,15 @@ NOTES
 		
 		
   PHYSICS/FEEL
-	- fix controls
+	- fix controls 
+		- low state/speed - DONE
+		- high state/speed - DONE
 	- update Player/ParticlePhysicsManagers
-	- SetPhysics(...) method in StatePattern
-	  alongside SetZoomCamera/SetParts in TransitionTo
-	- update sphere collider radii - DONE
-	- update mass
+		- ??
+	- UpdatePhysics(...) method in StatePattern
+		alongside SetZoomCamera/SetParts in TransitionTo
+	- update sphere collider radii
+	- update mass - DONE
   
   ANIM
 	- investigate devolve from 5th to 4th: appropriate change shape back to sphere?
@@ -145,7 +153,7 @@ NOTES
 		- switch colours
 	- collision with opposite world's particles
 		- disable sphere collider if (isLightWorld && !lightworld) - DONE
-		- disable sphere collider if (!isLightWorld && lightworld)
+		- disable sphere collider if (!isLightWorld && lightworld) - DONE
 	- debug
 		- particle to light world
 			- move colour change to managers - DONE
@@ -164,7 +172,7 @@ NOTES
 			- changeParticles triggers swap in nucleus colour - DONE
 				- set up path to white half of particle nucleus anim tree - DONE
 		- particle from light world
-			- 
+			- DONE
 		
 		
   SPAWN PARTICLE
@@ -177,7 +185,16 @@ NOTES
 	- add zoom fully in to player to switch to light world, then zoom out - DONE
 	
 	- debug:
+		- rewiew and edit zoom values
+		
+  AUDIO
+	- test syatem
 
+	
+  TEXT
+	- add new text instances
+	- code triggers
+	- test system
 	
 - debug DONE -
 	

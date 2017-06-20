@@ -1,19 +1,11 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Actors\Particle\States\ZeroParticleState.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Actors\Player\PlayerStatePattern.cs">
     <Files>
-      <File FileName="Assets\Scripts\Actors\Particle\ParticleStatePattern.cs" Line="286" Column="15" />
-      <File FileName="Assets\Scripts\Actors\Particle\ParticleCoreManager.cs" Line="90" Column="34" />
-      <File FileName="Assets\Scripts\Actors\Particle\ParticleNucleusManager.cs" Line="102" Column="124" />
-      <File FileName="Assets\Scripts\Actors\Particle\States\ZeroParticleState.cs" Line="277" Column="41" />
-      <File FileName="Assets\Scripts\Actors\Particle\States\FirstParticleState.cs" Line="52" Column="102" />
-      <File FileName="Assets\Scripts\Actors\Particle\States\SecondParticleState.cs" Line="49" Column="100" />
-      <File FileName="Assets\Scripts\Actors\Particle\States\ThirdParticleState.cs" Line="50" Column="1" />
-      <File FileName="Assets\Scripts\Actors\Particle\States\FourthParticleState.cs" Line="50" Column="1" />
-      <File FileName="Assets\Scripts\Actors\Particle\States\FifthParticleState.cs" Line="51" Column="1" />
-      <File FileName="Assets\Scripts\Actors\Particle\States\SixthParticleState.cs" Line="51" Column="1" />
-      <File FileName="Assets\Scripts\Actors\Particle\States\SeventhParticleState.cs" Line="53" Column="63" />
-      <File FileName="Assets\Scripts\Actors\Player\States\FirstPlayerState.cs" Line="57" Column="43" />
+      <File FileName="Assets\Scripts\Actors\Player\PlayerStatePattern.cs" Line="377" Column="17" />
+      <File FileName="Assets\Scripts\Actors\Player\PlayerPhysicsManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Actors\Player\PlayerController.cs" Line="59" Column="55" />
+      <File FileName="Assets\Scripts\Camera\OrthoSmoothFollow.cs" Line="32" Column="178" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -46,7 +46,7 @@ public class FourthPlayerState : IParticleState
 				|| other.gameObject.CompareTag ("Fourth")) {										// collide with fourth
 				ParticleStatePattern pspOther 
 					= other.gameObject.GetComponent<ParticleStatePattern>();							// ref other ParticleStatePattern
-				if (!pspOther.inLightworld) {															// if other in dark world
+				if (psp.lightworld == pspOther.inLightworld) {											// if player and particle in same world
 					canCollide = false;																		// reset has collided trigger
 					psp.sc[0].enabled = false;																// disable trigger collider
 					psp.stunned = true;                                                                     // stun for duration
@@ -75,7 +75,7 @@ public class FourthPlayerState : IParticleState
 			{
 				ParticleStatePattern pspOther 
 					= other.gameObject.GetComponent<ParticleStatePattern>();							// ref other ParticleStatePattern
-				if (!pspOther.inLightworld) {															// if other in dark world
+				if (psp.lightworld == pspOther.inLightworld) {											// if player and particle in same world
 					canCollide = false;																		// reset has collided trigger
 					psp.sc[0].enabled = false;																// disable trigger collider
 					psp.stunned = true;                                                                     // set stunned flag

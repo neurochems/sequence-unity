@@ -56,7 +56,7 @@ public class FifthPlayerState : IParticleState
 				|| other.gameObject.CompareTag ("Fifth")) {											// collide with fifth
 				ParticleStatePattern pspOther 
 					= other.gameObject.GetComponent<ParticleStatePattern>();							// ref other ParticleStatePattern
-				if (!pspOther.inLightworld) {															// if other in dark world
+				if (psp.lightworld == pspOther.inLightworld) {											// if player and particle in same world
 					canCollide = false;																		// reset has collided trigger
 					psp.sc[0].enabled = false;																// disable trigger collider
 					psp.stunned = true;                                                                     // set stunned flag
@@ -84,7 +84,7 @@ public class FifthPlayerState : IParticleState
 			{	
 				ParticleStatePattern pspOther 
 					= other.gameObject.GetComponent<ParticleStatePattern>();							// ref other ParticleStatePattern
-				if (!pspOther.inLightworld) {															// if other in dark world
+				if (psp.lightworld == pspOther.inLightworld) {											// if player and particle in same world
 					canCollide = false;																			// reset has collided trigger
 					psp.sc[0].enabled = false;																	// disable trigger collider
 					psp.stunned = true;																			// set stunned flag

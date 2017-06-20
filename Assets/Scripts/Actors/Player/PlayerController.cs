@@ -7,9 +7,9 @@ public class PlayerController : MonoBehaviour {
 
 	public bool godMode = false;
 
-	public float sprintSpeed = 10;
+	public float accelSpeed = 10;
 	public float floatSpeed = 10;
-	public float smoothingFactor = 50;
+	public float weight = 50;
 
 	public Vector3 moveDir;
 	public Vector3 force;
@@ -17,15 +17,17 @@ public class PlayerController : MonoBehaviour {
 
 	private Rigidbody rb;
 
+	private PlayerStatePattern psp;
 	private UIManager uim;
 
 	void Start() {
 		// init components
 		rb = GetComponent<Rigidbody> ();
 		uim = GetComponent<UIManager> ();
+		psp = GetComponent<PlayerStatePattern> ();
 
 		if (godMode) {
-			sprintSpeed = 20;
+			accelSpeed = 20;
 			floatSpeed = 15;
 		}
 
@@ -38,16 +40,16 @@ public class PlayerController : MonoBehaviour {
 		// input
 		if (!uim.uI.GetComponent<StartOptions>().inMainMenu) {
 			// how fast moveDir increases
-			moveDir.x += (Input.GetAxisRaw ("Horizontal") / smoothingFactor);
-			moveDir.z += (Input.GetAxisRaw ("Vertical") / smoothingFactor);
+			moveDir.x += (Input.GetAxisRaw ("Horizontal") / weight);
+			moveDir.z += (Input.GetAxisRaw ("Vertical") / weight);
 		}
 
 		// speed change sensitivity/max moveDir threshold
-		moveDir = Vector3.ClampMagnitude (moveDir, smoothingFactor);
+		moveDir = Vector3.ClampMagnitude (moveDir, weight);
 
 		// movement
 
-		force = (moveDir * sprintSpeed);			// calculate force for inspector visibility / move direction * sprint threshold (larget to account for mass)
+		force = (moveDir * accelSpeed);			// calculate force for inspector visibility / move direction * sprint threshold (larget to account for mass)
 		rb.AddRelativeForce (force * rb.mass);		// apply force as a factor of mass
 
 		velocity = rb.velocity.magnitude;			// velocity for inspector visibility

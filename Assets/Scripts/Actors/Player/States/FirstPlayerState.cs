@@ -47,27 +47,7 @@ public class FirstPlayerState : IParticleState
 				|| other.gameObject.CompareTag ("First")) {											// collide with first	
 				ParticleStatePattern pspOther 
 					= other.gameObject.GetComponent<ParticleStatePattern>();							// ref other ParticleStatePattern
-				if (!pspOther.inLightworld) {															// if other in dark world
-					canCollide = false;																		// reset has collided trigger
-					psp.sc[0].enabled = false;																// disable trigger collider
-					psp.stunned = true;                                                     		        // stun for duration
-					if (pspOther.evolC == 0f) {																// if other = 0
-						psp.AddLight (0.5f);																	// add 0.5 light
-					}
-					else if (pspOther.evolC > 0f) {															// if other > 0
-						//Debug.Log ("player first + 0/1>0: add evol");
-						if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC);							// add dark of other
-						if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC);            		    // add light of other
-						Debug.Log ("player first + 0/1>0: add " + pspOther.lightEvolC + " light");
-					}
-					else if (pspOther.evolC < 0f) {															// if other < 0
-						Debug.Log ("player first + 0/1<0: add evol");
-						if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC * -1);						// add positive dark of other
-						if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC * -1);					// add positive light of other
-					}
-					checkEvol = true;																		// set check evol flag
-				}
-				else if (pspOther.inLightworld && psp.lightworld) {										// if other in light world and is light world
+				if (psp.lightworld == pspOther.inLightworld) {											// if player and particle in same world
 					canCollide = false;																		// reset has collided trigger
 					psp.sc[0].enabled = false;																// disable trigger collider
 					psp.stunned = true;                                                     		        // stun for duration
@@ -99,7 +79,7 @@ public class FirstPlayerState : IParticleState
 			{	
 				ParticleStatePattern pspOther 
 					= other.gameObject.GetComponent<ParticleStatePattern>();							// ref other ParticleStatePattern
-				if (!pspOther.inLightworld) {															// if other in dark world
+				if (psp.lightworld == pspOther.inLightworld) {											// if player and particle in same world
 					canCollide = false;																		// reset has collided trigger
 					psp.sc[0].enabled = false;																// disable trigger collider
 					psp.stunned = true;																		// stun for duration
