@@ -103,50 +103,57 @@ public class ZeroPlayerState : IParticleState
 	public void ToFirst(bool toLight)
 	{
 		psp.TransitionTo(0, 1, isLight, toLight, 0);									// trigger transition effects
-		//ParticleStateEvents.toFirst += psp.TransitionToFirst;						// flag transition in delegate
-		psp.currentState = psp.firstState;											// set to new state
+		//ParticleStateEvents.toFirst += psp.TransitionToFirst;								// flag transition in delegate
+		psp.currentState = psp.firstState;												// set to new state
 	}
 
 	public void ToSecond(bool toLight)
 	{
 		psp.TransitionTo(0, 2, isLight, toLight, 0);									// trigger transition effects
-		//ParticleStateEvents.toSecond += psp.TransitionToSecond;						// flag transition in delegate
-		psp.currentState = psp.secondState;											// set to new state
+		//ParticleStateEvents.toSecond += psp.TransitionToSecond;							// flag transition in delegate
+		psp.currentState = psp.secondState;												// set to new state
 	}
 
 	public void ToThird(bool toLight)
 	{
 		psp.TransitionTo(0, 3, isLight, toLight, 0);									// trigger transition effects
-		//ParticleStateEvents.toThird += psp.TransitionToThird;						// flag transition in delegate
-		psp.currentState = psp.thirdState;											// set to new state
+		//ParticleStateEvents.toThird += psp.TransitionToThird;								// flag transition in delegate
+		psp.currentState = psp.thirdState;												// set to new state
 	}
 
 	public void ToFourth(bool toLight)
 	{
 		psp.TransitionTo(0, 4, isLight, toLight, 0);									// trigger transition effects
-		//ParticleStateEvents.toFourth += psp.TransitionToFourth;						// flag transition in delegate
-		psp.currentState = psp.fourthState;											// set to new state
+		//ParticleStateEvents.toFourth += psp.TransitionToFourth;							// flag transition in delegate
+		psp.currentState = psp.fourthState;												// set to new state
 	}
 
 	public void ToFifth(bool toLight, int shape)
 	{
 		psp.TransitionTo(0, 5, isLight, toLight, shape);								// trigger transition effects
-		//ParticleStateEvents.toFifth += psp.TransitionToFifth;						// flag transition in delegate
-		psp.currentState = psp.fifthState;											// set to new state
+		//ParticleStateEvents.toFifth += psp.TransitionToFifth;								// flag transition in delegate
+		psp.currentState = psp.fifthState;												// set to new state
 	}
 
 	public void ToSixth(bool toLight, int shape)
 	{
 		psp.TransitionTo(0, 6, isLight, toLight, shape);								// trigger transition effects
-		//ParticleStateEvents.toSixth += psp.TransitionToSixth;						// flag transition in delegate
-		psp.currentState = psp.sixthState;											// set to new state
+		//ParticleStateEvents.toSixth += psp.TransitionToSixth;								// flag transition in delegate
+		psp.currentState = psp.sixthState;												// set to new state
 	}
 
 	public void ToSeventh(bool toLight, int shape)
 	{
 		psp.TransitionTo(0, 7, isLight, toLight, shape);								// trigger transition effects
-		//ParticleStateEvents.toSeventh += psp.TransitionToSeventh;					// flag transition in delegate
-		psp.currentState = psp.seventhState;										// set to new stateebug.Log ("Can't transition to same state");
+		//ParticleStateEvents.toSeventh += psp.TransitionToSeventh;							// flag transition in delegate
+		psp.currentState = psp.seventhState;											// set to new state
+	}
+
+	public void ToEighth(bool toLight, int shape)
+	{
+		psp.TransitionTo(0, 8, isLight, toLight, shape);								// trigger transition effects
+		//ParticleStateEvents.toSeventh += psp.TransitionToSeventh;							// flag transition in delegate
+		psp.currentState = psp.eighthState;												// set to new state
 	}
 
     public void Init()
@@ -174,16 +181,23 @@ public class ZeroPlayerState : IParticleState
         {
             int i = Random.Range(0, 2);                                                         // random 0 or 1 or 2
             if (i == 0) ToSixth(true, 0);                                                       // to light circle sixth
-            else if (i == 1) ToSixth(false, 1);                                             // to dark triangle sixth
-            else if (i == 2) ToSixth(false, 2);												// to dark square sixth
+            else if (i == 1) ToSixth(false, 1);													// to dark triangle sixth
+            else if (i == 2) ToSixth(false, 2);													// to dark square sixth
         }
         else if (evol == 13f)
         {
             int i = Random.Range(0, 2);                                                         // random 0 or 1 or 2
-            if (i == 0) ToSeventh(true, 0);                                                 // to light circle seventh
-            else if (i == 1) ToSeventh(true, 1);                                                // to light triangle seventh
+            if (i == 0) ToSeventh(true, 0);														// to light circle seventh
+            else if (i == 1) ToSeventh(true, 1);												// to light triangle seventh
             else if (i == 2) ToSeventh(true, 2);												// to light square seventh
         }
+		else if (evol == 21f)
+		{
+			int i = Random.Range(0, 2);															// random 0 or 1 or 2
+			if (i == 0) ToEighth(true, 0);														// to light circle seventh
+			else if (i == 1) ToEighth(true, 1);													// to light triangle seventh
+			else if (i == 2) ToEighth(true, 2);													// to light square seventh
+		}
         // new state
     }
 
@@ -258,7 +272,11 @@ public class ZeroPlayerState : IParticleState
 			if (deltaDark <= deltaLight) ToSeventh(true, 0);								// if lose more dark than light = to light circle seventh
 			else if (deltaDark > deltaLight) ToSeventh(false, 0);							// if lose more light than dark = to dark circle seventh
 		}
-
+		// eighth
+		if (evol >= -21f && evol < -34f) {											    // devolve to light world seventh (if evol == -13)
+			if (deltaDark <= deltaLight) ToEighth(true, 0);									// if lose more dark than light = to light circle seventh
+			else if (deltaDark > deltaLight) ToEighth(false, 0);							// if lose more light than dark = to dark circle seventh
+		}
         // new state
 	}
 }

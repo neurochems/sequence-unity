@@ -25,6 +25,8 @@ public interface IParticleState
 
 	void ToSeventh(bool toLight, int shape);
 
+	void ToEighth(bool toLight, int shape);
+
 	void Evol ();
 
 }

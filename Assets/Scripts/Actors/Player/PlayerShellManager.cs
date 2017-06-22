@@ -9,7 +9,7 @@ public class PlayerShellManager : MonoBehaviour {
 		anim = GetComponent<Animator>();		// init animator ref
 	}
 
-	public void Shell (int fromState, int toState, bool fromLight, bool toLight, int shape) 
+	public void Shell (int f, int t, bool fl, bool tl, int s) 
 	{
 
 // EVOLUTIONS \\
@@ -46,32 +46,30 @@ public class PlayerShellManager : MonoBehaviour {
 		// to third
 
 		// from dark first
-		if (fromState == 1 && toState == 3 && !fromLight && !toLight) {			// to dark third
+			// to dark third
+		if (f == 1 && t == 3 && !fl && !tl) {
 			Debug.Log("player shell first to third");
-			ScaleTo (false, "hidden", "third");										// scale to third
+			ScaleTo (false, "hidden", "third");																		// scale to third
 		}
 		// to light third (no shell change)
 
 		// from light first
-		if (fromState == 1 && toState == 3 && fromLight && !toLight) {			// to dark third
-			ScaleTo (false, "hidden", "third");										// scale to third
-		}
-		// to light third (no shell change)
+			// to dark third
+		if (f == 1 && t == 3 && fl && !tl) ScaleTo (false, "hidden", "third");										// scale to third
+			// to light third (no shell change)
 
 	///// second \\\\\
 
 		// to third
 
 		// from dark second
-		if (fromState == 2 && toState == 3 && !fromLight && !toLight) {			// to dark third
-			ScaleTo (false, "hidden", "third");										// scale to third
-		}
+			// to dark third
+		if (f == 2 && t == 3 && !fl && !tl) ScaleTo (false, "hidden", "third");										// scale to third
 			// to light third (no shell change)
 			
 		// from light second
-		if (fromState == 2 && toState == 3 && fromLight && !toLight) {			// to dark third
-			ScaleTo (false, "hidden", "third");										// scale to third
-		}
+			// to dark third
+		if (f == 2 && t == 3 && fl && !tl) ScaleTo (false, "hidden", "third");										// scale to third
 			// to light third (no shell change)
 
 	///// third \\\\\
@@ -80,13 +78,11 @@ public class PlayerShellManager : MonoBehaviour {
 
 		// from dark third
 			// to dark fourth (no shell change)
-		if (fromState == 3 && toState == 4 && !fromLight && toLight) {			// to light fourth
-			ScaleTo (true, "third", "hidden");										// scale to hidden
-		}
+			// to light fourth
+		if (f == 3 && t == 4 && !fl && tl) ScaleTo (true, "third", "hidden");										// scale to hidden
 		// from light third
-		if (fromState == 3 && toState == 4 && fromLight && !toLight) {			// to dark fourth
-			ScaleTo (false, "hidden", "third");										// scale to third
-		}
+			// to dark fourth
+		if (f == 3 && t == 4 && fl && !tl) ScaleTo (false, "hidden", "third");										// scale to third
 			// to light fourth (no shell change)
 			
 	///// fourth \\\\\
@@ -124,29 +120,23 @@ public class PlayerShellManager : MonoBehaviour {
 		// to seventh
 
 		// from dark circle sixth
-		if (fromState == 6 && toState == 7 && !fromLight && !toLight && shape == 0) {			// to dark circle seventh
-			ScaleTo (false, "third", "seventh");													// scale to seventh
-		}
-		else if (fromState == 6 && toState == 7 && !fromLight && toLight && shape == 0) {		// to light circle seventh
-			ScaleTo (false, "third", "seventh");													// scale to seventh
-		}
+			// to dark circle seventh
+		if (f == 6 && t == 7 && !fl && !tl && s == 0) ScaleTo (false, "third", "seventh");							// scale to seventh
+			// to light circle seventh
+		else if (f == 6 && t == 7 && !fl && tl && s == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
 		// from light circle sixth
-		if (fromState == 6 && toState == 7 && fromLight && !toLight && shape == 0) {			// to dark circle seventh
-			ScaleTo (false, "third", "seventh");													// scale to seventh
-		}
-		else if (fromState == 6 && toState == 7 && fromLight && toLight && shape == 0) {		// to light circle seventh
-			ScaleTo (false, "third", "seventh");													// scale to seventh
-		}
+			// to dark circle seventh
+		if (f == 6 && t == 7 && fl && !tl && s == 0) ScaleTo (false, "third", "seventh");							// scale to seventh
+			// to light circle seventh
+		else if (f == 6 && t == 7 && fl && tl && s == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
 		// from dark triangle sixth
-		if (fromState == 6 && toState == 7 && !fromLight && !toLight && shape == 1) {			// to dark triangle seventh
-			ScaleTo (false, "hidden", "seventh");													// scale to seventh
-		}
+			// to dark triangle seventh
+		if (f == 6 && t == 7 && !fl && !tl && s == 1) ScaleTo (false, "hidden", "seventh");							// scale to seventh
 			// to light triangle seventh (no shell change)
 			
 		// from dark square sixth
-		if (fromState == 6 && toState == 7 && !fromLight && !toLight && shape == 2) {			// to dark square seventh
-			ScaleTo (false, "hidden", "seventh");													// scale to seventh
-		}
+			// to dark square seventh
+		if (f == 6 && t == 7 && !fl && !tl && s == 2) ScaleTo (false, "hidden", "seventh");							// scale to seventh
 			// to light square seventh (no shell change)
 
 	///// seventh \\\\\
@@ -156,44 +146,61 @@ public class PlayerShellManager : MonoBehaviour {
 		// from dark circle seventh
 			// to dark circle eighth (no shell change)
 			// to light circle eighth (no shell change)
-			
 		// from light circle seventh
 			// to dark circle eighth (no shell change)
 			// to light circle eighth (no shell change)
-			
 		// from dark triangle seventh
 			// to dark triangle eighth (no shell change)
-		if (fromState == 7 && toState == 8 && !fromLight && toLight && shape == 1) {			// to light triangle eighth
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
-
+			// to light triangle eighth
+		if (f == 7 && t == 8 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");							// scale to hidden
 		// from light triangle seventh
-		if (fromState == 7 && toState == 8 && fromLight && !toLight && shape == 1) {			// to dark triangle eighth
-			ScaleTo (false, "hidden", "seventh");													// scale to seventh
-		}
+			// to dark triangle eighth
+		if (f == 7 && t == 8 && fl && !tl && s == 1) ScaleTo (false, "hidden", "seventh");							// scale to seventh
 			// to light triangle eighth (no shell change)
-			
 		// from dark square seventh
 			// to dark square eighth (no shell change)
-		if (fromState == 7 && toState == 8 && !fromLight && toLight && shape == 2) {			// to light square eighth
-			ScaleTo (false, "hidden", "seventh");													// scale to seventh
-		}
-
+			// to light square eighth
+		if (f == 7 && t == 8 && !fl && tl && s == 2) ScaleTo (false, "hidden", "seventh");							// scale to seventh
 		// from light square seventh
-		if (fromState == 7 && toState == 8 && fromLight && !toLight && shape == 2) {			// to dark square eighth
-			ScaleTo (false, "hidden", "seventh");													// scale to seventh
-		}
-		// to light square eighth (no shell change)
+			// to dark square eighth
+		if (f == 7 && t == 8 && fl && !tl && s == 2) ScaleTo (false, "hidden", "seventh");							// scale to seventh
+			// to light square eighth (no shell change)
+
+	///// eighth \\\\\
+
+		// to ninth
+
+		// from dark circle eighth
+			// to dark circle ninth
+		if (f == 8 && t == 9 && !fl && !tl && s == 0) ScaleTo (false, "seventh", "ninth");							// scale to ninth
+			// to light circle seventh
+		else if (f == 8 && t == 9 && !fl && tl && s == 0) ScaleTo (false, "seventh", "ninth");						// scale to ninth
+		// from light circle eighth
+			// to dark circle ninth
+		if (f == 8 && t == 9 && fl && !tl && s == 0) ScaleTo (false, "seventh", "ninth");							// scale to ninth
+			// to light circle ninth
+		else if (f == 8 && t == 9 && fl && tl && s == 0) ScaleTo (false, "seventh", "ninth");						// scale to ninth
+		// from dark triangle eighth
+			// to dark triangle ninth
+		if (f == 8 && t == 9 && !fl && !tl && s == 1) ScaleTo (false, "seventh", "ninth");							// scale to ninth
+			// to light triangle ninth
+		else if (f == 8 && t == 9 && !fl && tl && s == 1) ScaleTo (false, "seventh", "ninth");						// scale to ninth
+		// from dark square eighth
+			// to dark square ninth
+		if (f == 8 && t == 9 && !fl && !tl && s == 2) ScaleTo (false, "seventh", "ninth");							// scale to ninth
+			// to light square ninth
+		else if (f == 8 && t == 9 && !fl && tl && s == 2) ScaleTo (false, "seventh", "ninth");						// scale to ninth
+
 
 // DEVOLUTIONS \\
 
-	///// zero \\\\\
+///// zero \\\\\
 
-	///// half zero (0.5) \\\\\
+///// half zero (0.5) \\\\\
 
 		// to zero (no shell change)
 
-	///// first \\\\\
+///// first \\\\\
 
 		// from dark first
 			// to zero (no shell change)
@@ -203,7 +210,7 @@ public class PlayerShellManager : MonoBehaviour {
 			// to zero (no shell change)
 			// to dark zero (0.5) (no shell change)
 
-	///// second \\\\\
+///// second \\\\\
 
 		// from dark second
 			// to zero (no shell change)
@@ -219,35 +226,27 @@ public class PlayerShellManager : MonoBehaviour {
 			// to dark first (no shell change)
 			// to light first (no shell change)
 
-	///// third \\\\\
+///// third \\\\\
 
-		// from dark third	
+	// from dark third	
 		// to zero
-		if (fromState == 3 && toState == 0 && !fromLight && toLight) {					// to zero
-			ScaleTo (true, "third", "hidden");												// scale to hidden
-		}
+		if (f == 3 && t == 0 && !fl && tl) ScaleTo (true, "third", "hidden");										// scale to hidden
 		// to dark zero
-		if (fromState == 3 && toState == 0 && !fromLight && !toLight) {					// to dark zero
-			ScaleTo (true, "third", "hidden");												// scale to hidden
-		}
+		if (f == 3 && t == 0 && !fl && !tl) ScaleTo (true, "third", "hidden");										// scale to hidden
 		// to first
-		if (fromState == 3 && toState == 1 && !fromLight && !toLight) {					// to dark first
-			ScaleTo (true, "third", "hidden");												// scale to hidden
-		}
-		else if (fromState == 3 && toState == 1 && !fromLight && toLight) {				// to light first
-			ScaleTo (true, "third", "hidden");												// scale to hidden
-		}
+			// to dark first
+		if (f == 3 && t == 1 && !fl && !tl) ScaleTo (true, "third", "hidden");										// scale to hidden
+			// to light first
+		else if (f == 3 && t == 1 && !fl && tl) ScaleTo (true, "third", "hidden");									// scale to hidden
 		// to second
-		if (fromState == 3 && toState == 2 && !fromLight && !toLight) {					// to dark second
-			ScaleTo (true, "third", "hidden");												// scale to hidden
-		}
-		else if (fromState == 3 && toState == 2 && !fromLight && toLight) {				// to light second
-			ScaleTo (true, "third", "hidden");												// scale to hidden
-		}
+			// to dark second
+		if (f == 3 && t == 2 && !fl && !tl) ScaleTo (true, "third", "hidden");										// scale to hidden
+			// to light second
+		else if (f == 3 && t == 2 && !fl && tl) ScaleTo (true, "third", "hidden");									// scale to hidden
 
-		// from light third	
-			// to zero (no shell change)
-			// to dark zero (no shell change)
+	// from light third	
+		// to zero (no shell change)
+		// to dark zero (no shell change)
 		// to first
 			// to dark first (no shell change)
 			// to light first (no shell change)
@@ -255,38 +254,30 @@ public class PlayerShellManager : MonoBehaviour {
 			// to dark second (no shell change)
 			// to light second (no shell change)
 			
-	///// fourth \\\\\
+///// fourth \\\\\
 
-		// from dark fourth	
+	// from dark fourth	
 		// to zero
-		if (fromState == 4 && toState == 0 && !fromLight && toLight) {					// to zero
-			ScaleTo (true, "third", "hidden");												// scale to hidden
-		}
+		if (f == 4 && t == 0 && !fl && tl)ScaleTo (true, "third", "hidden");										// scale to hidden
 		// to dark zero
-		if (fromState == 4 && toState == 0 && !fromLight && !toLight) {					// to dark zero
-			ScaleTo (true, "third", "hidden");												// scale to hidden
-		}
+		if (f == 4 && t == 0 && !fl && !tl) ScaleTo (true, "third", "hidden");										// scale to hidden
 		// to first
-		if (fromState == 4 && toState == 1 && !fromLight && !toLight) {					// to dark first
-			ScaleTo (true, "third", "hidden");												// scale to hidden
-		}
-		else if (fromState == 4 && toState == 1 && !fromLight && toLight) {				// to light first
-			ScaleTo (true, "third", "hidden");												// scale to hidden
-		}
+			// to dark first
+		if (f == 4 && t == 1 && !fl && !tl) ScaleTo (true, "third", "hidden");										// scale to hidden
+			// to light first
+		else if (f == 4 && t == 1 && !fl && tl) ScaleTo (true, "third", "hidden");									// scale to hidden
 		// to second
-		if (fromState == 4 && toState == 2 && !fromLight && !toLight) {					// to dark second
-			ScaleTo (true, "third", "hidden");												// scale to hidden
-		}
-		else if (fromState == 4 && toState == 2 && !fromLight && toLight) {				// to light second
-			ScaleTo (true, "third", "hidden");												// scale to hidden
-		}
+			// to dark second
+		if (f == 4 && t == 2 && !fl && !tl) ScaleTo (true, "third", "hidden");										// scale to hidden
+			// to light second
+		else if (f == 4 && t == 2 && !fl && tl) ScaleTo (true, "third", "hidden");									// scale to hidden
 		// to third
 			// to dark third (no shell change)
 			// to light third (no shell change)
 
-		// from light fourth	
-			// to zero (no shell change)
-			// to dark zero (no shell change)
+	// from light fourth	
+		// to zero (no shell change)
+		// to dark zero (no shell change)
 		// to first
 			// to dark first (no shell change)
 			// to light first (no shell change)
@@ -294,78 +285,59 @@ public class PlayerShellManager : MonoBehaviour {
 			// to dark second (no shell change)
 			// to light second (no shell change)
 		// to third
-		if (fromState == 4 && toState == 3 && fromLight && !toLight) {					// to dark third
-			ScaleTo (false, "hidden", "third");												// scale to third
-		}
-		// to light third (no shell change)
+			// to dark third
+		if (f == 4 && t == 3 && fl && !tl) ScaleTo (false, "hidden", "third");										// scale to third
+			// to light third (no shell change)
 
-	///// fifth \\\\\
+///// fifth \\\\\
 
-		// from dark circle fifth
+	// from dark circle fifth
 		// to zero
-		if (fromState == 5 && toState == 0 && !fromLight && toLight && shape == 0) {			// to zero
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
+		if (f == 5 && t == 0 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
 		// to dark zero
-		if (fromState == 5 && toState == 0 && !fromLight && !toLight && shape == 0) {			// to dark zero
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
+		if (f == 5 && t == 0 && !fl && !tl && s == 0) ScaleTo (true, "third", "hidden");							// scale to hidden
 		// to first
-		if (fromState == 5 && toState == 1 && !fromLight && !toLight && shape == 0) {			// to dark first
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
-		else if (fromState == 5 && toState == 1 && !fromLight && toLight && shape == 0) {		// to light first
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
+			// to dark first
+		if (f == 5 && t == 1 && !fl && !tl && s == 0) ScaleTo (true, "third", "hidden");							// scale to hidden
+			// to light first
+		else if (f == 5 && t == 1 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");						// scale to hidden
 		// to second
-		if (fromState == 5 && toState == 2 && !fromLight && !toLight && shape == 0) {			// to dark second
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
-		else if (fromState == 5 && toState == 2 && !fromLight && toLight && shape == 0) {		// to light second
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
+			// to dark second
+		if (f == 5 && t == 2 && !fl && !tl && s == 0) ScaleTo (true, "third", "hidden");							// scale to hidden
+			// to light second
+		else if (f == 5 && t == 2 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");						// scale to hidden
 		// to third
 			// to dark third (no shell change)
-		if (fromState == 5 && toState == 3 && !fromLight && toLight && shape == 0) {			// to light third
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
+			// to light third
+		if (f == 5 && t == 3 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
 		// to fourth
 			// to dark fourth (no shell change)
 			
-		// from light circle fifth
+	// from light circle fifth
 		// to zero
-		if (fromState == 5 && toState == 0 && fromLight && toLight && shape == 0) {				// to zero
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
+		if (f == 5 && t == 0 && fl && tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
 		// to dark zero
-		if (fromState == 5 && toState == 0 && fromLight && !toLight && shape == 0) {			// to dark zero
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
+		if (f == 5 && t == 0 && fl && !tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
 		// to first
-		if (fromState == 5 && toState == 1 && fromLight && !toLight && shape == 0) {			// to dark first
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
-		else if (fromState == 5 && toState == 1 && fromLight && toLight && shape == 0) {		// to light first
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
+			// to dark first
+		if (f == 5 && t == 1 && fl && !tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
+			// to light first
+		else if (f == 5 && t == 1 && fl && tl && s == 0) ScaleTo (true, "third", "hidden");							// scale to hidden
 		// to second
-		if (fromState == 5 && toState == 2 && fromLight && !toLight && shape == 0) {			// to dark second
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
-		else if (fromState == 5 && toState == 2 && fromLight && toLight && shape == 0) {		// to light second
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
+			// to dark second
+		if (f == 5 && t == 2 && fl && !tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
+			// to light second
+		else if (f == 5 && t == 2 && fl && tl && s == 0) ScaleTo (true, "third", "hidden");							// scale to hidden
 		// to third
 			// to dark third (no shell change)
-		if (fromState == 5 && toState == 3 && fromLight && toLight && shape == 0) {				// to light third
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
+			// to light third
+		if (f == 5 && t == 3 && fl && tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
 		// to fourth
 			// to dark fourth (no shell change)
 			
-		// from triangle fifth
-			// to zero (no shell change)
-			// to dark zero (no shell change)
+	// from triangle fifth
+		// to zero (no shell change)
+		// to dark zero (no shell change)
 		// to first
 			// to dark first (no shell change)
 			// to light first (no shell change)
@@ -373,16 +345,15 @@ public class PlayerShellManager : MonoBehaviour {
 			// to dark second (no shell change)
 			// to light second (no shell change)
 		// to third
-		if (fromState == 5 && toState == 3 && fromLight && !toLight && shape == 1) {			// to dark third
-			ScaleTo (false, "hidden", "third");														// scale to third
-		}
+			// to dark third
+		if (f == 5 && t == 3 && fl && !tl && s == 1) ScaleTo (false, "hidden", "third");							// scale to third
 			// to light third (no shell change)
 		// to fourth
-		// to light fourth (no shell change)
+			// to light fourth (no shell change)
 			
-		// from square fifth
-			// to zero (no shell change)
-			// to dark zero (no shell change)
+	// from square fifth
+		// to zero (no shell change)
+		// to dark zero (no shell change)
 		// to first
 			// to dark first (no shell change)
 			// to light first (no shell change)
@@ -390,73 +361,54 @@ public class PlayerShellManager : MonoBehaviour {
 			// to dark second (no shell change)
 			// to light second (no shell change)
 		// to third
-		if (fromState == 5 && toState == 3 && fromLight && !toLight && shape == 2) {			// to dark third
-			ScaleTo (false, "hidden", "third");														// scale to third
-		}
+			// to dark third
+		if (f == 5 && t == 3 && fl && !tl && s == 2) ScaleTo (false, "hidden", "third");							// scale to third
 			// to light third (no shell change)
 		// to fourth
 			// to light fourth (no shell change)
 
-	///// sixth \\\\\
+///// sixth \\\\\
 
-		// from dark circle sixth
+	// from dark circle sixth
 		// to zero
-		if (fromState == 6 && toState == 0 && !fromLight && toLight && shape == 0) {			// to zero
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
+		if (f == 6 && t == 0 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
 		// to dark zero
-		if (fromState == 6 && toState == 0 && !fromLight && !toLight && shape == 0) {			// to dark zero
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
+		if (f == 6 && t == 0 && !fl && !tl && s == 0) ScaleTo (true, "third", "hidden");							// scale to hidden
 		// to first
-		if (fromState == 6 && toState == 1 && !fromLight && !toLight && shape == 0) {			// to dark first
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
-		else if (fromState == 6 && toState == 1 && !fromLight && toLight && shape == 0) {		// to light first
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
+			// to dark first
+		if (f == 6 && t == 1 && !fl && !tl && s == 0) ScaleTo (true, "third", "hidden");							// scale to hidden
+			// to light first
+		else if (f == 6 && t == 1 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");						// scale to hidden
 		// to second
-		if (fromState == 6 && toState == 2 && !fromLight && !toLight && shape == 0) {		// to dark second
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
-		else if (fromState == 6 && toState == 2 && !fromLight && toLight && shape == 0) {		// to light second
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
+			// to dark second
+		if (f == 6 && t == 2 && !fl && !tl && s == 0) ScaleTo (true, "third", "hidden");							// scale to hidden
+			// to light second
+		else if (f == 6 && t == 2 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");						// scale to hidden
 		// to third
 			// to dark third (no shell change)
-		if (fromState == 6 && toState == 3 && !fromLight && toLight && shape == 0) {		// to light third
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
+			// to light third
+		if (f == 6 && t == 3 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
 		// to fourth
 			// to dark fourth (no shell change)
-
 		// to fifth
 			// to dark circle fifth (no shell change)
 			// to light circle fifth (no shell change)
 			
-		// from light circle sixth
+	// from light circle sixth
 		// to zero
-		if (fromState == 6 && toState == 0 && fromLight && toLight && shape == 0) {				// to zero
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
+		if (f == 6 && t == 0 && fl && tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
 		// to dark zero
-		if (fromState == 6 && toState == 0 && fromLight && !toLight && shape == 0) {			// to dark zero
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
+		if (f == 6 && t == 0 && fl && !tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
 		// to first
-		if (fromState == 6 && toState == 1 && fromLight && !toLight && shape == 0) {			// to dark first
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
-		else if (fromState == 6 && toState == 1 && fromLight && toLight && shape == 0) {		// to light first
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
+			// to dark first
+		if (f == 6 && t == 1 && fl && !tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
+			// to light first
+		else if (f == 6 && t == 1 && fl && tl && s == 0) ScaleTo (true, "third", "hidden");							// scale to hidden
 		// to second
-		if (fromState == 6 && toState == 2 && fromLight && !toLight && shape == 0) {			// to dark second
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
-		else if (fromState == 6 && toState == 2 && fromLight && toLight && shape == 0) {		// to light second
-			ScaleTo (true, "third", "hidden");														// scale to hidden
-		}
+			// to dark second
+		if (f == 6 && t == 2 && fl && !tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
+			// to light second
+		else if (f == 6 && t == 2 && fl && tl && s == 0) ScaleTo (true, "third", "hidden");							// scale to hidden
 		// to third
 			// to dark third (no shell change)
 			// to light third (no shell change)
@@ -466,9 +418,9 @@ public class PlayerShellManager : MonoBehaviour {
 			// to dark circle fifth (no shell change)
 			// to light circle fifth (no shell change)
 			
-		// from triangle sixth
-			// to zero (no shell change)
-			// to dark zero (no shell change)
+	// from triangle sixth
+		// to zero (no shell change)
+		// to dark zero (no shell change)
 		// to first
 			// to dark first (no shell change)
 			// to light first (no shell change)
@@ -476,18 +428,17 @@ public class PlayerShellManager : MonoBehaviour {
 			// to dark second (no shell change)
 			// to light second (no shell change)
 		// to third
-		if (fromState == 6 && toState == 3 && !fromLight && !toLight && shape == 1) {			// to dark third
-			ScaleTo (false, "hidden", "third");														// scale to third
-		}
+			// to dark third
+		if (f == 6 && t == 3 && !fl && !tl && s == 1) ScaleTo (false, "hidden", "third");							// scale to third
 			// to light third (no shell change)
 		// to fourth
 			// to light fourth (no shell change)
 		// to fifth
 			// to triangle fifth (no shell change)
 	
-		// from square sixth
-			// to zero (no shell change)
-			// to dark zero (no shell change)
+	// from square sixth
+		// to zero (no shell change)
+		// to dark zero (no shell change)
 		// to first
 			// to dark first (no shell change)
 			// to light first (no shell change)
@@ -495,161 +446,122 @@ public class PlayerShellManager : MonoBehaviour {
 			// to dark second (no shell change)
 			// to light second (no shell change)
 		// to third
-		if (fromState == 6 && toState == 3 && !fromLight && !toLight && shape == 2) {			// to dark third
-			ScaleTo (false, "hidden", "third");														// scale to third
-		}
+			// to dark third
+		if (f == 6 && t == 3 && !fl && !tl && s == 2) ScaleTo (false, "hidden", "third");							// scale to third
 			// to light third (no shell change)
 		// to fourth
 			// to light fourth (no shell change)
 		// to fifth
 			// to square fifth (no shell change)
 			
-	///// seventh \\\\\
+///// seventh/eighth \\\\\
 
-		// from dark circle seventh
+	// from dark circle seventh
 		// to zero
-		if (fromState == 7 && toState == 0 && !fromLight && toLight && shape == 0) {			// to zero
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+		if ((f == 7 || f == 8) && t == 0 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");							// scale to hidden
 		// to dark zero
-		if (fromState == 7 && toState == 0 && !fromLight && !toLight && shape == 0) {			// to dark zero
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+		if ((f == 7 || f == 8) && t == 0 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");							// scale to hidden
 		// to first
-		if (fromState == 7 && toState == 1 && !fromLight && !toLight && shape == 0) {			// to dark first
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
-		else if (fromState == 7 && toState == 1 && !fromLight && toLight && shape == 0) {		// to light first
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+			// to dark first
+		if ((f == 7 || f == 8) && t == 1 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");							// scale to hidden
+			// to light first
+		else if ((f == 7 || f == 8) && t == 1 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");						// scale to hidden
 		// to second
-		if (fromState == 7 && toState == 2 && !fromLight && !toLight && shape == 0) {			// to dark second
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
-		else if (fromState == 7 && toState == 2 && !fromLight && toLight && shape == 0) {		// to light second
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+			// to dark second
+		if ((f == 7 || f == 8) && t == 2 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");							// scale to hidden
+			// to light second
+		else if ((f == 7 || f == 8) && t == 2 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");						// scale to hidden
 		// to third
-		if (fromState == 7 && toState == 3 && !fromLight && !toLight && shape == 0) {			// to dark third
-			ScaleTo (true, "seventh", "third");														// scale to third
-		}
-		else if (fromState == 7 && toState == 3 && !fromLight && toLight && shape == 0) {		// to light third
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+			// to dark third
+		if ((f == 7 || f == 8) && t == 3 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");							// scale to third
+			// to light third
+		else if ((f == 7 || f == 8) && t == 3 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");						// scale to hidden
 		// to fourth
-		if (fromState == 7 && toState == 4 && !fromLight && !toLight && shape == 0) {			// to dark fourth
-			ScaleTo (true, "seventh", "third");														// scale to third
-		}
+			// to dark fourth
+		if ((f == 7 || f == 8) && t == 4 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");							// scale to third
 		// to fifth
-		if (fromState == 7 && toState == 5 && !fromLight && !toLight && shape == 0) {			// to dark circle fifth
-			ScaleTo (true, "seventh", "third");														// scale to third
-		}
-		else if (fromState == 7 && toState == 5 && !fromLight && toLight && shape == 0) {		// to light circle fifth
-			ScaleTo (true, "seventh", "third");														// scale to third
-		}
+			// to dark circle fifth
+		if ((f == 7 || f == 8) && t == 5 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");							// scale to third
+			// to light circle fifth
+		else if ((f == 7 || f == 8) && t == 5 && !fl && tl && s == 0) ScaleTo (true, "seventh", "third");						// scale to third
 		// to sixth
-		if (fromState == 7 && toState == 6 && !fromLight && !toLight && shape == 0) {			// to dark circle sixth
-			ScaleTo (true, "seventh", "third");														// scale to third
-		}
-		else if (fromState == 7 && toState == 6 && !fromLight && toLight && shape == 0) {		// to light circle sixth
-			ScaleTo (true, "seventh", "third");														// scale to third
-		}
-
-		// from light circle seventh
+			// to dark circle sixth
+		if ((f == 7 || f == 8) && t == 6 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");							// scale to third
+			// to light circle sixth
+		else if ((f == 7 || f == 8) && t == 6 && !fl && tl && s == 0) ScaleTo (true, "seventh", "third");						// scale to third
+	
+	// from light circle seventh
 		// to zero
-		if (fromState == 7 && toState == 0 && fromLight && toLight && shape == 0) {				// to zero
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+		if ((f == 7 || f == 8) && t == 0 && fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");							// scale to hidden
 		// to dark zero
-		if (fromState == 7 && toState == 0 && fromLight && !toLight && shape == 0) {			// to dark zero
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+		if ((f == 7 || f == 8) && t == 0 && fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");							// scale to hidden
 		// to first
-		if (fromState == 7 && toState == 1 && fromLight && !toLight && shape == 0) {			// to dark first
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
-		else if (fromState == 7 && toState == 1 && fromLight && toLight && shape == 0) {		// to light first
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+			// to dark first
+		if ((f == 7 || f == 8) && t == 1 && fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");							// scale to hidden
+			// to light first
+		else if ((f == 7 || f == 8) && t == 1 && fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");						// scale to hidden
 		// to second
-		if (fromState == 7 && toState == 2 && fromLight && !toLight && shape == 0) {			// to dark second
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
-		else if (fromState == 7 && toState == 2 && fromLight && toLight && shape == 0) {		// to light second
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+			// to dark second
+		if ((f == 7 || f == 8) && t == 2 && fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");							// scale to hidden
+			// to light second
+		else if ((f == 7 || f == 8) && t == 2 && fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");						// scale to hidden
 		// to third
-		if (fromState == 7 && toState == 3 && fromLight && !toLight && shape == 0) {			// to dark third
-			ScaleTo (true, "seventh", "third");														// scale to third
-		}
-		else if (fromState == 7 && toState == 3 && fromLight && toLight && shape == 0) {		// to light third
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+			// to dark third
+		if ((f == 7 || f == 8) && t == 3 && fl && !tl && s == 0) ScaleTo (true, "seventh", "third");							// scale to third
+			// to light third
+		else if ((f == 7 || f == 8) && t == 3 && fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");						// scale to hidden
 		// to fourth
-		if (fromState == 7 && toState == 4 && fromLight && !toLight && shape == 0) {			// to dark fourth
-			ScaleTo (true, "seventh", "third");														// scale to third
-		}
+			// to dark fourth
+		if ((f == 7 || f == 8) && t == 4 && fl && !tl && s == 0) ScaleTo (true, "seventh", "third");							// scale to third
 		// to fifth
-		if (fromState == 7 && toState == 5 && fromLight && !toLight && shape == 0) {			// to dark circle fifth
-			ScaleTo (true, "seventh", "third");														// scale to third
-		}
-		else if (fromState == 7 && toState == 5 && fromLight && toLight && shape == 0) {		// to light circle fifth
-			ScaleTo (true, "seventh", "third");														// scale to third
-		}
+			// to dark circle fifth
+		if ((f == 7 || f == 8) && t == 5 && fl && !tl && s == 0) ScaleTo (true, "seventh", "third");							// scale to third
+			// to light circle fifth
+		else if ((f == 7 || f == 8) && t == 5 && fl && tl && s == 0) ScaleTo (true, "seventh", "third");						// scale to third
 		// to sixth
-		if (fromState == 7 && toState == 6 && fromLight && !toLight && shape == 0) {			// to dark circle sixth
-			ScaleTo (true, "seventh", "third");														// scale to third
-		}
-		else if (fromState == 7 && toState == 6 && fromLight && toLight && shape == 0) {		// to light circle sixth
-			ScaleTo (true, "seventh", "third");														// scale to third
-		}
+			// to dark circle sixth
+		if ((f == 7 || f == 8) && t == 6 && fl && !tl && s == 0) ScaleTo (true, "seventh", "third");							// scale to third
+			// to light circle sixth
+		else if ((f == 7 || f == 8) && t == 6 && fl && tl && s == 0) ScaleTo (true, "seventh", "third");						// scale to third
 
-		// from dark triangle seventh
+	// from dark triangle seventh
 		// to zero
-		if (fromState == 7 && toState == 0 && !fromLight && toLight && shape == 1) {			// to zero
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+		if ((f == 7 || f == 8) && t == 0 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");							// scale to hidden
 		// to dark zero
-		if (fromState == 7 && toState == 0 && !fromLight && !toLight && shape == 1) {			// to dark zero
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+		if ((f == 7 || f == 8) && t == 0 && !fl && !tl && s == 1) ScaleTo (true, "seventh", "hidden");							// scale to hidden
 		// to first
-		if (fromState == 7 && toState == 1 && !fromLight && !toLight && shape == 1) {			// to dark first
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
-		else if (fromState == 7 && toState == 1 && !fromLight && toLight && shape == 1) {		// to light first
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+			// to dark first
+		if ((f == 7 || f == 8) && t == 1 && !fl && !tl && s == 1) ScaleTo (true, "seventh", "hidden");							// scale to hidden
+			// to light first
+		else if ((f == 7 || f == 8) && t == 1 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");						// scale to hidden
 		// to second
-		if (fromState == 7 && toState == 2 && !fromLight && !toLight && shape == 1) {			// to dark second
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
-		else if (fromState == 7 && toState == 2 && !fromLight && toLight && shape == 1) {		// to light second
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+			// to dark second
+		if ((f == 7 || f == 8) && t == 2 && !fl && !tl && s == 1) ScaleTo (true, "seventh", "hidden");							// scale to hidden
+			// to light second
+		else if ((f == 7 || f == 8) && t == 2 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");						// scale to hidden
 		// to third
-		if (fromState == 7 && toState == 3 && !fromLight && !toLight && shape == 1) {			// to dark third
-			ScaleTo (true, "seventh", "third");														// scale to third
-		}
-		else if (fromState == 7 && toState == 3 && !fromLight && toLight && shape == 1) {		// to light third
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+			// to dark third
+		if ((f == 7 || f == 8) && t == 3 && !fl && !tl && s == 1) ScaleTo (true, "seventh", "third");							// scale to third
+			// to light third
+		else if ((f == 7 || f == 8) && t == 3 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");						// scale to hidden
 		// to fourth
-		if (fromState == 7 && toState == 4 && !fromLight && toLight && shape == 1) {			// to light fourth
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+			// to light fourth
+		if ((f == 7 || f == 8) && t == 4 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");							// scale to hidden
 		// to fifth
-		if (fromState == 7 && toState == 5 && !fromLight && toLight && shape == 1) {			// to triangle fifth
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+			// to triangle fifth
+		if ((f == 7 || f == 8) && t == 5 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");							// scale to hidden
 		// to sixth
-		if (fromState == 7 && toState == 6 && !fromLight && !toLight && shape == 1) {			// to dark triangle sixth
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+			// to dark triangle sixth
+		if ((f == 7 || f == 8) && t == 6 && !fl && !tl && s == 1) ScaleTo (true, "seventh", "hidden");							// scale to hidden
 
-		// from light triangle seventh
-			// to zero (no shell change)
-			// to dark zero (no shell change)
+	// from dark triangle eighth
+		// to seventh
+			// to light triangle seventh
+		if (f == 8 && t == 7 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+
+	// from light triangle seventh
+		// to zero (no shell change)
+		// to dark zero (no shell change)
 		// to first
 			// to dark first (no shell change)
 			// to light first (no shell change)
@@ -657,9 +569,8 @@ public class PlayerShellManager : MonoBehaviour {
 			// to dark second (no shell change)
 			// to light second (no shell change)
 		// to third
-		if (fromState == 7 && toState == 3 && fromLight && !toLight && shape == 1) {			// to dark third
-			ScaleTo (true, "seventh", "third");														// scale to third
-		}
+			// to dark third
+		if ((f == 7 || f == 8) && t == 3 && fl && !tl && s == 1) ScaleTo (true, "seventh", "third");							// scale to third
 			// to light third (no shell change)
 		// to fourth
 			// to light fourth (no shell change)
@@ -668,52 +579,44 @@ public class PlayerShellManager : MonoBehaviour {
 		// to sixth
 			// to dark triangle sixth (no shell change)
 
-		// from dark square seventh
+	// from dark square seventh
 		// to zero
-		if (fromState == 7 && toState == 0 && !fromLight && toLight && shape == 2) {			// to zero
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+		if ((f == 7 || f == 8) && t == 0 && !fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");							// scale to hidden
 		// to dark zero
-		if (fromState == 7 && toState == 0 && !fromLight && !toLight && shape == 2) {			// to dark zero
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+		if ((f == 7 || f == 8) && t == 0 && !fl && !tl && s == 2) ScaleTo (true, "seventh", "hidden");							// scale to hidden
 		// to first
-		if (fromState == 7 && toState == 1 && !fromLight && !toLight && shape == 2) {			// to dark first
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
-		else if (fromState == 7 && toState == 1 && !fromLight && toLight && shape == 2) {		// to light first
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+			// to dark first
+		if ((f == 7 || f == 8) && t == 1 && !fl && !tl && s == 2) ScaleTo (true, "seventh", "hidden");							// scale to hidden
+			// to light first
+		else if ((f == 7 || f == 8) && t == 1 && !fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");						// scale to hidden
 		// to second
-		if (fromState == 7 && toState == 2 && !fromLight && !toLight && shape == 2) {			// to dark second
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
-		else if (fromState == 7 && toState == 2 && !fromLight && toLight && shape == 2) {		// to light second
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+			// to dark second
+		if ((f == 7 || f == 8) && t == 2 && !fl && !tl && s == 2) ScaleTo (true, "seventh", "hidden");							// scale to hidden
+			// to light second
+		else if ((f == 7 || f == 8) && t == 2 && !fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");						// scale to hidden
 		// to third
-		if (fromState == 7 && toState == 3 && !fromLight && !toLight && shape == 2) {			// to dark third
-			ScaleTo (true, "seventh", "third");														// scale to third
-		}
-		else if (fromState == 7 && toState == 3 && !fromLight && toLight && shape == 2) {		// to light third
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+			// to dark third
+		if ((f == 7 || f == 8) && t == 3 && !fl && !tl && s == 2) ScaleTo (true, "seventh", "third");							// scale to third
+			// to light third
+		else if ((f == 7 || f == 8) && t == 3 && !fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");						// scale to hidden
 		// to fourth
-		if (fromState == 7 && toState == 4 && !fromLight && toLight && shape == 2) {			// to light fourth
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+			// to light fourth
+		if ((f == 7 || f == 8) && t == 4 && !fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");							// scale to hidden
 		// to fifth
-		if (fromState == 7 && toState == 5 && !fromLight && toLight && shape == 2) {			// to square fifth
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+			// to square fifth
+		if ((f == 7 || f == 8) && t == 5 && !fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");							// scale to hidden
 		// to sixth
-		if (fromState == 7 && toState == 6 && !fromLight && !toLight && shape == 2) {			// to dark square sixth
-			ScaleTo (true, "seventh", "hidden");													// scale to hidden
-		}
+			// to dark square sixth
+		if ((f == 7 || f == 8) && t == 6 && !fl && !tl && s == 2) ScaleTo (true, "seventh", "hidden");							// scale to hidden
 
-		// from light square seventh
-			// to zero (no shell change)
-			// to dark zero (no shell change)
+	// from dark triangle eighth
+		// to seventh
+			// to light triangle seventh
+		if (f == 8 && t == 7 && !fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+
+	// from light square seventh
+		// to zero (no shell change)
+		// to dark zero (no shell change)
 		// to first
 			// to dark first (no shell change)
 			// to light first (no shell change)
@@ -721,9 +624,8 @@ public class PlayerShellManager : MonoBehaviour {
 			// to dark second (no shell change)
 			// to light second (no shell change)
 		// to third
-		if (fromState == 7 && toState == 3 && fromLight && !toLight && shape == 2) {			// to dark third
-			ScaleTo (true, "seventh", "third");														// scale to third
-		}
+			// to dark third
+		if ((f == 7 || f == 8) && t == 3 && fl && !tl && s == 2) ScaleTo (true, "seventh", "third");							// scale to third
 			// to light third (no shell change)
 		// to fourth
 			// to light fourth (no shell change)

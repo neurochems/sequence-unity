@@ -51,6 +51,7 @@
      <Compile Include="Assets\Scripts\Actors\Particle\ParticlePhysicsManager.cs" />
      <Compile Include="Assets\Scripts\Actors\Particle\ParticleShellManager.cs" />
      <Compile Include="Assets\Scripts\Actors\Particle\ParticleStatePattern.cs" />
+     <Compile Include="Assets\Scripts\Actors\Particle\States\EighthParticleState.cs" />
      <Compile Include="Assets\Scripts\Actors\Particle\States\FifthParticleState.cs" />
      <Compile Include="Assets\Scripts\Actors\Particle\States\FirstParticleState.cs" />
      <Compile Include="Assets\Scripts\Actors\Particle\States\FourthParticleState.cs" />
@@ -66,6 +67,7 @@
      <Compile Include="Assets\Scripts\Actors\Player\PlayerPhysicsManager.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\PlayerShellManager.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\PlayerStatePattern.cs" />
+     <Compile Include="Assets\Scripts\Actors\Player\States\EighthPlayerState.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\States\FifthPlayerState.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\States\FirstPlayerState.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\States\FourthPlayerState.cs" />

@@ -2,30 +2,40 @@
 NOTES	
 
 - needs attn: updating shape flags in state class Evol() / shape flag in StatePattern - [in LIGHT WORLD, below]
-	
-- core
-	- zero = 0.4
-	- first = 1
-	- third = 2
-	- seventh = 3
-	- ninth = 4
-- shell 
-	- third = 0.75
-	- seventh = 2.5
-	- ninth = 3.5
-- nucleus
-	- zero = 0.25
-	- first = 0.8
-	- seventh = 2.5
-	- ninth = 3.25
-	- tenth = 
-- core collider
-	- zero 0.205
-	- first 0.51
-	- third 1.02
-	- seventh 1.53
-	- ninth 2.04
-	
+
+part sizes
+	- core
+		- zero = 0.4
+		- first = 1
+		- third = 2
+		- seventh = 3
+		- ninth = 4
+	- shell 
+		- third = 0.75
+		- seventh = 2.5
+		- ninth = 3.5
+	- nucleus
+		- zero = 0.25
+		- first = 0.8
+		- seventh = 2.5
+		- ninth = 3.25
+		- tenth = 
+	- core collider
+		- zero 0.205
+		- first 0.51
+		- third 1.02
+		- seventh 1.53
+		- ninth 2.04
+		
+camera zooms
+	- zero - 10
+	- first - 20
+	- third - 40
+	- fifth - 60
+	- seventh - 80
+	- ninth - 100
+	- tenth
+		
 ┌─────┐  
 │blaze│
 │  it │
@@ -41,17 +51,13 @@ NOTES
 // NEXT \\
 	 
  -  AUDIO SYSTEM
- 
- -	STATES TO 10 / ENDING SEQUENCE
-	- update physics/add mass - DEBUG
-	- core/shell/nucleus anim (player and particle): ninth to tenth
-	- camera: rotate around to side
-	- instantiate other world spheres
-		- gravitate them to world
-	- adding states
-		- parts
-			- nucleus: anim tree is set up, add to NucleusManager according to it
- 
+
+ -  POPULATE WORLD
+	- particle simulation
+		particle/particle collisions
+		particle evol
+		particle transitions
+			
  -  SHADERS
 	- dark world / light world
 	- dark skybox / light skybox
@@ -71,21 +77,68 @@ NOTES
 			- experienced
 			- novices
 	
+ - REVISE AFTER TESTING
+	
  -	RELEASE
 	- set date
 	- itch page
 	- consciousless page
 	- social media shares
 	
+	
 /// ACTIVE TASK \\\
 
+
+STATES TO 10
+
+	adding states
+		- see post-it list
+		- parts
+			- nucleus: anim tree is set up, add to NucleusManager according to it
+			
+		make state class
+			EIGHTH - DONE
+			NINTH
+		update state class
+			EIGHTH - DONE
+		update interface
+			EIGHTH - DONE
+		update state pattern
+			EIGHTH - DONE
+		update part managers
+			EIGHTH: core[DONE] shell[DONE] nucleus[DONE]
+			NINTH: core[] shell[] nucleus[]
+		update other state classes
+			EIGHTH: zero[DONE] first[DONE] second[DONE] third[DONE] fourth[DONE] fifth[DONE] sixth[DONE] seventh[DONE]
+			NINTH: zero[] first[] second[] third[] fourth[] fifth[] sixth[] seventh[] eighth[]
+		update particle state classes
+			EIGHTH: zero[DONE] first[DONE] second[DONE] third[DONE] fourth[DONE] fifth[DONE] sixth[DONE] seventh[DONE] 
+			NINTH: zero[] first[] second[] third[] fourth[] fifth[] sixth[] seventh[] eighth[]
+		update particle state pattern
+			EIGHTH - DONE
+		create particle state class
+			EIGHTH - DONE
+		update new particle state class
+			EIGHTH - DONE
+			
+ENDING SEQUENCE
+
+	core/shell/nucleus anim (player and particle): ninth to tenth
+		- slow increase in player
+		- add anim to world
+			- slow decrease to hidden
 		
-  DEBUG
+	camera: rotate around to side
 	
-  POPULATE WORLD
-  
+	instantiate other world spheres
+		- gravitate them to world
+
+	world controller
+		- activate to allow control of world
+		
 	
 //// DEBUG \\\\
+  
   
   
   EVOLUTION
@@ -142,6 +195,7 @@ NOTES
 	- UpdatePhysics(...) method in StatePattern
 		alongside SetZoomCamera/SetParts in TransitionTo
 	- update sphere collider radii
+		- trigger slightly larger than kinematic - DONE
 	- update mass - DONE
   
   ANIM
@@ -185,16 +239,18 @@ NOTES
 	- add zoom fully in to player to switch to light world, then zoom out - DONE
 	
 	- debug:
-		- rewiew and edit zoom values
+		- rewiew and edit zoom values - DONE
 		
   AUDIO
 	- test syatem
+		- requires all states
 
-	
   TEXT
 	- add new text instances
 	- code triggers
 	- test system
+		- requires all states
+
 	
 - debug DONE -
 	

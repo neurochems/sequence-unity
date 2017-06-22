@@ -24,6 +24,7 @@ public class ParticleStatePattern : MonoBehaviour {
 	[HideInInspector] public FifthParticleState fifthState;					// instance of fifth state
 	[HideInInspector] public SixthParticleState sixthState;					// instance of sixth state
 	[HideInInspector] public SeventhParticleState seventhState;				// instance of seventh state
+	[HideInInspector] public EighthParticleState eighthState;				// instance of eighth state
 	// new state
 
 	public bool lightworld;													// is light world flag
@@ -42,8 +43,9 @@ public class ParticleStatePattern : MonoBehaviour {
 	private ParticleCoreManager pcm;										// particle core manager (animations)
 	private ParticleShellManager psm;										// particle core manager (animations)
 	private ParticleNucleusManager pnm;										// particle core manager (animations)
+	private Rigidbody rb;													// particle rigidbody
 	//private ParticlePhysicsManager ppm;										// particle physics manager
-	[HideInInspector] public SphereCollider[] sc;											// sphere colliders
+	[HideInInspector] public SphereCollider[] sc;							// sphere colliders
 
 	private MeshRenderer rendCore, rendShell, rendNucleus;					// mesh renderers (for lightworld colour changes)
 
@@ -71,6 +73,7 @@ public class ParticleStatePattern : MonoBehaviour {
 		fifthState = new FifthParticleState (this);							// initialize fifth state
 		sixthState = new SixthParticleState (this);							// initialize sixth state
 		seventhState = new SeventhParticleState (this);						// initialize seventh state
+		eighthState = new EighthParticleState (this);						// initialize eighth state
 		// new state
 
 	}
@@ -89,6 +92,8 @@ public class ParticleStatePattern : MonoBehaviour {
 
 		//ppm = GetComponent<ParticlePhysicsManager> ();						// init particle physics manager ref
 		sc = GetComponents<SphereCollider> ();								// init sphere colliders ref
+
+		rb = GetComponent<Rigidbody> ();									// init rigidbody ref
 
 		rendCore = transform.FindChild("Core")
 			.gameObject.GetComponent<MeshRenderer> ();						// init core mesh renderer ref
@@ -125,7 +130,7 @@ public class ParticleStatePattern : MonoBehaviour {
 			else if (currentState == fifthState) state = 5;
 			else if (currentState == sixthState) state = 6;
 			else if (currentState == seventhState) state = 7;
-			//else if (currentState == eighthState) state = 8;
+			else if (currentState == eighthState) state = 8;
 			//else if (currentState == ninthState) state = 9;
 			//else if (currentState == tenthState) state = 10;
 			updateStateIndicator = false;
@@ -218,62 +223,70 @@ public class ParticleStatePattern : MonoBehaviour {
 		updateStateIndicator = true;
 
 		if (toState == 0)	{ 														// to zero
-			// rb.mass = 0.2f;															// set mass
+			rb.mass = 1.0f;																// set mass
 			gameObject.tag = "Zero";													// set tag
 			sc[0].radius = 0.205f;														// update collision radius
-			sc[1].radius = 0.205f;														// update collision radius
+			sc[1].radius = 0.200f;														// update collision radius
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 1) {													// to first
-			// rb.mass = 0.2f;															// set mass
+			rb.mass = 2.0f;																// set mass
 			gameObject.tag = "First";													// set tag
 			sc[0].radius = 0.51f;														// update collision radius
-			sc[1].radius = 0.51f;														// update collision radius
+			sc[1].radius = 0.50f;														// update collision radius
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 2) {													// to second
-			//rb.mass = 0.2f;															// set mass
+			rb.mass = 2.5f;																// set mass
 			gameObject.tag = "Second";													// set tag
 			sc[0].radius = 0.51f;														// update collision radius
-			sc[1].radius = 0.51f;														// update collision radius
+			sc[1].radius = 0.50f;														// update collision radius
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 3) {													// to third
-			//rb.mass = 0.2f;															// set mass
+			rb.mass = 3.0f;																// set mass
 			gameObject.tag = "Third";													// set tag
 			sc[0].radius = 1.02f;														// update collision radius
-			sc[1].radius = 1.02f;														// update collision radius
+			sc[1].radius = 1.00f;														// update collision radius
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 4) {													// to fourth
-			//rb.mass = 0.2f;															// set mass
+			rb.mass = 3.5f;																// set mass
 			gameObject.tag = "Fourth";													// set tag
 			sc[0].radius = 1.02f;														// update collision radius
-			sc[1].radius = 1.02f;														// update collision radius
+			sc[1].radius = 1.00f;														// update collision radius
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 5) {													// to fifth
-			//rb.mass = 0.2f;															// set mass
+			rb.mass = 4.0f;																// set mass
 			gameObject.tag = "Fifth";													// set tag
 			sc[0].radius = 0.51f;														// update collision radius
-			sc[1].radius = 0.51f;														// update collision radius
+			sc[1].radius = 0.50f;														// update collision radius
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 6) {													// to sixth
-			//rb.mass = 0.2f;															// set mass
+			rb.mass = 4.5f;																// set mass
 			gameObject.tag = "Sixth";													// set tag
 			sc[0].radius = 0.51f;														// update collision radius
-			sc[1].radius = 0.51f;														// update collision radius
+			sc[1].radius = 0.50f;														// update collision radius
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 7) {													// to seventh
-			// rb.mass = 0.2f;															// set mass
+			rb.mass = 5.5f;																// set mass
 			gameObject.tag = "Seventh";													// set tag
 			sc[0].radius = 1.53f;														// update collision radius
-			sc[1].radius = 1.53f;														// update collision radius
+			sc[1].radius = 1.50f;														// update collision radius
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
-		//new state
+		else if (toState == 8) {													// to eighth
+			rb.mass = 7.0f;																// set mass
+			gameObject.tag = "Eighth";													// set tag
+			sc[0].radius = 1.53f;														// update collision radius
+			sc[1].radius = 1.50f;														// update collision radius
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+		}
+		//new state 9 mass = 8.5
+		//new state 10 mass = 10
 
 		isLight = toLight;															// set light flag
 

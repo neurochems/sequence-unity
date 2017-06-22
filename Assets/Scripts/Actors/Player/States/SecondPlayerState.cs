@@ -93,17 +93,17 @@ public class SecondPlayerState : IParticleState
 	public void ToZero(bool toLight)
 	{
 		psp.TransitionTo(2, 0, isLight, toLight, 0);								// trigger transition effects
-		//ParticleStateEvents.toZero += psp.TransitionToZero;						// flag transition in delegate
-		psp.SpawnZero(2);														// spawn 2 Zeros
-		psp.currentState = psp.zeroState;										// set to new state
+		//ParticleStateEvents.toZero += psp.TransitionToZero;							// flag transition in delegate
+		psp.SpawnZero(2);															// spawn 2 Zeros
+		psp.currentState = psp.zeroState;											// set to new state
 	}
 
 	public void ToFirst(bool toLight)
 	{
 		psp.TransitionTo(2, 1, isLight, toLight, 0);								// trigger transition effects
-		//ParticleStateEvents.toFirst += psp.TransitionToFirst;						// flag transition in delegate
-		psp.SpawnZero(1);														// spawn 1 Zero
-		psp.currentState = psp.firstState;										// set to new state
+		//ParticleStateEvents.toFirst += psp.TransitionToFirst;							// flag transition in delegate
+		psp.SpawnZero(1);															// spawn 1 Zero
+		psp.currentState = psp.firstState;											// set to new state
 	}
 
 	public void ToSecond(bool toLight)
@@ -114,36 +114,43 @@ public class SecondPlayerState : IParticleState
 	public void ToThird(bool toLight)
 	{
 		psp.TransitionTo(2, 3, isLight, toLight, 0);								// trigger transition effects
-		//ParticleStateEvents.toThird += psp.TransitionToThird;						// flag transition in delegate
-		psp.currentState = psp.thirdState;										// set to new state
+		//ParticleStateEvents.toThird += psp.TransitionToThird;							// flag transition in delegate
+		psp.currentState = psp.thirdState;											// set to new state
 	}
 
 	public void ToFourth(bool toLight)
 	{
 		psp.TransitionTo(2, 4, isLight, toLight, 0);								// trigger transition effects
-		//ParticleStateEvents.toFourth += psp.TransitionToFourth;					// flag transition in delegate
-		psp.currentState = psp.fourthState;										// set to new state
+		//ParticleStateEvents.toFourth += psp.TransitionToFourth;						// flag transition in delegate
+		psp.currentState = psp.fourthState;											// set to new state
 	}
 
 	public void ToFifth(bool toLight, int shape)
 	{
 		psp.TransitionTo(2, 5, isLight, toLight, shape);							// trigger transition effects
-		//ParticleStateEvents.toFifth += psp.TransitionToFifth;						// flag transition in delegate
-		psp.currentState = psp.fifthState;										// set to new state
+		//ParticleStateEvents.toFifth += psp.TransitionToFifth;							// flag transition in delegate
+		psp.currentState = psp.fifthState;											// set to new state
 	}
 
 	public void ToSixth(bool toLight, int shape)
 	{
 		psp.TransitionTo(2, 6, isLight, toLight, shape);							// trigger transition effects
-		//ParticleStateEvents.toSixth += psp.TransitionToSixth;						// flag transition in delegate
-		psp.currentState = psp.sixthState;										// set to new state
+		//ParticleStateEvents.toSixth += psp.TransitionToSixth;							// flag transition in delegate
+		psp.currentState = psp.sixthState;											// set to new state
 	}
 
 	public void ToSeventh(bool toLight, int shape)
 	{
 		psp.TransitionTo(2, 7, isLight, toLight, shape);							// trigger transition effects
-		//ParticleStateEvents.toSixth += psp.TransitionToSixth;						// flag transition in delegate
-		psp.currentState = psp.sixthState;										// set to new state
+		//ParticleStateEvents.toSixth += psp.TransitionToSixth;							// flag transition in delegate
+		psp.currentState = psp.seventhState;										// set to new state
+	}
+
+	public void ToEighth(bool toLight, int shape)
+	{
+		psp.TransitionTo(2, 8, isLight, toLight, shape);							// trigger transition effects
+		//ParticleStateEvents.toSixth += psp.TransitionToSixth;							// flag transition in delegate
+		psp.currentState = psp.eighthState;											// set to new state
 	}
 
 	public void Evol() 
@@ -177,7 +184,7 @@ public class SecondPlayerState : IParticleState
         // third
 		if (evol >= 2f && evol < 3f) {																		// evolve to dark world third (if evol = 2)
 			if (deltaDark > deltaLight) ToThird(false);															// if gain more dark than light = to dark third
-			else if (deltaDark <= deltaLight) ToThird(true);														// if gain more light than dark = to light third
+			else if (deltaDark <= deltaLight) ToThird(true);													// if gain more light than dark = to light third
 		}
 		else if (evol >= -2f && evol < -3f) {																// devolve to light world third (if evol = -2)
 			if (deltaDark <= deltaLight) ToThird(true);															// if lose more dark than light = to light third
@@ -185,7 +192,7 @@ public class SecondPlayerState : IParticleState
 		}
         // fourth
 		if (evol >= -3f && evol < -5f) {															    	// devolve to light world fourth (if evol = -3)
-			if (deltaDark <= deltaLight) ToFourth(true);															// if lose more dark than light = to light fourth
+			if (deltaDark <= deltaLight) ToFourth(true);														// if lose more dark than light = to light fourth
 			else if (deltaDark > deltaLight) ToFourth(false);													// if lose more light than dark = to dark fourth
 		}
         // fifth
@@ -200,13 +207,13 @@ public class SecondPlayerState : IParticleState
 		}
         // seventh
 		if (evol >= -13f && evol < -21f) {															    	// devolve to light world seventh (if evol = -13)
-			if (deltaDark <= deltaLight) ToSeventh(true, 0);														// if lose more dark than light = to light circle seventh
+			if (deltaDark <= deltaLight) ToSeventh(true, 0);													// if lose more dark than light = to light circle seventh
 			else if (deltaDark > deltaLight) ToSeventh(false, 0);												// if lose more light than dark = to dark circle seventh
 		}
         // eighth
-		/*if (evol >= -21f && evol < -34f) {															// devolve to light world eighth (if evol = -21)
-			if (deltaDark < deltaLight) ToEighth(true, 0);														// if lose more dark than light = to light circle eighth
+		if (evol >= -21f && evol < -34f) {																	// devolve to light world eighth (if evol = -21)
+			if (deltaDark <= deltaLight) ToEighth(true, 0);														// if lose more dark than light = to light circle eighth
 			else if (deltaDark > deltaLight) ToEighth(false, 0);												// if lose more light than dark = to dark circle eighth
-		}*/
+		}
 	}
 }
