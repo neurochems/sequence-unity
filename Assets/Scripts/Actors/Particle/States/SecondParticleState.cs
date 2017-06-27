@@ -151,6 +151,7 @@ public class SecondParticleState : IParticleState
 		else if (toState == 6) psp.currentState = psp.sixthState;						// set to sixth state
 		else if (toState == 7) psp.currentState = psp.seventhState;						// set to seventh state
 		else if (toState == 8) psp.currentState = psp.eighthState;						// set to eighth state
+		else if (toState == 9) psp.currentState = psp.ninthState;						// set to ninth state
 
 		//ParticleStateEvents.toZero += psp.TransitionToZero;							// flag transition in delegate
 	}
@@ -216,6 +217,13 @@ public class SecondParticleState : IParticleState
 		psp.TransitionTo(2, 8, isLight, toLight, shape);								// trigger transition effects
 		//ParticleStateEvents.toSeventh += psp.TransitionToSeventh;							// flag transition in delegate
 		psp.currentState = psp.eighthState;												// set to new state
+	}
+
+	public void ToNinth(bool toLight, int shape)
+	{
+		psp.TransitionTo(2, 9, isLight, toLight, shape);								// trigger transition effects
+		//ParticleStateEvents.toSeventh += psp.TransitionToSeventh;							// flag transition in delegate
+		psp.currentState = psp.ninthState;												// set to new state
 	}
 
 	public void Evol()
@@ -320,6 +328,14 @@ public class SecondParticleState : IParticleState
 			if (deltaDark <= deltaLight) ToEighth(true, 0);										// if lose more dark than light = to light world light eighth
 			else if (deltaDark > deltaLight) ToEighth(false, 0);								// if lose more light than dark = to light world dark eighth
 		}
-		// new state
+		// ninth
+		if ((evol <= -34f && evol > -55f) && !lightworld) {									// devolve to light world ninth from dark world
+			if (deltaDark <= deltaLight) ToOtherWorld(true, 2, 9, true);						// if lose more dark than light = to light world light ninth
+			else if (deltaDark > deltaLight) ToOtherWorld(true, 2, 9, false);					// if lose more light than dark = to light world dark ninth
+		}
+		else if ((evol <= -34f && evol > -55f) && lightworld) {								// devolve to light world ninth within light world
+			if (deltaDark <= deltaLight) ToNinth(true, 0);										// if lose more dark than light = to light world light ninth
+			else if (deltaDark > deltaLight) ToNinth(false, 0);									// if lose more light than dark = to light world dark ninth
+		}
 	}
 }

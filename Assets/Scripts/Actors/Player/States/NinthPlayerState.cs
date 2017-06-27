@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EighthPlayerState : IParticleState 
+public class NinthPlayerState : IParticleState 
 {
 
 	private readonly PlayerStatePattern psp;											// reference to pattern/monobehaviour class
@@ -14,7 +14,7 @@ public class EighthPlayerState : IParticleState
 	private bool canCollide = false;													// can collide flag (init false to begin stunned)
 	private float collisionTimer;														// reset collision timer
 
-	public EighthPlayerState (PlayerStatePattern playerStatePattern)					// constructor
+	public NinthPlayerState (PlayerStatePattern playerStatePattern)					// constructor
 	{
 		psp = playerStatePattern;														// attach state pattern to this state 
 	}
@@ -161,14 +161,21 @@ public class EighthPlayerState : IParticleState
 
 	public void ToEighth(bool toLight, int shape)
 	{
-		Debug.Log ("Can't transition to same state");
+		psp.TransitionTo(9, 8, isLight, toLight, shape);							// trigger transition effects
+		//ParticleStateEvents.toEighth += psp.TransitionToEighth;						// flag transition in delegate
+		psp.currentState = psp.eighthState;											// set to new state
 	}
 
 	public void ToNinth(bool toLight, int shape)
 	{
-		psp.TransitionTo(8, 9, isLight, toLight, shape);							// trigger transition effects
+		Debug.Log ("Can't transition to same state");
+	}
+
+	public void ToTenth(bool toLight, int shape)
+	{
+		psp.TransitionTo(9, 10, isLight, toLight, shape);							// trigger transition effects
 		//ParticleStateEvents.toEighth += psp.TransitionToEighth;						// flag transition in delegate
-		psp.currentState = psp.ninthState;											// set to new state
+		//psp.currentState = psp.tenthState;											// set to new state
 	}
 
 	public void Evol()
@@ -261,18 +268,27 @@ public class EighthPlayerState : IParticleState
 			if (deltaDark <= deltaLight) ToSeventh (true, 0);													// if lose more dark than light = to light circle eighth
 			else if (deltaDark > deltaLight) ToSeventh (false, 0);												// if lose more light than dark = to dark circle eighth
 		}
-		// ninth
-		if (evol >= 34) {																					// evolve to dark world ninth (if evol >= 34)
-			if (circle && (deltaDark > deltaLight)) ToNinth (false, 0);											// if either circle & gain more dark than light = to dark circle eighth
-			else if (circle && (deltaDark <= deltaLight)) ToNinth (true, 0);									// if either circle & gain more light than dark = to light circle eighth
-			else if (triangle && (deltaDark > deltaLight)) ToNinth (false, 1);									// if either triangle & gain more dark than light = to dark triangle eighth
-			else if (triangle && (deltaDark <= deltaLight)) ToNinth (true, 1);									// if either triangle & gain more light than dark = to light triangle eighth
-			else if (square && (deltaDark > deltaLight)) ToNinth (false, 2);									// if either square & gain more dark than light = to dark square eighth
-			else if (square && (deltaDark <= deltaLight)) ToNinth (true, 2);									// if either square & gain more light than dark = to light square eighth
+		// eighth
+		if (evol >= 21f && evol < 34f) {																	// devolve to dark world eighth (if evol >= 21 and < 34)
+			if (circle && (deltaDark > deltaLight)) ToEighth (false, 0);										// if either circle & gain more dark than light = to dark circle eighth
+			else if (circle && (deltaDark <= deltaLight)) ToEighth (true, 0);									// if either circle & gain more light than dark = to light circle eighth
+			else if (triangle && (deltaDark > deltaLight)) ToEighth (false, 1);									// if either triangle & gain more dark than light = to dark triangle eighth
+			else if (triangle && (deltaDark <= deltaLight)) ToEighth (true, 1);									// if either triangle & gain more light than dark = to light triangle eighth
+			else if (square && (deltaDark > deltaLight)) ToEighth (false, 2);									// if either square & gain more dark than light = to dark square eighth
+			else if (square && (deltaDark <= deltaLight)) ToEighth (true, 2);									// if either square & gain more light than dark = to light square eighth
 		} 
-		else if (evol <= -34) {																				// devolve to light world eighth (if evol >= -34)
-			if (deltaDark <= deltaLight) ToNinth (true, 0);														// if lose more dark than light = to light circle eighth
-			else if (deltaDark > deltaLight) ToNinth (false, 0);												// if lose more light than dark = to dark circle eighth
+		else if (evol <= -13 && evol > -21) {																// devolve to light world seventh (if evol >= -13 and < -21)
+			if (deltaDark <= deltaLight) ToEighth (true, 0);													// if lose more dark than light = to light circle eighth
+			else if (deltaDark > deltaLight) ToEighth (false, 0);												// if lose more light than dark = to dark circle eighth
 		}
+		// tenth
+		if (evol >= 55) {																					// evolve to tenth (if evol >= 55)
+			if (circle && (deltaDark > deltaLight)) ToTenth (false, 0);											// if either circle & gain more dark than light = to dark circle tenth
+			else if (circle && (deltaDark <= deltaLight)) ToTenth (true, 0);									// if either circle & gain more light than dark = to light circle tenth
+			else if (triangle && (deltaDark > deltaLight)) ToTenth (false, 1);									// if either triangle & gain more dark than light = to dark triangle tenth
+			else if (triangle && (deltaDark <= deltaLight)) ToTenth (true, 1);									// if either triangle & gain more light than dark = to light triangle tenth
+			else if (square && (deltaDark > deltaLight)) ToTenth (false, 2);									// if either square & gain more dark than light = to dark square tenth
+			else if (square && (deltaDark <= deltaLight)) ToTenth (true, 2);									// if either square & gain more light than dark = to light square tenth
+		} 
 	}
 }

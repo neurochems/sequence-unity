@@ -55,6 +55,7 @@
      <Compile Include="Assets\Scripts\Actors\Particle\States\FifthParticleState.cs" />
      <Compile Include="Assets\Scripts\Actors\Particle\States\FirstParticleState.cs" />
      <Compile Include="Assets\Scripts\Actors\Particle\States\FourthParticleState.cs" />
+     <Compile Include="Assets\Scripts\Actors\Particle\States\NinthParticleState.cs" />
      <Compile Include="Assets\Scripts\Actors\Particle\States\SecondParticleState.cs" />
      <Compile Include="Assets\Scripts\Actors\Particle\States\SeventhParticleState.cs" />
      <Compile Include="Assets\Scripts\Actors\Particle\States\SixthParticleState.cs" />
@@ -71,6 +72,7 @@
      <Compile Include="Assets\Scripts\Actors\Player\States\FifthPlayerState.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\States\FirstPlayerState.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\States\FourthPlayerState.cs" />
+     <Compile Include="Assets\Scripts\Actors\Player\States\NinthPlayerState.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\States\SecondPlayerState.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\States\SeventhPlayerState.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\States\SixthPlayerState.cs" />

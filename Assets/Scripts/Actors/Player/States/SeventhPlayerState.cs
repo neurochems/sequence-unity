@@ -164,6 +164,13 @@ public class SeventhPlayerState : IParticleState
 		psp.currentState = psp.eighthState;											// set to new state
 	}
 
+	public void ToNinth(bool toLight, int shape)
+	{
+		psp.TransitionTo(6, 9, isLight, toLight, shape);							// trigger transition effects
+		//ParticleStateEvents.toSeventh += psp.TransitionToSeventh;						// flag transition in delegate
+		psp.currentState = psp.ninthState;											// set to new state
+	}
+
 	public void Evol()
 	{
 		evol = psp.evol;																					// local evol check			
@@ -253,6 +260,11 @@ public class SeventhPlayerState : IParticleState
 		else if (evol <= -21 && evol > -34) {																// devolve to light world eighth (if evol = -5)
 			if (deltaDark <= deltaLight) ToEighth (true, 0);														// if lose more dark than light = to light circle eighth
 			else if (deltaDark > deltaLight) ToEighth (false, 0);												// if lose more light than dark = to dark circle eighth
+		}
+		// ninth
+		if (evol >= -34f && evol < -55f) {																	// devolve to light world ninth (if evol == -34)
+			if (deltaDark <= deltaLight) ToNinth(true, 0);														// if lose more dark than light = to light circle ninth
+			else if (deltaDark > deltaLight) ToNinth(false, 0);													// if lose more light than dark = to dark circle ninth
 		}
 	}
 }

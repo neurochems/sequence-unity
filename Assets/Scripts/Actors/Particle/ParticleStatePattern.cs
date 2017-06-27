@@ -25,7 +25,7 @@ public class ParticleStatePattern : MonoBehaviour {
 	[HideInInspector] public SixthParticleState sixthState;					// instance of sixth state
 	[HideInInspector] public SeventhParticleState seventhState;				// instance of seventh state
 	[HideInInspector] public EighthParticleState eighthState;				// instance of eighth state
-	// new state
+	[HideInInspector] public NinthParticleState ninthState;					// instance of ninth state
 
 	public bool lightworld;													// is light world flag
 	public bool toLightworld, toDarkworld, inLightworld;					// to light world trigger, to dark world trigger, in light world flag
@@ -74,7 +74,7 @@ public class ParticleStatePattern : MonoBehaviour {
 		sixthState = new SixthParticleState (this);							// initialize sixth state
 		seventhState = new SeventhParticleState (this);						// initialize seventh state
 		eighthState = new EighthParticleState (this);						// initialize eighth state
-		// new state
+		ninthState = new NinthParticleState (this);							// initialize ninth state
 
 	}
 
@@ -120,7 +120,7 @@ public class ParticleStatePattern : MonoBehaviour {
 
 		currentState.UpdateState ();										// frame updates from current state class
 
-		// debug - show current state
+		// current state as int
 		if (updateStateIndicator) {
 			if (currentState == zeroState) state = 0;
 			else if (currentState == firstState) state = 1;
@@ -131,8 +131,7 @@ public class ParticleStatePattern : MonoBehaviour {
 			else if (currentState == sixthState) state = 6;
 			else if (currentState == seventhState) state = 7;
 			else if (currentState == eighthState) state = 8;
-			//else if (currentState == ninthState) state = 9;
-			//else if (currentState == tenthState) state = 10;
+			else if (currentState == ninthState) state = 9;
 			updateStateIndicator = false;
 		}
 
@@ -285,8 +284,13 @@ public class ParticleStatePattern : MonoBehaviour {
 			sc[1].radius = 1.50f;														// update collision radius
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
-		//new state 9 mass = 8.5
-		//new state 10 mass = 10
+		else if (toState == 9) {													// to ninth
+			rb.mass = 8.5f;																// set mass
+			gameObject.tag = "Ninth";													// set tag
+			sc[0].radius = 2.04f;														// update collision radius
+			sc[1].radius = 2.00f;														// update collision radius
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+		}
 
 		isLight = toLight;															// set light flag
 

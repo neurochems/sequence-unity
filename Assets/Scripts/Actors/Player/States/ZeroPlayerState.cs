@@ -156,6 +156,13 @@ public class ZeroPlayerState : IParticleState
 		psp.currentState = psp.eighthState;												// set to new state
 	}
 
+	public void ToNinth(bool toLight, int shape)
+	{
+		psp.TransitionTo(0, 9, isLight, toLight, shape);								// trigger transition effects
+		//ParticleStateEvents.toSeventh += psp.TransitionToSeventh;							// flag transition in delegate
+		psp.currentState = psp.ninthState;												// set to new state
+	}
+
     public void Init()
     {
         evol = psp.evol;                                                                    // local evol check	
@@ -194,11 +201,17 @@ public class ZeroPlayerState : IParticleState
 		else if (evol == 21f)
 		{
 			int i = Random.Range(0, 2);															// random 0 or 1 or 2
-			if (i == 0) ToEighth(true, 0);														// to light circle seventh
-			else if (i == 1) ToEighth(true, 1);													// to light triangle seventh
-			else if (i == 2) ToEighth(true, 2);													// to light square seventh
+			if (i == 0) ToEighth(true, 0);														// to light circle eighth
+			else if (i == 1) ToEighth(true, 1);													// to light triangle eighth
+			else if (i == 2) ToEighth(true, 2);													// to light square eighth
 		}
-        // new state
+		else if (evol == 34f)
+		{
+			int i = Random.Range(0, 2);															// random 0 or 1 or 2
+			if (i == 0) ToNinth(true, 0);														// to light circle ninth
+			else if (i == 1) ToNinth(true, 1);													// to light triangle ninth
+			else if (i == 2) ToNinth(true, 2);													// to light square ninth
+		}
     }
 
     public void Evol()
@@ -273,9 +286,14 @@ public class ZeroPlayerState : IParticleState
 			else if (deltaDark > deltaLight) ToSeventh(false, 0);							// if lose more light than dark = to dark circle seventh
 		}
 		// eighth
-		if (evol >= -21f && evol < -34f) {											    // devolve to light world seventh (if evol == -13)
-			if (deltaDark <= deltaLight) ToEighth(true, 0);									// if lose more dark than light = to light circle seventh
-			else if (deltaDark > deltaLight) ToEighth(false, 0);							// if lose more light than dark = to dark circle seventh
+		if (evol >= -21f && evol < -34f) {											    // devolve to light world eighth (if evol == -21)
+			if (deltaDark <= deltaLight) ToEighth(true, 0);									// if lose more dark than light = to light circle eighth
+			else if (deltaDark > deltaLight) ToEighth(false, 0);							// if lose more light than dark = to dark circle eighth
+		}
+		// ninth
+		if (evol >= -34f && evol < -55f) {											    // devolve to light world ninth (if evol == -34)
+			if (deltaDark <= deltaLight) ToNinth(true, 0);									// if lose more dark than light = to light circle ninth
+			else if (deltaDark > deltaLight) ToNinth(false, 0);								// if lose more light than dark = to dark circle ninth
 		}
         // new state
 	}

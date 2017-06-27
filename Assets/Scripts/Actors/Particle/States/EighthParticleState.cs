@@ -73,10 +73,11 @@ public class EighthParticleState : IParticleState
 				|| other.gameObject.CompareTag ("Third")									// collide with third
 				|| other.gameObject.CompareTag ("Fourth")									// collide with fourth
 				|| other.gameObject.CompareTag ("Fifth")									// collide with fifth
-				|| other.gameObject.CompareTag ("Sixth")) {									// collide with sixth
+				|| other.gameObject.CompareTag ("Sixth")									// collide with sixth
+				|| other.gameObject.CompareTag ("Seventh")) {								// collide with seventh
 				ParticleStatePattern pspOther 
 				= other.gameObject.GetComponent<ParticleStatePattern>();						// ref other ParticleStatePattern
-				if (pspOther.lightworld == psp.inLightworld) {								// if player and particle in same world
+				if (pspOther.lightworld == psp.inLightworld) {									// if player and particle in same world
 					canCollide = false;																// reset has collided trigger
 					psp.sc[0].enabled = false;														// disable trigger collider
 					psp.stunned = true;																// set stunned flag
@@ -94,10 +95,10 @@ public class EighthParticleState : IParticleState
 					checkEvol = true;																// check evol flag
 				}
 			}
-			else if (other.gameObject.CompareTag ("Seventh")) {								// collide with seventh
+			else if (other.gameObject.CompareTag ("Eighth")) {								// collide with eighth
 				ParticleStatePattern pspOther 
 				= other.gameObject.GetComponent<ParticleStatePattern>();						// ref other ParticleStatePattern
-				if (pspOther.lightworld == psp.inLightworld) {								// if player and particle in same world
+				if (pspOther.lightworld == psp.inLightworld) {									// if player and particle in same world
 					canCollide = false;																// reset has collided trigger
 					psp.sc[0].enabled = false;														// disable trigger collider
 					psp.stunned = true;																// stun for duration
@@ -113,12 +114,11 @@ public class EighthParticleState : IParticleState
 					checkEvol = true;																// check evol flag
 				}
 			}
-			else if (other.gameObject.CompareTag("Eighth")								    // collide with eighth
-				|| other.gameObject.CompareTag("Ninth"))								    // collide with ninth
+			else if (other.gameObject.CompareTag("Ninth"))								    // collide with ninth
 			{
 				ParticleStatePattern pspOther 
 				= other.gameObject.GetComponent<ParticleStatePattern>();						// ref other ParticleStatePattern
-				if (pspOther.lightworld == psp.inLightworld) {								// if player and particle in same world
+				if (pspOther.lightworld == psp.inLightworld) {									// if player and particle in same world
 					canCollide = false;																// reset has collided trigger
 					psp.sc[0].enabled = false;														// disable trigger collider
 					psp.stunned = true;																// stun for duration
@@ -159,6 +159,8 @@ public class EighthParticleState : IParticleState
 		else if (toState == 5) psp.currentState = psp.fifthState;						// set to fifth state
 		else if (toState == 6) psp.currentState = psp.sixthState;						// set to sixth state
 		else if (toState == 7) psp.currentState = psp.seventhState;						// set to seventh state
+		else if (toState == 8) psp.currentState = psp.eighthState;						// set to eighth state
+		else if (toState == 9) psp.currentState = psp.ninthState;						// set to ninth state
 
 		//ParticleStateEvents.toZero += psp.TransitionToZero;								// flag transition in delegate
 	}
@@ -241,7 +243,7 @@ public class EighthParticleState : IParticleState
 	{
 		psp.TransitionTo(8, 9, isLight, toLight, shape);								// trigger transition effects
 		//ParticleStateEvents.toEighth += psp.TransitionToEighth;							// flag transition in delegate
-		//psp.currentState = psp.ninthState;												// set to new state
+		psp.currentState = psp.ninthState;												// set to new state
 	}
 
 	public void Evol()

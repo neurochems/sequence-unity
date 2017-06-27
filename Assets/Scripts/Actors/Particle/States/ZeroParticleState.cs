@@ -148,6 +148,7 @@ public class ZeroParticleState : IParticleState
 		else if (toState == 6) psp.currentState = psp.sixthState;		    				// set to sixth state
 		else if (toState == 7) psp.currentState = psp.seventhState;			    			// set to seventh state
 		else if (toState == 8) psp.currentState = psp.eighthState;			    			// set to eighth state
+		else if (toState == 9) psp.currentState = psp.ninthState;			    			// set to ninth state
 
 		//ParticleStateEvents.toZero += psp.TransitionToZero;				        		// flag transition in delegate
 	}
@@ -219,6 +220,13 @@ public class ZeroParticleState : IParticleState
 		psp.currentState = psp.eighthState;													// set to new state
 	}
 
+	public void ToNinth(bool toLight, int shape)
+	{
+		psp.TransitionTo(0, 9, isLight, toLight, shape);								// trigger transition effects
+		//ParticleStateEvents.toSeventh += psp.TransitionToSeventh;							// flag transition in delegate
+		psp.currentState = psp.ninthState;												// set to new state
+	}
+
     public void Init()
     {
 		evol = psp.evol;                                                                    // local evol check
@@ -258,14 +266,21 @@ public class ZeroParticleState : IParticleState
             else if (i == 1) ToSeventh(true, 1);                                                // to light triangle seventh
             else if (i == 2) ToSeventh(true, 2);												// to light square seventh
         }
-		else if (evol == 21f) {																// init to light seventh
+		else if (evol == 21f) {																// init to light eighth
 			int i = Random.Range(0, 2);                                                         // random 0 or 1 or 2
 			if (i == 0) ToEighth(true, 0);														// to light circle seventh
 			else if (i == 1) ToEighth(true, 1);													// to light triangle seventh
 			else if (i == 2) ToEighth(true, 2);													// to light square seventh
 		}
-        // new state
+		else if (evol == 34f) {																// init to light ninth
+			int i = Random.Range(0, 2);															// random 0 or 1 or 2
+			if (i == 0) ToNinth(true, 0);														// to light circle ninth
+			else if (i == 1) ToNinth(true, 1);													// to light triangle ninth
+			else if (i == 2) ToNinth(true, 2);													// to light square ninth
+		}
+
 		checkEvol = true;																	// set check evol flag
+
     }
 
 	public void Evol()
@@ -392,6 +407,14 @@ public class ZeroParticleState : IParticleState
 			if (deltaDark <= deltaLight) ToEighth(true, 0);										// if lose more dark than light = to light world light eighth
 			else if (deltaDark > deltaLight) ToEighth(false, 0);								// if lose more light than dark = to light world dark eighth
 		}
-		// new state
+		// ninth
+		if ((evol <= -34f && evol > -55f) && !lightworld) {									// devolve to light world ninth from dark world
+			if (deltaDark <= deltaLight) ToOtherWorld(true, 0, 9, true);						// if lose more dark than light = to light world light ninth
+			else if (deltaDark > deltaLight) ToOtherWorld(true, 0, 9, false);					// if lose more light than dark = to light world dark ninth
+		}
+		else if ((evol <= -34f && evol > -55f) && lightworld) {								// devolve to light world ninth within light world
+			if (deltaDark <= deltaLight) ToNinth(true, 0);										// if lose more dark than light = to light world light ninth
+			else if (deltaDark > deltaLight) ToNinth(false, 0);									// if lose more light than dark = to light world dark ninth
+		}
 	}
 }

@@ -1,16 +1,9 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Actors\Particle\States\SeventhParticleState.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Actors\Particle\ParticleNucleusManager.cs">
     <Files>
-      <File FileName="Assets\Scripts\Actors\Particle\ParticleStatePattern.cs" Line="288" Column="1" />
-      <File FileName="Assets\Scripts\Actors\Particle\States\ZeroParticleState.cs" Line="395" Column="15" />
-      <File FileName="Assets\Scripts\Actors\Particle\States\FirstParticleState.cs" Line="323" Column="3" />
-      <File FileName="Assets\Scripts\Actors\Particle\States\SecondParticleState.cs" Line="242" Column="67" />
-      <File FileName="Assets\Scripts\Actors\Particle\States\ThirdParticleState.cs" Line="252" Column="67" />
-      <File FileName="Assets\Scripts\Actors\Particle\States\FourthParticleState.cs" Line="253" Column="125" />
-      <File FileName="Assets\Scripts\Actors\Particle\States\FifthParticleState.cs" Line="346" Column="61" />
-      <File FileName="Assets\Scripts\Actors\Particle\States\SixthParticleState.cs" Line="356" Column="61" />
-      <File FileName="Assets\Scripts\Actors\Particle\States\SeventhParticleState.cs" Line="371" Column="1" />
+      <File FileName="Assets\Scripts\Actors\Player\PlayerNucleusManager.cs" Line="2019" Column="4" />
+      <File FileName="Assets\Scripts\Actors\Particle\ParticleNucleusManager.cs" Line="2030" Column="7" NotebookId="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

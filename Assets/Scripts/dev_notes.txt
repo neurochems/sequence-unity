@@ -20,7 +20,7 @@ part sizes
 		- seventh = 2.5
 		- ninth = 3.25
 		- tenth = 
-	- core collider
+	- collider
 		- zero 0.205
 		- first 0.51
 		- third 1.02
@@ -92,34 +92,39 @@ camera zooms
 STATES TO 10
 
 	adding states
-		- see post-it list
-		- parts
-			- nucleus: anim tree is set up, add to NucleusManager according to it
+		- anim trees are set up, add to XManager according to it
 			
 		make state class
 			EIGHTH - DONE
-			NINTH
+			NINTH - DONE
 		update state class
 			EIGHTH - DONE
+			NINTH - DONE
 		update interface
 			EIGHTH - DONE
+			NINTH - DONE
 		update state pattern
 			EIGHTH - DONE
-		update part managers
+			NINTH - DONE
+		update player part managers
 			EIGHTH: core[DONE] shell[DONE] nucleus[DONE]
-			NINTH: core[] shell[] nucleus[]
+			NINTH: core[DONE] shell[DONE] nucleus[DONE]
 		update other state classes
 			EIGHTH: zero[DONE] first[DONE] second[DONE] third[DONE] fourth[DONE] fifth[DONE] sixth[DONE] seventh[DONE]
-			NINTH: zero[] first[] second[] third[] fourth[] fifth[] sixth[] seventh[] eighth[]
+			NINTH:  zero[DONE] first[DONE] second[DONE] third[DONE] fourth[DONE] fifth[DONE] sixth[DONE] seventh[DONE] eighth[DONE]
+		make/update particle state class
+			EIGHTH - DONE
+			NINTH - DONE
 		update particle state classes
 			EIGHTH: zero[DONE] first[DONE] second[DONE] third[DONE] fourth[DONE] fifth[DONE] sixth[DONE] seventh[DONE] 
-			NINTH: zero[] first[] second[] third[] fourth[] fifth[] sixth[] seventh[] eighth[]
+			NINTH:	zero[DONE] first[DONE] second[DONE] third[DONE] fourth[DONE] fifth[DONE] sixth[DONE] seventh[DONE] eighth[DONE]
 		update particle state pattern
 			EIGHTH - DONE
-		create particle state class
-			EIGHTH - DONE
-		update new particle state class
-			EIGHTH - DONE
+			NINTH - DONE
+		update particle part managers
+			EIGHTH: core[DONE] shell[DONE] nucleus[DONE]
+			- REVIEW CODE FOR EIGHTHs - DONE
+			NINTH: core[DONE] shell[DONE] nucleus[DONE]
 			
 ENDING SEQUENCE
 
