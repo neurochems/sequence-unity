@@ -175,7 +175,7 @@ public class NinthPlayerState : IParticleState
 	{
 		psp.TransitionTo(9, 10, isLight, toLight, shape);							// trigger transition effects
 		//ParticleStateEvents.toEighth += psp.TransitionToEighth;						// flag transition in delegate
-		//psp.currentState = psp.tenthState;											// set to new state
+		psp.currentState = psp.tenthState;											// set to new state
 	}
 
 	public void Evol()

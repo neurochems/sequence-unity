@@ -77,7 +77,7 @@ camera zooms
 			- experienced
 			- novices
 	
- - REVISE AFTER TESTING
+ -  REVISE AFTER TESTING
 	
  -	RELEASE
 	- set date
@@ -128,15 +128,25 @@ STATES TO 10
 			
 ENDING SEQUENCE
 
-	core/shell/nucleus anim (player and particle): ninth to tenth
+	tenth payer state
+		- what does it actually need?
+
+	anim (player and particle): ninth to tenth
 		- slow increase in player
-		- add anim to world
-			- slow decrease to hidden
+			- core - DONE
+			- nucleus - DONE
+			- equal increase in sphere collider radius
+				- in psp update - DONE
+		- slow decrease to world
+			- add anim to world - DONE
 		
 	camera: rotate around to side
+		- new script - DONE
+		- test
 	
 	instantiate other world spheres
 		- gravitate them to world
+		- use SpawnParticle?
 
 	world controller
 		- activate to allow control of world

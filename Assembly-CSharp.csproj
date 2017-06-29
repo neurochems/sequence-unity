@@ -76,12 +76,14 @@
      <Compile Include="Assets\Scripts\Actors\Player\States\SecondPlayerState.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\States\SeventhPlayerState.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\States\SixthPlayerState.cs" />
+     <Compile Include="Assets\Scripts\Actors\Player\States\TenthPlayerState.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\States\ThirdPlayerState.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\States\ZeroPlayerState.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\UIManager.cs" />
      <Compile Include="Assets\Scripts\Actors\SpawnParticle.cs" />
      <Compile Include="Assets\Scripts\Audio\EffectsBlender.cs" />
      <Compile Include="Assets\Scripts\Camera\CameraManager.cs" />
+     <Compile Include="Assets\Scripts\Camera\Orbit.cs" />
      <Compile Include="Assets\Scripts\Camera\OrthoSmoothFollow.cs" />
      <Compile Include="Assets\Scripts\Environment\FauxGravityAttractor.cs" />
      <Compile Include="Assets\UI\Scripts\DontDestroy.cs" />

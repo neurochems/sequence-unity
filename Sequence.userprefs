@@ -1,9 +1,10 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Actors\Particle\ParticleNucleusManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Actors\Player\PlayerStatePattern.cs">
     <Files>
-      <File FileName="Assets\Scripts\Actors\Player\PlayerNucleusManager.cs" Line="2019" Column="4" />
-      <File FileName="Assets\Scripts\Actors\Particle\ParticleNucleusManager.cs" Line="2030" Column="7" NotebookId="1" />
+      <File FileName="Assets\Scripts\Camera\OrthoSmoothFollow.cs" Line="6" Column="49" />
+      <File FileName="Assets\Scripts\Actors\Player\States\TenthPlayerState.cs" Line="22" Column="64" />
+      <File FileName="Assets\Scripts\Actors\Player\PlayerStatePattern.cs" Line="60" Column="27" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

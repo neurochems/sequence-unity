@@ -6,7 +6,7 @@ public class PlayerStatePattern : MonoBehaviour {
 
 	public float evol;														// evolution level
 	public int state;														// state indicator for inspector
-	public new bool isLight;													// is light flag
+	public bool isLight;													// is light flag
 	public float darkEvol, lightEvol;										// dark & light evolution level
 	public float darkEvolStart, lightEvolStart;								// last dark & light evolution level (for delta calc)
 	public float deltaDark, deltaLight;										// delta dark & light evolution level
@@ -16,7 +16,7 @@ public class PlayerStatePattern : MonoBehaviour {
 	public bool circle = true, triangle, square;							// shape flags
 
 	private bool updateStateIndicator;										// update state indicator flag
-	[HideInInspector] public IParticleState currentState;					// other object state
+	[HideInInspector] public IParticleState currentState;					// current player state
 
 	[HideInInspector] public ZeroPlayerState zeroState;						// instance of zero state
 	[HideInInspector] public FirstPlayerState firstState;					// instance of first state
@@ -28,6 +28,7 @@ public class PlayerStatePattern : MonoBehaviour {
 	[HideInInspector] public SeventhPlayerState seventhState;				// instance of seventh state
 	[HideInInspector] public EighthPlayerState eighthState;					// instance of eighth state
 	[HideInInspector] public NinthPlayerState ninthState;					// instance of ninth state
+	[HideInInspector] public TenthPlayerState tenthState;					// instance of tenth state
 	// new state
 
 	public bool lightworld;													// is light world flag
@@ -35,21 +36,24 @@ public class PlayerStatePattern : MonoBehaviour {
 	public bool changeParticles;											// change particle colour flag
 
 	// component references
-	private CameraManager cam;												// main camera animator
-	private PlayerCoreManager pcm;											// player core manager (for animations)
-	private PlayerShellManager psm;											// player shell manager (for animations)
-	private PlayerNucleusManager pnm;										// player nucleus manager (for animations)
-	private UIManager uim;													// UI manager
-	private Rigidbody rb;													// player rigidbody
-	//private PlayerPhysicsManager ppm;										// player physics manager
-	[HideInInspector] public SphereCollider[] sc;							// sphere colliders
+	private CameraManager cam;																				// main camera animator
+	private PlayerCoreManager pcm;																			// player core manager (for animations)
+	private PlayerShellManager psm;																			// player shell manager (for animations)
+	private PlayerNucleusManager pnm;																		// player nucleus manager (for animations)
+	private UIManager uim;																					// UI manager
+	private Rigidbody rb;																					// player rigidbody
+	//private PlayerPhysicsManager ppm;																		// player physics manager
+	[HideInInspector] public SphereCollider[] sc;															// sphere colliders
 
-	private MeshRenderer rendWorld, rendCore, rendShell, rendNucleus;		// mesh renderers (for lightworld colour changes)
+	private MeshRenderer rendWorld, rendCore, rendShell, rendNucleus;										// mesh renderers (for lightworld colour changes)
 
-	private int toState, fromState;											// state transitioning to/from (for timers)
-	private bool changeWorld = false;										// timer trigger for changing colour, 
-	[HideInInspector] public bool resetScale = false;						// timer trigger for resetting scale after world switch (public for camera manager access)
-	private float changeWorldTimer, resetScaleTimer, changeParticlesTimer;	// change shape timer, reset scale timer, change particles timer
+	private int toState, fromState;																			// state transitioning to/from (for timers)
+	private bool changeWorld = false, radiusUp = false;														// timer trigger for changing colour, tenth state collider radius up
+	[HideInInspector] public bool resetScale = false;														// timer trigger for resetting scale after world switch (public for camera manager access)
+	private float changeWorldTimer, resetScaleTimer, changeParticlesTimer, radiusUpTimer;					// change shape timer, reset scale timer, change particles timer, tenth state collider radius up timer
+
+	//[HideInInspector] 
+	public bool camOrbit;																	// tenth state camera orbit flag
 
 	// timers & flags
 	public bool isInit = true;												// is init flag
@@ -87,6 +91,7 @@ public class PlayerStatePattern : MonoBehaviour {
 		seventhState = new SeventhPlayerState (this);						// initialize seventh state
 		eighthState = new EighthPlayerState (this);							// initialize eighth state
 		ninthState = new NinthPlayerState (this);							// initialize ninth state
+		tenthState = new TenthPlayerState (this);							// initialize tenth state
 		// new state
 
 	}
@@ -154,15 +159,20 @@ public class PlayerStatePattern : MonoBehaviour {
 			else if (currentState == seventhState) state = 7;
 			else if (currentState == eighthState) state = 8;
 			else if (currentState == ninthState) state = 9;
-			//else if (currentState == tenthState) state = 10;
+			else if (currentState == tenthState) state = 10;
 			updateStateIndicator = false;
 		}
 
-		// trigger timed stun
-		if (stunned) {
-			//Stun ();
-			stunTimer += Time.deltaTime;													// start timer
-		} 
+		// tenth state collision radius increase
+		if (radiusUp) {
+			radiusUpTimer += Time.deltaTime;														// start timer
+			sc[0].radius += 0.000383f;														// update collision radius	
+			sc[1].radius += 0.000383f;														// update collision radius	
+		}
+		if (radiusUpTimer >= 60.0f) {																				// when timer >= 2 sec
+			radiusUp = false;																						// reset change colour flag
+			radiusUpTimer = 0f;																						// reset timer
+		}
 
 		// change particles timer
 		if (changeParticles) changeParticlesTimer += Time.deltaTime;														// start timer
@@ -232,7 +242,7 @@ public class PlayerStatePattern : MonoBehaviour {
 		// new state
 	}
 
-	// EVOL CHANGES \\ - PUT IN SEPARATE SCRIPT
+	// EVOL CHANGES \\
 
 
 	public void AddEvol(float changeAmount) 
@@ -258,21 +268,7 @@ public class PlayerStatePattern : MonoBehaviour {
 		lightEvol -= changeAmount;											// subtract light evol level
 	}
 
-	// BEHAVIOURS \\ - PUT IN SEPARATE SCRIPT
-
-	/*public void Stun ()											// post-hit invulnerability
-	{
-		if (GetComponent<SphereCollider> ().enabled) {
-			//GetComponent<SphereCollider> ().enabled = false;					// disable collider
-			//ppm.Bump (true);													// enable bump
-		}
-
-		if (stunTimer >= stunDuration) {									// if timer >= duration
-			//GetComponent<SphereCollider> ().enabled = true;						// enable collider
-			stunned = false;													// reset stunned flag
-			stunTimer = 0f;														// reset timer
-		}
-	}*/
+	// BEHAVIOURS \\
 
 	public void SpawnZero (int num)
 	{
@@ -415,7 +411,19 @@ public class PlayerStatePattern : MonoBehaviour {
 			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
-		//new state 10 mass = 10
+		else if (toState == 10) {													// to eighth
+			rb.mass = 10.0f;															// set mass
+			sc[0].radius = 2.04f;														// update collision radius
+			sc[1].radius = 2.00f;														// update collision radius
+			musicSnapshots[11].TransitionTo(5.0f);										// AUDIO: transition to seventh state music snapshot
+			if (shape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);			// AUDIO: transition to dark circle effects snapshot
+			if (shape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
+			if (shape == 1) effectsSnapshots[3].TransitionTo(5.0f);						// AUDIO: transition to triangle effects snapshot
+			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot
+			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
+			camOrbit = true;															// CAMERA: start orbit
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+		}
 
 		isLight = toLight;															// update light value
 
