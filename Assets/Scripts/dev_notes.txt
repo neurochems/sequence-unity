@@ -144,9 +144,15 @@ ENDING SEQUENCE
 		- new script - DONE
 		- test
 	
-	instantiate other world spheres
-		- gravitate them to world
-		- use SpawnParticle?
+	other world spheres
+		- create prefab - DONE
+		- gravitate them to world - DONE
+		- use SpawnParticle? - no
+		- at tenth state
+			- disable particles
+				- particle state pattern/part managers: if player state = 10, to hidden + timer to disable self
+			- reset is kinematic in world/particle worlds
+				- add listener script to particle worlds
 
 	world controller
 		- activate to allow control of world

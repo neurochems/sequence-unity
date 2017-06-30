@@ -98,16 +98,4 @@ public class SpawnParticle : MonoBehaviour {
 		newParticle.GetComponent<Animator>().SetBool("black", false);													// set fade trigger
 		newParticle.GetComponent<Animator>().SetTrigger("fadein");														// fade to white
 	}
-
-	//private void Stun(GameObject newParticle)
-	//{
-		
-
-		/*newParticle.GetComponent<ParticleStatePattern>().Stun(true);													// disable collider
-		stunTimer += Time.deltaTime;																				// start timer
-		if (stunTimer >= 1f) {																						// if timer >= duration
-			newParticle.GetComponent<ParticleStatePattern>().Stun(false);													// enable collider
-			stunTimer = 0f;																								// reset timer
-		}*/
-	//}
 }
