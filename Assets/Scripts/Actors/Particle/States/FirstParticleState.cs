@@ -48,7 +48,7 @@ public class FirstParticleState : IParticleState
 
 	public void OnTriggerEnter(Collider other)
 	{
-		if (!other.gameObject.CompareTag("World")) Debug.Log ("first particle collision");
+		//if (!other.gameObject.CompareTag("World")) Debug.Log ("first particle collision");
 		if (canCollide && !psp.psp.stunned) {													// if collision allowed and player is not stunned
 			if (other.gameObject.CompareTag ("Player")) {											// colide with player
 				PlayerStatePattern pspOther 
@@ -58,12 +58,12 @@ public class FirstParticleState : IParticleState
 					psp.sc[0].enabled = false;																// disable trigger collider
 					psp.stunned = true;																		// stun for duration
 					if (psp.evolC > pspOther.evol) {														// if player evol is lower
-						Debug.Log ("first particle>player: add evol");
+						//Debug.Log ("first particle>player: add evol");
 						if (pspOther.darkEvolC != 0f) psp.AddDark(pspOther.darkEvolC);							// add player dark evol
 						if (pspOther.lightEvolC != 0f) psp.AddLight(pspOther.lightEvolC);						// add player light evol
 					}
 					else if (psp.evolC <= pspOther.evol) {													// else player is higher
-						Debug.Log ("first particle<player: sub evol");
+						//Debug.Log ("first particle<player: sub evol");
 						if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);							// subtract player dark
 						if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);						// subtract player light
 					}

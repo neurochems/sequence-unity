@@ -5,7 +5,8 @@ public class ParticleStatePattern : MonoBehaviour {
 
 	public float evol;														// evolution level
 	public int state;														// state indicator for inspector
-	public new bool isLight;													// is light flag
+	public new bool isLight;												// is light flag
+	public int currentShape;												// current shape
 	public float darkEvol, lightEvol;										// dark & light evolution level
 	public float darkEvolStart, lightEvolStart;								// last dark & light evolution level (for delta calc)
 	public float deltaDark, deltaLight;										// delta dark & light evolution level
@@ -52,9 +53,7 @@ public class ParticleStatePattern : MonoBehaviour {
 	public int die;															// collision conflict check
 	public bool stunned;													// stunned?
 	public float stunDuration = 3f;											// duration of post-hit invulnerability
-	private float stunTimer = 0f;											// stun timer
-	//private bool shellShrinking, nucleusDeactivating;						// shell shrinking flag, nucleus deactivating flag
-	[HideInInspector] public float shrinkTimer = 0f;						// shell deactivation timer
+	private float stunTimer = 0f, activeTimer = 0f;							// stun timer, active timer
 
 	void Awake()
 	{
@@ -120,6 +119,14 @@ public class ParticleStatePattern : MonoBehaviour {
 
 		currentState.UpdateState ();										// frame updates from current state class
 
+		if (psp.state == 10) {												// if player is atate 10
+			activeTimer += Time.deltaTime;										// start timer
+			TransitionTo(state, 10, isLight, false, currentShape);				// transition to hidden
+			if (activeTimer >= 4.0f) {											// if timer is 4 sec
+				gameObject.SetActive (false);										// deactivate
+			}
+		}
+
 		// current state as int
 		if (updateStateIndicator) {
 			if (currentState == zeroState) state = 0;
@@ -181,12 +188,14 @@ public class ParticleStatePattern : MonoBehaviour {
 
 	public void SpawnZero (int num)
 	{
-		GetComponent<SpawnParticle> ().SpawnPhoton (num);
+		Debug.Log ("spawn zero");
+		//GetComponent<SpawnParticle> ().SpawnPhoton (num);
 	}
 
 	public void SpawnFirst (int num)
 	{
-		GetComponent<SpawnParticle> ().SpawnElectron (num);
+		Debug.Log ("spawn first");
+		//GetComponent<SpawnParticle> ().SpawnElectron (num);
 	}
 
 	// EVOL CHANGES \\ - PUT IN SEPARATE SCRIPT
@@ -219,7 +228,7 @@ public class ParticleStatePattern : MonoBehaviour {
 	public void TransitionTo(int fromState, int toState, bool fromLight, bool toLight, int shape)
 	{
 
-		updateStateIndicator = true;
+		updateStateIndicator = true;												// update state indicator
 
 		if (toState == 0)	{ 														// to zero
 			rb.mass = 1.0f;																// set mass
@@ -293,6 +302,7 @@ public class ParticleStatePattern : MonoBehaviour {
 		}
 
 		isLight = toLight;															// set light flag
+		currentShape = shape;														// set current shape
 
 		darkEvolStart = darkEvol;													// store dark evol at start of state
 		lightEvolStart = lightEvol;													// store light evol at start of state
@@ -300,7 +310,7 @@ public class ParticleStatePattern : MonoBehaviour {
 
 	public void ChangeWorld(bool toLW, int fromState, int toState, bool toLight) 
 	{
-		Debug.Log ("particle change world");
+		//Debug.Log ("particle change world");
 		if (toLW) inLightworld = true;												// if to lightworld, set inLightworld
 		if (!toLW) inLightworld = false;											// if not to lightworld, reset inLightworld
 

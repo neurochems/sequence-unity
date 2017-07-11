@@ -24,9 +24,9 @@ public class UIManager : MonoBehaviour {
 	public bool endless = false;
 
 	// debug info
-	//public UnityEngine.UI.Text numParticles;
-	//public GameObject debugCollectables;
-	//private int numTotal, numPhoton, numElectron, numElectron2, numShell, numShell2, numAtom, numAtom2;
+	public UnityEngine.UI.Text numParticles;
+	public GameObject debugParticles;
+	private int numTotal, numZero, numFirst, numSecond, numThird, numFourth, numFifth, numSixth, numSeventh, numEighth, numNinth;
 
 	// ui text anim
 	public GameObject[] overlayTextTrigger;
@@ -42,37 +42,42 @@ public class UIManager : MonoBehaviour {
 	void Update () 
 	{
 
-		/*////////////////////////      DEBUG particle counts      \\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+		////////////////////////      DEBUG particle counts      \\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		// total children
-		numTotal = debugCollectables.transform.childCount;
+		numTotal = debugParticles.transform.childCount;
 
-		/ iterate particles, logging tag type
-		foreach (Transform child in debugCollectables.transform) {
-			if (child.CompareTag("Photon")) numPhoton += 1;
-			else if (child.CompareTag("Electron")) numElectron += 1;
-			else if (child.CompareTag("Electron2")) numElectron2 += 1;
-			else if (child.CompareTag("Shell")) numShell += 1;
-			else if (child.CompareTag("Shell2")) numShell2 += 1;
-			else if (child.CompareTag("Atom")) numAtom += 1;
-			else if (child.CompareTag("Atom2")) numAtom2 += 1;
+		// iterate particles, logging tag type
+		foreach (Transform child in debugParticles.transform) {
+			if (child.CompareTag("Zero")) numZero += 1;
+			else if (child.CompareTag("First")) numFirst += 1;
+			else if (child.CompareTag("Second")) numSecond += 1;
+			else if (child.CompareTag("Third")) numThird += 1;
+			else if (child.CompareTag("Fourth")) numFourth += 1;
+			else if (child.CompareTag("Fifth")) numFifth += 1;
+			else if (child.CompareTag("Sixth")) numSixth += 1;
+			else if (child.CompareTag("Seventh")) numSeventh += 1;
+			else if (child.CompareTag("Eighth")) numEighth += 1;
+			else if (child.CompareTag("Ninth")) numNinth += 1;
 		}
 
 		// display info
-		numParticles.text = "Total: " + numTotal + "\nPhotons: " + numPhoton + "\nElectrons: " + numElectron + "\nElectron2s: " + numElectron2 + 
-			"\nShells: " + numShell + "\nShell2s: " + numShell2 + "\nAtoms: " + numAtom + "\nAtom2s: " + numAtom2;
+		numParticles.text = "Total: " + numTotal + "\nZero: " + numZero + "\nFirst: " + numFirst + "\nSecond: " + numSecond + 
+			"\nThird: " + numThird + "\nFourth: " + numFourth + "\nFifth: " + numFifth + "\nSixth: " + numSixth + "\nSeventh: " + numSeventh + 
+			"\nEighth: " + numEighth + "\nNinth: " + numNinth;
 
 		// reset numbers
 		numTotal = 0;
-		numPhoton = 0;
-		numElectron = 0;
-		numElectron2 = 0;
-		numShell = 0;
-		numShell2 = 0;
-		numAtom = 0;
-		numAtom2 = 0;
-
-		*/
+		numZero = 0;
+		numFirst = 0;
+		numSecond = 0;
+		numThird = 0;
+		numFourth = 0;
+		numFifth = 0;
+		numSixth = 0;
+		numSeventh = 0;
+		numEighth = 0;
+		numNinth = 0;
 
 		//////////////////////////////////////////////////////////////////////////////////////
 

@@ -42,7 +42,7 @@ public class ParticleNucleusManager : MonoBehaviour {
 		// change colour timer
 		if (changeColour) changeColourTimer += Time.deltaTime;																	// start timer
 		if (changeColourTimer >= 2.0f) {																						// when timer >= 4 sec
-			Debug.Log("set colour: " + colour);
+			//Debug.Log("set colour: " + colour);
 			SetLight(colour);																										// set colour
 			changeColour = false;																									// reset reset scale flag
 			changeColourTimer = 0f;																									// reset timer
@@ -50,7 +50,7 @@ public class ParticleNucleusManager : MonoBehaviour {
 		// change shape timer
 		if (changeShape) changeShapeTimer += Time.deltaTime;																	// start timer
 		if (changeShapeTimer >= 2.0f) {																							// when timer >= 4 sec
-			Debug.Log("set shape: " + shape);
+			Debug.Log("particle nucleus set shape: " + shape);
 			SetShape(shape);																										// set shape
 			changeShape = false;																									// reset reset scale flag
 			changeShapeTimer = 0f;																									// reset timer
@@ -423,6 +423,33 @@ public class ParticleNucleusManager : MonoBehaviour {
 
 ///// ninth \\\\\
 		// no tenth state in particle
+
+///// player tenth \\\\\
+
+		// from zero/half zero
+		if (f == 0 && t == 10 && !fl) ScaleTo (true, "zero", "hidden");															// scale to hidden
+		// from first
+		else if (f == 1 && t == 10 && !fl) ScaleTo (true, "first", "hidden");													// scale to hidden
+		// from second
+		else if (f == 2 && t == 10 && !fl) ScaleTo (true, "first", "hidden");													// scale to hidden
+		// from fourth
+		else if (f == 4 && t == 10 && !fl) ScaleTo (true, "first", "hidden");													// scale to hidden
+		else if (f == 4 && t == 10 && fl) ScaleTo (true, "zero", "hidden");														// scale to hidden
+		// from fifth
+		else if (f == 5 && t == 10 && !fl && s == 0) ScaleTo (true, "first", "hidden");											// scale to hidden
+		// from sixth
+		else if (f == 6 && t == 10 && !fl && s == 0) ScaleTo (true, "first", "hidden");											// scale to hidden
+		else if (f == 6 && t == 10 && fl && s == 0) ScaleTo (true, "zero", "hidden");											// scale to hidden
+		else if (f == 6 && t == 10 && s != 0) ScaleTo (true, "first", "hidden");												// scale to hidden
+		// from seventh
+		else if (f == 7 && t == 10 && !fl && s == 0) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		// from eighth
+		else if (f == 8 && t == 10 && !fl && s == 0) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 8 && t == 10 && fl && s == 0) ScaleTo (true, "first", "hidden");											// scale to hidden
+		else if (f == 8 && t == 10 && s != 0) ScaleTo (true, "seventh", "hidden");												// scale to hidden
+		// from ninth
+		else if (f == 9 && t == 10 && !fl && s == 0) ScaleTo (true, "ninth", "hidden");											// scale to hidden
+	
 
 		////////////////////// DEVOLUTIONS \\\\\\\\\\\\\\\\\\\\\\\
 

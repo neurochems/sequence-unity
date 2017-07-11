@@ -49,14 +49,6 @@ camera zooms
  -  add options menu	
 	
 // NEXT \\
-	 
- -  AUDIO SYSTEM
-
- -  POPULATE WORLD
-	- particle simulation
-		particle/particle collisions
-		particle evol
-		particle transitions
 			
  -  SHADERS
 	- dark world / light world
@@ -65,6 +57,8 @@ camera zooms
 	- second stage nucleus
 		- white / black
 		- also for core
+ 
+  -  AUDIO SYSTEM
  
  -  TEXT
 	- up to level 10
@@ -89,7 +83,19 @@ camera zooms
 /// ACTIVE TASK \\\
 
 
-STATES TO 10
+  POPULATE WORLD
+	- particle simulation
+		particle/particle collisions
+		particle evol
+		particle transitions
+	- spawn particle	
+	
+	- test high states/ending sequence
+		
+	
+//// DEBUG \\\\
+  
+  STATES TO 10
 
 	adding states
 		- anim trees are set up, add to XManager according to it
@@ -126,7 +132,7 @@ STATES TO 10
 			- REVIEW CODE FOR EIGHTHs - DONE
 			NINTH: core[DONE] shell[DONE] nucleus[DONE]
 			
-ENDING SEQUENCE
+  ENDING SEQUENCE
 
 	tenth payer state
 		- what does it actually need?
@@ -143,24 +149,19 @@ ENDING SEQUENCE
 	camera: rotate around to side
 		- new script - DONE
 		- test
-	
+
 	other world spheres
 		- create prefab - DONE
 		- gravitate them to world - DONE
 		- use SpawnParticle? - no
 		- at tenth state
 			- disable particles
-				- particle state pattern/part managers: if player state = 10, to hidden + timer to disable self
+				- particle state pattern/part managers: if player state = 10, to hidden + timer to disable self - DONE
 			- reset is kinematic in world/particle worlds
-				- add listener script to particle worlds
+				- add listener script to particle worlds - DONE
 
 	world controller
-		- activate to allow control of world
-		
-	
-//// DEBUG \\\\
-  
-  
+		- activate to allow control of world - DONE
   
   EVOLUTION
 	

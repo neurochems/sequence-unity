@@ -48,7 +48,7 @@ public class ZeroParticleState : IParticleState
 
 	public void OnTriggerEnter(Collider other)
 	{
-		if (!other.gameObject.CompareTag("World")) Debug.Log ("zero particle collision");
+		//if (!other.gameObject.CompareTag("World")) Debug.Log ("zero particle collision");
 		if (canCollide) {										// if collision allowed and player is not stunned
 			if (other.gameObject.CompareTag ("Player")) {								// if colide with player
 				PlayerStatePattern pspOther 
@@ -81,7 +81,7 @@ public class ZeroParticleState : IParticleState
 					canCollide = false;															// reset has collided trigger
 					psp.sc[0].enabled = false;													// disable trigger collider
 					psp.stunned = true;													    	// stunned flag
-					Debug.Log ("zero particle+zero: roll die");
+					//Debug.Log ("zero particle+zero: roll die");
 					RollDie (pspOther);															// roll die
 					checkEvol = true;															// set check evol flag
 				}
@@ -102,7 +102,7 @@ public class ZeroParticleState : IParticleState
 					canCollide = false;															// reset has collided trigger
 					psp.sc[0].enabled = false;													// disable trigger collider
 					psp.stunned = true;															// set stunned flag
-					Debug.Log ("zero particle+else: sub evol");
+					//Debug.Log ("zero particle+else: sub evol");
 					if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);				// subtract other dark
 					if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);			// subtract other light
 					checkEvol = true;															// set check evol flag

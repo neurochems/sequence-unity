@@ -234,6 +234,29 @@ public class ParticleShellManager : MonoBehaviour {
 	///// ninth \\\\\
 		// no tenth state in particle
 
+	///// player tenth \\\\\
+
+		// from third
+		else if (f == 3 && t == 10 && !fl) ScaleTo (true, "third", "hidden");										// scale to hidden
+		// from fourth
+		else if (f == 4 && t == 10 && !fl) ScaleTo (true, "third", "hidden");										// scale to hidden
+		// from fifth
+		else if (f == 5 && t == 10 && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		// from sixth
+		else if (f == 6 && t == 10 && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		// from seventh
+		else if (f == 7 && t == 10 && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 10 && !fl && s == 1) ScaleTo (true, "seventh", "hidden");							// scale to hidden
+		else if (f == 7 && t == 10 && !fl && s == 2) ScaleTo (true, "seventh", "hidden");							// scale to hidden
+		// from eighth
+		else if (f == 8 && t == 10) ScaleTo (true, "seventh", "hidden");											// scale to hidden
+		else if (f == 8 && t == 10 && !fl && s == 1) ScaleTo (true, "seventh", "hidden");							// scale to hidden
+		else if (f == 8 && t == 10 && !fl && s == 2) ScaleTo (true, "seventh", "hidden");							// scale to hidden
+		// from ninth
+		else if (f == 9 && t == 10) ScaleTo (true, "ninth", "hidden");												// scale to hidden
+		else if (f == 9 && t == 10 && !fl && s == 1) ScaleTo (true, "ninth", "hidden");								// scale to hidden
+		else if (f == 9 && t == 10 && !fl && s == 2) ScaleTo (true, "ninth", "hidden");								// scale to hidden
+
 // DEVOLUTIONS \\
 
 

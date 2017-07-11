@@ -23,7 +23,7 @@ public class ZeroPlayerState : IParticleState
 	{
 		// check evol
 		if (checkEvol) {
-			Debug.Log("player evol: " + psp.evol);
+			Debug.Log("player zero state - evol entering evol check: " + psp.evol);
 			Evol();																		// check evol logic
 			checkEvol = false;															// reset check evol flag
 		}
@@ -42,7 +42,7 @@ public class ZeroPlayerState : IParticleState
 
 	public void OnTriggerEnter(Collider other)
 	{
-		if (!other.gameObject.CompareTag("World")) Debug.Log ("zero player collision");
+		if (!other.gameObject.CompareTag("World")) Debug.Log ("zero player collision with " + other.gameObject.name);
 		
 		if (canCollide) {																// if collision allowed and other in dark world
 			if (other.gameObject.CompareTag ("Zero")) {										// if collide with zero

@@ -44,6 +44,7 @@ public class PlayerStatePattern : MonoBehaviour {
 	private Rigidbody rb;																					// player rigidbody
 	//private PlayerPhysicsManager ppm;																		// player physics manager
 	[HideInInspector] public SphereCollider[] sc;															// sphere colliders
+	private PlayerController pc, wc;																		// player, world player controller
 
 	private MeshRenderer rendWorld, rendCore, rendShell, rendNucleus;										// mesh renderers (for lightworld colour changes)
 
@@ -111,6 +112,10 @@ public class PlayerStatePattern : MonoBehaviour {
 
 		rb = GetComponent<Rigidbody> ();									// init rigidbody ref
 
+		pc = GetComponent<PlayerController> ();								// init player controller ref
+		wc = GameObject.Find("World")
+			.GetComponent<PlayerController>();								// init world player controller ref
+
 		rendWorld = GameObject.Find("World")
 			.GetComponent<MeshRenderer>();									// init world mesh renderer ref
 		rendCore = GameObject.Find("Player Core")
@@ -146,6 +151,8 @@ public class PlayerStatePattern : MonoBehaviour {
 		}*/
 
 		currentState.UpdateState ();														// frame updates from current state class
+
+		isInit = false;																		// reset is init flag
 
 		// debug - show current state
 		if (updateStateIndicator) {
@@ -200,7 +207,7 @@ public class PlayerStatePattern : MonoBehaviour {
 
 		// checks for OVERLAY TEXT
 		if (!uim.uI.GetComponent<StartOptions>().inMainMenu && timeCheck == true) {			// if game start (not in menu)
-			isInit = false;																		// reset is init flag
+			
 			sincePlaytimeBegin = Time.time;														// check time
 			timeCheck = false;																	// check time only once
 		}
@@ -423,6 +430,8 @@ public class PlayerStatePattern : MonoBehaviour {
 			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
 			camOrbit = true;															// CAMERA: start orbit
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+			pc.enabled = false;															// disable player controller on player
+			wc.enabled = true;															// enable player controller on world
 		}
 
 		isLight = toLight;															// update light value
