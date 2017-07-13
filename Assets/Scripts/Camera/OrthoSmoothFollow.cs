@@ -23,6 +23,7 @@ public class OrthoSmoothFollow : MonoBehaviour {
 	void Update () {
 
 		if (!psp.camOrbit) {																							// if not in tenth state
+
 			Vector3 goalPos = player.position;																				// save player position
 
 			goalPos.x += (player.position.x * xOffset);																		// fix x axis

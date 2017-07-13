@@ -99,12 +99,18 @@ public class ParticleShellManager : MonoBehaviour {
 
 		// from dark second
 			// to dark third
-		if (f == 2 && t == 3 && !fl && !tl) ScaleTo (false, "hidden", "third");										// scale to third
+		if (f == 2 && t == 3 && !fl && !tl) {
+			ScaleTo (false, "hidden", "third");										// scale to third
+			Debug.Log (transform.parent.name + " shell dark second to dark third");
+		}
 			// to light third (no shell change)
 
 		// from light second
 			// to dark third
-		if (f == 2 && t == 3 && fl && !tl) ScaleTo (false, "hidden", "third");										// scale to third
+		if (f == 2 && t == 3 && fl && !tl) {
+			Debug.Log (transform.parent.name + " shell light second to dark third");
+			ScaleTo (false, "hidden", "third");										// scale to third
+		}
 			// to light third (no shell change)
 
 	///// third \\\\\
@@ -114,7 +120,7 @@ public class ParticleShellManager : MonoBehaviour {
 		// from dark third
 			// to dark fourth (no shell change)
 			// to light fourth
-		if (f == 3 && t == 4 && !fl && tl) ScaleTo (false, "third", "hidden");										// scale to hidden
+		if (f == 3 && t == 4 && !fl && tl) ScaleTo (true, "third", "hidden");										// scale to hidden
 		// from light third
 			// to dark fourth
 		if (f == 3 && t == 4 && fl && !tl) ScaleTo (false, "hidden", "third");										// scale to third
@@ -189,7 +195,7 @@ public class ParticleShellManager : MonoBehaviour {
 		// from dark triangle seventh
 			// to dark triangle eighth (no shell change)
 			// to light triangle eighth
-		if (f == 7 && t == 8 && !fl && tl && s == 1) ScaleTo (false, "seventh", "hidden");							// scale to hidden
+		if (f == 7 && t == 8 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");							// scale to hidden
 
 		// from light triangle seventh
 			// to dark triangle eighth
@@ -946,7 +952,7 @@ public class ParticleShellManager : MonoBehaviour {
 	///<para> resetState = state to set to false </para>
 	///<para> setState = state to set to true </para>
 	///</summary>
-	private void ScaleTo (bool devol, string setState, string resetState)
+	private void ScaleTo (bool devol, string resetState, string setState)
 	{
 		if (devol) {
 			anim.ResetTrigger ("scaleup");											// reset last stage
@@ -959,5 +965,6 @@ public class ParticleShellManager : MonoBehaviour {
 		}
 		anim.SetBool(resetState, false);											// reset previously active state
 		anim.SetBool(setState, true);												// set active state
+		Debug.Log (transform.parent.name + " shell second to dark third");
 	}
 }

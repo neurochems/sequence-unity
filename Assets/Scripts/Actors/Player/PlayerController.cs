@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour {
 	void Start() {
 		// init components
 		rb = GetComponent<Rigidbody> ();
-		uim = GetComponent<UIManager> ();
+		uim = GameObject.Find("Player").GetComponent<UIManager> ();
 		psp = GetComponent<PlayerStatePattern> ();
 
 		if (godMode) {

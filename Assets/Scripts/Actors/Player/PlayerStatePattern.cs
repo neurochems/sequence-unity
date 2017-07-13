@@ -29,11 +29,12 @@ public class PlayerStatePattern : MonoBehaviour {
 	[HideInInspector] public EighthPlayerState eighthState;					// instance of eighth state
 	[HideInInspector] public NinthPlayerState ninthState;					// instance of ninth state
 	[HideInInspector] public TenthPlayerState tenthState;					// instance of tenth state
-	// new state
 
 	public bool lightworld;													// is light world flag
 	public bool toLightworld, toDarkworld;									// to light world trigger, to dark world trigger
 	public bool changeParticles;											// change particle colour flag
+
+	[HideInInspector] public bool canCollide;								// can collide flag
 
 	// component references
 	private CameraManager cam;																				// main camera animator
@@ -58,11 +59,11 @@ public class PlayerStatePattern : MonoBehaviour {
 
 	// timers & flags
 	public bool isInit = true;												// is init flag
+	private float initTimer = 0f;											// init timer
 	private int die;														// roll for collision conflicts
 	public bool stunned;													// stunned?
 	public float stunDuration = 5f;											// duration of post-hit invulnerability
 	private float stunTimer = 0f;											// stun timer
-	//private bool shellShrinking, shell2Shrinking, nucleusDeactivating;		// shell/shell2 shrinking flag, nucleus deactivating flag
 	[HideInInspector] public float shrinkTimer = 0f;						// shell deactivation timer
 	// UI
 	[HideInInspector] public float lastStateChange = 0.0f;					// since last state change
@@ -145,14 +146,18 @@ public class PlayerStatePattern : MonoBehaviour {
 		deltaDark = darkEvol - darkEvolStart;												// calculate deltaDark
 		deltaLight = lightEvol - lightEvolStart;											// calculate deltaLight
 
-
-		/*if (uim.uI.GetComponent<StartOptions> ().inMainMenu) {								// if in menu
-			evol = 0f;																			// prevent evol changes (no death in menu)
-		}*/
+		if (uim.uI.GetComponent<StartOptions> ().inMainMenu) canCollide = false;			// if in menu, no collision
+		else if (!uim.uI.GetComponent<StartOptions> ().inMainMenu) canCollide = true; 		// if not in menu, collision
 
 		currentState.UpdateState ();														// frame updates from current state class
 
-		isInit = false;																		// reset is init flag
+		if (isInit) {																		// if init
+			initTimer += Time.deltaTime;														// start timer
+			if (initTimer >= 1.0f) {															// if timer = 1 sec
+				isInit = false;																		// reset is init flag
+				initTimer = 0f;																		// reset timer
+			}
+		}
 
 		// debug - show current state
 		if (updateStateIndicator) {
@@ -204,10 +209,8 @@ public class PlayerStatePattern : MonoBehaviour {
 			resetScaleTimer = 0f;																						// reset timer
 		}
 
-
 		// checks for OVERLAY TEXT
 		if (!uim.uI.GetComponent<StartOptions>().inMainMenu && timeCheck == true) {			// if game start (not in menu)
-			
 			sincePlaytimeBegin = Time.time;														// check time
 			timeCheck = false;																	// check time only once
 		}
@@ -279,12 +282,12 @@ public class PlayerStatePattern : MonoBehaviour {
 
 	public void SpawnZero (int num)
 	{
-		GetComponent<SpawnParticle> ().SpawnPhoton (num);
+		//GetComponent<SpawnParticle> ().SpawnPhoton (num);
 	}
 
 	public void SpawnFirst (int num)
 	{
-		GetComponent<SpawnParticle> ().SpawnElectron (num);
+		//GetComponent<SpawnParticle> ().SpawnElectron (num);
 	}
 
 	// STATE TRANSTITIONS \\
@@ -313,112 +316,117 @@ public class PlayerStatePattern : MonoBehaviour {
 		Debug.Log ("player transition to");
 
 		if (toState == 0) { 														// to zero
+			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 			rb.mass = 1.0f;																// set mass
 			sc[0].radius = 0.205f;														// update collision radius	
-			sc[1].radius = 0.200f;														// update collision radius
+			sc[1].radius = 0.195f;														// update collision radius
 			if (toLightworld) Debug.Log ("player to light world");
 			if (toDarkworld) Debug.Log ("player to dark world");
 			if (!toLightworld) effectsSnapshots[0].TransitionTo(5.0f);					// AUDIO: transition to default/dark world effects snapshot
 			if (toLightworld) effectsSnapshots[5].TransitionTo(5.0f);					// AUDIO: transition to light world effects snapshot
 			if (evol == 0f) musicSnapshots[0].TransitionTo(5.0f);						// AUDIO: transition to zero state music snapshot
 			if (evol == 0.5f) musicSnapshots[1].TransitionTo(5.0f);						// AUDIO: transition to half zero state music snapshot
-			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 1) {													// to first
+			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 			rb.mass = 2.0f;																// set mass
-			sc[0].radius = 0.51f;														// update collision radius
-			sc[1].radius = 0.50f;														// update collision radius
+			sc[0].radius = 0.52f;														// update collision radius
+			sc[1].radius = 0.48f;														// update collision radius
 			//sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world	
 			musicSnapshots[2].TransitionTo(5.0f);										// AUDIO: transition to first state music snapshot
-			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 2) {													// to second
-			rb.mass = 2.5f;																// set mass
-			sc[0].radius = 0.51f;														// update collision radius
-			sc[1].radius = 0.50f;														// update collision radius
-			musicSnapshots[3].TransitionTo(5.0f);										// AUDIO: transition to second state music snapshot
 			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+			rb.mass = 2.5f;																// set mass
+			sc[0].radius = 0.52f;														// update collision radius
+			sc[1].radius = 0.48f;														// update collision radius
+			musicSnapshots[3].TransitionTo(5.0f);										// AUDIO: transition to second state music snapshot
 		}
 		else if (toState == 3) {													// to third
+			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 			rb.mass = 3.0f;																// set mass
 			sc[0].radius = 1.02f;														// update collision radius
-			sc[1].radius = 1.00f;														// update collision radius
+			sc[1].radius = 0.48f;														// update collision radius
 			musicSnapshots[4].TransitionTo(5.0f);										// AUDIO: transition to third state music snapshot	
-			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 4) {													// to fourth
-			rb.mass = 3.5f;																// set mass
-			sc[0].radius = 1.02f;														// update collision radius
-			sc[1].radius = 1.00f;														// update collision radius
-			musicSnapshots[5].TransitionTo(5.0f);										// AUDIO: transition to fourth state music snapshot	
 			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+			rb.mass = 3.5f;																// set mass
+			sc[0].radius = 1.02f;														// update collision radius
+			sc[1].radius = 0.48f;														// update collision radius
+			musicSnapshots[5].TransitionTo(5.0f);										// AUDIO: transition to fourth state music snapshot	
 		}
 		else if (toState == 5) {													// to fifth
+			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 			rb.mass = 4.0f;																// set mass
-			sc[0].radius = 0.51f;														// update collision radius
-			sc[1].radius = 0.50f;														// update collision radius
+			if (shape == 0) sc[0].radius = 1.02f;										// if circle, update collision radius
+			else if (shape == 1 || shape == 2) sc[0].radius = 0.52f;						// if triangle or square, update collision radius
+			sc[1].radius = 0.48f;														// update collision radius
 			musicSnapshots[6].TransitionTo(5.0f);										// AUDIO: transition to fifth state music snapshot
 			if (shape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);			// AUDIO: transition to dark circle effects snapshot
 			if (shape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
 			if (shape == 1) effectsSnapshots[3].TransitionTo(5.0f);						// AUDIO: transition to triangle effects snapshot
 			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot
-			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 6) {													// to sixth
+			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 			rb.mass = 4.5f;																// set mass
-			sc[0].radius = 0.51f;														// update collision radius
+			if (shape == 0) sc[0].radius = 1.02f;										// if circle, update collision radius
+			else if (shape == 1 || shape == 2) sc[0].radius = 0.52f;						// if triangle or square, update collision radius
 			sc[1].radius = 0.50f;														// update collision radius
 			musicSnapshots[7].TransitionTo(5.0f);										// AUDIO: transition to sixth state music snapshot
 			if (shape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);			// AUDIO: transition to dark circle effects snapshot
 			if (shape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
 			if (shape == 1) effectsSnapshots[3].TransitionTo(5.0f);						// AUDIO: transition to triangle effects snapshot
 			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot	
-			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 7) {													// to seventh
+			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 			rb.mass = 5.5f;																// set mass
 			sc[0].radius = 1.53f;														// update collision radius
-			sc[1].radius = 1.50f;														// update collision radius
+			sc[1].radius = 1.02f;														// update collision radius
 			musicSnapshots[8].TransitionTo(5.0f);										// AUDIO: transition to seventh state music snapshot
 			if (shape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);			// AUDIO: transition to dark circle effects snapshot
 			if (shape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
 			if (shape == 1) effectsSnapshots[3].TransitionTo(5.0f);						// AUDIO: transition to triangle effects snapshot
 			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot
-			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
 		else if (toState == 8) {													// to eighth
+			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 			rb.mass = 7.0f;																// set mass
 			sc[0].radius = 1.53f;														// update collision radius
-			sc[1].radius = 1.50f;														// update collision radius
+			sc[1].radius = 1.02f;														// update collision radius
 			musicSnapshots[9].TransitionTo(5.0f);										// AUDIO: transition to seventh state music snapshot
 			if (shape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);			// AUDIO: transition to dark circle effects snapshot
 			if (shape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
 			if (shape == 1) effectsSnapshots[3].TransitionTo(5.0f);						// AUDIO: transition to triangle effects snapshot
 			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot
+		}
+		else if (toState == 9) {													// to ninth
 			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
 			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
-		}
-		else if (toState == 9) {													// to eighth
 			rb.mass = 8.5f;																// set mass
 			sc[0].radius = 2.04f;														// update collision radius
-			sc[1].radius = 2.00f;														// update collision radius
+			sc[1].radius = 1.53f;														// update collision radius
 			musicSnapshots[10].TransitionTo(5.0f);										// AUDIO: transition to seventh state music snapshot
 			if (shape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);			// AUDIO: transition to dark circle effects snapshot
 			if (shape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
 			if (shape == 1) effectsSnapshots[3].TransitionTo(5.0f);						// AUDIO: transition to triangle effects snapshot
 			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot
-			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 		}
-		else if (toState == 10) {													// to eighth
+		else if (toState == 10) {													// to tenth
+			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
+			camOrbit = true;															// CAMERA: start orbit
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 			rb.mass = 10.0f;															// set mass
 			sc[0].radius = 2.04f;														// update collision radius
 			sc[1].radius = 2.00f;														// update collision radius
@@ -427,9 +435,6 @@ public class PlayerStatePattern : MonoBehaviour {
 			if (shape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
 			if (shape == 1) effectsSnapshots[3].TransitionTo(5.0f);						// AUDIO: transition to triangle effects snapshot
 			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot
-			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			camOrbit = true;															// CAMERA: start orbit
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 			pc.enabled = false;															// disable player controller on player
 			wc.enabled = true;															// enable player controller on world
 		}

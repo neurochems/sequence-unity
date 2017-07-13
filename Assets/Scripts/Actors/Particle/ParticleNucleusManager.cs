@@ -25,7 +25,7 @@ public class ParticleNucleusManager : MonoBehaviour {
 
 	void Update() {
 
-		if (psp.changeParticles && psp.lightworld && !psp.isLight) {																			// if change particles and light world
+		if (psp.changeParticles && psp.lightworld && !psp.isLight) {															// if change particles and light world
 			//Debug.Log ("change particle nucleus");
 			toState = psp.state;																									// set toState to current state
 			ToOtherWorld (true, toState, toState, false);																			// to hidden, change to white
@@ -138,7 +138,10 @@ public class ParticleNucleusManager : MonoBehaviour {
 
 
 		// to dark zero
-		if (f == 0 && t == 0 && !fl && !tl) ScaleTo (false, "hidden", "zero");													// scale to zero
+		if (f == 0 && t == 0 && !fl && !tl) {
+			ScaleTo (false, "hidden", "zero");													// scale to zero
+			Debug.Log(transform.parent.name + " nucleus init to dark zero - ParticleNucleusManager");
+		}
 
 		// to dark first (init)
 		if (f == 0 && t == 1 && !fl && !tl) ScaleTo (false, "hidden", "first");													// scale to first
@@ -2116,19 +2119,21 @@ public class ParticleNucleusManager : MonoBehaviour {
 	{
 		if (lite && !psp.lightworld) {
 			rend.material.shader = lightShader;							// change to white shader
-			//light = true;												// set is light flag
+			//light = true;													// set is light flag
 		} 
 		else if (!lite && !psp.lightworld) {
+			rend.material.shader = Shader.Find ("Unlit/Color");			// change to colour shader
 			rend.material.SetColor("_Color", Color.black);				// change to black
 			//light = false;												// reset is light flag
 		}
 		else if (lite && psp.lightworld) {
 			rend.material.shader = darkShader;							// change to black shader
-			//light = true;												// set is light flag
+			//light = true;													// set is light flag
 		}
 		else if (!lite && psp.lightworld) {
-			rend.material.SetColor("_Color", Color.white);			// change to white
-			//light = false;											// reset is light flag
+			rend.material.shader = Shader.Find ("Unlit/Color");			// change to colour shader
+			rend.material.SetColor("_Color", Color.white);				// change to white
+			//light = false;												// reset is light flag
 		}
 	}
 

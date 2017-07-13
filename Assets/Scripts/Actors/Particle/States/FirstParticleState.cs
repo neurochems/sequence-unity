@@ -50,7 +50,7 @@ public class FirstParticleState : IParticleState
 	{
 		//if (!other.gameObject.CompareTag("World")) Debug.Log ("first particle collision");
 		if (canCollide && !psp.psp.stunned) {													// if collision allowed and player is not stunned
-			if (other.gameObject.CompareTag ("Player")) {											// colide with player
+			if (other.gameObject.CompareTag ("Player") && psp.psp.canCollide) {						// colide with collidable player
 				PlayerStatePattern pspOther 
 					= other.gameObject.GetComponent<PlayerStatePattern>();								// ref other ParticleStatePattern
 				if (pspOther.lightworld == psp.inLightworld) {											// if player and particle in same world
@@ -73,7 +73,7 @@ public class FirstParticleState : IParticleState
 			else if (other.gameObject.CompareTag ("Zero")) {										// collide with zero
 				ParticleStatePattern pspOther 
 				= other.gameObject.GetComponent<ParticleStatePattern>();								// ref other ParticleStatePattern
-				if (pspOther.lightworld == psp.inLightworld) {											// if player and particle in same world
+				if (pspOther.lightworld == psp.inLightworld) {											// if particles in same world
 					canCollide = false;																		// reset has collided trigger
 					psp.sc[0].enabled = false;																// disable trigger collider
 					psp.stunned = true;																		// stun for duration
@@ -85,8 +85,8 @@ public class FirstParticleState : IParticleState
 						if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC);						// add light of other
 					}
 					else if (pspOther.evolC < 0f) {															// if other < 0
-						if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC * -1);					// add dark of other
-						if (pspOther.darkEvolC != 0f) psp.AddLight (pspOther.lightEvolC * -1);					// add light of other
+						if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC);							// add dark of other
+						if (pspOther.darkEvolC != 0f) psp.AddLight (pspOther.lightEvolC);						// add light of other
 					}
 					checkEvol = true;																		// check evol flag
 				}

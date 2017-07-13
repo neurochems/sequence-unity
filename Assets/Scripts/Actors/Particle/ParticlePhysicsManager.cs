@@ -15,6 +15,9 @@ public class ParticlePhysicsManager : MonoBehaviour {
 	private Vector3 moveDir;
 
 	private Rigidbody rb;
+	private bool boost = true;
+	private float boostTimer = 0f;
+
 	[HideInInspector] public bool bump = false;
 	public int bumpStrength = 100;
 
@@ -34,9 +37,16 @@ public class ParticlePhysicsManager : MonoBehaviour {
 	void FixedUpdate () {
 		attractor.Attract(particleTransform);
 
-		moveDir = new Vector3 (Random.Range(xMin, xMax), 0.0f, Random.Range(zMin, zMax)).normalized;		// create move direction
+		if (boost) {
+			moveDir = new Vector3 (Random.Range(xMin, xMax), 0.0f, Random.Range(zMin, zMax)).normalized;		// create move direction
+			rb.AddRelativeForce (moveDir * moveSpeed); 															// add force in movement direction
+			boost = false;																					// reset kickstart
+		}
 
-		rb.AddRelativeForce (moveDir * moveSpeed); 																// add force in movement direction
+		if (!boost) {
+			boostTimer += Time.deltaTime;
+			if (boostTimer >= 10.0f) boost = true;
+		}
 
 		if (rb.velocity.magnitude > maxSpeed) {																	// clamp at max speed
 			rb.velocity = Vector3.ClampMagnitude (rb.velocity, maxSpeed);

@@ -50,7 +50,7 @@ public class ZeroParticleState : IParticleState
 	{
 		//if (!other.gameObject.CompareTag("World")) Debug.Log ("zero particle collision");
 		if (canCollide) {										// if collision allowed and player is not stunned
-			if (other.gameObject.CompareTag ("Player")) {								// if colide with player
+			if (other.gameObject.CompareTag ("Player") && psp.psp.canCollide) {			// if colide with collidable player
 				PlayerStatePattern pspOther 
 					= other.gameObject.GetComponent<PlayerStatePattern>();					// ref other ParticleStatePattern
 				if (pspOther.lightworld == psp.inLightworld) {								// if player and particle in same world
@@ -77,7 +77,7 @@ public class ZeroParticleState : IParticleState
 			else if (other.gameObject.CompareTag ("Zero")) {							// if collide with zero
 				ParticleStatePattern pspOther 
 					= other.gameObject.GetComponent<ParticleStatePattern>();				// ref other ParticleStatePattern
-				if (pspOther.lightworld == psp.inLightworld) {								// if player and particle in same world
+				if (pspOther.lightworld == psp.inLightworld) {								// if particles in same world
 					canCollide = false;															// reset has collided trigger
 					psp.sc[0].enabled = false;													// disable trigger collider
 					psp.stunned = true;													    	// stunned flag
@@ -116,7 +116,7 @@ public class ZeroParticleState : IParticleState
 			die = Random.Range(1,6);														// roll die
 			psp.die = die;																	// make die value visible to other
 			if (die > pspOther.die) {														// if this die > other die
-				Debug.Log ("die roll: this > other");
+				//Debug.Log ("die roll: this > other");
 				if (pspOther.evolC == 0) psp.AddLight (0.5f);									// if other = 0, add light
 				else {																			// else
 					if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC);					// add dark of other
@@ -125,7 +125,7 @@ public class ZeroParticleState : IParticleState
 				rolling = false;																// exit roll
 			}
 			else if (die < pspOther.die) {													// if this die < other die
-				Debug.Log ("die roll: this < other");
+				//Debug.Log ("die roll: this < other");
 				if (pspOther.evolC == 0) psp.SubLight (0.5f);									// if other = 0, add light
 				else {																			// else
 					if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvol);					// add dark of other
@@ -233,7 +233,10 @@ public class ZeroParticleState : IParticleState
 		isLight = psp.isLight;																	// update light value
 
         if (evol == 0f) ToZero(true);               									    // init to light zero
-		else if (evol == 0.5f) ToHalfZero(false);               							// init to half zero
+		else if (evol == 0.5f) {
+			ToHalfZero(false);               							// init to half zero
+			//Debug.Log(psp.gameObject.name + " nucleus init to dark zero - ZeroParticleState");
+		}
 		else if (evol == 1f) {																// if first
 			if (isLight) ToFirst(true);               											// init to light first
 			if (!isLight) ToFirst(false);															// init to dark first

@@ -27,7 +27,7 @@ public class ParticleCoreManager : MonoBehaviour {
 		// change shape timer
 		if (changeShape) changeShapeTimer += Time.deltaTime;														// start timer
 		if (changeShapeTimer >= 2.0f) {																				// when timer >= 4 sec
-			Debug.Log("particle core set shape: " + shape);
+			Debug.Log(transform.parent.name + " core set shape: " + shape);
 			SetShape(shape);																							// set shape
 			changeShape = false;																						// reset reset scale flag
 			changeShapeTimer = 0f;																						// reset timer
@@ -102,7 +102,10 @@ public class ParticleCoreManager : MonoBehaviour {
 	///// zero \\\\\
 
 		// to zero (init)
-		if (f == 0 && t == 0 && fl && tl) ScaleTo (false, "hidden", "zero");										// scale to first
+		if (f == 0 && t == 0 && fl && tl) {
+			ScaleTo (false, "hidden", "zero");										// scale to first
+			//Debug.Log (transform.parent.name + " core init to light zero");
+		}
 		// to dark zero (init)
 		else if (f == 0 && t == 0 && !fl && !tl) ScaleTo (false, "hidden", "zero");									// scale to first
 		// to light zero (0.5) (no core change)
@@ -136,18 +139,31 @@ public class ParticleCoreManager : MonoBehaviour {
 			// to dark second (no core change)
 			// to light second (no core change)
 
+		// to third
+
+		// from dark first
+			// to dark third
+		if (f == 1 && t == 3 && !fl && !tl) ScaleTo (true, "first", "hidden");										// scale to hidden
+			// to light third
+		else if (f == 1 && t == 3 && !fl && tl) ScaleTo (false, "first", "third");									// scale to third
+		// from dark first
+			// to dark third
+		if (f == 1 && t == 3 && fl && !tl) ScaleTo (true, "first", "hidden");										// scale to hidden
+			// to light third
+		else if (f == 1 && t == 3 && fl && tl) ScaleTo (false, "first", "third");									// scale to third
+
 	///// second \\\\\
 
 		// to third
 
 		// from dark second
 			// to dark third
-		if (f == 2 && t == 3 && !fl && !tl) ScaleTo (false, "first", "hidden");										// scale to hidden
+		if (f == 2 && t == 3 && !fl && !tl) ScaleTo (true, "first", "hidden");										// scale to hidden
 			// to light third
 		else if (f == 2 && t == 3 && !fl && tl) ScaleTo (false, "first", "third");									// scale to third
 		// from light second
 			// to dark third
-		if (f == 2 && t == 3 && fl && !tl) ScaleTo (false, "first", "hidden");										// scale to hidden
+		if (f == 2 && t == 3 && fl && !tl) ScaleTo (true, "first", "hidden");										// scale to hidden
 			// to light third
 		else if (f == 2 && t == 3 && fl && tl) ScaleTo (false, "first", "third");									// scale to third
 

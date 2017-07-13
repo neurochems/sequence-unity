@@ -84,6 +84,9 @@ camera zooms
 
 
   POPULATE WORLD
+	- seed 100 - DONE
+	- seed 200 - DONE
+	- seed 250 - DONE
 	- particle simulation
 		particle/particle collisions
 		particle evol

@@ -10,7 +10,7 @@ public class ZeroPlayerState : IParticleState
 	public float evol, deltaDark, deltaLight;											// evol tracking refs
 	private bool checkEvol;																// check evol flag
 
-	private bool canCollide = false;													// can collide flag (init false to begin stunned)
+	[HideInInspector] public bool canCollide = false;									// can collide flag (init false to begin stunned)
 	private float collisionTimer;														// reset collision timer
 
 	// constructor
@@ -44,7 +44,7 @@ public class ZeroPlayerState : IParticleState
 	{
 		if (!other.gameObject.CompareTag("World")) Debug.Log ("zero player collision with " + other.gameObject.name);
 		
-		if (canCollide) {																// if collision allowed and other in dark world
+		if (canCollide && psp.canCollide) {												// if collision allowed and not in menu
 			if (other.gameObject.CompareTag ("Zero")) {										// if collide with zero
 				ParticleStatePattern pspOther 
 						= other.gameObject.GetComponent<ParticleStatePattern> ();				// ref other ParticleStatePattern

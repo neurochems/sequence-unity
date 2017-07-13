@@ -188,13 +188,13 @@ public class ParticleStatePattern : MonoBehaviour {
 
 	public void SpawnZero (int num)
 	{
-		Debug.Log ("spawn zero");
+		//Debug.Log ("spawn zero");
 		//GetComponent<SpawnParticle> ().SpawnPhoton (num);
 	}
 
 	public void SpawnFirst (int num)
 	{
-		Debug.Log ("spawn first");
+		//Debug.Log ("spawn first");
 		//GetComponent<SpawnParticle> ().SpawnElectron (num);
 	}
 
@@ -213,11 +213,11 @@ public class ParticleStatePattern : MonoBehaviour {
 		darkEvol += changeAmount;											// add dark evol level
 	}
 	public void SubDark(float changeAmount) {
-		lightEvol -= changeAmount;											// subtract dark evol level
+		darkEvol -= changeAmount;											// subtract dark evol level
 	}
 
 	public void AddLight(float changeAmount) {
-		darkEvol += changeAmount;											// add light evol level
+		lightEvol += changeAmount;											// add light evol level
 	}
 	public void SubLight(float changeAmount) {
 		lightEvol -= changeAmount;											// subtract light evol level
@@ -231,74 +231,75 @@ public class ParticleStatePattern : MonoBehaviour {
 		updateStateIndicator = true;												// update state indicator
 
 		if (toState == 0)	{ 														// to zero
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 			rb.mass = 1.0f;																// set mass
 			gameObject.tag = "Zero";													// set tag
 			sc[0].radius = 0.205f;														// update collision radius
-			sc[1].radius = 0.200f;														// update collision radius
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+			sc[1].radius = 0.195f;														// update collision radius
+			//Debug.Log(psp.gameObject.name + " nucleus init to dark zero - TransitionTo(0)");
 		}
 		else if (toState == 1) {													// to first
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 			rb.mass = 2.0f;																// set mass
 			gameObject.tag = "First";													// set tag
-			sc[0].radius = 0.51f;														// update collision radius
-			sc[1].radius = 0.50f;														// update collision radius
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+			sc[0].radius = 0.52f;														// update collision radius
+			sc[1].radius = 0.48f;														// update collision radius
 		}
 		else if (toState == 2) {													// to second
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 			rb.mass = 2.5f;																// set mass
 			gameObject.tag = "Second";													// set tag
-			sc[0].radius = 0.51f;														// update collision radius
-			sc[1].radius = 0.50f;														// update collision radius
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+			sc[0].radius = 0.52f;														// update collision radius
+			sc[1].radius = 0.48f;														// update collision radius
 		}
 		else if (toState == 3) {													// to third
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 			rb.mass = 3.0f;																// set mass
 			gameObject.tag = "Third";													// set tag
 			sc[0].radius = 1.02f;														// update collision radius
-			sc[1].radius = 1.00f;														// update collision radius
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+			sc[1].radius = 0.48f;														// update collision radius
 		}
 		else if (toState == 4) {													// to fourth
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 			rb.mass = 3.5f;																// set mass
 			gameObject.tag = "Fourth";													// set tag
 			sc[0].radius = 1.02f;														// update collision radius
-			sc[1].radius = 1.00f;														// update collision radius
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+			sc[1].radius = 0.48f;														// update collision radius
 		}
 		else if (toState == 5) {													// to fifth
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 			rb.mass = 4.0f;																// set mass
 			gameObject.tag = "Fifth";													// set tag
-			sc[0].radius = 0.51f;														// update collision radius
-			sc[1].radius = 0.50f;														// update collision radius
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+			sc[0].radius = 1.02f;														// update collision radius
+			sc[1].radius = 0.48f;														// update collision radius
 		}
 		else if (toState == 6) {													// to sixth
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 			rb.mass = 4.5f;																// set mass
 			gameObject.tag = "Sixth";													// set tag
-			sc[0].radius = 0.51f;														// update collision radius
-			sc[1].radius = 0.50f;														// update collision radius
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+			sc[0].radius = 1.02f;														// update collision radius
+			sc[1].radius = 0.48f;														// update collision radius
 		}
 		else if (toState == 7) {													// to seventh
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 			rb.mass = 5.5f;																// set mass
 			gameObject.tag = "Seventh";													// set tag
 			sc[0].radius = 1.53f;														// update collision radius
-			sc[1].radius = 1.50f;														// update collision radius
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+			sc[1].radius = 0.98f;														// update collision radius
 		}
 		else if (toState == 8) {													// to eighth
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 			rb.mass = 7.0f;																// set mass
 			gameObject.tag = "Eighth";													// set tag
 			sc[0].radius = 1.53f;														// update collision radius
-			sc[1].radius = 1.50f;														// update collision radius
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+			sc[1].radius = 0.98f;														// update collision radius
 		}
 		else if (toState == 9) {													// to ninth
+			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
 			rb.mass = 8.5f;																// set mass
 			gameObject.tag = "Ninth";													// set tag
-			sc[0].radius = 2.04f;														// update collision radius
-			sc[1].radius = 2.00f;														// update collision radius
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+			sc[0].radius = 2.03f;														// update collision radius
+			sc[1].radius = 1.47f;														// update collision radius
 		}
 
 		isLight = toLight;															// set light flag

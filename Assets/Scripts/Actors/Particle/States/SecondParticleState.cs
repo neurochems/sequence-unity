@@ -46,8 +46,8 @@ public class SecondParticleState : IParticleState
 
 	public void OnTriggerEnter(Collider other)
 	{
-		if (canCollide && !psp.psp.stunned) {											// if collision allowed and player is not stunned
-			if (other.gameObject.CompareTag ("Player")) {									// colide with player
+		if (canCollide && !psp.psp.stunned) {												// if collision allowed and player is not stunned
+			if (other.gameObject.CompareTag ("Player") && psp.psp.canCollide) {					// colide with collidable player
 				PlayerStatePattern pspOther 
 					= other.gameObject.GetComponent<PlayerStatePattern>();						// ref other ParticleStatePattern
 				if (pspOther.lightworld == psp.inLightworld) {									// if player and particle in same world
@@ -272,6 +272,7 @@ public class SecondParticleState : IParticleState
 		}
 		// third
 		else if (evol >= 2f && !lightworld) {												// evolve to dark world third within dark world
+			Debug.Log("particle second to third");
 			if (deltaDark > deltaLight) ToThird(false);											// if gain more dark than light = to dark world dark third
 			else if (deltaDark <= deltaLight) ToThird(true);									// if gain more light than dark = to dark world light third
 		} 
