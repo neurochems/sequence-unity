@@ -66,6 +66,7 @@ public class SixthParticleState : IParticleState
 					checkEvol = true;																// check evol flag
 					Debug.Log ("particle contact player");
 				}
+				pspOther = null;																// clear pspOther
 			} 
 			else if (other.gameObject.CompareTag ("Zero")									// collide with zero
 				|| other.gameObject.CompareTag ("First")									// collide with first
@@ -92,6 +93,7 @@ public class SixthParticleState : IParticleState
 					}
 					checkEvol = true;																// check evol flag
 				}
+				pspOther = null;																// clear pspOther
 			} 
 			else if (other.gameObject.CompareTag ("Sixth")) {								// collide with sixth
 				ParticleStatePattern pspOther 
@@ -111,6 +113,7 @@ public class SixthParticleState : IParticleState
 					}
 					checkEvol = true;																// check evol flag
 				}
+				pspOther = null;																// clear pspOther
 			}
 			else if (other.gameObject.CompareTag("Seventh")								    // collide with seventh
 				|| other.gameObject.CompareTag("Eighth")								    // collide with eighth
@@ -126,6 +129,7 @@ public class SixthParticleState : IParticleState
 					if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvol);				// subtract other light
 					checkEvol = true;																// check evol flag
 				}
+				pspOther = null;																// clear pspOther
 			}
 		}
 	}

@@ -44,22 +44,22 @@ public class UIManager : MonoBehaviour {
 
 		////////////////////////      DEBUG particle counts      \\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-		// total children
-		numTotal = debugParticles.transform.childCount;
-
 		// iterate particles, logging tag type
 		foreach (Transform child in debugParticles.transform) {
-			if (child.CompareTag("Zero")) numZero += 1;
-			else if (child.CompareTag("First")) numFirst += 1;
-			else if (child.CompareTag("Second")) numSecond += 1;
-			else if (child.CompareTag("Third")) numThird += 1;
-			else if (child.CompareTag("Fourth")) numFourth += 1;
-			else if (child.CompareTag("Fifth")) numFifth += 1;
-			else if (child.CompareTag("Sixth")) numSixth += 1;
-			else if (child.CompareTag("Seventh")) numSeventh += 1;
-			else if (child.CompareTag("Eighth")) numEighth += 1;
-			else if (child.CompareTag("Ninth")) numNinth += 1;
+			if (child.CompareTag("Zero") && child.gameObject.activeInHierarchy) numZero += 1;
+			else if (child.CompareTag("First") && child.gameObject.activeInHierarchy) numFirst += 1;
+			else if (child.CompareTag("Second") && child.gameObject.activeInHierarchy) numSecond += 1;
+			else if (child.CompareTag("Third") && child.gameObject.activeInHierarchy) numThird += 1;
+			else if (child.CompareTag("Fourth") && child.gameObject.activeInHierarchy) numFourth += 1;
+			else if (child.CompareTag("Fifth") && child.gameObject.activeInHierarchy) numFifth += 1;
+			else if (child.CompareTag("Sixth") && child.gameObject.activeInHierarchy) numSixth += 1;
+			else if (child.CompareTag("Seventh") && child.gameObject.activeInHierarchy) numSeventh += 1;
+			else if (child.CompareTag("Eighth") && child.gameObject.activeInHierarchy) numEighth += 1;
+			else if (child.CompareTag("Ninth") && child.gameObject.activeInHierarchy) numNinth += 1;
 		}
+
+		// total children
+		numTotal = numZero + numFirst + numSecond + numThird + numFourth + numFifth + numSixth + numSeventh + numEighth + numNinth;
 
 		// display info
 		numParticles.text = "Total: " + numTotal + "\nZero: " + numZero + "\nFirst: " + numFirst + "\nSecond: " + numSecond + 

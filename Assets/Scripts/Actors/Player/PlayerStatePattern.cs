@@ -49,7 +49,12 @@ public class PlayerStatePattern : MonoBehaviour {
 
 	private MeshRenderer rendWorld, rendCore, rendShell, rendNucleus;										// mesh renderers (for lightworld colour changes)
 
-	private int toState, fromState;																			// state transitioning to/from (for timers)
+	private int fromState, toState, shape;																	// transition properties
+	private bool fromLight, toLight;																		// transition properties
+
+	private bool setShell, setNucleus;																		// set part flags
+	private float setShellTimer, setNucleusTimer;															// set part timers
+
 	private bool changeWorld = false, radiusUp = false;														// timer trigger for changing colour, tenth state collider radius up
 	[HideInInspector] public bool resetScale = false;														// timer trigger for resetting scale after world switch (public for camera manager access)
 	private float changeWorldTimer, resetScaleTimer, changeParticlesTimer, radiusUpTimer;					// change shape timer, reset scale timer, change particles timer, tenth state collider radius up timer
@@ -126,16 +131,10 @@ public class PlayerStatePattern : MonoBehaviour {
 		rendNucleus = transform.FindChild ("Player Nucleus")
 			.gameObject.GetComponent<MeshRenderer> ();						// init nucleus mesh renderer ref
 
-		//ppm = GetComponent<PlayerPhysicsManager> ();						// init player physics manager ref
-
 		uim = GetComponent<UIManager> ();									// init ui manager ref
 		Destroy(GameObject.FindGameObjectWithTag("Destroy"));				// destroy old UI
 
-		//light = true;														// start as light
-		//lightEvol = 0f;													    // start at 0.5 light evol
-		//darkEvol = 0f;													    // start at 0.5 light evol
 		currentState = zeroState;											// start at zero state
-		//TransitionTo(0, 0, light, toLight, 0);								// start at zero size
 		state = 0;
 	}
 
@@ -158,21 +157,23 @@ public class PlayerStatePattern : MonoBehaviour {
 				initTimer = 0f;																		// reset timer
 			}
 		}
-
-		// debug - show current state
-		if (updateStateIndicator) {
-			if (currentState == zeroState) state = 0;
-			else if (currentState == firstState) state = 1;
-			else if (currentState == secondState) state = 2;
-			else if (currentState == thirdState) state = 3;
-			else if (currentState == fourthState) state = 4;
-			else if (currentState == fifthState) state = 5;
-			else if (currentState == sixthState) state = 6;
-			else if (currentState == seventhState) state = 7;
-			else if (currentState == eighthState) state = 8;
-			else if (currentState == ninthState) state = 9;
-			else if (currentState == tenthState) state = 10;
-			updateStateIndicator = false;
+			
+		// set parts timers
+		if (setShell) {														// if set shell
+			setShellTimer += Time.deltaTime;									// start timer
+			if (setShellTimer >= 1.0f) {										// if timer is 1 sec
+				psm.Shell (fromState, toState, fromLight, toLight, shape);			// change shell
+				setShell = false;													// reset set shell flag
+				setShellTimer = 0f;													// reset set shell timer
+			}
+		}
+		if (setNucleus) {													// if set nucleus
+			setNucleusTimer += Time.deltaTime;									// start timer
+			if (setNucleusTimer >= 2.0f) {										// if timer is 2 sec
+				pnm.Nucleus (fromState, toState, fromLight, toLight, shape);		// change nucleus
+				setNucleus = false;													// reset set nucleus flag
+				setNucleusTimer = 0f;												// reset set nucleus timer
+			}
 		}
 
 		// tenth state collision radius increase
@@ -180,10 +181,10 @@ public class PlayerStatePattern : MonoBehaviour {
 			radiusUpTimer += Time.deltaTime;														// start timer
 			sc[0].radius += 0.000383f;														// update collision radius	
 			sc[1].radius += 0.000383f;														// update collision radius	
-		}
-		if (radiusUpTimer >= 60.0f) {																				// when timer >= 2 sec
-			radiusUp = false;																						// reset change colour flag
-			radiusUpTimer = 0f;																						// reset timer
+			if (radiusUpTimer >= 60.0f) {																				// when timer >= 2 sec
+				radiusUp = false;																						// reset change colour flag
+				radiusUpTimer = 0f;																						// reset timer
+			}
 		}
 
 		// change particles timer
@@ -213,6 +214,22 @@ public class PlayerStatePattern : MonoBehaviour {
 		if (!uim.uI.GetComponent<StartOptions>().inMainMenu && timeCheck == true) {			// if game start (not in menu)
 			sincePlaytimeBegin = Time.time;														// check time
 			timeCheck = false;																	// check time only once
+		}
+
+		// debug - show current state
+		if (updateStateIndicator) {
+			if (currentState == zeroState) state = 0;
+			else if (currentState == firstState) state = 1;
+			else if (currentState == secondState) state = 2;
+			else if (currentState == thirdState) state = 3;
+			else if (currentState == fourthState) state = 4;
+			else if (currentState == fifthState) state = 5;
+			else if (currentState == sixthState) state = 6;
+			else if (currentState == seventhState) state = 7;
+			else if (currentState == eighthState) state = 8;
+			else if (currentState == ninthState) state = 9;
+			else if (currentState == tenthState) state = 10;
+			updateStateIndicator = false;
 		}
 
 	}
@@ -292,8 +309,14 @@ public class PlayerStatePattern : MonoBehaviour {
 
 	// STATE TRANSTITIONS \\
 
-	public void TransitionTo (int fromState, int toState, bool fromLight, bool toLight, int shape)
+	public void TransitionTo (int f, int t, bool fl, bool tl, int s)
 	{
+
+		fromState = f;																// store from state
+		toState = t;																// store to state
+		fromLight = fl;																// store from light
+		toLight = tl;																// store to light
+		shape = s;																	// store shape
 
 		updateStateIndicator = true;
 
@@ -316,8 +339,8 @@ public class PlayerStatePattern : MonoBehaviour {
 		Debug.Log ("player transition to");
 
 		if (toState == 0) { 														// to zero
-			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+			SetZoomCamera();															// CAMERA: zoom to state 0
+			SetParts();																	// set player parts
 			rb.mass = 1.0f;																// set mass
 			sc[0].radius = 0.205f;														// update collision radius	
 			sc[1].radius = 0.195f;														// update collision radius
@@ -329,8 +352,8 @@ public class PlayerStatePattern : MonoBehaviour {
 			if (evol == 0.5f) musicSnapshots[1].TransitionTo(5.0f);						// AUDIO: transition to half zero state music snapshot
 		}
 		else if (toState == 1) {													// to first
-			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+			if (fromState != 2) SetZoomCamera();										// CAMERA: if not from state 2, zoom to state 1
+			SetParts();																	// set player parts
 			rb.mass = 2.0f;																// set mass
 			sc[0].radius = 0.52f;														// update collision radius
 			sc[1].radius = 0.48f;														// update collision radius
@@ -338,32 +361,32 @@ public class PlayerStatePattern : MonoBehaviour {
 			musicSnapshots[2].TransitionTo(5.0f);										// AUDIO: transition to first state music snapshot
 		}
 		else if (toState == 2) {													// to second
-			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+			if (fromState != 1) SetZoomCamera();										// CAMERA: if not from state 1, zoom to state 1
+			SetParts();																	// set player parts
 			rb.mass = 2.5f;																// set mass
 			sc[0].radius = 0.52f;														// update collision radius
 			sc[1].radius = 0.48f;														// update collision radius
 			musicSnapshots[3].TransitionTo(5.0f);										// AUDIO: transition to second state music snapshot
 		}
 		else if (toState == 3) {													// to third
-			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+			if (fromState != 4) SetZoomCamera();										// CAMERA: if not from state 4, zoom to state 3
+			SetParts();																	// set player parts
 			rb.mass = 3.0f;																// set mass
 			sc[0].radius = 1.02f;														// update collision radius
 			sc[1].radius = 0.48f;														// update collision radius
 			musicSnapshots[4].TransitionTo(5.0f);										// AUDIO: transition to third state music snapshot	
 		}
 		else if (toState == 4) {													// to fourth
-			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+			if (fromState != 3) SetZoomCamera();										// CAMERA: if not from state 3, zoom to state 3
+			SetParts();																	// set player parts
 			rb.mass = 3.5f;																// set mass
 			sc[0].radius = 1.02f;														// update collision radius
 			sc[1].radius = 0.48f;														// update collision radius
 			musicSnapshots[5].TransitionTo(5.0f);										// AUDIO: transition to fourth state music snapshot	
 		}
 		else if (toState == 5) {													// to fifth
-			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+			if (fromState != 6) SetZoomCamera();										// CAMERA: if not from state 6, zoom to state 5
+			SetParts();																	// set player parts
 			rb.mass = 4.0f;																// set mass
 			if (shape == 0) sc[0].radius = 1.02f;										// if circle, update collision radius
 			else if (shape == 1 || shape == 2) sc[0].radius = 0.52f;						// if triangle or square, update collision radius
@@ -375,8 +398,8 @@ public class PlayerStatePattern : MonoBehaviour {
 			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot
 		}
 		else if (toState == 6) {													// to sixth
-			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+			if (fromState != 5) SetZoomCamera();										// CAMERA: if not from state 5, zoom to state 5
+			SetParts();																	// set player parts
 			rb.mass = 4.5f;																// set mass
 			if (shape == 0) sc[0].radius = 1.02f;										// if circle, update collision radius
 			else if (shape == 1 || shape == 2) sc[0].radius = 0.52f;						// if triangle or square, update collision radius
@@ -388,8 +411,8 @@ public class PlayerStatePattern : MonoBehaviour {
 			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot	
 		}
 		else if (toState == 7) {													// to seventh
-			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+			if (fromState != 8) SetZoomCamera();										// CAMERA: if not from state 8, zoom to state 7
+			SetParts();																	// set player parts
 			rb.mass = 5.5f;																// set mass
 			sc[0].radius = 1.53f;														// update collision radius
 			sc[1].radius = 1.02f;														// update collision radius
@@ -400,8 +423,8 @@ public class PlayerStatePattern : MonoBehaviour {
 			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot
 		}
 		else if (toState == 8) {													// to eighth
-			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+			if (fromState != 7) SetZoomCamera();										// CAMERA: if not from state 7, zoom to state 7
+			SetParts();																	// set player parts
 			rb.mass = 7.0f;																// set mass
 			sc[0].radius = 1.53f;														// update collision radius
 			sc[1].radius = 1.02f;														// update collision radius
@@ -412,8 +435,8 @@ public class PlayerStatePattern : MonoBehaviour {
 			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot
 		}
 		else if (toState == 9) {													// to ninth
-			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+			SetZoomCamera();															// CAMERA: zoom to state 9
+			SetParts();																	// set player parts
 			rb.mass = 8.5f;																// set mass
 			sc[0].radius = 2.04f;														// update collision radius
 			sc[1].radius = 1.53f;														// update collision radius
@@ -424,9 +447,9 @@ public class PlayerStatePattern : MonoBehaviour {
 			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot
 		}
 		else if (toState == 10) {													// to tenth
-			SetZoomCamera(fromState, toState);											// CAMERA: zoom to size 20
+			SetZoomCamera();															// CAMERA: zoom to state 10
 			camOrbit = true;															// CAMERA: start orbit
-			SetParts(fromState, toState, fromLight, toLight, shape);					// set player parts
+			SetParts();																	// set player parts
 			rb.mass = 10.0f;															// set mass
 			sc[0].radius = 2.04f;														// update collision radius
 			sc[1].radius = 2.00f;														// update collision radius
@@ -448,17 +471,15 @@ public class PlayerStatePattern : MonoBehaviour {
 	}
 
 	// camera - PUT IN SEPARATE SCRIPT
-	private void SetZoomCamera (int from, int to) 
+	private void SetZoomCamera () 
 	{
-		fromState = from;
-		toState = to;
 		if (toLightworld || toDarkworld) {											// if changing worlds
-			cam.ZoomCamera (true, from, to);											// zoom camera in from particular state
+			cam.ZoomCamera (true, fromState, toState);											// zoom camera in from particular state
 			changeWorld = true;															// switch properties
 			resetScale = true;															// zoom camera out to appropriate state
 		} 
 		else {
-			cam.ZoomCamera (false, from, to);										// else in dark world, zoom between states
+			cam.ZoomCamera (false, fromState, toState);										// else in dark world, zoom between states
 		}
 	}
 
@@ -495,11 +516,11 @@ public class PlayerStatePattern : MonoBehaviour {
 	}
 
 	// set player parts
-	private void SetParts(int fromState, int toState, bool fromLight, bool toLight, int shape)
+	private void SetParts()
 	{
 		pcm.Core (fromState, toState, fromLight, toLight, shape);					// change circle
-		psm.Shell (fromState, toState, fromLight, toLight, shape);					// change shell
-		pnm.Nucleus(fromState, toState, fromLight, toLight, shape);					// change nucleus
+		setShell = true;															// start set shell timer
+		setNucleus = true;															// start set nucleus timer
 	}
 
 }

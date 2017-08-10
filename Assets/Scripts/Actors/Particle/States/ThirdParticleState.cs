@@ -65,6 +65,7 @@ public class ThirdParticleState : IParticleState
 					checkEvol = true;															// check evol flag
 					Debug.Log ("particle contact player");
 				}
+				pspOther = null;															// clear pspOther
 			} 
 			else if (other.gameObject.CompareTag ("Zero")								// collide with zero
 				|| other.gameObject.CompareTag ("First")								// collide with first
@@ -83,11 +84,12 @@ public class ThirdParticleState : IParticleState
 						if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC);			// add light of other
 					}
 					else if (pspOther.evol < 0f) {												// if other < 0
-						if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC * -1);		// add dark of other
-						if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC * -1);		// add light of other
+						if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC);				// add dark of other
+						if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC);			// add light of other
 					}
 					checkEvol = true;															// check evol flag
 				}
+				pspOther = null;															// clear pspOther
 			}
 			else if (other.gameObject.CompareTag ("Third")) {							// collide with third
 				ParticleStatePattern pspOther 
@@ -107,6 +109,7 @@ public class ThirdParticleState : IParticleState
 					}
 					checkEvol = true;															// check evol flag
 				}
+				pspOther = null;															// clear pspOther
 			}
 			else if (other.gameObject.CompareTag("Fourth")								    // collide with fourth
 				|| other.gameObject.CompareTag("Fifth")										// collide with fifth
@@ -125,6 +128,7 @@ public class ThirdParticleState : IParticleState
 					if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);			// subtract other light
 					checkEvol = true;															// check evol flag
 				}
+				pspOther = null;															// clear pspOther
 			}
 		}
 	}

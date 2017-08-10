@@ -8,6 +8,9 @@ public class ParticleNucleusManager : MonoBehaviour {
 	private MeshRenderer rend;																									// mesh renderer (for colour changes)
 	private ParticleStatePattern psp;																							// psp ref
 
+	private Vector3 corePos;																									// core position
+	private float zeroPos, firstPos, thirdPos, seventhPos, ninthPos;															// y positions
+
 	private int toState, shape;																									// to state indicator
 	private bool toLight, colour; 																								// to light, colour indicator
 	private bool changeColour = false, changeShape = false, resetScale = false;													// timer trigger for resetting scale after world switch
@@ -21,6 +24,13 @@ public class ParticleNucleusManager : MonoBehaviour {
 		psp = GetComponentInParent<ParticleStatePattern> ();																	// init psp ref
 		lightShader = Shader.Find("Unlit/light_nucleus");																		// init light nucleus shader
 		darkShader = Shader.Find("Unlit/light_nucleus");																		// init light nucleus shader
+
+		corePos = transform.parent.FindChild ("Core").transform.position;														// core position
+		zeroPos =  0.175f;																										// set zero y position
+		firstPos =  0.5f;																										// set first/second/fifth/sixth y position
+		thirdPos =  1.0f;																										// set third/fourth y position
+		seventhPos =  1.5f;																										// set seventh/eighth y position
+		ninthPos =  2.0f;																										// set ninth y position
 	}
 
 	void Update() {
@@ -60,7 +70,7 @@ public class ParticleNucleusManager : MonoBehaviour {
 		if (resetScaleTimer >= 4.0f) {																							// when timer >= 4 sec
 			//anim.ResetTrigger("colour");	
 			if (toState == 0) ScaleTo (false, "hidden", "zero");																	// if to zero, grow to zero
-			if (!toLight && (toState == 1 || toState == 2 ||toState == 4 ||  toState == 5 || toState == 6)) 						// if to dark first/second/fourth/fifth/sixth
+			if (!toLight && (toState == 1 || toState == 2 || toState == 4 || toState == 5 || toState == 6)) 						// if to dark first/second/fourth/fifth/sixth
 				ScaleTo (false, "hidden", "first");																						// grow to first
 			if (shape == 0 && toLight && (toState == 2 || toState == 4 || toState == 6)) 											// if to light circle second/fourth/sixth
 				ScaleTo (false, "hidden", "zero");																						// grow to zero
@@ -130,6 +140,56 @@ public class ParticleNucleusManager : MonoBehaviour {
 		toLight = tl;																											// set to light
 		shape = s;																												// set s
 
+		// ADJUST NUCLEUS HEIGHT FOR VISIBILITY
+		if (toState == 0) { 																									// to zero
+			//Vector3 newPos = corePos;																								// save core position
+			//newPos.x += corePos.x;																									// fix x axis
+			//newPos.y = (corePos.y + zeroPos);																						// fix y axis
+			//newPos.z += corePos.z;																									// fix z axis
+			transform.localPosition = new Vector3 (0f, zeroPos, 0f);																// adjust position
+		}
+		else if (toState == 1 || toState == 2) {																				// to first/second
+			Debug.Log (psp.transform.parent.name + " adjust nucleus position - to 1st/2nd");
+			//Vector3 newPos = corePos;																								// save core position
+			//newPos.x += corePos.x;																									// fix x axis
+			//newPos.y = (corePos.y + firstPos);																						// fix y axis
+			//newPos.z += corePos.z;																									// fix z axis
+			//transform.position = newPos;																							// adjust position
+			transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
+		}
+		else if (toState == 3 || toState == 4) {																				// to third/fourth
+			//Vector3 newPos = corePos;																								// save core position
+			//newPos.x += corePos.x;																									// fix x axis
+			//newPos.y = (corePos.y + thirdPos);																						// fix y axis
+			//newPos.z += corePos.z;																									// fix z axis
+			//transform.position = newPos;																							// adjust position
+			transform.localPosition = new Vector3 (0f, thirdPos, 0f);																// adjust position
+		}
+		else if (toState == 5 || toState == 6) {																				// to fifth/sixth
+			//Vector3 newPos = corePos;																								// save core position
+			//newPos.x += corePos.x;																									// fix x axis
+			//newPos.y = (corePos.y + firstPos);																						// fix y axis
+			//newPos.z += corePos.z;																									// fix z axis
+			//transform.position = newPos;																							// adjust position
+			transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
+		}
+		else if (toState == 7 || toState == 8) {																				// to seventh/eighth
+			//Vector3 newPos = corePos;																								// save core position
+			//newPos.x += corePos.x;																									// fix x axis
+			//newPos.y = (corePos.y + seventhPos);																						// fix y axis
+			//newPos.z += corePos.z;																									// fix z axis
+			//transform.position = newPos;																							// adjust position
+			transform.localPosition = new Vector3 (0f, seventhPos, 0f);																// adjust position
+		}
+		else if (toState == 9) {																								// to ninth
+			//Vector3 newPos = corePos;																								// save core position
+			//newPos.x += corePos.x;																									// fix x axis
+			//newPos.y = (corePos.y + ninthPos);																						// fix y axis
+			//newPos.z += corePos.z;																									// fix z axis
+			//transform.position = newPos;																							// adjust position
+			transform.localPosition = new Vector3 (0f, ninthPos, 0f);																// adjust position
+		}
+
 
 		///////////////////// EVOLUTIONS \\\\\\\\\\\\\\\\\\\\\\
 
@@ -138,10 +198,7 @@ public class ParticleNucleusManager : MonoBehaviour {
 
 
 		// to dark zero
-		if (f == 0 && t == 0 && !fl && !tl) {
-			ScaleTo (false, "hidden", "zero");													// scale to zero
-			Debug.Log(transform.parent.name + " nucleus init to dark zero - ParticleNucleusManager");
-		}
+		if (f == 0 && t == 0 && !fl && !tl) ScaleTo (false, "hidden", "zero");													// scale to zero
 
 		// to dark first (init)
 		if (f == 0 && t == 1 && !fl && !tl) ScaleTo (false, "hidden", "first");													// scale to first
@@ -182,6 +239,15 @@ public class ParticleNucleusManager : MonoBehaviour {
 		// to light second
 		else if (f == 1 && t == 2 && fl && tl) ScaleTo (false, "hidden", "zero");												// scale to first
 
+	// from dark first
+		// to dark third
+		if (f == 1 && t == 3 && !fl && !tl) ScaleTo (true, "first", "hidden");													// scale to hidden
+		// to light third
+		else if (f == 1 && t == 3 && !fl && tl) ScaleTo (true, "first", "hidden");												// scale to hidden
+
+	// from light first
+		// to dark third (no nucleus change)
+		// to light third (no nucleus change)
 
 ///// second \\\\\
 
@@ -207,6 +273,31 @@ public class ParticleNucleusManager : MonoBehaviour {
 		else if (f == 2 && t == 3 && fl && tl) ScaleTo (true, "zero", "hidden");												// scale to hidden
 
 
+	// from dark second
+		// to dark fourth (no nucleus change)
+		// to light fourth
+		else if (f == 2 && t == 4 && !fl && tl) {		 
+			transform.position.Set(0, 1, 0);																					// move nucleus up to be visible
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			colour = false;																										// change to black
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+
+	// from light second
+		// to dark fourth
+		else if (f == 2 && t == 4 && fl && !tl) {
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			colour = true;																										// change to white shader
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		// to light fourth
+		else if (f == 2 && t == 4 && fl && tl) {
+			transform.position.Set(0, 1, 0);																					// move nucleus up to be visible
+		}
+		
+
 ///// third \\\\\
 
 
@@ -217,7 +308,10 @@ public class ParticleNucleusManager : MonoBehaviour {
 			resetScale = true;																									// set reset scale flag
 		}
 		// to light fourth
-		else if (f == 3 && t == 4 && !fl && tl) ScaleTo (false, "hidden", "zero");												// scale to zero
+		else if (f == 3 && t == 4 && !fl && tl) {
+			transform.position.Set(0, 1, 0);																					// move nucleus up to be visible
+			ScaleTo (false, "hidden", "zero");																					// scale to zero
+		}
 
 	// from light third
 		// to dark fourth
@@ -226,7 +320,10 @@ public class ParticleNucleusManager : MonoBehaviour {
 			resetScale = true;																									// set reset scale flag
 		}
 		// to light fourth
-		else if (f == 3 && t == 4 && fl && tl) ScaleTo (false, "hidden", "zero");												// scale to first
+		else if (f == 3 && t == 4 && fl && tl) {
+			transform.position.Set(0, 1, 0);																					// move nucleus up to be visible
+			ScaleTo (false, "hidden", "zero");																					// scale to zero
+		}
 
 
 ///// fourth \\\\\

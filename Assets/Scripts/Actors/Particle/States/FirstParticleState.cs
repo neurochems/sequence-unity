@@ -3,7 +3,6 @@ using System.Collections;
 
 public class FirstParticleState : IParticleState
 {
-
 	private readonly ParticleStatePattern psp;											// reference to pattern/monobehaviour class
 
 	public bool isLight = true;															// 'is light' flag
@@ -69,6 +68,7 @@ public class FirstParticleState : IParticleState
 					}
 					checkEvol = true;																		// check evol flag
 				}
+				pspOther = null;																		// clear pspOther
 			}
 			else if (other.gameObject.CompareTag ("Zero")) {										// collide with zero
 				ParticleStatePattern pspOther 
@@ -90,6 +90,7 @@ public class FirstParticleState : IParticleState
 					}
 					checkEvol = true;																		// check evol flag
 				}
+				pspOther = null;																		// clear pspOther
 			}
 			else if (other.gameObject.CompareTag ("First")) {										// collide with first	
 				ParticleStatePattern pspOther 
@@ -101,6 +102,7 @@ public class FirstParticleState : IParticleState
 					RollDie (pspOther);																		// roll die
 					checkEvol = true;																		// check evol flag
 				}
+				pspOther = null;																		// clear pspOther
 			}
 			else if (other.gameObject.CompareTag("Second")											// collide with second
 				|| other.gameObject.CompareTag("Third")												// collide with third
@@ -121,6 +123,7 @@ public class FirstParticleState : IParticleState
 					if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);						// subtract other light
 					checkEvol = true;																		// check evol flag
 				}
+				pspOther = null;																		// clear pspOther
 			}
 		}
 	}

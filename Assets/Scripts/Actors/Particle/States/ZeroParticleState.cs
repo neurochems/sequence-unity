@@ -73,6 +73,7 @@ public class ZeroParticleState : IParticleState
 					}
 					checkEvol = true;															// set check evol flag
 				}
+				pspOther = null;															// clear pspOther
 			} 
 			else if (other.gameObject.CompareTag ("Zero")) {							// if collide with zero
 				ParticleStatePattern pspOther 
@@ -85,6 +86,7 @@ public class ZeroParticleState : IParticleState
 					RollDie (pspOther);															// roll die
 					checkEvol = true;															// set check evol flag
 				}
+				pspOther = null;															// clear pspOther
 			} 
 			else if (other.gameObject.CompareTag("First") 								// collide with first
 				|| other.gameObject.CompareTag("Second")								// collide with second
@@ -107,6 +109,7 @@ public class ZeroParticleState : IParticleState
 					if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);			// subtract other light
 					checkEvol = true;															// set check evol flag
 				}
+				pspOther = null;															// clear pspOther
 			}
 		}
 	}

@@ -93,6 +93,17 @@ public class ParticleShellManager : MonoBehaviour {
 			// to dark second (no shell change)
 			// to light second (no shell change)
 
+		// to third
+
+		// from dark first
+			// to dark third
+		if (f == 1 && t == 3 && !fl && !tl) ScaleTo (false, "hidden", "third");										// scale to third
+			// to light third (no shell change)
+		// from light first
+			// to dark third
+		if (f == 1 && t == 3 && fl && !tl) ScaleTo (false, "hidden", "third");										// scale to third
+			// to light third (no shell change)
+
 	///// second \\\\\
 
 		// to third
@@ -112,6 +123,24 @@ public class ParticleShellManager : MonoBehaviour {
 			ScaleTo (false, "hidden", "third");										// scale to third
 		}
 			// to light third (no shell change)
+
+		// to fourth
+
+		// from dark second
+			// to dark fourth
+		if (f == 2 && t == 4 && !fl && !tl) {
+			ScaleTo (false, "hidden", "third");										// scale to third
+			Debug.Log (transform.parent.name + " shell dark second to dark fourth");
+		}
+			// to light fourth (no shell change)
+
+		// from light second
+			// to dark fourth
+		if (f == 2 && t == 4 && fl && !tl) {
+			ScaleTo (false, "hidden", "third");										// scale to third
+			Debug.Log (transform.parent.name + " shell light second to dark fourth");
+		}
+			// to light fourth (no shell change)
 
 	///// third \\\\\
 

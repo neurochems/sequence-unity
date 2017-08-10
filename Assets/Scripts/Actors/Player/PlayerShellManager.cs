@@ -72,6 +72,18 @@ public class PlayerShellManager : MonoBehaviour {
 		if (f == 2 && t == 3 && fl && !tl) ScaleTo (false, "hidden", "third");										// scale to third
 			// to light third (no shell change)
 
+		// to fourth
+
+		// from dark second
+			// to dark fourth
+		if (f == 2 && t == 4 && !fl && !tl) ScaleTo (false, "hidden", "third");										// scale to third
+			// to light fourth (no shell change)
+
+		// from light second
+			// to dark fourth
+		if (f == 2 && t == 4 && fl && !tl) ScaleTo (false, "hidden", "third");										// scale to third
+			// to light fourth (no shell change)
+
 	///// third \\\\\
 
 		// to fourth

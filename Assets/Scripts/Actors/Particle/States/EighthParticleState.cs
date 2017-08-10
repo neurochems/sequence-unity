@@ -50,8 +50,8 @@ public class EighthParticleState : IParticleState
 		if (canCollide && !psp.psp.stunned) {											// if collision allowed and player is not stunned
 			if (other.gameObject.CompareTag ("Player")) {									// colide with player
 				PlayerStatePattern pspOther 
-				= other.gameObject.GetComponent<PlayerStatePattern>();					// ref other ParticleStatePattern
-				if (pspOther.lightworld == psp.inLightworld) {								// if player and particle in same world
+				= other.gameObject.GetComponent<PlayerStatePattern>();							// ref other ParticleStatePattern
+				if (pspOther.lightworld == psp.inLightworld) {									// if player and particle in same world
 					canCollide = false;																// reset can collide trigger	
 					psp.sc[0].enabled = false;														// disable trigger collider
 					psp.stunned = true;																// stun for duration
@@ -66,6 +66,7 @@ public class EighthParticleState : IParticleState
 					checkEvol = true;																// check evol flag
 					Debug.Log ("particle contact player");
 				}
+				pspOther = null;																// clear pspOther
 			}
 			else if (other.gameObject.CompareTag ("Zero")									// collide with zero
 				|| other.gameObject.CompareTag ("First")									// collide with first
@@ -94,6 +95,7 @@ public class EighthParticleState : IParticleState
 					}
 					checkEvol = true;																// check evol flag
 				}
+				pspOther = null;																// clear pspOther
 			}
 			else if (other.gameObject.CompareTag ("Eighth")) {								// collide with eighth
 				ParticleStatePattern pspOther 
@@ -113,6 +115,7 @@ public class EighthParticleState : IParticleState
 					}
 					checkEvol = true;																// check evol flag
 				}
+				pspOther = null;																// clear pspOther
 			}
 			else if (other.gameObject.CompareTag("Ninth"))								    // collide with ninth
 			{
@@ -126,6 +129,7 @@ public class EighthParticleState : IParticleState
 					if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvol);				// subtract other light
 					checkEvol = true;																// check evol flag
 				}
+				pspOther = null;																// clear pspOther
 			}
 		}
 	}

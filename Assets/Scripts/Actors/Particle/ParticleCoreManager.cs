@@ -167,6 +167,19 @@ public class ParticleCoreManager : MonoBehaviour {
 			// to light third
 		else if (f == 2 && t == 3 && fl && tl) ScaleTo (false, "first", "third");									// scale to third
 
+		// to fourth
+
+		// from dark second
+			// to dark fourth
+		if (f == 2 && t == 4 && !fl && !tl) ScaleTo (true, "first", "hidden");										// scale to hidden
+			// to light fourth
+		else if (f == 2 && t == 4 && !fl && tl) ScaleTo (false, "first", "third");									// scale to third
+		// from light second
+			// to dark fourth
+		if (f == 2 && t == 4 && fl && !tl) ScaleTo (true, "first", "hidden");										// scale to hidden
+			// to light fourth
+		else if (f == 2 && t == 4 && fl && tl) ScaleTo (false, "first", "third");									// scale to third
+
 	///// third \\\\\
 
 		// to fourth
@@ -395,7 +408,7 @@ public class ParticleCoreManager : MonoBehaviour {
 		// from light third	
 
 		// to zero
-		if (f == 3 && t == 0 && fl && !tl) ScaleTo (true, "third", "zero");											// scale to zero
+		if (f == 3 && t == 0 && fl && tl) ScaleTo (true, "third", "zero");											// scale to zero
 		// to dark zero
 		if (f == 3 && t == 0 && fl && !tl) ScaleTo (true, "third", "zero");											// scale to zero
 		// to first

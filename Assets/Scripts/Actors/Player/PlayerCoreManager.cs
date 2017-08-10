@@ -333,7 +333,7 @@ public class PlayerCoreManager : MonoBehaviour {
 		// from light third	
 
 		// to zero
-		if (f == 3 && t == 0 && fl && !tl) ScaleTo (true, "third", "zero");											// scale to zero
+		if (f == 3 && t == 0 && fl && tl) ScaleTo (true, "third", "zero");											// scale to zero
 		// to dark zero
 		if (f == 3 && t == 0 && fl && !tl) ScaleTo (true, "third", "zero");											// scale to zero
 		// to first

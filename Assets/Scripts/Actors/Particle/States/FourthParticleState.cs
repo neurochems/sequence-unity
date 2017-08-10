@@ -65,7 +65,7 @@ public class FourthParticleState : IParticleState
 					checkEvol = true;																// check evol flag
 					Debug.Log ("particle contact player");
 				}
-				
+				pspOther = null;																// clear pspOther
 			} 
 			else if (other.gameObject.CompareTag ("Zero")									// collide with zero
 				|| other.gameObject.CompareTag ("First")									// collide with first
@@ -90,6 +90,7 @@ public class FourthParticleState : IParticleState
 					}
 					checkEvol = true;																// check evol flag
 				}
+				pspOther = null;																// clear pspOther
 			}
 			else if (other.gameObject.CompareTag ("Fourth")) {								// collide with fourth
 				ParticleStatePattern pspOther 
@@ -109,23 +110,25 @@ public class FourthParticleState : IParticleState
 					}
 					checkEvol = true;																// check evol flag
 				}
+				pspOther = null;																// clear pspOther
 			}
-			else if (other.gameObject.CompareTag("Fifth")										// collide with fifth
+			else if (other.gameObject.CompareTag("Fifth")									// collide with fifth
 				|| other.gameObject.CompareTag("Sixth")									    // collide with sixth
 				|| other.gameObject.CompareTag("Seventh")								    // collide with seventh
 				|| other.gameObject.CompareTag("Eighth")								    // collide with eighth
 				|| other.gameObject.CompareTag("Ninth"))								    // collide with ninth
 			{
 				ParticleStatePattern pspOther 
-				= other.gameObject.GetComponent<ParticleStatePattern>();					// ref other ParticleStatePattern
-				if (pspOther.lightworld == psp.inLightworld) {									// if player and particle in same world
-					canCollide = false;															// reset has collided trigger
-					psp.sc[0].enabled = false;													// disable trigger collider
-					psp.stunned = true;															// stun for duration
-					if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);				// subtract other dark
-					if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);			// subtract other light
-					checkEvol = true;															// check evol flag
+				= other.gameObject.GetComponent<ParticleStatePattern>();						// ref other ParticleStatePattern
+				if (pspOther.lightworld == psp.inLightworld) {										// if player and particle in same world
+					canCollide = false;																// reset has collided trigger
+					psp.sc[0].enabled = false;														// disable trigger collider
+					psp.stunned = true;																// stun for duration
+					if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);					// subtract other dark
+					if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);				// subtract other light
+					checkEvol = true;																// check evol flag
 				}
+				pspOther = null;																// clear pspOther
 			}
 		}
 	}
