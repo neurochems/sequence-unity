@@ -87,6 +87,7 @@
      <Compile Include="Assets\Scripts\Camera\OrthoSmoothFollow.cs" />
      <Compile Include="Assets\Scripts\Environment\FauxGravityAttractor.cs" />
      <Compile Include="Assets\Scripts\Environment\FreeFloat.cs" />
+     <Compile Include="Assets\Scripts\Environment\WorldManager.cs" />
      <Compile Include="Assets\UI\Scripts\DontDestroy.cs" />
      <Compile Include="Assets\UI\Scripts\EventSystemChecker.cs" />
      <Compile Include="Assets\UI\Scripts\Pause.cs" />

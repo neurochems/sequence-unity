@@ -25,6 +25,7 @@ public class SixthParticleState : IParticleState
 
 	public void UpdateState()
 	{
+		//Debug.Log (psp.transform.name + "particle sixth state");
 		// check evol
 		if (checkEvol) {
 			Evol();																		// check evol logic
@@ -47,6 +48,11 @@ public class SixthParticleState : IParticleState
 
 	public void OnTriggerEnter(Collider other)
 	{
+		// state class doesn't know what shape it is until it contacts another
+		circle = psp.circle;																	// set current circle flag
+		triangle = psp.triangle;																// set current triangle flag
+		square = psp.square;																	// set current square flag
+
 		if (canCollide && !psp.psp.stunned) {											// if collision allowed and player is not stunned
 			if (other.gameObject.CompareTag ("Player")) {									// colide with player
 				PlayerStatePattern pspOther 

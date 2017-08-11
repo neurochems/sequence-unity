@@ -30,7 +30,7 @@ public class PlayerStatePattern : MonoBehaviour {
 	[HideInInspector] public NinthPlayerState ninthState;					// instance of ninth state
 	[HideInInspector] public TenthPlayerState tenthState;					// instance of tenth state
 
-	public bool lightworld;													// is light world flag
+	public bool lightworld = false;											// is light world flag
 	public bool toLightworld, toDarkworld;									// to light world trigger, to dark world trigger
 	public bool changeParticles;											// change particle colour flag
 
@@ -48,6 +48,8 @@ public class PlayerStatePattern : MonoBehaviour {
 	private PlayerController pc, wc;																		// player, world player controller
 
 	private MeshRenderer rendWorld, rendCore, rendShell, rendNucleus;										// mesh renderers (for lightworld colour changes)
+
+	private OrthoSmoothFollow osf;																			// orthosmoothfollow
 
 	private int fromState, toState, shape;																	// transition properties
 	private bool fromLight, toLight;																		// transition properties
@@ -130,6 +132,8 @@ public class PlayerStatePattern : MonoBehaviour {
 			.gameObject.GetComponent<MeshRenderer> ();						// init shell mesh renderer ref
 		rendNucleus = transform.FindChild ("Player Nucleus")
 			.gameObject.GetComponent<MeshRenderer> ();						// init nucleus mesh renderer ref
+
+		osf = GetComponentInChildren<OrthoSmoothFollow> ();					// get orthosmoothfollow
 
 		uim = GetComponent<UIManager> ();									// init ui manager ref
 		Destroy(GameObject.FindGameObjectWithTag("Destroy"));				// destroy old UI
@@ -356,7 +360,7 @@ public class PlayerStatePattern : MonoBehaviour {
 			SetParts();																	// set player parts
 			rb.mass = 2.0f;																// set mass
 			sc[0].radius = 0.52f;														// update collision radius
-			sc[1].radius = 0.48f;														// update collision radius
+			sc[1].radius = 0.47f;														// update collision radius
 			//sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world	
 			musicSnapshots[2].TransitionTo(5.0f);										// AUDIO: transition to first state music snapshot
 		}
@@ -365,7 +369,7 @@ public class PlayerStatePattern : MonoBehaviour {
 			SetParts();																	// set player parts
 			rb.mass = 2.5f;																// set mass
 			sc[0].radius = 0.52f;														// update collision radius
-			sc[1].radius = 0.48f;														// update collision radius
+			sc[1].radius = 0.47f;														// update collision radius
 			musicSnapshots[3].TransitionTo(5.0f);										// AUDIO: transition to second state music snapshot
 		}
 		else if (toState == 3) {													// to third
@@ -373,7 +377,7 @@ public class PlayerStatePattern : MonoBehaviour {
 			SetParts();																	// set player parts
 			rb.mass = 3.0f;																// set mass
 			sc[0].radius = 1.02f;														// update collision radius
-			sc[1].radius = 0.48f;														// update collision radius
+			sc[1].radius = 0.97f;														// update collision radius
 			musicSnapshots[4].TransitionTo(5.0f);										// AUDIO: transition to third state music snapshot	
 		}
 		else if (toState == 4) {													// to fourth
@@ -381,16 +385,21 @@ public class PlayerStatePattern : MonoBehaviour {
 			SetParts();																	// set player parts
 			rb.mass = 3.5f;																// set mass
 			sc[0].radius = 1.02f;														// update collision radius
-			sc[1].radius = 0.48f;														// update collision radius
+			sc[1].radius = 0.97f;														// update collision radius
 			musicSnapshots[5].TransitionTo(5.0f);										// AUDIO: transition to fourth state music snapshot	
 		}
 		else if (toState == 5) {													// to fifth
 			if (fromState != 6) SetZoomCamera();										// CAMERA: if not from state 6, zoom to state 5
 			SetParts();																	// set player parts
 			rb.mass = 4.0f;																// set mass
-			if (shape == 0) sc[0].radius = 1.02f;										// if circle, update collision radius
-			else if (shape == 1 || shape == 2) sc[0].radius = 0.52f;						// if triangle or square, update collision radius
-			sc[1].radius = 0.48f;														// update collision radius
+			if (shape == 0) {															// if circle
+				sc[0].radius = 1.02f;														// update collision radius
+				sc[1].radius = 0.97f;														// update collision radius
+			}
+			else if (shape == 1 || shape == 2) {										// if triangle or square
+				sc[0].radius = 0.52f;														// update collision radius
+				sc[1].radius = 0.47f;														// update collision radius
+			}
 			musicSnapshots[6].TransitionTo(5.0f);										// AUDIO: transition to fifth state music snapshot
 			if (shape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);			// AUDIO: transition to dark circle effects snapshot
 			if (shape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
@@ -401,9 +410,14 @@ public class PlayerStatePattern : MonoBehaviour {
 			if (fromState != 5) SetZoomCamera();										// CAMERA: if not from state 5, zoom to state 5
 			SetParts();																	// set player parts
 			rb.mass = 4.5f;																// set mass
-			if (shape == 0) sc[0].radius = 1.02f;										// if circle, update collision radius
-			else if (shape == 1 || shape == 2) sc[0].radius = 0.52f;						// if triangle or square, update collision radius
-			sc[1].radius = 0.50f;														// update collision radius
+			if (shape == 0) {															// if circle
+				sc[0].radius = 1.02f;														// update collision radius
+				sc[1].radius = 0.97f;														// update collision radius
+			}
+			else if (shape == 1 || shape == 2) {										// if triangle or square
+				sc[0].radius = 0.52f;														// update collision radius
+				sc[1].radius = 0.47f;														// update collision radius
+			}
 			musicSnapshots[7].TransitionTo(5.0f);										// AUDIO: transition to sixth state music snapshot
 			if (shape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);			// AUDIO: transition to dark circle effects snapshot
 			if (shape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
@@ -415,7 +429,7 @@ public class PlayerStatePattern : MonoBehaviour {
 			SetParts();																	// set player parts
 			rb.mass = 5.5f;																// set mass
 			sc[0].radius = 1.53f;														// update collision radius
-			sc[1].radius = 1.02f;														// update collision radius
+			sc[1].radius = 1.48f;														// update collision radius
 			musicSnapshots[8].TransitionTo(5.0f);										// AUDIO: transition to seventh state music snapshot
 			if (shape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);			// AUDIO: transition to dark circle effects snapshot
 			if (shape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
@@ -427,7 +441,7 @@ public class PlayerStatePattern : MonoBehaviour {
 			SetParts();																	// set player parts
 			rb.mass = 7.0f;																// set mass
 			sc[0].radius = 1.53f;														// update collision radius
-			sc[1].radius = 1.02f;														// update collision radius
+			sc[1].radius = 1.48f;														// update collision radius
 			musicSnapshots[9].TransitionTo(5.0f);										// AUDIO: transition to seventh state music snapshot
 			if (shape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);			// AUDIO: transition to dark circle effects snapshot
 			if (shape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
@@ -439,7 +453,7 @@ public class PlayerStatePattern : MonoBehaviour {
 			SetParts();																	// set player parts
 			rb.mass = 8.5f;																// set mass
 			sc[0].radius = 2.04f;														// update collision radius
-			sc[1].radius = 1.53f;														// update collision radius
+			sc[1].radius = 1.99f;														// update collision radius
 			musicSnapshots[10].TransitionTo(5.0f);										// AUDIO: transition to seventh state music snapshot
 			if (shape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);			// AUDIO: transition to dark circle effects snapshot
 			if (shape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
@@ -452,7 +466,7 @@ public class PlayerStatePattern : MonoBehaviour {
 			SetParts();																	// set player parts
 			rb.mass = 10.0f;															// set mass
 			sc[0].radius = 2.04f;														// update collision radius
-			sc[1].radius = 2.00f;														// update collision radius
+			sc[1].radius = 1.99f;														// update collision radius
 			musicSnapshots[11].TransitionTo(5.0f);										// AUDIO: transition to seventh state music snapshot
 			if (shape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);			// AUDIO: transition to dark circle effects snapshot
 			if (shape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
@@ -489,6 +503,8 @@ public class PlayerStatePattern : MonoBehaviour {
 			lightworld = true;
 			changeParticles = true;														// set change particle property trigger
 
+			//osf.enabled = false;														// disable orthosmoothfollow
+
 			rendWorld.material.SetColor("_Color", Color.white);							// change world to white
 			//pcm.SetLight (false);														// set core to black
 			rendCore.material.SetColor("_Color", Color.black);							// change core to black
@@ -503,6 +519,8 @@ public class PlayerStatePattern : MonoBehaviour {
 		else if (toDarkworld) {														// if switching to dark world from light world
 			lightworld = false;
 			changeParticles = true;
+
+			//osf.enabled = true;														// enable orthosmoothfollow
 
 			rendWorld.material.SetColor("_Color", Color.black);							// change world to white
 			//pcm.SetLight (true);														// set core to white

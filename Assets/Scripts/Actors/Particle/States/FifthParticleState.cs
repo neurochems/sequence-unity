@@ -47,6 +47,11 @@ public class FifthParticleState : IParticleState
 
 	public void OnTriggerEnter(Collider other)
 	{
+		// state class doesn't know what shape it is until it contacts another
+		circle = psp.circle;																	// set current circle flag
+		triangle = psp.triangle;																// set current triangle flag
+		square = psp.square;																	// set current square flag
+
 		if (canCollide && !psp.psp.stunned) {											// if collision allowed and player is not stunned
 			if (other.gameObject.CompareTag ("Player")) {									// colide with player
 				PlayerStatePattern pspOther 
@@ -219,7 +224,6 @@ public class FifthParticleState : IParticleState
 
 	public void ToSixth(bool toLight, int shape)
 	{
-		Debug.Log (psp.transform.parent.name + " fifth state to sixth state - ToSixth()");
 		psp.TransitionTo(5, 6, isLight, toLight, shape);								// trigger transition effects
 		//ParticleStateEvents.toSixth += psp.TransitionToSixth;								// flag transition in delegate
 		psp.currentState = psp.sixthState;												// set to new state
@@ -334,31 +338,30 @@ public class FifthParticleState : IParticleState
 			else if (deltaDark > deltaLight) ToOtherWorld(true, 5, 5, false);					// if lose more light than dark = to light world dark circle fifth
 		} 
 		// sixth
-		if(evol >= 8f && evol < 13f) Debug.Log (psp.transform.parent.name + " fifth state to sixth state - Evol()");
-		if ((evol >= 8f && evol < 13f) && !lightworld) {									// evolve to dark world sixth within dark world
-			if (circle && (deltaDark <= deltaLight)) {
+		if ((evol >= 8.0f && evol < 13.0f) && !lightworld) {								// evolve to dark world sixth within dark world
+			if (circle && (deltaDark > deltaLight)) {
 				ToSixth(false, 0);							// if either circle & gain more dark than light = to dark circle sixth
-				Debug.Log (psp.transform.parent.name + " fifth circle state to dark circle sixth state - Evol()");
+				Debug.Log (psp.transform.name + " fifth circle state to dark circle sixth state - Evol()");
 			}
-			else if (circle && (deltaDark > deltaLight)) {
+			else if (circle && (deltaDark <= deltaLight)) {
 				ToSixth(true, 0);						// if either circle & gain more light than dark = to light circle sixth
-				Debug.Log (psp.transform.parent.name + " fifth circle state to light circle sixth state - Evol()");
+				Debug.Log (psp.transform.name + " fifth circle state to light circle sixth state - Evol()");
 				}
-			else if (triangle && (deltaDark <= deltaLight)) {
-				ToSixth(false, 1);					// if triangle & gain more dark than light = to dark triangle sixth
-				Debug.Log (psp.transform.parent.name + " fifth triangle state to dark triangle sixth state - Evol()");
-			}
 			else if (triangle && (deltaDark > deltaLight)) {
-				ToSixth(false, 1);					// if triangle & gain more light than dark = to dark triangle sixth
-				Debug.Log (psp.transform.parent.name + " fifth triangle state to dark triangle sixth state - Evol()");
+				ToSixth(false, 1);					// if triangle & gain more dark than light = to dark triangle sixth
+				Debug.Log (psp.transform.name + " fifth triangle state to dark triangle sixth state - Evol()");
 			}
-			else if (square && (deltaDark <= deltaLight)) {
-				ToSixth(false, 2);					// if square & gain more dark than light = to dark square sixth
-				Debug.Log (psp.transform.parent.name + " fifth square state to dark square sixth state - Evol()");
+			else if (triangle && (deltaDark <= deltaLight)) {
+				ToSixth(false, 1);					// if triangle & gain more light than dark = to dark triangle sixth
+				Debug.Log (psp.transform.name + " fifth triangle state to dark triangle sixth state - Evol()");
 			}
 			else if (square && (deltaDark > deltaLight)) {
+				ToSixth(false, 2);					// if square & gain more dark than light = to dark square sixth
+				Debug.Log (psp.transform.name + " fifth square state to dark square sixth state - Evol()");
+			}
+			else if (square && (deltaDark <= deltaLight)) {
 				ToSixth(false, 2);						// if square & gain more light than dark = to dark square sixth
-				Debug.Log (psp.transform.parent.name + " fifth square state to dark square sixth state - Evol()");
+				Debug.Log (psp.transform.name + " fifth square state to dark square sixth state - Evol()");
 			}
 		}
 		else if ((evol <= -8f && evol > -13f) && !lightworld) {								// devolve to light world sixth from dark world

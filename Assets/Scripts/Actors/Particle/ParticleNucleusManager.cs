@@ -141,54 +141,18 @@ public class ParticleNucleusManager : MonoBehaviour {
 		shape = s;																												// set s
 
 		// ADJUST NUCLEUS HEIGHT FOR VISIBILITY
-		if (toState == 0) { 																									// to zero
-			//Vector3 newPos = corePos;																								// save core position
-			//newPos.x += corePos.x;																									// fix x axis
-			//newPos.y = (corePos.y + zeroPos);																						// fix y axis
-			//newPos.z += corePos.z;																									// fix z axis
+		if (toState == 0)	 																									// to zero
 			transform.localPosition = new Vector3 (0f, zeroPos, 0f);																// adjust position
-		}
-		else if (toState == 1 || toState == 2) {																				// to first/second
-			Debug.Log (psp.transform.parent.name + " adjust nucleus position - to 1st/2nd");
-			//Vector3 newPos = corePos;																								// save core position
-			//newPos.x += corePos.x;																									// fix x axis
-			//newPos.y = (corePos.y + firstPos);																						// fix y axis
-			//newPos.z += corePos.z;																									// fix z axis
-			//transform.position = newPos;																							// adjust position
+		else if (toState == 1 || toState == 2)																					// to first/second
 			transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
-		}
-		else if (toState == 3 || toState == 4) {																				// to third/fourth
-			//Vector3 newPos = corePos;																								// save core position
-			//newPos.x += corePos.x;																									// fix x axis
-			//newPos.y = (corePos.y + thirdPos);																						// fix y axis
-			//newPos.z += corePos.z;																									// fix z axis
-			//transform.position = newPos;																							// adjust position
+		else if (toState == 3 || toState == 4)																					// to third/fourth
 			transform.localPosition = new Vector3 (0f, thirdPos, 0f);																// adjust position
-		}
-		else if (toState == 5 || toState == 6) {																				// to fifth/sixth
-			//Vector3 newPos = corePos;																								// save core position
-			//newPos.x += corePos.x;																									// fix x axis
-			//newPos.y = (corePos.y + firstPos);																						// fix y axis
-			//newPos.z += corePos.z;																									// fix z axis
-			//transform.position = newPos;																							// adjust position
+		else if (toState == 5 || toState == 6)																					// to fifth/sixth
 			transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
-		}
-		else if (toState == 7 || toState == 8) {																				// to seventh/eighth
-			//Vector3 newPos = corePos;																								// save core position
-			//newPos.x += corePos.x;																									// fix x axis
-			//newPos.y = (corePos.y + seventhPos);																						// fix y axis
-			//newPos.z += corePos.z;																									// fix z axis
-			//transform.position = newPos;																							// adjust position
+		else if (toState == 7 || toState == 8)																					// to seventh/eighth
 			transform.localPosition = new Vector3 (0f, seventhPos, 0f);																// adjust position
-		}
-		else if (toState == 9) {																								// to ninth
-			//Vector3 newPos = corePos;																								// save core position
-			//newPos.x += corePos.x;																									// fix x axis
-			//newPos.y = (corePos.y + ninthPos);																						// fix y axis
-			//newPos.z += corePos.z;																									// fix z axis
-			//transform.position = newPos;																							// adjust position
+		else if (toState == 9)																									// to ninth
 			transform.localPosition = new Vector3 (0f, ninthPos, 0f);																// adjust position
-		}
 
 
 		///////////////////// EVOLUTIONS \\\\\\\\\\\\\\\\\\\\\\
