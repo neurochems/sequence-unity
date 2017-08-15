@@ -127,6 +127,8 @@ public class ParticleCoreManager : MonoBehaviour {
 			anim.SetBool("hidden", false);																			// init: reset hidden
 		}
 
+		// add each state
+
 	///// first \\\\\
 
 		// to second
@@ -152,6 +154,8 @@ public class ParticleCoreManager : MonoBehaviour {
 			// to light third
 		else if (f == 1 && t == 3 && fl && tl) ScaleTo (false, "first", "third");									// scale to third
 
+		// add each state
+
 	///// second \\\\\
 
 		// to third
@@ -167,6 +171,8 @@ public class ParticleCoreManager : MonoBehaviour {
 			// to light third
 		else if (f == 2 && t == 3 && fl && tl) ScaleTo (false, "first", "third");									// scale to third
 
+		// add each state
+
 		// to fourth
 
 		// from dark second
@@ -180,6 +186,8 @@ public class ParticleCoreManager : MonoBehaviour {
 			// to light fourth
 		else if (f == 2 && t == 4 && fl && tl) ScaleTo (false, "first", "third");									// scale to third
 
+		// add each state
+
 	///// third \\\\\
 
 		// to fourth
@@ -192,6 +200,8 @@ public class ParticleCoreManager : MonoBehaviour {
 			// to dark fourth
 		if (f == 3 && t == 4 && fl && !tl) ScaleTo (true, "third", "hidden");										// scale to hidden
 			// to light fourth (no core change)
+
+		// add each state
 
 	///// fourth \\\\\
 
@@ -216,6 +226,8 @@ public class ParticleCoreManager : MonoBehaviour {
 			resetScale = true;																						// set reset scale flag
 		}
 
+		// add each state
+
 	///// fifth \\\\\
 
 		// to sixth
@@ -233,6 +245,8 @@ public class ParticleCoreManager : MonoBehaviour {
 
 		// from square fifth
 			// to dark square sixth (no core change)
+
+		// add each state
 
 	///// sixth \\\\\
 
@@ -258,6 +272,8 @@ public class ParticleCoreManager : MonoBehaviour {
 		if (f == 6 && t == 7 && !fl && !tl && s == 2) ScaleTo (false, "first", "seventh");							// scale to seventh
 			// to light square seventh
 		else if (f == 6 && t == 7 && !fl && tl && s == 2) ScaleTo (false, "first", "seventh");						// scale to seventh
+
+		// add each state
 
 	///// seventh \\\\\
 

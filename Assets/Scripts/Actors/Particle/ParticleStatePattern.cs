@@ -100,6 +100,7 @@ public class ParticleStatePattern : MonoBehaviour {
 		rb = GetComponent<Rigidbody> ();									// init rigidbody ref
 
 		currentState = zeroState;											// start at zero state
+		state = 0;															// start at zero state
 	}
 
 	void Update () 

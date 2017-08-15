@@ -356,7 +356,7 @@ public class PlayerStatePattern : MonoBehaviour {
 			if (evol == 0.5f) musicSnapshots[1].TransitionTo(5.0f);						// AUDIO: transition to half zero state music snapshot
 		}
 		else if (toState == 1) {													// to first
-			if (fromState != 2) SetZoomCamera();										// CAMERA: if not from state 2, zoom to state 1
+			SetZoomCamera();															// CAMERA: zoom to state 1 if necessary
 			SetParts();																	// set player parts
 			rb.mass = 2.0f;																// set mass
 			sc[0].radius = 0.52f;														// update collision radius
@@ -365,7 +365,7 @@ public class PlayerStatePattern : MonoBehaviour {
 			musicSnapshots[2].TransitionTo(5.0f);										// AUDIO: transition to first state music snapshot
 		}
 		else if (toState == 2) {													// to second
-			if (fromState != 1) SetZoomCamera();										// CAMERA: if not from state 1, zoom to state 1
+			SetZoomCamera();															// CAMERA: zoom to state 1 if necessary
 			SetParts();																	// set player parts
 			rb.mass = 2.5f;																// set mass
 			sc[0].radius = 0.52f;														// update collision radius
@@ -373,7 +373,7 @@ public class PlayerStatePattern : MonoBehaviour {
 			musicSnapshots[3].TransitionTo(5.0f);										// AUDIO: transition to second state music snapshot
 		}
 		else if (toState == 3) {													// to third
-			if (fromState != 4) SetZoomCamera();										// CAMERA: if not from state 4, zoom to state 3
+			SetZoomCamera();															// CAMERA: zoom to state 3 if necessary
 			SetParts();																	// set player parts
 			rb.mass = 3.0f;																// set mass
 			sc[0].radius = 1.02f;														// update collision radius
@@ -381,7 +381,7 @@ public class PlayerStatePattern : MonoBehaviour {
 			musicSnapshots[4].TransitionTo(5.0f);										// AUDIO: transition to third state music snapshot	
 		}
 		else if (toState == 4) {													// to fourth
-			if (fromState != 3) SetZoomCamera();										// CAMERA: if not from state 3, zoom to state 3
+			SetZoomCamera();															// CAMERA: zoom to state 3 if necessary
 			SetParts();																	// set player parts
 			rb.mass = 3.5f;																// set mass
 			sc[0].radius = 1.02f;														// update collision radius
@@ -389,7 +389,7 @@ public class PlayerStatePattern : MonoBehaviour {
 			musicSnapshots[5].TransitionTo(5.0f);										// AUDIO: transition to fourth state music snapshot	
 		}
 		else if (toState == 5) {													// to fifth
-			if (fromState != 6) SetZoomCamera();										// CAMERA: if not from state 6, zoom to state 5
+			SetZoomCamera();															// CAMERA: zoom to state 5 if necessary
 			SetParts();																	// set player parts
 			rb.mass = 4.0f;																// set mass
 			if (shape == 0) {															// if circle
@@ -407,7 +407,7 @@ public class PlayerStatePattern : MonoBehaviour {
 			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot
 		}
 		else if (toState == 6) {													// to sixth
-			if (fromState != 5) SetZoomCamera();										// CAMERA: if not from state 5, zoom to state 5
+			SetZoomCamera();															// CAMERA: zoom to state 5 if necessary
 			SetParts();																	// set player parts
 			rb.mass = 4.5f;																// set mass
 			if (shape == 0) {															// if circle
@@ -425,7 +425,7 @@ public class PlayerStatePattern : MonoBehaviour {
 			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot	
 		}
 		else if (toState == 7) {													// to seventh
-			if (fromState != 8) SetZoomCamera();										// CAMERA: if not from state 8, zoom to state 7
+			SetZoomCamera();															// CAMERA: zoom to state 7 if necessary
 			SetParts();																	// set player parts
 			rb.mass = 5.5f;																// set mass
 			sc[0].radius = 1.53f;														// update collision radius
@@ -437,7 +437,7 @@ public class PlayerStatePattern : MonoBehaviour {
 			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot
 		}
 		else if (toState == 8) {													// to eighth
-			if (fromState != 7) SetZoomCamera();										// CAMERA: if not from state 7, zoom to state 7
+			SetZoomCamera();															// CAMERA: zoom to state 7 if necessary
 			SetParts();																	// set player parts
 			rb.mass = 7.0f;																// set mass
 			sc[0].radius = 1.53f;														// update collision radius
@@ -449,7 +449,7 @@ public class PlayerStatePattern : MonoBehaviour {
 			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot
 		}
 		else if (toState == 9) {													// to ninth
-			SetZoomCamera();															// CAMERA: zoom to state 9
+			SetZoomCamera();															// CAMERA: zoom to state 9 if necessary
 			SetParts();																	// set player parts
 			rb.mass = 8.5f;																// set mass
 			sc[0].radius = 2.04f;														// update collision radius
@@ -506,7 +506,6 @@ public class PlayerStatePattern : MonoBehaviour {
 			//osf.enabled = false;														// disable orthosmoothfollow
 
 			rendWorld.material.SetColor("_Color", Color.white);							// change world to white
-			//pcm.SetLight (false);														// set core to black
 			rendCore.material.SetColor("_Color", Color.black);							// change core to black
 			rendShell.material.SetColor("_Color", Color.black);							// change shell to black
 			rendNucleus.material.SetColor("_Color", Color.white);						// change nucleus to white

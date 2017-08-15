@@ -198,6 +198,10 @@ public class SecondPlayerState : IParticleState
 			else if (deltaDark > deltaLight) ToThird(false);													// if lose more light than dark = to dark third
 		}
         // fourth
+		if (evol >= 3f && evol < 5f) {																		// evolve to dark world fourth (if evol = 3)
+			if (deltaDark > deltaLight) ToFourth(false);														// if gain more dark than light = to dark fourth
+			else if (deltaDark <= deltaLight) ToFourth(true);													// if gain more light than dark = to light fourth
+		}
 		if (evol >= -3f && evol < -5f) {															    	// devolve to light world fourth (if evol = -3)
 			if (deltaDark <= deltaLight) ToFourth(true);														// if lose more dark than light = to light fourth
 			else if (deltaDark > deltaLight) ToFourth(false);													// if lose more light than dark = to dark fourth

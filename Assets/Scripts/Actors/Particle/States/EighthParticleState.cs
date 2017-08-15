@@ -57,9 +57,6 @@ public class EighthParticleState : IParticleState
 				PlayerStatePattern pspOther 
 				= other.gameObject.GetComponent<PlayerStatePattern>();							// ref other ParticleStatePattern
 				if (pspOther.lightworld == psp.inLightworld) {									// if player and particle in same world
-					canCollide = false;																// reset can collide trigger	
-					psp.sc[0].enabled = false;														// disable trigger collider
-					psp.stunned = true;																// stun for duration
 					if (psp.evolC > pspOther.evolC) {													// if player evol is lower
 						if (pspOther.darkEvolC != 0f) psp.AddDark(pspOther.darkEvol);						// add player dark evol
 						if (pspOther.lightEvolC != 0f) psp.AddLight(pspOther.lightEvol);					// add player light evol
@@ -68,8 +65,10 @@ public class EighthParticleState : IParticleState
 						if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvol);						// subtract player dark
 						if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvol);					// subtract player light
 					}
+					canCollide = false;																// reset can collide trigger	
+					psp.sc[0].enabled = false;														// disable trigger collider
+					psp.stunned = true;																// stun for duration
 					checkEvol = true;																// check evol flag
-					Debug.Log ("particle contact player");
 				}
 				pspOther = null;																// clear pspOther
 			}

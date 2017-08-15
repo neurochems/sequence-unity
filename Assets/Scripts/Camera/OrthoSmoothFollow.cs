@@ -39,7 +39,7 @@ public class OrthoSmoothFollow : MonoBehaviour {
 					(transform.position, player.position, ref velocity, smoothTime * returnSpeed);								// perform smoothdamp on camera position back to player at centre
 
 			if (psp.toLightworld || psp.toDarkworld) {																		// if to lightworld or darkworld
-				Debug.Log("OrthoSmoothFollow - return to player centre on toLightworld = true - CAMERA");			
+				//Debug.Log("OrthoSmoothFollow - return to player centre on toLightworld = true - CAMERA");			
 				transform.position = Vector3.SmoothDamp 
 					(transform.position, player.position, ref velocity, 0.75f);													// perform smoothdamp on camera position back to player at centre
 			}

@@ -103,7 +103,9 @@ public class FirstPlayerState : IParticleState
 
 	public void ToFirst(bool toLight)
 	{
-		Debug.Log ("Can't transition to same state");
+		// when changing world
+		//Debug.Log ("Can't transition to same state");
+		psp.TransitionTo(1, 1, isLight, toLight, 0);								// trigger transition effects
 	}
 
 	public void ToSecond(bool toLight)
@@ -186,6 +188,11 @@ public class FirstPlayerState : IParticleState
 			if (deltaDark < deltaLight) ToZero(true);															// if lose more dark than light = to light zero
 			else if (deltaDark > deltaLight) ToZero(false);														// if lose more dark than light = to dark zero
 		}
+		// first
+		if (evol == -1.0f) {																				// devolve to light world first (if evol = -1.0)
+			if (deltaDark <= deltaLight) ToFirst(true);														// if lose more dark than light = to light first
+			else if (deltaDark > deltaLight) ToFirst(false);													// if lose more dark than light = to dark second
+		}
         // second
         if (evol >= 1.5f) {																	        		// evolve to dark world second (if evol = 1.5)
 			if (deltaDark > deltaLight) ToSecond(false);														// if gain more dark than light = to dark second
@@ -205,7 +212,7 @@ public class FirstPlayerState : IParticleState
 			else if (deltaDark > deltaLight) ToThird(false);													// if lose more dark than light = to dark third
 		}
         // fourth
-        if (evol >= -3f && evol < -5f) {														    		// devolve to light world fourth (if evol = -3)
+        if (evol <= -3f && evol > -5f) {														    		// devolve to light world fourth (if evol = -3)
 			if (deltaDark <= deltaLight) ToFourth(true);														// if lose more dark than light = to light fourth
 			else if (deltaDark > deltaLight) ToFourth(false);													// if lose more dark than light = to dark fourth
 		}

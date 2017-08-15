@@ -54,9 +54,6 @@ public class ZeroParticleState : IParticleState
 				PlayerStatePattern pspOther 
 					= other.gameObject.GetComponent<PlayerStatePattern>();					// ref other ParticleStatePattern
 				if (pspOther.lightworld == psp.inLightworld) {								// if player and particle in same world
-					canCollide = false;															// reset can collide trigger	
-					psp.sc[0].enabled = false;													// disable trigger collider
-					psp.stunned = true;															// stun for duration
 					if (pspOther.evolC == 0f) {													// if player = 0
 						Debug.Log ("zero particle+player=0: sub evol");
 						psp.SubLight (0.5f);														// subtract 0.5 light
@@ -71,6 +68,9 @@ public class ZeroParticleState : IParticleState
 						if (pspOther.darkEvolC != 0f) psp.SubDark(pspOther.darkEvolC);			// subtract player dark
 						if (pspOther.lightEvolC != 0f) psp.SubLight(pspOther.lightEvolC);		// subtract player light
 					}
+					canCollide = false;															// reset can collide trigger	
+					psp.sc[0].enabled = false;													// disable trigger collider
+					psp.stunned = true;															// stun for duration
 					checkEvol = true;															// set check evol flag
 				}
 				pspOther = null;															// clear pspOther
@@ -352,8 +352,8 @@ public class ZeroParticleState : IParticleState
 		}
 		// second
 		if (evol == -1.5f && !lightworld) {										            // devolve to light world second from dark world
-			if (deltaDark <= deltaLight) ToOtherWorld(true, 1, 2, true);						// if lose more dark than light = to light world light second
-			else if (deltaDark > deltaLight) ToOtherWorld(true, 1, 2, false);					// if lose more light than dark = to light world dark second
+			if (deltaDark <= deltaLight) ToOtherWorld(true, 0, 2, true);						// if lose more dark than light = to light world light second
+			else if (deltaDark > deltaLight) ToOtherWorld(true, 0, 2, false);					// if lose more light than dark = to light world dark second
 		}
 		else if (evol == -1.5f && lightworld) {												// devolve to light world second within light world
 			if (deltaDark <= deltaLight) ToSecond(true);										// if lose more dark than light = to light world light second

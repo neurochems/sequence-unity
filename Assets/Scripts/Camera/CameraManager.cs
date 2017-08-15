@@ -40,6 +40,11 @@ public class CameraManager : MonoBehaviour {
 			Debug.Log ("camera zero to first");
 			ZoomTo (false, "zero", "first");		// zoom out
 		}
+		// to light world second
+		if (switchworld && fromState == 0 && toState == 2) {
+			Debug.Log ("camera zero to light world second");
+			ZoomTo (true, "zero", "first");		// zoom out
+		}
 			// to third
 		else if (fromState == 0 && toState == 3) ZoomTo (false, "zero", "third");						// zoom out
 			// to fifth
@@ -120,6 +125,10 @@ public class CameraManager : MonoBehaviour {
 		// from light world first
 			// to dark world zero
 		if (psp.resetScale && fromState == 1 && toState == 0) ZoomTo (false, "first", "zero");			// zoom out
+
+		// from second
+			// to zero
+		if (fromState == 2 && toState == 0) ZoomTo (true, "first", "zero");								// zoom in
 
 		// from third
 			// to second

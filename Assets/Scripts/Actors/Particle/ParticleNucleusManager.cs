@@ -8,7 +8,6 @@ public class ParticleNucleusManager : MonoBehaviour {
 	private MeshRenderer rend;																									// mesh renderer (for colour changes)
 	private ParticleStatePattern psp;																							// psp ref
 
-	private Vector3 corePos;																									// core position
 	private float zeroPos, firstPos, thirdPos, seventhPos, ninthPos;															// y positions
 
 	private int toState, shape;																									// to state indicator
@@ -25,7 +24,6 @@ public class ParticleNucleusManager : MonoBehaviour {
 		lightShader = Shader.Find("Unlit/light_nucleus");																		// init light nucleus shader
 		darkShader = Shader.Find("Unlit/light_nucleus");																		// init light nucleus shader
 
-		corePos = transform.parent.FindChild ("Core").transform.position;														// core position
 		zeroPos =  0.175f;																										// set zero y position
 		firstPos =  0.5f;																										// set first/second/fifth/sixth y position
 		thirdPos =  1.0f;																										// set third/fourth y position
@@ -147,12 +145,18 @@ public class ParticleNucleusManager : MonoBehaviour {
 			transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
 		else if (toState == 3 || toState == 4)																					// to third/fourth
 			transform.localPosition = new Vector3 (0f, thirdPos, 0f);																// adjust position
-		else if (toState == 5 || toState == 6)																					// to fifth/sixth
-			transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
-		else if (toState == 7 || toState == 8)																					// to seventh/eighth
-			transform.localPosition = new Vector3 (0f, seventhPos, 0f);																// adjust position
-		else if (toState == 9)																									// to ninth
-			transform.localPosition = new Vector3 (0f, ninthPos, 0f);																// adjust position
+		else if (toState == 5 || toState == 6) {																				// to fifth/sixth
+			if (shape == 1) transform.localPosition = new Vector3 (0f, firstPos, 0.075f);											// adjust position
+			else transform.localPosition = new Vector3 (0f, firstPos, 0f);															// adjust position
+		}
+		else if (toState == 7 || toState == 8) {																				// to seventh/eighth
+			if (shape == 1) transform.localPosition = new Vector3 (0f, seventhPos, 0.075f);											// adjust position
+			else transform.localPosition = new Vector3 (0f, seventhPos, 0f);														// adjust position
+		}
+		else if (toState == 9) {																								// to ninth
+			if (shape == 1) transform.localPosition = new Vector3 (0f, ninthPos, 0.075f);											// adjust position
+			else transform.localPosition = new Vector3 (0f, ninthPos, 0f);															// adjust position
+		}
 
 
 		///////////////////// EVOLUTIONS \\\\\\\\\\\\\\\\\\\\\\

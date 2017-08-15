@@ -57,19 +57,19 @@ public class FifthParticleState : IParticleState
 				PlayerStatePattern pspOther 
 				= other.gameObject.GetComponent<PlayerStatePattern>();							// ref other ParticleStatePattern
 				if (pspOther.lightworld == psp.inLightworld) {									// if player and particle in same world
-					canCollide = false;																// reset can collide trigger	
-					psp.sc[0].enabled = false;														// disable trigger collider
-					psp.stunned = true;																// stun for duration
 					if (psp.evolC > pspOther.evolC) {													// if player evol is lower
 						if (pspOther.darkEvolC != 0f) psp.AddDark(pspOther.darkEvolC);						// add player dark evol
 						if (pspOther.lightEvolC != 0f) psp.AddLight(pspOther.lightEvolC);					// add player light evol
 					}
 					else if (psp.evolC <= pspOther.evolC) {												// else player is higher
+						Debug.Log (psp.transform.name + " fifth particle contact player - sub evol");
 						if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);						// subtract player dark
 						if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);					// subtract player light
 					}
 					checkEvol = true;																// check evol flag
-					Debug.Log ("particle contact player");
+					canCollide = false;																// reset can collide trigger	
+					psp.sc[0].enabled = false;														// disable trigger collider
+					psp.stunned = true;																// stun for duration
 				}
 				pspOther = null;																// clear pspOther
 			} 
