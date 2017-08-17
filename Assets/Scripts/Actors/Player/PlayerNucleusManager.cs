@@ -51,7 +51,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 		}
 		// reset scale timer
 		if (resetScale) resetScaleTimer += Time.deltaTime;																		// start timer
-		if (resetScaleTimer >= 4.0f) {																							// when timer >= 4 sec
+		if (resetScaleTimer >= 2.75f) {																							// when timer >= 4 sec
 			//anim.ResetTrigger("colour");	
 			if (toState == 0) 																										// if to zero
 				ScaleTo (false, "hidden", "zero");																						// grow to zero
@@ -2503,8 +2503,10 @@ public class PlayerNucleusManager : MonoBehaviour {
 		}
 		else if (!l && psp.lightworld) {
 			if (toState != 0 && toState % 2 == 0) rend.material.shader = lightShader;											// if even # state, change to white shader
-			rend.material.shader = Shader.Find("Unlit/Color");																	// change to unlit colour shader
-			rend.material.SetColor("_Color", Color.white);																		// change to white
+			else { 
+				rend.material.shader = Shader.Find("Unlit/Color");																	// change to unlit colour shader
+				rend.material.SetColor("_Color", Color.white);																		// change to white
+			}
 		}
 	}
 

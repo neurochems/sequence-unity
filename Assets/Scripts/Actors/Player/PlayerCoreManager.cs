@@ -27,7 +27,7 @@ public class PlayerCoreManager : MonoBehaviour {
 		}
 		// reset scale timer
 		if (resetScale) resetScaleTimer += Time.deltaTime;															// start timer
-		if (resetScaleTimer >= 4.0f) {																				// when timer >= 4 sec
+		if (resetScaleTimer >= 2.25f) {																				// when timer >= 4 sec
 			//anim.ResetTrigger("colour");	
 			if (toState == 0) ScaleTo (false, "hidden", "zero");														// if to zero, grow to zero
 			if (toState == 1 || toState == 2 || toState == 5 || toState == 6) ScaleTo (false, "hidden", "first");		// if to first/second/fifth/sixth, grow to first

@@ -35,7 +35,7 @@ public class PlayerShellManager : MonoBehaviour {
 		}*/
 		// reset scale timer
 		if (resetScale) resetScaleTimer += Time.deltaTime;																		// start timer
-		if (resetScaleTimer >= 4.0f) {																							// when timer >= 4 sec
+		if (resetScaleTimer >= 3.25f) {																							// when timer >= 4 sec
 			//anim.ResetTrigger("colour");	
 			if (toState == 3 || toState == 4 || toState == 5 || toState == 6) 													// if to third/fourth/fifth/sixth
 				ScaleTo (false, "hidden", "third");																					// grow to first
@@ -52,8 +52,6 @@ public class PlayerShellManager : MonoBehaviour {
 	{
 		// set up
 		toState = t;
-
-// EVOLUTIONS \\
 
 
 	///// zero \\\\\
@@ -74,6 +72,7 @@ public class PlayerShellManager : MonoBehaviour {
 		else if (f == 0 && t == 7 && !fl && tl) resetScale = true;																// set reset scale flag
 		else if (f == 0 && t == 8 && !fl && tl) resetScale = true;																// set reset scale flag
 		else if (f == 0 && t == 9 && !fl && tl) resetScale = true;																// set reset scale flag
+
 		// from light zero (0.5)
 			// to dark
 		if (f == 0 && t == 3 && fl && !tl) ScaleTo (false, "hidden", "third");													// scale to third
@@ -109,6 +108,7 @@ public class PlayerShellManager : MonoBehaviour {
 		else if (f == 1 && t == 7 && !fl && tl) resetScale = true;																// set reset scale flag
 		else if (f == 1 && t == 8 && !fl && tl) resetScale = true;																// set reset scale flag
 		else if (f == 1 && t == 9 && !fl && tl) resetScale = true;																// set reset scale flag
+
 		// from light first
 			// to dark
 		if (f == 1 && t == 3 && fl && !tl) ScaleTo (false, "hidden", "third");													// scale to third
@@ -144,6 +144,7 @@ public class PlayerShellManager : MonoBehaviour {
 		else if (f == 2 && t == 7 && !fl && tl) resetScale = true;																// set reset scale flag
 		else if (f == 2 && t == 8 && !fl && tl) resetScale = true;																// set reset scale flag
 		else if (f == 2 && t == 9 && !fl && tl) resetScale = true;																// set reset scale flag
+
 		// from light second
 			// to dark
 		if (f == 2 && t == 3 && fl && !tl) ScaleTo (false, "hidden", "third");													// scale to third
@@ -162,6 +163,7 @@ public class PlayerShellManager : MonoBehaviour {
 
 
 	///// third \\\\\
+
 
 		// from dark third
 			// to dark

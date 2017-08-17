@@ -3,966 +3,917 @@ using System.Collections;
 
 public class ParticleShellManager : MonoBehaviour {
 
-	private Animator anim;						// animator on core ref
-	private MeshRenderer rend;					// mesh renderer (for colour changes)
-	private ParticleStatePattern psp;				// psp ref
+	private Animator anim;																							// animator on core ref
+	private MeshRenderer rend;																						// mesh renderer (for colour changes)
+	private ParticleStatePattern psp;																				// psp ref
 
-	private int toState;							// to state indicator
-	private bool resetScale = false;				// timer trigger for resetting scale after world switch
-	private float resetScaleTimer;					// reset scale timer
+	private int toState;																							// to state indicator
+	private bool colour;																							// colour indicator
+	private bool resetScale = false, changeColour = true, changeShape = false;										// timer trigger for changing shape, resetting scale after world switch;				// timer trigger for resetting scale after world switch
+	private float resetScaleTimer, changeColourTimer;																// reset scale, change colour timer
 
 	void Awake () {
-		anim = GetComponent<Animator>();							// init animator ref
-		rend = GetComponent<MeshRenderer>();						// init mesh renderer ref
-		psp = GetComponentInParent<ParticleStatePattern> ();		// init psp ref
+		anim = GetComponent<Animator>();																			// init animator ref
+		rend = GetComponent<MeshRenderer>();																		// init mesh renderer ref
+		psp = GetComponentInParent<ParticleStatePattern> ();														// init psp ref
 	}
 
 	void Update() {
-		// reset scale timer
-		if (resetScale) resetScaleTimer += Time.deltaTime;													// start timer
-		if (resetScaleTimer >= 4.0f) {
-			//anim.ResetTrigger("colour");
-			if (toState == 3 || toState == 4 || toState == 5 || toState == 6) ScaleTo (false, "hidden", "third");
-			if (toState == 7 || toState == 8) ScaleTo (false, "hidden", "seventh");
-			if (toState == 9) ScaleTo (false, "hidden", "ninth");
-			resetScale = false;
-			resetScaleTimer = 0f;
+
+		// change colour timer
+		if (changeColour) changeColourTimer += Time.deltaTime;														// start timer
+		if (changeColourTimer >= 2.0f) {																			// when timer >= 4 sec
+			//Debug.Log("set colour: " + colour);
+			SetLight(colour);																							// set colour
+			changeColour = false;																						// reset reset scale flag
+			changeColourTimer = 0f;																						// reset timer
 		}
+
+		// reset scale timer
+		if (resetScale) resetScaleTimer += Time.deltaTime;															// start timer
+		if (resetScaleTimer >= 3.25f) {																				// when timer >= 3.25 sec
+			//anim.ResetTrigger("colour");
+			if (toState == 3 || toState == 4 || toState == 5 || toState == 6) 											// to third/fourth/fifth/sixth
+				ScaleTo (false, "hidden", "third");																			// scale to third
+			if (toState == 7 || toState == 8) 																			// to seventh/eighth
+				ScaleTo (false, "hidden", "seventh");																		// scale to seventh
+			if (toState == 9) 																							// to ninth
+				ScaleTo (false, "hidden", "ninth");																			// scale to ninth
+			resetScale = false;																							// reset reset scale flag
+			resetScaleTimer = 0f;																						// reset timer
+		}
+
 	}
 
 	public void ToOtherWorld (bool lw, int f, int t, bool l)
 	{
-		toState = t;																			// set to state
-		if (lw) {																				// if to light world
+		toState = t;																								// set to state
+		if (lw) {																									// if to light world
 			// from changes
-			if (f == 3 || f == 4 || f == 5 || f == 6) ScaleTo (true, "third", "hidden");			// scale from third
-			else if (f == 7 || f == 8) ScaleTo (true, "seventh", "hidden");							// scale from seventh	
-			else if (f == 9) ScaleTo (true, "ninth", "hidden");										// scale from ninth
+			if (f == 3 || f == 4 || f == 5 || f == 6) 																	// from third/fourth/fifth/sixth
+				ScaleTo (true, "third", "hidden");																			// scale to hidden
+			else if (f == 7 || f == 8) 																					// from seventh/eighth
+				ScaleTo (true, "seventh", "hidden");																		// scale to hidden
+			else if (f == 9) 																							// from ninth
+				ScaleTo (true, "ninth", "hidden");																			// scale to hidden
+
 			// to changes
-			if (t == 3 || t == 4 || t == 5 || t == 6) SetLight(false);								// change to black
-			else if (t == 7 || t == 8) SetLight(false);												// change to black
-			else if (t == 9) SetLight(false);														// change to black
-			else if (t == 0 || t == 1 || t == 2) SetLight(false);									// change to black
+			colour = false;																								// change to black
+			changeColour = true;																						// start change colour timer
+			resetScale = true;																							// start rescale timer
 		}
-		else if (!lw) {																			// if to dark world
+		else if (!lw) {																								// if to dark world
 			// from changes
-			if (f == 3 || f == 4 || f == 5 || f == 6) ScaleTo (true, "third", "hidden");			// scale from third
-			else if (f == 7 || f == 8) ScaleTo (true, "seventh", "hidden");							// scale from seventh	
-			else if (f == 9) ScaleTo (true, "ninth", "hidden");										// scale from ninth
+			if (f == 3 || f == 4 || f == 5 || f == 6) 																	// from third/fourth/fifth/sixth
+				ScaleTo (true, "third", "hidden");																			// scale to hidden
+			else if (f == 7 || f == 8) 																					// from seventh/eighth
+				ScaleTo (true, "seventh", "hidden");																		// scale to hidden
+			else if (f == 9) 																							// from ninth
+				ScaleTo (true, "ninth", "hidden");																			// scale to hidden
 			// to changes
-			if (t == 3 || t == 4 || t == 5 || t == 6) SetLight(true);								// change to white
-			else if (t == 7 || t == 8) SetLight(true);												// change to white
-			else if (t == 9) SetLight(true);														// change to white
-			else if (t == 0 || t == 1 || t == 2) SetLight(true);									// change to white
+			colour = true;																								// change to white
+			changeColour = true;																						// start change colour timer
+			resetScale = true;																							// start rescale timer
 		}
 	}
 
 	public void Shell (int f, int t, bool fl, bool tl, int s) 
 	{
-
-
-	// EVOLUTIONS \\
+		// set up
+		toState = t;
 
 
 	///// zero \\\\\
 
-		// to dark zero (0.5)
-
-		// from zero
-		// to dark zero (no shell change)
-
-		// to first
 
 		// from dark zero (0.5)
-			// to dark first (no shell change)
-			// to light first (no shell change)
+			// to dark
+		if (f == 0 && t == 3 && !fl && !tl) ScaleTo (false, "hidden", "third");													// scale to third
+		else if (f == 0 && t == 4 && !fl && !tl) ScaleTo (false, "hidden", "third");											// scale to third
+		else if (f == 0 && t == 5 && !fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 0 && t == 6 && !fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 0 && t == 7 && !fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 0 && t == 8 && !fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 0 && t == 9 && !fl && !tl) resetScale = true;																// set reset scale flag
+			// to light
+		else if (f == 0 && t == 5 && !fl && tl) resetScale = true;																// set reset scale flag
+		else if (f == 0 && t == 6 && !fl && tl) resetScale = true;																// set reset scale flag
+		else if (f == 0 && t == 7 && !fl && tl) resetScale = true;																// set reset scale flag
+		else if (f == 0 && t == 8 && !fl && tl) resetScale = true;																// set reset scale flag
+		else if (f == 0 && t == 9 && !fl && tl) resetScale = true;																// set reset scale flag
 
 		// from light zero (0.5)
-			// to dark first (no shell change)
-			// to light first (no shell change)
+			// to dark
+		if (f == 0 && t == 3 && fl && !tl) ScaleTo (false, "hidden", "third");													// scale to third
+		else if (f == 0 && t == 4 && fl && !tl) ScaleTo (false, "hidden", "third");												// scale to third
+		else if (f == 0 && t == 5 && fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 0 && t == 6 && fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 0 && t == 7 && fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 0 && t == 8 && fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 0 && t == 9 && fl && !tl) resetScale = true;																// set reset scale flag
+			// to light
+		else if (f == 0 && t == 5 && fl && tl) resetScale = true;																// set reset scale flag
+		else if (f == 0 && t == 6 && fl && tl) resetScale = true;																// set reset scale flag
+		else if (f == 0 && t == 7 && fl && tl) resetScale = true;																// set reset scale flag
+		else if (f == 0 && t == 8 && fl && tl) resetScale = true;																// set reset scale flag
+		else if (f == 0 && t == 9 && fl && tl) resetScale = true;																// set reset scale flag
+
 
 	///// first \\\\\
 
-		// to second
 
 		// from dark first
-			// to dark second (no shell change)
-			// to light second (no shell change)
+			// to dark
+		if (f == 1 && t == 3 && !fl && !tl) ScaleTo (false, "hidden", "third");													// scale to third
+		else if (f == 1 && t == 4 && !fl && !tl) ScaleTo (false, "hidden", "third");											// scale to third
+		else if (f == 1 && t == 5 && !fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 1 && t == 6 && !fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 1 && t == 7 && !fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 1 && t == 8 && !fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 1 && t == 9 && !fl && !tl) resetScale = true;																// set reset scale flag
+			// to light
+		if (f == 1 && t == 5 && !fl && tl) resetScale = true;																	// set reset scale flag
+		else if (f == 1 && t == 6 && !fl && tl) resetScale = true;																// set reset scale flag
+		else if (f == 1 && t == 7 && !fl && tl) resetScale = true;																// set reset scale flag
+		else if (f == 1 && t == 8 && !fl && tl) resetScale = true;																// set reset scale flag
+		else if (f == 1 && t == 9 && !fl && tl) resetScale = true;																// set reset scale flag
 
 		// from light first
-			// to dark second (no shell change)
-			// to light second (no shell change)
+			// to dark
+		if (f == 1 && t == 3 && fl && !tl) ScaleTo (false, "hidden", "third");													// scale to third
+		else if (f == 1 && t == 4 && fl && !tl) ScaleTo (false, "hidden", "third");												// scale to third
+		else if (f == 1 && t == 5 && fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 1 && t == 6 && fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 1 && t == 7 && fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 1 && t == 8 && fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 1 && t == 9 && fl && !tl) resetScale = true;																// set reset scale flag
+			// to light
+		if (f == 1 && t == 5 && fl && tl) resetScale = true;																	// set reset scale flag
+		else if (f == 1 && t == 6 && fl && tl) resetScale = true;																// set reset scale flag
+		else if (f == 1 && t == 7 && fl && tl) resetScale = true;																// set reset scale flag
+		else if (f == 1 && t == 8 && fl && tl) resetScale = true;																// set reset scale flag
+		else if (f == 1 && t == 9 && fl && tl) resetScale = true;																// set reset scale flag
 
-		// to third
-
-		// from dark first
-			// to dark third
-		if (f == 1 && t == 3 && !fl && !tl) ScaleTo (false, "hidden", "third");										// scale to third
-			// to light third (no shell change)
-		// from light first
-			// to dark third
-		if (f == 1 && t == 3 && fl && !tl) ScaleTo (false, "hidden", "third");										// scale to third
-			// to light third (no shell change)
 
 	///// second \\\\\
 
-		// to third
 
 		// from dark second
-			// to dark third
-		if (f == 2 && t == 3 && !fl && !tl) {
-			ScaleTo (false, "hidden", "third");										// scale to third
-			Debug.Log (transform.parent.name + " shell dark second to dark third");
-		}
-			// to light third (no shell change)
+			// to dark
+		if (f == 2 && t == 3 && !fl && !tl) ScaleTo (false, "hidden", "third");													// scale to third
+		else if (f == 2 && t == 4 && !fl && !tl) ScaleTo (false, "hidden", "third");											// scale to third
+		else if (f == 2 && t == 5 && !fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 2 && t == 6 && !fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 2 && t == 7 && !fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 2 && t == 8 && !fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 2 && t == 9 && !fl && !tl) resetScale = true;																// set reset scale flag
+			// to light
+		if (f == 2 && t == 5 && !fl && tl) resetScale = true;																	// set reset scale flag
+		else if (f == 2 && t == 6 && !fl && tl) resetScale = true;																// set reset scale flag
+		else if (f == 2 && t == 7 && !fl && tl) resetScale = true;																// set reset scale flag
+		else if (f == 2 && t == 8 && !fl && tl) resetScale = true;																// set reset scale flag
+		else if (f == 2 && t == 9 && !fl && tl) resetScale = true;																// set reset scale flag
 
 		// from light second
-			// to dark third
-		if (f == 2 && t == 3 && fl && !tl) {
-			Debug.Log (transform.parent.name + " shell light second to dark third");
-			ScaleTo (false, "hidden", "third");										// scale to third
-		}
-			// to light third (no shell change)
+			// to dark
+		if (f == 2 && t == 3 && fl && !tl) ScaleTo (false, "hidden", "third");													// scale to third
+		else if (f == 2 && t == 4 && fl && !tl) ScaleTo (false, "hidden", "third");												// scale to third
+		else if (f == 2 && t == 5 && fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 2 && t == 6 && fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 2 && t == 7 && fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 2 && t == 8 && fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 2 && t == 9 && fl && !tl) resetScale = true;																// set reset scale flag
+			// to light
+		if (f == 2 && t == 5 && fl && tl) resetScale = true;																	// set reset scale flag
+		else if (f == 2 && t == 6 && fl && tl) resetScale = true;																// set reset scale flag
+		else if (f == 2 && t == 7 && fl && tl) resetScale = true;																// set reset scale flag
+		else if (f == 2 && t == 8 && fl && tl) resetScale = true;																// set reset scale flag
+		else if (f == 2 && t == 9 && fl && tl) resetScale = true;																// set reset scale flag
 
-		// to fourth
-
-		// from dark second
-			// to dark fourth
-		if (f == 2 && t == 4 && !fl && !tl) {
-			ScaleTo (false, "hidden", "third");										// scale to third
-			Debug.Log (transform.parent.name + " shell dark second to dark fourth");
-		}
-			// to light fourth (no shell change)
-
-		// from light second
-			// to dark fourth
-		if (f == 2 && t == 4 && fl && !tl) {
-			ScaleTo (false, "hidden", "third");										// scale to third
-			Debug.Log (transform.parent.name + " shell light second to dark fourth");
-		}
-			// to light fourth (no shell change)
 
 	///// third \\\\\
 
-		// to fourth
 
 		// from dark third
-			// to dark fourth (no shell change)
-			// to light fourth
-		if (f == 3 && t == 4 && !fl && tl) ScaleTo (true, "third", "hidden");										// scale to hidden
+			// to dark
+		if (f == 3 && t == 0 && !fl && !tl) ScaleTo (true, "third", "hidden");													// scale to hidden
+		else if (f == 3 && t == 1 && !fl && !tl) ScaleTo (true, "third", "hidden");												// scale to hidden
+		else if (f == 3 && t == 2 && !fl && !tl) ScaleTo (true, "third", "hidden");												// scale to hidden
+		else if (f == 3 && t == 5 && !fl && !tl) {
+			ScaleTo (true, "third", "hidden");																					// scale to hidden
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 3 && t == 6 && !fl && !tl) {
+			ScaleTo (true, "third", "hidden");																					// scale to hidden
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 3 && t == 7 && !fl && !tl) {
+			ScaleTo (true, "third", "hidden");																					// scale to hidden
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 3 && t == 8 && !fl && !tl) {
+			ScaleTo (true, "third", "hidden");																					// scale to hidden
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 3 && t == 9 && !fl && !tl) {
+			ScaleTo (true, "third", "hidden");																					// scale to hidden
+			resetScale = true;																									// set reset scale flag
+		}
+			// to light
+		if (f == 3 && t == 0 && !fl && tl) ScaleTo (true, "third", "hidden");													// scale to hidden
+		else if (f == 3 && t == 1 && !fl && tl) ScaleTo (true, "third", "hidden");												// scale to hidden
+		else if (f == 3 && t == 2 && !fl && tl) ScaleTo (true, "third", "hidden");												// scale to hidden
+		else if (f == 3 && t == 3 && !fl && tl) ScaleTo (true, "third", "hidden");												// scale to hidden
+		else if (f == 3 && t == 4 && !fl && tl) ScaleTo (true, "third", "hidden");												// scale to hidden
+		else if (f == 3 && t == 5 && !fl && tl) {
+			ScaleTo (true, "third", "hidden");																					// scale to hidden
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 3 && t == 6 && !fl && tl) {
+			ScaleTo (true, "third", "hidden");																					// scale to hidden
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 3 && t == 7 && !fl && tl) {
+			ScaleTo (true, "third", "hidden");																					// scale to hidden
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 3 && t == 8 && !fl && tl) {
+			ScaleTo (true, "third", "hidden");																					// scale to hidden
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 3 && t == 9 && !fl && tl) {
+			ScaleTo (true, "third", "hidden");																					// scale to hidden
+			resetScale = true;																									// set reset scale flag
+		}
+
 		// from light third
-			// to dark fourth
-		if (f == 3 && t == 4 && fl && !tl) ScaleTo (false, "hidden", "third");										// scale to third
-			// to light fourth (no shell change)
+			// to dark
+		if (f == 3 && t == 3 && fl && !tl) ScaleTo (false, "hidden", "third");													// scale to third
+		else if (f == 3 && t == 4 && fl && !tl) ScaleTo (false, "hidden", "third");												// scale to third
+		else if (f == 3 && t == 5 && fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 3 && t == 6 && fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 3 && t == 7 && fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 3 && t == 8 && fl && !tl) resetScale = true;																// set reset scale flag
+		else if (f == 3 && t == 9 && fl && !tl) resetScale = true;																// set reset scale flag
+			// to light
+		if (f == 3 && t == 5 && fl && tl) resetScale = true;																	// set reset scale flag
+		else if (f == 3 && t == 6 && fl && tl) resetScale = true;																// set reset scale flag
+		else if (f == 3 && t == 7 && fl && tl) resetScale = true;																// set reset scale flag
+		else if (f == 3 && t == 8 && fl && tl) resetScale = true;																// set reset scale flag
+		else if (f == 3 && t == 9 && fl && tl) resetScale = true;																// set reset scale flag
+
 
 	///// fourth \\\\\
 
-		// to fifth
 
 		// from dark fourth
-			// to dark circle fifth (no shell change)
-			// to light circle fifth (no shell change)
+			// to dark circle
+		if (f == 4 && t == 0 && !fl && !tl && s == 0) ScaleTo (true, "third", "hidden");										// scale to hidden
+		else if (f == 4 && t == 1 && !fl && !tl && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 4 && t == 2 && !fl && !tl && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 4 && t == 5 && !fl && !tl && s == 0) {
+			ScaleTo (true, "third", "hidden");																					// scale to hidden
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 4 && t == 6 && !fl && !tl && s == 0) {
+			ScaleTo (true, "third", "hidden");																					// scale to hidden
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 4 && t == 7 && !fl && !tl && s == 0) {
+			ScaleTo (true, "third", "hidden");																					// scale to hidden
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 4 && t == 8 && !fl && !tl && s == 0) {
+			ScaleTo (true, "third", "hidden");																					// scale to hidden
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 4 && t == 9 && !fl && !tl && s == 0) {
+			ScaleTo (true, "third", "hidden");																					// scale to hidden
+			resetScale = true;																									// set reset scale flag
+		}
+			// to light circle
+		if (f == 4 && t == 0 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");											// scale to hidden
+		else if (f == 4 && t == 1 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 4 && t == 2 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 4 && t == 4 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 4 && t == 5 && !fl && tl && s == 0) {
+			ScaleTo (true, "third", "hidden");																					// scale to hidden
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 4 && t == 6 && !fl && tl && s == 0) {
+			ScaleTo (true, "third", "hidden");																					// scale to hidden
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 4 && t == 7 && !fl && tl && s == 0) {
+			ScaleTo (true, "third", "hidden");																					// scale to hidden
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 4 && t == 8 && !fl && tl && s == 0) {
+			ScaleTo (true, "third", "hidden");																					// scale to hidden
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 4 && t == 9 && !fl && tl && s == 0) {
+			ScaleTo (true, "third", "hidden");																					// scale to hidden
+			resetScale = true;																									// set reset scale flag
+		}
 
 		// from light fourth
-			// to triangle fifth (no shell change)
-			// to square fifth (no shell change)
+			// to dark circle
+		if (f == 4 && t == 3 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");										// scale to third
+		else if (f == 4 && t == 4 && fl && !tl && s == 0) resetScale = true;													// set reset scale flag
+		else if (f == 4 && t == 5 && fl && !tl && s == 0) resetScale = true;													// set reset scale flag
+		else if (f == 4 && t == 6 && fl && !tl && s == 0) resetScale = true;													// set reset scale flag
+			// to light circle
+		if (f == 4 && t == 5 && fl && tl && s == 0) resetScale = true;															// set reset scale flag
+		else if (f == 4 && t == 6 && fl && tl && s == 0) resetScale = true;														// set reset scale flag
+			// to dark triangle
+		//if (f == 4 && t == 7 && fl && !tl && s == 1) resetScale = true;															// set reset scale flag
+		//else if (f == 4 && t == 8 && fl && !tl && s == 1) resetScale = true;														// set reset scale flag
+		//else if (f == 4 && t == 9 && fl && !tl && s == 1) resetScale = true;														// set reset scale flag
+			// to dark square
+		//if (f == 4 && t == 7 && fl && !tl && s == 2) resetScale = true;															// set reset scale flag
+		//else if (f == 4 && t == 8 && fl && !tl && s == 2) resetScale = true;														// set reset scale flag
+		//else if (f == 4 && t == 9 && fl && !tl && s == 2) resetScale = true;														// set reset scale flag
+
 
 	///// fifth \\\\\
 
-		// to sixth
 
-		// from dark circle fifth
-			// to dark circle sixth (no shell change)
-			// to light circle sixth (no shell change)
+		// from dark fifth
+			// to dark circle
+		if (f == 5 && t == 0 && !fl && !tl && s == 0) ScaleTo (true, "third", "hidden");										// scale to hidden
+		else if (f == 5 && t == 1 && !fl && !tl && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 5 && t == 2 && !fl && !tl && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 5 && t == 7 && !fl && !tl && s == 0) ScaleTo (false, "third", "seventh");									// scale to seventh
+		else if (f == 5 && t == 8 && !fl && !tl && s == 0) ScaleTo (false, "third", "seventh");									// scale to seventh
+		else if (f == 5 && t == 9 && !fl && !tl && s == 0) ScaleTo (false, "third", "ninth");									// scale to ninth
+			// to light circle
+		if (f == 5 && t == 0 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");											// scale to hidden
+		else if (f == 5 && t == 1 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 5 && t == 2 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 5 && t == 3 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 5 && t == 4 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 5 && t == 7 && !fl && tl && s == 0) ScaleTo (false, "third", "seventh");									// scale to seventh
+		else if (f == 5 && t == 8 && !fl && tl && s == 0) ScaleTo (false, "third", "seventh");									// scale to seventh
+		else if (f == 5 && t == 9 && !fl && tl && s == 0) ScaleTo (false, "third", "ninth");									// scale to ninth
 
-		// from light circle fifth
-			// to dark circle sixth (no shell change)
-			// to light circle sixth (no shell change)
+		// from light fifth
+			// to dark circle
+		if (f == 5 && t == 0 && fl && !tl && s == 0) ScaleTo (true, "third", "hidden");											// scale to hidden
+		else if (f == 5 && t == 1 && fl && !tl && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 5 && t == 2 && fl && !tl && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 5 && t == 7 && fl && !tl && s == 0) ScaleTo (false, "third", "seventh");									// scale to seventh
+		else if (f == 5 && t == 8 && fl && !tl && s == 0) ScaleTo (false, "third", "seventh");									// scale to seventh
+		else if (f == 5 && t == 9 && fl && !tl && s == 0) ScaleTo (false, "third", "ninth");									// scale to ninth
+			// to light circle
+		if (f == 5 && t == 0 && fl && tl && s == 0) ScaleTo (true, "third", "hidden");											// scale to hidden
+		else if (f == 5 && t == 1 && fl && tl && s == 0) ScaleTo (true, "third", "hidden");										// scale to hidden
+		else if (f == 5 && t == 2 && fl && tl && s == 0) ScaleTo (true, "third", "hidden");										// scale to hidden
+		else if (f == 5 && t == 3 && fl && tl && s == 0) ScaleTo (true, "third", "hidden");										// scale to hidden
+		else if (f == 5 && t == 4 && fl && tl && s == 0) ScaleTo (true, "third", "hidden");										// scale to hidden
+		else if (f == 5 && t == 7 && fl && tl && s == 0) ScaleTo (false, "third", "seventh");									// scale to seventh
+		else if (f == 5 && t == 8 && fl && tl && s == 0) ScaleTo (false, "third", "seventh");									// scale to seventh
+		else if (f == 5 && t == 9 && fl && tl && s == 0) ScaleTo (false, "third", "ninth");										// scale to ninth
 
-		// from triangle fifth
-			// to dark triangle sixth (no shell change)
+		// from light triangle
+			// to dark circle
+		if (f == 5 && t == 3 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");										// scale to third
+		else if (f == 5 && t == 4 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 5 && t == 5 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 5 && t == 6 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 5 && t == 7 && fl && !tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+			// to light circle
+		if (f == 5 && t == 5 && fl && tl && s == 0) ScaleTo (false, "hidden", "third");											// scale to third
+		else if (f == 5 && t == 6 && fl && tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 5 && t == 7 && fl && tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+			// to dark triangle
+		if (f == 5 && t == 7 && fl && !tl && s == 1) resetScale = true;															// set reset scale flag
+		//else if (f == 5 && t == 8 && fl && !tl && s == 1) resetScale = true;														// set reset scale flag
+		//else if (f == 5 && t == 9 && fl && !tl && s == 1) resetScale = true;														// set reset scale flag
 
-		// from square fifth
-			// to dark square sixth (no shell change)
+		// from light square
+			// to dark circle
+		if (f == 5 && t == 3 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");										// scale to third
+		else if (f == 5 && t == 4 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 5 && t == 5 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 5 && t == 6 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 5 && t == 7 && fl && !tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+			// to light circle
+		if (f == 5 && t == 5 && fl && tl && s == 0) ScaleTo (false, "hidden", "third");											// scale to third
+		else if (f == 5 && t == 6 && fl && tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 5 && t == 7 && fl && tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+			// to dark square
+		if (f == 5 && t == 7 && fl && !tl && s == 2) resetScale = true;															// set reset scale flag
+		//else if (f == 5 && t == 8 && fl && !tl && s == 2) resetScale = true;														// set reset scale flag
+		//else if (f == 5 && t == 9 && fl && !tl && s == 2) resetScale = true;														// set reset scale flag
+
 
 	///// sixth \\\\\
 
-		// to seventh
 
 		// from dark circle sixth
-			// to dark circle seventh
-		if (f == 6 && t == 7 && !fl && !tl && s == 0) ScaleTo (false, "third", "seventh");							// scale to seventh
-			// to light circle seventh
-		else if (f == 6 && t == 7 && !fl && tl && s == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
+			// to dark circle
+		if (f == 6 && t == 0 && !fl && !tl && s == 0) ScaleTo (true, "third", "hidden");										// scale to hidden
+		else if (f == 6 && t == 1 && !fl && !tl && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 6 && t == 2 && !fl && !tl && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 6 && t == 7 && !fl && !tl && s == 0) ScaleTo (false, "third", "seventh");									// scale to seventh
+		else if (f == 6 && t == 8 && !fl && !tl && s == 0) ScaleTo (false, "third", "seventh");									// scale to seventh
+		else if (f == 6 && t == 9 && !fl && !tl && s == 0) ScaleTo (false, "third", "ninth");									// scale to ninth
+			// to light circle
+		if (f == 6 && t == 0 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");											// scale to hidden
+		else if (f == 6 && t == 1 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 6 && t == 2 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 6 && t == 3 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 6 && t == 4 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 6 && t == 7 && !fl && tl && s == 0) ScaleTo (false, "third", "seventh");									// scale to seventh
+		else if (f == 6 && t == 8 && !fl && tl && s == 0) ScaleTo (false, "third", "seventh");									// scale to seventh
+		else if (f == 6 && t == 9 && !fl && tl && s == 0) ScaleTo (false, "third", "ninth");									// scale to ninth
+
 		// from light circle sixth
-			// to dark circle seventh
-		if (f == 6 && t == 7 && fl && !tl && s == 0) ScaleTo (false, "third", "seventh");							// scale to seventh
-			// to light circle seventh
-		else if (f == 6 && t == 7 && fl && tl && s == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
+			// to dark circle
+		if (f == 6 && t == 0 && fl && !tl && s == 0) ScaleTo (true, "third", "hidden");											// scale to hidden
+		else if (f == 6 && t == 1 && fl && !tl && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 6 && t == 2 && fl && !tl && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 6 && t == 7 && fl && !tl && s == 0) ScaleTo (false, "third", "seventh");									// scale to seventh
+		else if (f == 6 && t == 8 && fl && !tl && s == 0) ScaleTo (false, "third", "seventh");									// scale to seventh
+		else if (f == 6 && t == 9 && fl && !tl && s == 0) ScaleTo (false, "third", "ninth");									// scale to ninth
+			// to light circle
+		if (f == 6 && t == 0 && fl && tl && s == 0) ScaleTo (true, "third", "hidden");											// scale to hidden
+		else if (f == 6 && t == 1 && fl && tl && s == 0) ScaleTo (true, "third", "hidden");										// scale to hidden
+		else if (f == 6 && t == 2 && fl && tl && s == 0) ScaleTo (true, "third", "hidden");										// scale to hidden
+		else if (f == 6 && t == 3 && fl && tl && s == 0) ScaleTo (true, "third", "hidden");										// scale to hidden
+		else if (f == 6 && t == 4 && fl && tl && s == 0) ScaleTo (true, "third", "hidden");										// scale to hidden
+		else if (f == 6 && t == 7 && fl && tl && s == 0) ScaleTo (false, "third", "seventh");									// scale to seventh
+		else if (f == 6 && t == 8 && fl && tl && s == 0) ScaleTo (false, "third", "seventh");									// scale to seventh
+		else if (f == 6 && t == 9 && fl && tl && s == 0) ScaleTo (false, "third", "ninth");										// scale to ninth
+
 		// from dark triangle sixth
-			// to dark triangle seventh
-		if (f == 6 && t == 7 && !fl && !tl && s == 1) ScaleTo (false, "hidden", "seventh");							// scale to seventh
-			// to light triangle seventh (no shell change)
+			// to dark circle
+		if (f == 6 && t == 3 && !fl && !tl && s == 0) ScaleTo (false, "hidden", "third");										// scale to third
+		else if (f == 6 && t == 4 && !fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 6 && t == 5 && !fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 6 && t == 6 && !fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 6 && t == 7 && !fl && !tl && s == 0) ScaleTo (false, "hidden", "seventh");								// scale to seventh
+		else if (f == 6 && t == 8 && !fl && !tl && s == 0) ScaleTo (false, "hidden", "seventh");								// scale to seventh
+			// to light circle
+		if (f == 6 && t == 5 && !fl && tl && s == 0) ScaleTo (false, "hidden", "third");										// scale to third
+		else if (f == 6 && t == 6 && !fl && tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 6 && t == 7 && !fl && tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 6 && t == 8 && !fl && tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+			// to dark triangle
+		if (f == 6 && t == 7 && fl && !tl && s == 1) resetScale = true;															// set reset scale flag
+		else if (f == 6 && t == 8 && fl && !tl && s == 1) resetScale = true;													// set reset scale flag
+		//else if (f == 6 && t == 9 && fl && !tl && s == 1) resetScale = true;													// set reset scale flag
 
 		// from dark square sixth
-			// to dark square seventh
-		if (f == 6 && t == 7 && !fl && !tl && s == 2) ScaleTo (false, "hidden", "seventh");							// scale to seventh
-			// to light square seventh (no shell change)
+			// to dark circle
+		if (f == 6 && t == 3 && !fl && !tl && s == 0) ScaleTo (false, "hidden", "third");										// scale to third
+		else if (f == 6 && t == 4 && !fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 6 && t == 5 && !fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 6 && t == 6 && !fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 6 && t == 7 && !fl && !tl && s == 0) ScaleTo (false, "hidden", "seventh");								// scale to seventh
+		else if (f == 6 && t == 8 && !fl && !tl && s == 0) ScaleTo (false, "hidden", "seventh");								// scale to seventh
+			// to light circle
+		if (f == 6 && t == 5 && !fl && tl && s == 0) ScaleTo (false, "hidden", "third");										// scale to third
+		else if (f == 6 && t == 6 && !fl && tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 6 && t == 7 && !fl && tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 6 && t == 8 && !fl && tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+			// to dark square
+		if (f == 6 && t == 7 && fl && !tl && s == 2) resetScale = true;															// set reset scale flag
+		else if (f == 6 && t == 8 && fl && !tl && s == 2) resetScale = true;													// set reset scale flag
+		//else if (f == 6 && t == 9 && fl && !tl && s == 2) resetScale = true;														// set reset scale flag
+
 
 	///// seventh \\\\\
 
-		// to eighth
 
 		// from dark circle seventh
-			// to dark circle eighth (no shell change)
-			// to light circle eighth (no shell change)
+			// to dark circle
+		if (f == 7 && t == 0 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 7 && t == 1 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 2 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 3 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 7 && t == 4 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 7 && t == 5 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 7 && t == 6 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 7 && t == 9 && !fl && !tl && s == 0) ScaleTo (false, "seventh", "ninth");									// scale to ninth
+			// to light circle
+		if (f == 7  && t == 0 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 7 && t == 1 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 2 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 3 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 4 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 5 && !fl && tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 7 && t == 6 && !fl && tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 7 && t == 9 && !fl && tl && s == 0) ScaleTo (false, "seventh", "ninth");									// scale to ninth
 
 		// from light circle seventh
-			// to dark circle eighth (no shell change)
-			// to light circle eighth (no shell change)
+			// to dark circle
+		if (f == 7 && t == 0 && fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 7 && t == 1 && fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 2 && fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 3 && fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 7 && t == 4 && fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 7 && t == 5 && fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 7 && t == 6 && fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 7 && t == 9 && fl && !tl && s == 0) ScaleTo (false, "seventh", "ninth");									// scale to ninth
+			// to light circle
+		if (f == 7 && t == 0 && fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 7 && t == 1 && fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 2 && fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 3 && fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 4 && fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 5 && fl && tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 7 && t == 6 && fl && tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 7 && t == 9 && fl && tl && s == 0) ScaleTo (false, "seventh", "ninth");									// scale to ninth
 
 		// from dark triangle seventh
-			// to dark triangle eighth (no shell change)
-			// to light triangle eighth
-		if (f == 7 && t == 8 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");							// scale to hidden
+			// to dark circle
+		if (f == 7 && t == 0 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 7 && t == 1 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 2 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 3 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 7 && t == 4 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 7 && t == 5 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 7 && t == 6 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+			// seventh/eighth = no change
+		else if (f == 7 && t == 9 && !fl && !tl && s == 0) ScaleTo (false, "seventh", "ninth");									// scale to ninth
+			// to light circle
+		if (f == 7 && t == 0 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 7 && t == 1 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 2 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 3 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 4 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 5 && !fl && tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 7 && t == 6 && !fl && tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+			// seventh/eighth = no change
+		else if (f == 7 && t == 9 && !fl && tl && s == 0) ScaleTo (false, "seventh", "ninth");									// scale to ninth
+			// to dark triangle
+		if (f == 7 && t == 6 && !fl && !tl && s == 1) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 7 && t == 9 && !fl && !tl && s == 1) ScaleTo (false, "seventh", "ninth");									// scale to ninth
+			// to light triangle
+		if (f == 7 && t == 5 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 7 && t == 8 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 9 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");									// scale to hidden
 
 		// from light triangle seventh
-			// to dark triangle eighth
-		if (f == 7 && t == 8 && fl && !tl && s == 1) ScaleTo (false, "hidden", "seventh");							// scale to seventh
-			// to light triangle eighth (no shell change)
+			// to dark circle
+		if (f == 7 && t == 3 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");										// scale to third
+		else if (f == 7 && t == 4 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 7 && t == 5 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 7 && t == 6 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 7 && t == 7 && fl && !tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 7 && t == 8 && fl && !tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 7 && t == 9 && fl && !tl && s == 0) ScaleTo (false, "hidden", "ninth");									// scale to ninth
+			// to light circle
+		if (f == 7 && t == 5 && fl && tl && s == 0) ScaleTo (false, "hidden", "third");											// scale to third
+		else if (f == 7 && t == 6 && fl && tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 7 && t == 7 && fl && tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 7 && t == 8 && fl && tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 7 && t == 9 && fl && tl && s == 0) ScaleTo (false, "hidden", "ninth");									// scale to ninth
+			// to dark triangle
+		if (f == 7 && t == 8 && fl && !tl && s == 1) ScaleTo (false, "hidden", "seventh");										// scale to seventh
+		else if (f == 7 && t == 9 && fl && !tl && s == 1) ScaleTo (false, "hidden", "ninth");									// scale to ninth
 
 		// from dark square seventh
-			// to dark square eighth (no shell change)
-			// to light square eighth
-		if (f == 7 && t == 8 && !fl && tl && s == 2) ScaleTo (false, "hidden", "seventh");							// scale to seventh
+			// to dark circle
+		if (f == 7 && t == 0 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 7 && t == 1 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 2 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 3 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 7 && t == 4 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 7 && t == 5 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 7 && t == 6 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+			// seventh/eighth = no change
+		else if (f == 7 && t == 9 && !fl && !tl && s == 0) ScaleTo (false, "seventh", "ninth");									// scale to ninth
+			// to light circle
+		if (f == 7 && t == 0 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 7 && t == 1 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 2 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 3 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 4 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 5 && !fl && tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 7 && t == 6 && !fl && tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+			// seventh/eighth = no change
+		else if (f == 7 && t == 9 && !fl && tl && s == 0) ScaleTo (false, "seventh", "ninth");									// scale to ninth
+			// to dark square
+		if (f == 7 && t == 6 && !fl && !tl && s == 2) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 7 && t == 9 && !fl && !tl && s == 2) ScaleTo (false, "seventh", "ninth");									// scale to ninth
+			// to light square
+		if (f == 7 && t == 5 && !fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 7 && t == 8 && !fl && tl && s == 2) ScaleTo (false, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 9 && !fl && tl && s == 2) ScaleTo (false, "seventh", "hidden");									// scale to hidden
 
 		// from light square seventh
-			// to dark square eighth
-		if (f == 7 && t == 8 && fl && !tl && s == 2) ScaleTo (false, "hidden", "seventh");							// scale to seventh
-			// to light square eighth (no shell change)
+			// to dark circle
+		if (f == 7 && t == 3 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");										// scale to third
+		else if (f == 7 && t == 4 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 7 && t == 5 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 7 && t == 6 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 7 && t == 7 && fl && !tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 7 && t == 8 && fl && !tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 7 && t == 9 && fl && !tl && s == 0) ScaleTo (false, "hidden", "ninth");									// scale to ninth
+			// to light circle
+		if (f == 7 && t == 5 && fl && tl && s == 0) ScaleTo (false, "hidden", "third");											// scale to third
+		else if (f == 7 && t == 6 && fl && tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 7 && t == 7 && fl && tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 7 && t == 8 && fl && tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 7 && t == 9 && fl && tl && s == 0) ScaleTo (false, "hidden", "ninth");									// scale to ninth
+			// to dark square
+		if (f == 7 && t == 8 && fl && !tl && s == 2) ScaleTo (false, "hidden", "seventh");										// scale to seventh
+		else if (f == 7 && t == 9 && fl && !tl && s == 2) ScaleTo (false, "hidden", "ninth");									// scale to ninth
+
 
 	///// eighth \\\\\
 
-		// to ninth
 
 		// from dark circle eighth
-			// to dark circle ninth
-		if (f == 8 && t == 9 && !fl && !tl && s == 0) ScaleTo (false, "seventh", "ninth");							// scale to ninth
-			// to light circle seventh
-		else if (f == 8 && t == 9 && !fl && tl && s == 0) ScaleTo (false, "seventh", "ninth");						// scale to ninth
+			// to dark circle
+		if (f == 8 && t == 0 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 8 && t == 1 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 2 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 3 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 8 && t == 4 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 8 && t == 5 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 8 && t == 6 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 8 && t == 9 && !fl && !tl && s == 0) ScaleTo (false, "seventh", "ninth");									// scale to ninth
+			// to light circle
+		if (f == 8 && t == 0 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 8 && t == 1 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 2 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 3 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 4 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 5 && !fl && tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 8 && t == 6 && !fl && tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 8 && t == 9 && !fl && tl && s == 0) ScaleTo (false, "seventh", "ninth");									// scale to ninth
+
 		// from light circle eighth
 			// to dark circle ninth
-		if (f == 8 && t == 9 && fl && !tl && s == 0) ScaleTo (false, "seventh", "ninth");							// scale to ninth
+		if (f == 8 && t == 0 && fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 8 && t == 1 && fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 2 && fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 3 && fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 8 && t == 4 && fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 8 && t == 5 && fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 8 && t == 6 && fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 8 && t == 9 && fl && !tl && s == 0) ScaleTo (false, "seventh", "ninth");									// scale to ninth
 			// to light circle ninth
-		else if (f == 8 && t == 9 && fl && tl && s == 0) ScaleTo (false, "seventh", "ninth");						// scale to ninth
+		if (f == 8 && t == 0 && fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 8 && t == 1 && fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 2 && fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 3 && fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 4 && fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 5 && fl && tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 8 && t == 6 && fl && tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 8 && t == 9 && fl && tl && s == 0) ScaleTo (false, "seventh", "ninth");									// scale to ninth
+
 		// from dark triangle eighth
-			// to dark triangle ninth
-		if (f == 8 && t == 9 && !fl && !tl && s == 1) ScaleTo (false, "seventh", "ninth");							// scale to ninth
-			// to light triangle ninth
-		else if (f == 8 && t == 9 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");						// scale to hidden
+			// to dark circle
+		if (f == 8 && t == 0 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 8 && t == 1 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 2 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 3 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 8 && t == 4 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 8 && t == 5 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 8 && t == 6 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 8 && t == 9 && !fl && !tl && s == 0) ScaleTo (false, "seventh", "ninth");									// scale to ninth
+			// to light circle
+		if (f == 8 && t == 0 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 8 && t == 1 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 2 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 3 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 4 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 5 && !fl && tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 8 && t == 6 && !fl && tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 8 && t == 9 && !fl && tl && s == 0) ScaleTo (false, "seventh", "ninth");									// scale to nint
+			// to dark triangle
+		if (f == 8 && t == 6 && !fl && !tl && s == 1) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 8 && t == 9 && !fl && !tl && s == 1) ScaleTo (false, "seventh", "ninth");									// scale to ninth
+			// to light triangle
+		if (f == 8 && t == 5 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 8 && t == 7 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 9 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+
+		// from light triangle eighth
+			// to dark circle
+		if (f == 8 && t == 3 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");										// scale to third
+		else if (f == 8 && t == 4 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 8 && t == 5 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 8 && t == 6 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 8 && t == 7 && fl && !tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 8 && t == 8 && fl && !tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 8 && t == 9 && fl && !tl && s == 0) ScaleTo (false, "hidden", "ninth");									// scale to ninth
+			// to light circle
+		if (f == 8 && t == 5 && fl && tl && s == 0) ScaleTo (false, "hidden", "third");											// scale to third
+		else if (f == 8 && t == 6 && fl && tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 8 && t == 7 && fl && tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 8 && t == 8 && fl && tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 8 && t == 9 && fl && tl && s == 0) ScaleTo (false, "hidden", "ninth");									// scale to ninth
+			// to dark triangle
+		if (f == 8 && t == 7 && fl && !tl && s == 1) ScaleTo (false, "hidden", "seventh");										// scale to seventh
+		else if (f == 8 && t == 9 && fl && !tl && s == 1) ScaleTo (false, "hidden", "ninth");									// scale to ninth
+
 		// from dark square eighth
-			// to dark square ninth
-		if (f == 8 && t == 9 && !fl && !tl && s == 2) ScaleTo (false, "seventh", "ninth");							// scale to ninth
-			// to light square ninth
-		else if (f == 8 && t == 9 && !fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");						// scale to hidden
+			// to dark circle
+		if (f == 8 && t == 0 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 8 && t == 1 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 2 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 3 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 8 && t == 4 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 8 && t == 5 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 8 && t == 6 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+			// seventh/eighth = no change
+		else if (f == 8 && t == 9 && !fl && !tl && s == 0) ScaleTo (false, "seventh", "ninth");									// scale to ninth
+			// to light circle
+		if (f == 8 && t == 0 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 8 && t == 1 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 2 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 3 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 4 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 5 && !fl && tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 8 && t == 6 && !fl && tl && s == 0) ScaleTo (true, "seventh", "third");									// scale to third
+		else if (f == 8 && t == 9 && !fl && tl && s == 0) ScaleTo (false, "seventh", "ninth");									// scale to ninth
+			// to dark square
+		if (f == 8 && t == 6 && !fl && !tl && s == 2) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 8 && t == 9 && !fl && !tl && s == 2) ScaleTo (false, "seventh", "ninth");									// scale to ninth
+			// to light square
+		if (f == 8 && t == 5 && !fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 8 && t == 7 && !fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 9 && !fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+
+		// from light square eighth
+			// to dark circle
+		if (f == 8 && t == 3 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");										// scale to third
+		else if (f == 8 && t == 4 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 8 && t == 5 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 8 && t == 6 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 8 && t == 7 && fl && !tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 8 && t == 8 && fl && !tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 8 && t == 9 && fl && !tl && s == 0) ScaleTo (false, "hidden", "ninth");									// scale to ninth
+			// to light circle
+		if (f == 8 && t == 5 && fl && tl && s == 0) ScaleTo (false, "hidden", "third");											// scale to third
+		else if (f == 8 && t == 6 && fl && tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 8 && t == 7 && fl && tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 8 && t == 8 && fl && tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 8 && t == 9 && fl && tl && s == 0) ScaleTo (false, "hidden", "ninth");									// scale to ninth
+			// to dark square
+		if (f == 8 && t == 7 && fl && !tl && s == 2) ScaleTo (false, "hidden", "seventh");										// scale to seventh
+		else if (f == 8 && t == 9 && fl && !tl && s == 2) ScaleTo (false, "hidden", "ninth");									// scale to ninth
+
 
 	///// ninth \\\\\
-		// no tenth state in particle
-
-	///// player tenth \\\\\
-
-		// from third
-		else if (f == 3 && t == 10 && !fl) ScaleTo (true, "third", "hidden");										// scale to hidden
-		// from fourth
-		else if (f == 4 && t == 10 && !fl) ScaleTo (true, "third", "hidden");										// scale to hidden
-		// from fifth
-		else if (f == 5 && t == 10 && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
-		// from sixth
-		else if (f == 6 && t == 10 && s == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
-		// from seventh
-		else if (f == 7 && t == 10 && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
-		else if (f == 7 && t == 10 && !fl && s == 1) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-		else if (f == 7 && t == 10 && !fl && s == 2) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-		// from eighth
-		else if (f == 8 && t == 10) ScaleTo (true, "seventh", "hidden");											// scale to hidden
-		else if (f == 8 && t == 10 && !fl && s == 1) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-		else if (f == 8 && t == 10 && !fl && s == 2) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-		// from ninth
-		else if (f == 9 && t == 10) ScaleTo (true, "ninth", "hidden");												// scale to hidden
-		else if (f == 9 && t == 10 && !fl && s == 1) ScaleTo (true, "ninth", "hidden");								// scale to hidden
-		else if (f == 9 && t == 10 && !fl && s == 2) ScaleTo (true, "ninth", "hidden");								// scale to hidden
-
-// DEVOLUTIONS \\
 
 
-///// zero \\\\\
-
-///// dark zero (0.5) \\\\\
-
-		// to zero (no shell change)
-
-///// first \\\\\
-
-	// from dark first
-		// to zero (no shell change)
-		// to dark zero (0.5) (no shell change)
-
-	// from light first
-		// to zero (no shell change)
-		// to dark zero (0.5) (no shell change)
-
-///// second \\\\\
-
-	// from dark second
-
-		// to zero (no shell change)
-		// to dark zero (no shell change)
-		// to first 
-			// to dark first (no shell change)
-			// to light first (no shell change)
-
-	// from light second
-		// to zero (no shell change)
-		// to dark zero (no shell change)
-		// to first
-			// to dark first (no shell change)
-			// to light first (no shell change)
-
-///// third \\\\\
-
-	// from dark third	
-		// to zero
-		if (f == 3 && t == 0 && !fl && tl) ScaleTo (true, "third", "hidden");										// scale to hidden
-		// to dark zero
-		if (f == 3 && t == 0 && !fl && !tl) ScaleTo (true, "third", "hidden");										// scale to hidden
-		// to first
-			// to dark first
-		if (f == 3 && t == 1 && !fl && !tl) ScaleTo (true, "third", "hidden");										// scale to hidden
-			// to light first
-		else if (f == 3 && t == 1 && !fl && tl) ScaleTo (true, "third", "hidden");									// scale to hidden
-		// to second
-			// to dark second
-		if (f == 3 && t == 2 && !fl && !tl) ScaleTo (true, "third", "hidden");										// scale to hidden
-			// to light second
-		else if (f == 3 && t == 2 && !fl && tl) ScaleTo (true, "third", "hidden");									// scale to hidden
-
-	// from light third	
-		// to zero (no shell change)
-		// to dark zero (no shell change)
-		// to first
-			// to dark first (no shell change)
-			// to light first (no shell change)
-		// to second
-			// to dark second (no shell change)
-			// to light second (no shell change)
-
-///// fourth \\\\\
-
-	// from dark fourth
-		// to zero
-		if (f == 4 && t == 0 && !fl && tl) ScaleTo (true, "third", "hidden");										// scale to hidden
-		// to dark zero
-		if (f == 4 && t == 0 && !fl && !tl) ScaleTo (true, "third", "hidden");										// scale to hidden
-		// to first
-			// to dark first
-		if (f == 4 && t == 1 && !fl && !tl) ScaleTo (true, "third", "hidden");										// scale to hidden
-			// to light first
-		else if (f == 4 && t == 1 && !fl && tl) ScaleTo (true, "third", "hidden");									// scale to hidden
-		// to second
-			// to dark second
-		if (f == 4 && t == 2 && !fl && !tl) ScaleTo (true, "third", "hidden");										// scale to hidden
-			// to light second
-		else if (f == 4 && t == 2 && !fl && tl) ScaleTo (true, "third", "hidden");									// scale to hidden
-		// to third
-			// to dark third (no shell change)
-			// to light third (no shell change)
-
-	// from light fourth	
-		// to zero (no shell change)
-		// to dark zero (no shell change)
-		// to first
-			// to dark first (no shell change)
-			// to light first (no shell change)
-		// to second
-			// to dark second (no shell change)
-			// to light second (no shell change)
-		// to third
-			// to dark third
-		if (f == 4 && t == 3 && fl && !tl) ScaleTo (false, "hidden", "third");										// scale to third
-			// to light third (no shell change)
-
-///// fifth \\\\\
-
-	// from dark circle fifth
-		// to zero
-		if (f == 5 && t == 0 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
-		// to dark zero
-		if (f == 5 && t == 0 && !fl && !tl && s == 0) ScaleTo (true, "third", "hidden");							// scale to hidden
-		// to first
-			// to dark first
-		if (f == 5 && t == 1 && !fl && !tl && s == 0) ScaleTo (true, "third", "hidden");							// scale to hidden
-			// to light first
-		else if (f == 5 && t == 1 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");						// scale to hidden
-		// to second
-			// to dark second
-		if (f == 5 && t == 2 && !fl && !tl && s == 0) ScaleTo (true, "third", "hidden");							// scale to hidden
-			// to light second
-		else if (f == 5 && t == 2 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");						// scale to hidden
-		// to third
-			// to dark third (no shell change)
-			// to light third
-		if (f == 5 && t == 3 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
-		// to fourth
-			// to dark fourth (no shell change)
-
-	// from light circle fifth
-		// to zero
-		if (f == 5 && t == 0 && fl && tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
-		// to dark zero
-		if (f == 5 && t == 0 && fl && !tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
-		// to first
-			// to dark first
-		if (f == 5 && t == 1 && fl && !tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
-			// to light first
-		else if (f == 5 && t == 1 && fl && tl && s == 0) ScaleTo (true, "third", "hidden");							// scale to hidden
-		// to second
-			// to dark second
-		if (f == 5 && t == 2 && fl && !tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
-			// to light second
-		else if (f == 5 && t == 2 && fl && tl && s == 0) ScaleTo (true, "third", "hidden");							// scale to hidden
-		// to third
-			// to dark third (no shell change)
-			// to light third
-		if (f == 5 && t == 3 && fl && tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
-		// to fourth
-			// to dark fourth (no shell change)
-
-	// from triangle fifth
-		// to zero (no shell change)
-		// to dark zero (no shell change)
-		// to first
-			// to dark first (no shell change)
-			// to light first (no shell change)
-		// to second
-			// to dark second (no shell change)
-			// to light second (no shell change)
-		// to third
-			// to dark third
-		if (f == 5 && t == 3 && fl && !tl && s == 1) ScaleTo (false, "hidden", "third");							// scale to third
-			// to light third (no shell change)
-		// to fourth
-			// to light fourth (no shell change)
-
-	// from square fifth
-		// to zero (no shell change)
-		// to dark zero (no shell change)
-		// to first
-			// to dark first (no shell change)
-			// to light first (no shell change)
-		// to second
-			// to dark second (no shell change)
-			// to light second (no shell change)
-		// to third
-			// to dark third
-		if (f == 5 && t == 3 && fl && !tl && s == 2) ScaleTo (false, "hidden", "third");							// scale to third
-			// to light third (no shell change)
-		// to fourth
-			// to light fourth (no shell change)
-
-///// sixth \\\\\
-
-	// from dark circle sixth
-		// to zero
-		if (f == 6 && t == 0 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
-		// to dark zero
-		if (f == 6 && t == 0 && !fl && !tl && s == 0) ScaleTo (true, "third", "hidden");							// scale to hidden
-		// to first
-			// to dark first
-		if (f == 6 && t == 1 && !fl && !tl && s == 0) ScaleTo (true, "third", "hidden");							// scale to hidden
-			// to light first
-		else if (f == 6 && t == 1 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");						// scale to hidden
-		// to second
-			// to dark second
-		if (f == 6 && t == 2 && !fl && !tl && s == 0) ScaleTo (true, "third", "hidden");							// scale to hidden
-			// to light second
-		else if (f == 6 && t == 2 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");						// scale to hidden
-		// to third
-			// to dark third (no shell change)
-			// to light third
-		if (f == 6 && t == 3 && !fl && tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
-		// to fourth
-			// to dark fourth (no shell change)
-		// to fifth
-			// to dark circle fifth (no shell change)
-			// to light circle fifth (no shell change)
-
-	// from light circle sixth
-		// to zero
-		if (f == 6 && t == 0 && fl && tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
-		// to dark zero
-		if (f == 6 && t == 0 && fl && !tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
-		// to first
-			// to dark first
-		if (f == 6 && t == 1 && fl && !tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
-			// to light first
-		else if (f == 6 && t == 1 && fl && tl && s == 0) ScaleTo (true, "third", "hidden");							// scale to hidden
-		// to second
-			// to dark second
-		if (f == 6 && t == 2 && fl && !tl && s == 0) ScaleTo (true, "third", "hidden");								// scale to hidden
-			// to light second
-		else if (f == 6 && t == 2 && fl && tl && s == 0) ScaleTo (true, "third", "hidden");							// scale to hidden
-		// to third
-			// to dark third (no shell change)
-			// to light third (no shell change)
-		// to fourth
-			// to dark fourth (no shell change)
-		// to fifth
-			// to dark circle fifth (no shell change)
-			// to light circle fifth (no shell change)
-
-	// from triangle sixth
-		// to zero (no shell change)
-		// to dark zero (no shell change)
-		// to first
-			// to dark first (no shell change)
-			// to light first (no shell change)
-		// to second
-			// to dark second (no shell change)
-			// to light second (no shell change)
-		// to third
-			// to dark third
-		if (f == 6 && t == 3 && !fl && !tl && s == 1) ScaleTo (false, "hidden", "third");							// scale to third
-			// to light third (no shell change)
-		// to fourth
-			// to light fourth (no shell change)
-		// to fifth
-			// to triangle fifth (no shell change)
-
-	// from square sixth
-		// to zero (no shell change)
-		// to dark zero (no shell change)
-		// to first
-			// to dark first (no shell change)
-			// to light first (no shell change)
-		// to second
-			// to dark second (no shell change)
-			// to light second (no shell change)
-		// to third
-			// to dark third
-		if (f == 6 && t == 3 && !fl && !tl && s == 2) ScaleTo (false, "hidden", "third");							// scale to third
-			// to light third (no shell change)
-		// to fourth
-			// to light fourth (no shell change)
-		// to fifth
-			// to square fifth (no shell change)
-
-///// seventh/eighth \\\\\
-
-	// from dark circle seventh
-		// to zero
-		if ((f == 7 || f == 8) && t == 0 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-		// to dark zero
-		if ((f == 7 || f == 8) && t == 0 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-		// to first
-			// to dark first
-		if ((f == 7 || f == 8) && t == 1 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-			// to light first
-		else if ((f == 7 || f == 8) && t == 1 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");						// scale to hidden
-		// to second
-			// to dark second
-		if ((f == 7 || f == 8) && t == 2 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-			// to light second
-		else if ((f == 7 || f == 8) && t == 2 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");						// scale to hidden
-		// to third
-			// to dark third
-		if ((f == 7 || f == 8) && t == 3 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");							// scale to third
-			// to light third
-		else if ((f == 7 || f == 8) && t == 3 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");						// scale to hidden
-		// to fourth
-			// to dark fourth
-		if ((f == 7 || f == 8) && t == 4 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");							// scale to third
-		// to fifth
-			// to dark circle fifth
-		if ((f == 7 || f == 8) && t == 5 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");							// scale to third
-			// to light circle fifth
-		else if ((f == 7 || f == 8) && t == 5 && !fl && tl && s == 0) ScaleTo (true, "seventh", "third");						// scale to third
-		// to sixth
-			// to dark circle sixth
-		if ((f == 7 || f == 8) && t == 6 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "third");							// scale to third
-			// to light circle sixth
-		else if ((f == 7 || f == 8) && t == 6 && !fl && tl && s == 0) ScaleTo (true, "seventh", "third");						// scale to third
-
-	// from light circle seventh
-		// to zero
-		if ((f == 7 || f == 8) && t == 0 && fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-		// to dark zero
-		if ((f == 7 || f == 8) && t == 0 && fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-		// to first
-			// to dark first
-		if ((f == 7 || f == 8) && t == 1 && fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-			// to light first
-		else if ((f == 7 || f == 8) && t == 1 && fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");						// scale to hidden
-		// to second
-			// to dark second
-		if ((f == 7 || f == 8) && t == 2 && fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-			// to light second
-		else if ((f == 7 || f == 8) && t == 2 && fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");						// scale to hidden
-		// to third
-			// to dark third
-		if ((f == 7 || f == 8) && t == 3 && fl && !tl && s == 0) ScaleTo (true, "seventh", "third");							// scale to third
-			// to light third
-		else if ((f == 7 || f == 8) && t == 3 && fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");						// scale to hidden
-		// to fourth
-			// to dark fourth
-		if ((f == 7 || f == 8) && t == 4 && fl && !tl && s == 0) ScaleTo (true, "seventh", "third");							// scale to third
-		// to fifth
-			// to dark circle fifth
-		if ((f == 7 || f == 8) && t == 5 && fl && !tl && s == 0) ScaleTo (true, "seventh", "third");							// scale to third
-			// to light circle fifth
-		else if ((f == 7 || f == 8) && t == 5 && fl && tl && s == 0) ScaleTo (true, "seventh", "third");						// scale to third
-		// to sixth
-			// to dark circle sixth
-		if ((f == 7 || f == 8) && t == 6 && fl && !tl && s == 0) ScaleTo (true, "seventh", "third");							// scale to third
-			// to light circle sixth
-		else if ((f == 7 || f == 8) && t == 6 && fl && tl && s == 0) ScaleTo (true, "seventh", "third");						// scale to third
-
-	// from dark triangle seventh
-		// to zero
-		if ((f == 7 || f == 8) && t == 0 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-		// to dark zero
-		if ((f == 7 || f == 8) && t == 0 && !fl && !tl && s == 1) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-		// to first
-			// to dark first
-		if ((f == 7 || f == 8) && t == 1 && !fl && !tl && s == 1) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-			// to light first
-		else if ((f == 7 || f == 8) && t == 1 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");						// scale to hidden
-		// to second
-			// to dark second
-		if ((f == 7 || f == 8) && t == 2 && !fl && !tl && s == 1) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-			// to light second
-		else if ((f == 7 || f == 8) && t == 2 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");						// scale to hidden
-		// to third
-			// to dark third
-		if ((f == 7 || f == 8) && t == 3 && !fl && !tl && s == 1) ScaleTo (true, "seventh", "third");							// scale to third
-			// to light third
-		else if ((f == 7 || f == 8) && t == 3 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");						// scale to hidden
-		// to fourth
-			// to light fourth
-		if ((f == 7 || f == 8) && t == 4 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-		// to fifth
-			// to triangle fifth
-		if ((f == 7 || f == 8) && t == 5 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-		// to sixth
-			// to dark triangle sixth
-		if ((f == 7 || f == 8) && t == 6 && !fl && !tl && s == 1) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-
-	// from dark triangle eighth
-		// to seventh
-			// to dark triangle seventh (no shell change)
-			// to light triangle seventh
-		if (f == 8 && t == 7 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");										// scale to hidden
-
-	// from light triangle seventh
-		// to zero (no shell change)
-		// to dark zero (no shell change)
-		// to first
-			// to dark first (no shell change)
-			// to light first (no shell change)
-		// to second
-			// to dark second (no shell change)
-			// to light second (no shell change)
-		// to third
-			// to dark third
-		if ((f == 7 || f == 8) && t == 3 && fl && !tl && s == 1) ScaleTo (true, "seventh", "third");							// scale to third
-			// to light third (no shell change)
-		// to fourth
-			// to light fourth (no shell change)
-		// to fifth
-			// to triangle fifth (no shell change)
-		// to sixth
-			// to dark triangle sixth (no shell change)
-
-	// from dark square seventh
-		// to zero
-		if ((f == 7 || f == 8) && t == 0 && !fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-		// to dark zero
-		if ((f == 7 || f == 8) && t == 0 && !fl && !tl && s == 2) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-		// to first
-			// to dark first
-		if ((f == 7 || f == 8) && t == 1 && !fl && !tl && s == 2) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-			// to light first
-		else if ((f == 7 || f == 8) && t == 1 && !fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");						// scale to hidden
-		// to second
-			// to dark second
-		if ((f == 7 || f == 8) && t == 2 && !fl && !tl && s == 2) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-			// to light second
-		else if ((f == 7 || f == 8) && t == 2 && !fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");						// scale to hidden
-		// to third
-			// to dark third
-		if ((f == 7 || f == 8) && t == 3 && !fl && !tl && s == 2) ScaleTo (true, "seventh", "third");							// scale to third
-			// to light third
-		else if ((f == 7 || f == 8) && t == 3 && !fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");						// scale to hidden
-		// to fourth
-			// to light fourth
-		if ((f == 7 || f == 8) && t == 4 && !fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-		// to fifth
-			// to square fifth
-		if ((f == 7 || f == 8) && t == 5 && !fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-		// to sixth
-			// to dark square sixth
-		if ((f == 7 || f == 8) && t == 6 && !fl && !tl && s == 2) ScaleTo (true, "seventh", "hidden");							// scale to hidden
-
-	// from dark square eighth
-		// to seventh
-			// to dark square seventh (no shell change)
-			// to light square seventh
-		if (f == 8 && t == 7 && !fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");										// scale to hidden
-
-	// from light square seventh
-		// to zero (no shell change)
-		// to dark zero (no shell change)
-		// to first
-			// to dark first (no shell change)
-			// to light first (no shell change)
-		// to second
-			// to dark second (no shell change)
-			// to light second (no shell change)
-		// to third
-			// to dark third
-		if ((f == 7 || f == 8) && t == 3 && fl && !tl && s == 2) ScaleTo (true, "seventh", "third");							// scale to third
-			// to light third (no shell change)
-		// to fourth
-			// to light fourth (no shell change)
-		// to fifth
-			// to square fifth (no shell change)
-		// to sixth
-			// to dark square sixth (no shell change)
-
-///// ninth \\\\\
-
-	// from dark circle ninth
-		// to zero
-		if (f == 9 && t == 0 && !fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");											// scale to hidden
-		// to dark zero
+		// from dark circle ninth
+			// to dark circle
 		if (f == 9 && t == 0 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "hidden");										// scale to hidden
-		// to first
-			// to dark first
-		if (f == 9 && t == 1 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "hidden");										// scale to hidden
-			// to light first
+		else if (f == 9 && t == 1 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+		else if (f == 9 && t == 2 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+		else if (f == 9 && t == 3 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "third");									// scale to third
+		else if (f == 9 && t == 4 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "third");									// scale to third
+		else if (f == 9 && t == 5 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "third");									// scale to third
+		else if (f == 9 && t == 6 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "third");									// scale to third
+		else if (f == 9 && t == 7 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "seventh");									// scale to seventh
+		else if (f == 9 && t == 8 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "seventh");									// scale to seventh
+		else if (f == 9 && t == 10 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+			// to light circle
+		if (f == 9 && t == 0 && !fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");											// scale to hidden
 		else if (f == 9 && t == 1 && !fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
-		// to second
-			// to dark second
-		if (f == 9 && t == 2 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "hidden");										// scale to hidden
-			// to light second
 		else if (f == 9 && t == 2 && !fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
-		// to third
-			// to dark third
-		if (f == 9 && t == 3 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "third");											// scale to third
-			// to light third
 		else if (f == 9 && t == 3 && !fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
-		// to fourth
-			// to dark fourth
-		if (f == 9 && t == 4 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "third");											// scale to third
-		// to fifth
-			// to dark circle fifth
-		if (f == 9 && t == 5 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "third");											// scale to third
-			// to light circle fifth
+		else if (f == 9 && t == 4 && !fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
 		else if (f == 9 && t == 5 && !fl && tl && s == 0) ScaleTo (true, "ninth", "third");										// scale to third
-		// to sixth
-			// to dark circle sixth
-		if (f == 9 && t == 6 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "third");											// scale to third
-			// to light circle sixth
 		else if (f == 9 && t == 6 && !fl && tl && s == 0) ScaleTo (true, "ninth", "third");										// scale to third
-		// to seventh
-			// to dark circle seventh
-		if (f == 9 && t == 7 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "seventh");										// scale to seventh
-			// to light circle seventh
 		else if (f == 9 && t == 7 && !fl && tl && s == 0) ScaleTo (true, "ninth", "seventh");									// scale to seventh
-		// to eighth
-			// to dark circle eighth
-		if (f == 9 && t == 8 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "seventh");										// scale to seventh
-			// to light circle eighth
 		else if (f == 9 && t == 8 && !fl && tl && s == 0) ScaleTo (true, "ninth", "seventh");									// scale to seventh
+		else if (f == 9 && t == 10 && !fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
 
-	// from light circle ninth
-		// to zero
-		if (f == 9 && t == 0 && fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");											// scale to hidden
-		// to dark zero
+		// from light circle ninth
+			// to dark circle
 		if (f == 9 && t == 0 && fl && !tl && s == 0) ScaleTo (true, "ninth", "hidden");											// scale to hidden
-		// to first
-			// to dark first
-		if (f == 9 && t == 1 && fl && !tl && s == 0) ScaleTo (true, "ninth", "hidden");											// scale to hidden
-			// to light first
+		else if (f == 9 && t == 1 && fl && !tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+		else if (f == 9 && t == 2 && fl && !tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+		else if (f == 9 && t == 3 && fl && !tl && s == 0) ScaleTo (true, "ninth", "third");										// scale to third
+		else if (f == 9 && t == 4 && fl && !tl && s == 0) ScaleTo (true, "ninth", "third");										// scale to third
+		else if (f == 9 && t == 5 && fl && !tl && s == 0) ScaleTo (true, "ninth", "third");										// scale to third
+		else if (f == 9 && t == 6 && fl && !tl && s == 0) ScaleTo (true, "ninth", "third");										// scale to third
+		else if (f == 9 && t == 7 && fl && !tl && s == 0) ScaleTo (true, "ninth", "seventh");									// scale to seventh
+		else if (f == 9 && t == 8 && fl && !tl && s == 0) ScaleTo (true, "ninth", "seventh");									// scale to seventh
+		else if (f == 9 && t == 10 && fl && !tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+			// to light circle
+		if (f == 9 && t == 0 && fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");											// scale to hidden
 		else if (f == 9 && t == 1 && fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");										// scale to hidden
-		// to second
-			// to dark second
-		if (f == 9 && t == 2 && fl && !tl && s == 0) ScaleTo (true, "ninth", "hidden");											// scale to hidden
-			// to light second
 		else if (f == 9 && t == 2 && fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");										// scale to hidden
-		// to third
-			// to dark third
-		if (f == 9 && t == 3 && fl && !tl && s == 0) ScaleTo (true, "ninth", "third");											// scale to third
-			// to light third
 		else if (f == 9 && t == 3 && fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");										// scale to hidden
-		// to fourth
-			// to dark fourth
-		if (f == 9 && t == 4 && fl && !tl && s == 0) ScaleTo (true, "ninth", "third");											// scale to third
-		// to fifth
-			// to dark circle fifth
-		if (f == 9 && t == 5 && fl && !tl && s == 0) ScaleTo (true, "ninth", "third");											// scale to third
-			// to light circle fifth
+		else if (f == 9 && t == 4 && fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");										// scale to hidden
 		else if (f == 9 && t == 5 && fl && tl && s == 0) ScaleTo (true, "ninth", "third");										// scale to third
-		// to sixth
-			// to dark circle sixth
-		if (f == 9 && t == 6 && fl && !tl && s == 0) ScaleTo (true, "ninth", "third");											// scale to third
-			// to light circle sixth
 		else if (f == 9 && t == 6 && fl && tl && s == 0) ScaleTo (true, "ninth", "third");										// scale to third
-		// to seventh
-			// to dark circle seventh
-		if (f == 9 && t == 7 && fl && !tl && s == 0) ScaleTo (true, "ninth", "seventh");										// scale to seventh
-			// to light circle seventh
 		else if (f == 9 && t == 7 && fl && tl && s == 0) ScaleTo (true, "ninth", "seventh");									// scale to seventh
-		// to eighth
-			// to dark circle eighth
-		if (f == 9 && t == 8 && fl && !tl && s == 0) ScaleTo (true, "ninth", "seventh");										// scale to seventh
-			// to light circle eighth
 		else if (f == 9 && t == 8 && fl && tl && s == 0) ScaleTo (true, "ninth", "seventh");									// scale to seventh
+		else if (f == 9 && t == 10 && fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
 
-	// from dark triangle ninth
-		// to zero
-		if (f == 9 && t == 0 && fl && tl && s == 1) ScaleTo (true, "ninth", "hidden");											// scale to hidden
-		// to dark zero
-		if (f == 9 && t == 0 && fl && !tl && s == 1) ScaleTo (true, "ninth", "hidden");											// scale to hidden
-		// to first
-			// to dark first
-		if (f == 9 && t == 1 && !fl && !tl && s == 1) ScaleTo (true, "ninth", "hidden");										// scale to hidden
-			// to light first
-		else if (f == 9 && t == 1 && !fl && tl && s == 1) ScaleTo (true, "ninth", "hidden");									// scale to hidden
-		// to second
-			// to dark second
-		if (f == 9 && t == 2 && !fl && !tl && s == 1) ScaleTo (true, "ninth", "hidden");										// scale to hidden
-			// to light second
-		else if (f == 9 && t == 2 && !fl && tl && s == 1) ScaleTo (true, "ninth", "hidden");									// scale to hidden
-		// to third
-			// to dark third
-		if (f == 9 && t == 3 && !fl && !tl && s == 1) ScaleTo (true, "ninth", "third");											// scale to third
-			// to light third
-		else if (f == 9 && t == 3 && !fl && tl && s == 1) ScaleTo (true, "ninth", "hidden");									// scale to hidden
-		// to fourth
-			// to light fourth
-		if (f == 9 && t == 4 && !fl && tl && s == 1) ScaleTo (true, "ninth", "hidden");											// scale to hidden
-		// to fifth
-			// to triangle fifth
-		if (f == 9 && t == 5 && !fl && tl && s == 1) ScaleTo (true, "ninth", "hidden");											// scale to hidden
-		// to sixth
-			// to dark triangle sixth
+		// from dark triangle ninth
+			// to dark circle
+		if (f == 9 && t == 0 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "hidden");											// scale to hidden
+		else if (f == 9 && t == 1 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+		else if (f == 9 && t == 2 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+		else if (f == 9 && t == 3 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "third");									// scale to third
+		else if (f == 9 && t == 4 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "third");									// scale to third
+		else if (f == 9 && t == 5 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "third");									// scale to third
+		else if (f == 9 && t == 6 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "third");									// scale to third
+		else if (f == 9 && t == 7 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "seventh");									// scale to seventh
+		else if (f == 9 && t == 8 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "seventh");									// scale to seventh
+			// to light circle
+		if (f == 9 && t == 0 && !fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");											// scale to hidden
+		else if (f == 9 && t == 1 && !fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+		else if (f == 9 && t == 2 && !fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+		else if (f == 9 && t == 3 && !fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+		else if (f == 9 && t == 4 && !fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+		else if (f == 9 && t == 5 && !fl && tl && s == 0) ScaleTo (true, "ninth", "third");										// scale to third
+		else if (f == 9 && t == 6 && !fl && tl && s == 0) ScaleTo (true, "ninth", "third");										// scale to third
+		else if (f == 9 && t == 7 && !fl && tl && s == 0) ScaleTo (true, "ninth", "seventh");									// scale to seventh
+		else if (f == 9 && t == 8 && !fl && tl && s == 0) ScaleTo (true, "ninth", "seventh");									// scale to seventh
+			// to dark triangle
 		if (f == 9 && t == 6 && !fl && !tl && s == 1) ScaleTo (true, "ninth", "hidden");										// scale to hidden
-		// to seventh
-			// to dark triangle seventh
-		if (f == 9 && t == 7 && !fl && !tl && s == 1) ScaleTo (true, "ninth", "seventh");										// scale to seventh
-			// to light triangle seventh
+		else if (f == 9 && t == 7 && !fl && !tl && s == 1) ScaleTo (true, "ninth", "seventh");									// scale to seventh
+		else if (f == 9 && t == 8 && !fl && !tl && s == 1) ScaleTo (true, "ninth", "seventh");									// scale to seventh
+		else if (f == 9 && t == 10 && !fl && !tl && s == 1) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+			// to light triangle
+		if (f == 9 && t == 5 && !fl && tl && s == 1) ScaleTo (true, "ninth", "hidden");											// scale to hidden
 		else if (f == 9 && t == 7 && !fl && tl && s == 1) ScaleTo (true, "ninth", "hidden");									// scale to hidden
-		// to eighth
-			// to dark tiangle eighth
-		if (f == 9 && t == 8 && !fl && !tl && s == 1) ScaleTo (true, "ninth", "seventh");										// scale to seventh
-			// to light triangle eighth
 		else if (f == 9 && t == 8 && !fl && tl && s == 1) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+		else if (f == 9 && t == 10 && !fl && tl && s == 1) ScaleTo (true, "ninth", "hidden");									// scale to hidden
 
-	// from light triangle ninth
-		// to zero (no shell change)
-		// to dark zero (no shell change)
-		// to first
-			// to dark first (no shell change)
-			// to light first (no shell change)
-		// to second
-			// to dark second (no shell change)
-			// to light second (no shell change)
-		// to third
-			// to dark third
-		if (f == 9 && t == 3 && fl && !tl && s == 1) ScaleTo (false, "hidden", "third");										// scale to third
-			// to light third (no shell change)
-		// to fourth
-			// to light fourth (no shell change)
-		// to fifth
-			// to triangle fifth (no shell change)
-		// to sixth
-			// to dark triangle sixth (no shell change)
-		// to seventh
-			// to dark triangle seventh
+		// from light triangle ninth
+			// to dark circle
+		if (f == 9 && t == 3 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");										// scale to third
+		else if (f == 9 && t == 4 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 9 && t == 5 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 9 && t == 6 && fl && !tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 9 && t == 7 && fl && !tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 9 && t == 8 && fl && !tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 9 && t == 9 && fl && !tl && s == 0) ScaleTo (false, "hidden", "ninth");									// scale to ninth
+			// to light circle
+		if (f == 9 && t == 5 && fl && tl && s == 0) ScaleTo (false, "hidden", "third");											// scale to third
+		else if (f == 9 && t == 6 && fl && tl && s == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 9 && t == 7 && fl && tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 9 && t == 8 && fl && tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 9 && t == 9 && fl && tl && s == 0) ScaleTo (false, "hidden", "ninth");									// scale to ninth
+			// to dark triangle
 		if (f == 9 && t == 7 && fl && !tl && s == 1) ScaleTo (false, "hidden", "seventh");										// scale to seventh
-			// to light triangle seventh (no shell change)
-		// to eighth
-			// to dark triangle eighth
-		if (f == 9 && t == 8 && fl && !tl && s == 1) ScaleTo (true, "hidden", "seventh");										// scale to seventh
-			// to light triangle eighth (no shell change)
+		else if (f == 9 && t == 8 && fl && !tl && s == 1) ScaleTo (true, "hidden", "seventh");									// scale to seventh
 
-	// from dark square ninth
-		// to zero
-		if (f == 9 && t == 0 && !fl && tl && s == 2) ScaleTo (true, "ninth", "hidden");											// scale to hidden
-		// to dark zero
-		if (f == 9 && t == 0 && !fl && !tl && s == 2) ScaleTo (true, "ninth", "hidden");										// scale to hidden
-		// to first
-			// to dark first
-		if (f == 9 && t == 1 && !fl && !tl && s == 2) ScaleTo (true, "ninth", "hidden");										// scale to hidden
-			// to light first
-		else if (f == 9 && t == 1 && !fl && tl && s == 2) ScaleTo (true, "ninth", "hidden");									// scale to hidden
-		// to second
-			// to dark second
-		if (f == 9 && t == 2 && !fl && !tl && s == 2) ScaleTo (true, "ninth", "hidden");										// scale to hidden
-			// to light second
-		else if (f == 9 && t == 2 && !fl && tl && s == 2) ScaleTo (true, "ninth", "hidden");									// scale to hidden
-		// to third
-			// to dark third
-		if (f == 9 && t == 3 && !fl && !tl && s == 2) ScaleTo (true, "ninth", "third");											// scale to third
-			// to light third
-		else if (f == 9 && t == 3 && !fl && tl && s == 2) ScaleTo (true, "ninth", "hidden");									// scale to hidden
-		// to fourth
-			// to light fourth
-		if (f == 9 && t == 4 && !fl && tl && s == 2) ScaleTo (true, "ninth", "hidden");											// scale to hidden
-		// to fifth
-			// to square fifth
-		if (f == 9 && t == 5 && !fl && tl && s == 2) ScaleTo (true, "ninth", "hidden");											// scale to hidden
-		// to sixth
-			// to dark square sixth
+		// from dark square ninth
+			// to dark circle
+		if (f == 9 && t == 0 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "hidden");										// scale to hidden
+		else if (f == 9 && t == 1 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+		else if (f == 9 && t == 2 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+		else if (f == 9 && t == 3 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "third");									// scale to third
+		else if (f == 9 && t == 4 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "third");									// scale to third
+		else if (f == 9 && t == 5 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "third");									// scale to third
+		else if (f == 9 && t == 6 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "third");									// scale to third
+		else if (f == 9 && t == 7 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "seventh");									// scale to seventh
+		else if (f == 9 && t == 8 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "seventh");									// scale to seventh
+			// to light circle
+		if (f == 9 && t == 0 && !fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");											// scale to hidden
+		else if (f == 9 && t == 1 && !fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+		else if (f == 9 && t == 2 && !fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+		else if (f == 9 && t == 3 && !fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+		else if (f == 9 && t == 4 && !fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+		else if (f == 9 && t == 5 && !fl && tl && s == 0) ScaleTo (true, "ninth", "third");										// scale to third
+		else if (f == 9 && t == 6 && !fl && tl && s == 0) ScaleTo (true, "ninth", "third");										// scale to third
+		else if (f == 9 && t == 7 && !fl && tl && s == 0) ScaleTo (true, "ninth", "seventh");									// scale to seventh
+		else if (f == 9 && t == 8 && !fl && tl && s == 0) ScaleTo (true, "ninth", "seventh");									// scale to seventh
+			// to dark square
 		if (f == 9 && t == 6 && !fl && !tl && s == 2) ScaleTo (true, "ninth", "hidden");										// scale to hidden
-		// to seventh
-			// to dark square seventh
-		if (f == 9 && t == 7 && !fl && !tl && s == 2) ScaleTo (true, "ninth", "seventh");										// scale to seventh
-			// to light square seventh
+		else if (f == 9 && t == 7 && !fl && !tl && s == 2) ScaleTo (true, "ninth", "seventh");									// scale to seventh
+		else if (f == 9 && t == 8 && !fl && !tl && s == 2) ScaleTo (true, "ninth", "seventh");									// scale to seventh
+		else if (f == 9 && t == 10 && !fl && !tl && s == 2) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+			// to light square
+		if (f == 9 && t == 5 && !fl && tl && s == 2) ScaleTo (true, "ninth", "hidden");											// scale to hidden
 		else if (f == 9 && t == 7 && !fl && tl && s == 2) ScaleTo (true, "ninth", "hidden");									// scale to hidden
-		// to eighth
-			// to dark square eighth
-		if (f == 9 && t == 8 && !fl && !tl && s == 2) ScaleTo (true, "ninth", "seventh");										// scale to seventh
-			// to light square eighth
 		else if (f == 9 && t == 8 && !fl && tl && s == 2) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+		else if (f == 9 && t == 10 && !fl && tl && s == 2) ScaleTo (true, "ninth", "hidden");									// scale to hidden
 
-	// from light square seventh/eighth
-		// to zero (no shell change)
-		// to dark zero (no shell change)
-		// to first
-			// to dark first (no shell change)
-			// to light first (no shell change)
-		// to second
-			// to dark second (no shell change)
-			// to light second (no shell change)
-		// to third
-			// to dark third
-		if (f == 9 && t == 3 && fl && !tl && s == 2) ScaleTo (true, "hidden", "third");											// scale to third
-			// to light third (no shell change)
-		// to fourth
-			// to light fourth (no shell change)
-		// to fifth
-			// to square fifth (no shell change)
-		// to sixth
-			// to dark square sixth (no shell change)
-		// to seventh
-			// to dark square seventh
+		// from light square ninth
+			// to dark circle
+		if (f == 9 && t == 3 && fl && !tl && s == 0) ScaleTo (true, "hidden", "third");											// scale to third
+		else if (f == 9 && t == 4 && fl && !tl && s == 0) ScaleTo (true, "hidden", "third");									// scale to third
+		else if (f == 9 && t == 5 && fl && !tl && s == 0) ScaleTo (true, "hidden", "third");									// scale to third
+		else if (f == 9 && t == 6 && fl && !tl && s == 0) ScaleTo (true, "hidden", "third");									// scale to third
+		else if (f == 9 && t == 7 && fl && !tl && s == 0) ScaleTo (true, "hidden", "seventh");									// scale to seventh
+		else if (f == 9 && t == 8 && fl && !tl && s == 0) ScaleTo (true, "hidden", "seventh");									// scale to seventh
+		else if (f == 9 && t == 9 && fl && !tl && s == 0) ScaleTo (true, "hidden", "ninth");									// scale to ninth
+			// to light circle
+		if (f == 9 && t == 5 && fl && tl && s == 0) ScaleTo (true, "hidden", "third");											// scale to third
+		else if (f == 9 && t == 6 && fl && tl && s == 0) ScaleTo (true, "hidden", "third");										// scale to third
+		else if (f == 9 && t == 7 && fl && tl && s == 0) ScaleTo (true, "hidden", "seventh");									// scale to seventh
+		else if (f == 9 && t == 8 && fl && tl && s == 0) ScaleTo (true, "hidden", "seventh");									// scale to seventh
+		else if (f == 9 && t == 9 && fl && tl && s == 0) ScaleTo (true, "hidden", "ninth");										// scale to ninth
+			// to dark square
 		if (f == 9 && t == 7 && fl && !tl && s == 2) ScaleTo (true, "ninth", "seventh");										// scale to seventh
-			// to light square seventh (no shell change)
-		// to eighth
-			// to dark square eighth
-		if (f == 9 && t == 8 && fl && !tl && s == 2) ScaleTo (true, "ninth", "seventh");										// scale to seventh
-			// to light square eighth (no shell change)
+		else if (f == 9 && t == 8 && fl && !tl && s == 2) ScaleTo (true, "ninth", "seventh");									// scale to seventh
+
 	}
 
 	///<summary>

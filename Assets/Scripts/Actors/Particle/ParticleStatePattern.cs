@@ -52,9 +52,12 @@ public class ParticleStatePattern : MonoBehaviour {
 
 	private int fromState, toState, shape;									// transition properties
 	private bool fromLight, toLight;										// transition properties
+	//private bool toLightworld;													// transition properties: to light world
 
 	private bool setShell, setNucleus;										// set part flags
+	private bool cwShell, cwNucleus;										// set change world part flags
 	private float setShellTimer, setNucleusTimer;							// set part timers
+	private float cwShellTimer, cwNucleusTimer;								// set change world part timers
 
 	public int die;															// collision conflict check
 	public bool stunned;													// stunned?
@@ -113,7 +116,38 @@ public class ParticleStatePattern : MonoBehaviour {
 		lightworld = psp.lightworld;										// update if lightworld
 		changeParticles = psp.changeParticles;								// if changeParticles is true, update from player state pattern
 
-		currentState.UpdateState ();										// frame updates from current state class
+		// current state as int
+		if (updateStateIndicator) {											// if update state indicator flag
+			if (currentState == zeroState) state = 0;							// zero
+			else if (currentState == firstState) state = 1;						// first
+			else if (currentState == secondState) state = 2;					// second
+			else if (currentState == thirdState) state = 3;						// third
+			else if (currentState == fourthState) state = 4;					// fourth
+			else if (currentState == fifthState) state = 5;						// fifth
+			else if (currentState == sixthState) state = 6;						// sixth
+			else if (currentState == seventhState) state = 7;					// seventh
+			else if (currentState == eighthState) state = 8;					// eighth
+			else if (currentState == ninthState) state = 9;						// ninth
+			updateStateIndicator = false;										// reset flag
+		}
+
+		// set part world change timers
+		if (cwShell) {														// if set shell
+			cwShellTimer += Time.deltaTime;									// start timer
+			if (cwShellTimer >= 0.1f) {										// if timer is 0.1 sec
+				psm.ToOtherWorld (toLightworld, fromState, toState, toLight);		// change shell
+				cwShell = false;													// reset set shell flag
+				cwShellTimer = 0f;													// reset set shell timer
+			}
+		}
+		if (cwNucleus) {													// if set nucleus
+			setNucleusTimer += Time.deltaTime;									// start timer
+			if (setNucleusTimer >= 0.2f) {										// if timer is 0.2 sec
+				pnm.ToOtherWorld (toLightworld, fromState, toState, toLight);		// change nucleus
+				cwNucleus = false;													// reset set nucleus flag
+				cwNucleusTimer = 0f;												// reset set nucleus timer
+			}
+		}
 
 		// set parts timers
 		if (setShell) {														// if set shell
@@ -143,26 +177,16 @@ public class ParticleStatePattern : MonoBehaviour {
 			}
 		}
 
-		// current state as int
-		if (updateStateIndicator) {
-			if (currentState == zeroState) state = 0;
-			else if (currentState == firstState) state = 1;
-			else if (currentState == secondState) state = 2;
-			else if (currentState == thirdState) state = 3;
-			else if (currentState == fourthState) state = 4;
-			else if (currentState == fifthState) state = 5;
-			else if (currentState == sixthState) state = 6;
-			else if (currentState == seventhState) state = 7;
-			else if (currentState == eighthState) state = 8;
-			else if (currentState == ninthState) state = 9;
-			updateStateIndicator = false;
-		}
-
 		// stun duration timer
 		if (stunned) {
 			//Stun ();
 			stunTimer += Time.deltaTime;													// start timer
 		}
+
+	/////
+		currentState.UpdateState ();										// frame updates from current state class
+	/////
+
 	}
 
 	private void OnTriggerEnter(Collider other)
@@ -349,16 +373,13 @@ public class ParticleStatePattern : MonoBehaviour {
 
 	public void ChangeWorld(bool toLW, int fromState, int toState, bool toLight) 
 	{
+		toLightworld = toLW;														// update local to lightworl
 		//Debug.Log ("particle change world");
-		if (toLW) inLightworld = true;												// if to lightworld, set inLightworld
-		if (!toLW) inLightworld = false;											// if not to lightworld, reset inLightworld
 
 		pcm.ToOtherWorld (toLW, fromState, toState, toLight);						// change core
-		psm.ToOtherWorld (toLW, fromState, toState, toLight);						// change shell
-		pnm.ToOtherWorld (toLW, fromState, toState, toLight);						// change nucleus
+		cwShell = true;																// start shell change timer
+		cwNucleus = true;															// start nucleus change timer
 
-		if (toLW) toLightworld = false;												// if to light world, reset toLightworld flag
-		else if (!toLW)	toDarkworld = false;										// if to dark world, reset toDarkworld flag
 
 		if (toState == 0) gameObject.tag = "Zero";									// if zero, set tag
 		else if (toState == 1) gameObject.tag = "First";							// if first, set tag
@@ -370,6 +391,16 @@ public class ParticleStatePattern : MonoBehaviour {
 		else if (toState == 7) gameObject.tag = "Seventh";							// if seventh, set tag
 		else if (toState == 8) gameObject.tag = "Eighth";							// if eighth, set tag
 		else if (toState == 9) gameObject.tag = "Ninth";							// if ninth, set tag
+	
+		if (toLW) {
+			toLightworld = false;													// if to light world, reset toLightworld flag
+			inLightworld = true;													// if to lightworld, set inLightworld
+		}
+		else if (!toLW)	{
+			toDarkworld = false;													// if to dark world, reset toDarkworld flag
+			inLightworld = false;													// if not to lightworld, reset inLightworld
+		}
+
 	}
 
 	/*private void LightWorldNucleus()

@@ -152,8 +152,6 @@ public class PlayerStatePattern : MonoBehaviour {
 		if (uim.uI.GetComponent<StartOptions> ().inMainMenu) canCollide = false;			// if in menu, no collision
 		else if (!uim.uI.GetComponent<StartOptions> ().inMainMenu) canCollide = true; 		// if not in menu, collision
 
-		currentState.UpdateState ();														// frame updates from current state class
-
 		if (isInit) {																		// if init
 			initTimer += Time.deltaTime;														// start timer
 			if (initTimer >= 1.0f) {															// if timer = 1 sec
@@ -220,7 +218,7 @@ public class PlayerStatePattern : MonoBehaviour {
 			timeCheck = false;																	// check time only once
 		}
 
-		// debug - show current state
+		// current state int value
 		if (updateStateIndicator) {
 			if (currentState == zeroState) state = 0;
 			else if (currentState == firstState) state = 1;
@@ -235,6 +233,10 @@ public class PlayerStatePattern : MonoBehaviour {
 			else if (currentState == tenthState) state = 10;
 			updateStateIndicator = false;
 		}
+
+	/////
+		currentState.UpdateState ();														// frame updates from current state class
+	/////
 
 	}
 
