@@ -1,15 +1,19 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Actors\Particle\ParticleShellManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Actors\Particle\States\NinthParticleState.cs">
     <Files>
-      <File FileName="Assets\Scripts\Actors\Player\PlayerStatePattern.cs" Line="221" Column="24" />
-      <File FileName="Assets\Scripts\Actors\Player\PlayerCoreManager.cs" Line="1257" Column="46" />
-      <File FileName="Assets\Scripts\Actors\Player\PlayerNucleusManager.cs" Line="2499" Column="5" />
-      <File FileName="Assets\Scripts\Actors\Player\PlayerShellManager.cs" Line="33" Column="15" />
-      <File FileName="Assets\Scripts\Actors\Particle\ParticleStatePattern.cs" Line="396" Column="38" NotebookId="1" />
-      <File FileName="Assets\Scripts\Actors\Particle\ParticleCoreManager.cs" Line="92" Column="24" NotebookId="1" />
-      <File FileName="Assets\Scripts\Actors\Particle\ParticleNucleusManager.cs" Line="44" Column="3" NotebookId="1" />
-      <File FileName="Assets\Scripts\Actors\Particle\ParticleShellManager.cs" Line="63" Column="53" NotebookId="1" />
+      <File FileName="Assets\Scripts\Actors\Particle\ParticleStatePattern.cs" Line="384" Column="46" />
+      <File FileName="Assets\Scripts\Actors\Particle\ParticleNucleusManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Actors\Particle\States\ZeroParticleState.cs" Line="296" Column="59" />
+      <File FileName="Assets\Scripts\Actors\Particle\States\FirstParticleState.cs" Line="269" Column="4" />
+      <File FileName="Assets\Scripts\Actors\Particle\States\SecondParticleState.cs" Line="286" Column="81" />
+      <File FileName="Assets\Scripts\Actors\Particle\States\ThirdParticleState.cs" Line="318" Column="82" />
+      <File FileName="Assets\Scripts\Actors\Particle\States\FourthParticleState.cs" Line="275" Column="92" />
+      <File FileName="Assets\Scripts\Actors\Particle\States\FifthParticleState.cs" Line="430" Column="8" />
+      <File FileName="Assets\Scripts\Actors\Particle\States\SixthParticleState.cs" Line="436" Column="8" />
+      <File FileName="Assets\Scripts\Actors\Particle\States\SeventhParticleState.cs" Line="444" Column="4" />
+      <File FileName="Assets\Scripts\Actors\Particle\States\EighthParticleState.cs" Line="426" Column="67" />
+      <File FileName="Assets\Scripts\Actors\Particle\States\NinthParticleState.cs" Line="446" Column="63" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -19,10 +23,10 @@
               <Node name="Scripts" expanded="True">
                 <Node name="Actors" expanded="True">
                   <Node name="Particle" expanded="True">
-                    <Node name="States" expanded="True" />
-                    <Node name="ParticleShellManager.cs" selected="True" />
+                    <Node name="States" expanded="True">
+                      <Node name="NinthParticleState.cs" selected="True" />
+                    </Node>
                   </Node>
-                  <Node name="Player" expanded="True" />
                 </Node>
               </Node>
             </Node>

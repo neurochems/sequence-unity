@@ -23,7 +23,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 		psp = GameObject.Find ("Player")
 			.gameObject.GetComponent<PlayerStatePattern> ();																	// init psp ref
 		lightShader = Shader.Find("Unlit/light_nucleus");																		// init light nucleus shader
-		darkShader = Shader.Find("Unlit/light_nucleus");																		// init dark nucleus shader
+		darkShader = Shader.Find("Unlit/dark_nucleus");																			// init dark nucleus shader
 
 		zeroPos = 0.175f;																										// set zero y position
 		firstPos = 0.5f;																										// set first/second/fifth/sixth y position
@@ -2492,7 +2492,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 			rend.material.shader = lightShader;																					// change to white shader
 		} 
 		else if (!l && !psp.lightworld) {
-			if (toState != 0 && toState % 2 == 0) rend.material.shader = darkShader;											// if even # state, change to black shader
+			if (toState != 0 && (toState % 2 == 0))	rend.material.shader = darkShader;											// if even # state, change to black shader
 			else {
 				rend.material.shader = Shader.Find("Unlit/Color");																// change to unlit colour shader
 				rend.material.SetColor("_Color", Color.black);																	// change to black
@@ -2502,7 +2502,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 			rend.material.shader = darkShader;																					// change to black shader
 		}
 		else if (!l && psp.lightworld) {
-			if (toState != 0 && toState % 2 == 0) rend.material.shader = lightShader;											// if even # state, change to white shader
+			if (toState != 0 && (toState % 2 == 0)) rend.material.shader = lightShader;											// if even # state, change to white shader
 			else { 
 				rend.material.shader = Shader.Find("Unlit/Color");																	// change to unlit colour shader
 				rend.material.SetColor("_Color", Color.white);																		// change to white

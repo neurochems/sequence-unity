@@ -60,6 +60,7 @@ public class ParticleStatePattern : MonoBehaviour {
 	private float cwShellTimer, cwNucleusTimer;								// set change world part timers
 
 	public int die;															// collision conflict check
+	public bool roll;														// collision conflict check
 	public bool stunned;													// stunned?
 	public float stunDuration = 3f;											// duration of post-hit invulnerability
 	private float stunTimer = 0f, activeTimer = 0f;							// stun timer, active timer
@@ -104,6 +105,8 @@ public class ParticleStatePattern : MonoBehaviour {
 
 		currentState = zeroState;											// start at zero state
 		state = 0;															// start at zero state
+
+		roll = true;														// roll die
 	}
 
 	void Update () 
@@ -177,10 +180,10 @@ public class ParticleStatePattern : MonoBehaviour {
 			}
 		}
 
-		// stun duration timer
-		if (stunned) {
-			//Stun ();
-			stunTimer += Time.deltaTime;													// start timer
+		// roll die
+		if (roll) {
+			die = Random.Range(1,6);														// roll die
+			roll = false;																	// reset flag
 		}
 
 	/////
@@ -371,12 +374,14 @@ public class ParticleStatePattern : MonoBehaviour {
 		lightEvolStart = lightEvol;													// store light evol at start of state
 	}
 
-	public void ChangeWorld(bool toLW, int fromState, int toState, bool toLight) 
+	public void ChangeWorld(bool toLW, int f, int t, bool tl) 
 	{
-		toLightworld = toLW;														// update local to lightworl
-		//Debug.Log ("particle change world");
+		toLightworld = toLW;														// store to lightworld
+		fromState = f;																// store from state
+		toState = t;																// store to state
+		toLight = tl;																// store to light
 
-		pcm.ToOtherWorld (toLW, fromState, toState, toLight);						// change core
+		pcm.ToOtherWorld (toLW, f, t, tl);											// change core
 		cwShell = true;																// start shell change timer
 		cwNucleus = true;															// start nucleus change timer
 

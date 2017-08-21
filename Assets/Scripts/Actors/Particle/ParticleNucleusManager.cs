@@ -22,7 +22,7 @@ public class ParticleNucleusManager : MonoBehaviour {
 		rend = GetComponent<MeshRenderer>();																					// init mesh renderer ref
 		psp = GetComponentInParent<ParticleStatePattern> ();																	// init psp ref
 		lightShader = Shader.Find("Unlit/light_nucleus");																		// init light nucleus shader
-		darkShader = Shader.Find("Unlit/light_nucleus");																		// init light nucleus shader
+		darkShader = Shader.Find("Unlit/dark_nucleus");																			// init dark nucleus shader
 
 		zeroPos =  0.175f;																										// set zero y position
 		firstPos =  0.5f;																										// set first/second/fifth/sixth y position
@@ -36,10 +36,11 @@ public class ParticleNucleusManager : MonoBehaviour {
 		// !inLightworld WORLD CHANGES \\  	- swapping nuclei colours for particles remaining in dark world, no state changes
 			// to light world
 		if (!psp.inLightworld && psp.changeParticles) {																			// if change particles and light world
-			Debug.Log (psp.gameObject.name + ": change nucleus to opposite world");
+			//Debug.Log (psp.gameObject.name + ": change nucleus to opposite world");
 			toState = psp.state;																									// set toState to current state
 			ToOtherWorld (psp.lightworld, toState, toState, psp.isLight);																			// to hidden, change to white
 		}
+
 
 		// change colour timer
 		if (changeColour) changeColourTimer += Time.deltaTime;																	// start timer
@@ -51,7 +52,7 @@ public class ParticleNucleusManager : MonoBehaviour {
 		}
 		// change shape timer
 		if (changeShape) changeShapeTimer += Time.deltaTime;																	// start timer
-		if (changeShapeTimer >= 2.0f) {																							// when timer >= 4 sec
+		if (changeShapeTimer >= 2.0f) {																							// when timer >= 2 sec
 			Debug.Log("particle nucleus set shape: " + shape);
 			SetShape(shape);																										// set shape
 			changeShape = false;																									// reset reset scale flag
@@ -59,7 +60,7 @@ public class ParticleNucleusManager : MonoBehaviour {
 		}
 		// reset scale timer
 		if (resetScale) resetScaleTimer += Time.deltaTime;																		// start timer
-		if (resetScaleTimer >= 2.75f) {																							// when timer >= 4 sec
+		if (resetScaleTimer >= 2.75f) {																							// when timer >= 2.75 sec
 			//anim.ResetTrigger("colour");	
 			if (toState == 0) 																										// if to zero
 				ScaleTo (false, "hidden", "zero");																					// grow to zero
@@ -2653,27 +2654,27 @@ public class ParticleNucleusManager : MonoBehaviour {
 	private void SetLight (bool l)
 	{
 		if (l && !psp.lightworld) {
-			rend.material.shader = lightShader;							// change to white shader
+			rend.material.shader = lightShader;																					// change to white shader
 		} 
 		else if (!l && !psp.lightworld) {
-			if (toState != 0 && toState % 2 == 0) rend.material.shader = darkShader;											// if even # state, change to black shader
+			if (toState != 0 && (toState % 2 == 0)) rend.material.shader = darkShader;											// if even # state, change to black shader
 			else {
-				anim.SetBool("white", false);									// reset previously active state
-				anim.SetBool("black", true);									// set active state
-				//rend.material.shader = Shader.Find ("Unlit/Color");			// change shader
-				//rend.material.SetColor("_Color", Color.black);				// change to black
+				anim.SetBool("white", false);																					// reset previously active state
+				anim.SetBool("black", true);																					// set active state
+				//rend.material.shader = Shader.Find ("Unlit/Color");																// change shader
+				//rend.material.SetColor("_Color", Color.black);																	// change to black
 			}
 		}
 		else if (l && psp.lightworld) {
-			rend.material.shader = darkShader;							// change to black shader
+			rend.material.shader = darkShader;																					// change to black shader
 		}
 		else if (!l && psp.lightworld) {
-			if (toState != 0 && toState % 2 == 0) rend.material.shader = lightShader;											// if even # state, change to white shader
+			if (toState != 0 && (toState % 2 == 0)) rend.material.shader = lightShader;											// if even # state, change to white shader
 			else {
-				anim.SetBool("black", false);									// reset previously active state
-				anim.SetBool("white", true);									// set active state
-				//rend.material.shader = Shader.Find ("Unlit/Color");			// change shader
-				//rend.material.SetColor("_Color", Color.white);				// change to white
+				anim.SetBool("black", false);																					// reset previously active state
+				anim.SetBool("white", true);																					// set active state
+				//rend.material.shader = Shader.Find ("Unlit/Color");																// change shader
+				//rend.material.SetColor("_Color", Color.white);																	// change to white
 			}
 		}
 	}

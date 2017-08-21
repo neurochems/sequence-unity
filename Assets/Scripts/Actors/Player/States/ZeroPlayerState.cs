@@ -54,13 +54,15 @@ public class ZeroPlayerState : IParticleState
 					psp.stunned = true;																// stunned flag
 					if (pspOther.isLight) {															// if light
 						Debug.Log ("player+zero: add light");
-						if (pspOther.evolC == 0) psp.AddLight (0.5f);									// if other evol = 0, add 0.5 to light
-						else if (pspOther.evolC > 0) psp.AddLight (pspOther.lightEvolC);				// else, add light of other
+						//if (pspOther.evolC == 0) 
+						psp.AddLight (0.5f);									// if other evol = 0, add 0.5 to light
+						//else if (pspOther.evolC > 0) psp.AddLight (pspOther.lightEvolC);				// else, add light of other
 					}
 					else if (!pspOther.isLight) {													// if dark
 						Debug.Log ("player+zero: add dark");
-						if (pspOther.evolC == 0) psp.AddDark (0.5f);									// if other evol = 0, add 0.5 to dark
-						else if (pspOther.evolC > 0) psp.AddDark (pspOther.darkEvolC);					// else, add dark of other
+						//if (pspOther.evolC == 0) 
+						psp.AddDark (0.5f);									// if other evol = 0, add 0.5 to dark
+						//else if (pspOther.evolC > 0) psp.AddDark (pspOther.darkEvolC);					// else, add dark of other
 					}
 					checkEvol = true;																// set check evol flaG
 				}
