@@ -64,9 +64,11 @@ public class ParticleNucleusManager : MonoBehaviour {
 			//anim.ResetTrigger("colour");	
 			if (toState == 0) 																										// if to zero
 				ScaleTo (false, "hidden", "zero");																					// grow to zero
-			if (!toLight && (toState == 1 || toState == 2 || toState == 4 || toState == 5 || toState == 6)) 						// if to dark first/second/fourth/fifth/sixth
+			if (!toLight && (toState == 1 || toState == 2 || toState == 5 || toState == 6)) 										// if to dark first/fourth/fifth/sixth
 				ScaleTo (false, "hidden", "first");																						// grow to first
 			if (shape == 0 && toLight && (toState == 2 || toState == 4 || toState == 6)) 											// if to light circle second/fourth/sixth
+				ScaleTo (false, "hidden", "zero");																						// grow to zero
+			if (!toLight && toState == 4)
 				ScaleTo (false, "hidden", "zero");																						// grow to zero
 			if (!toLight && (toState == 7 || toState == 8)) 																		// if to dark seventh/eighth
 				ScaleTo (false, "hidden", "seventh");																					// grow to seventh
@@ -82,6 +84,27 @@ public class ParticleNucleusManager : MonoBehaviour {
 	public void ToOtherWorld (bool lw, int f, int t, bool tl) 
 	{
 		toState = t;																											// set to state
+
+		// ADJUST NUCLEUS HEIGHT FOR VISIBILITY
+		if (toState == 0)	 																									// to zero
+			transform.localPosition = new Vector3 (0f, zeroPos, 0f);																// adjust position
+		else if (toState == 1 || toState == 2)																					// to first/second
+			transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
+		else if (toState == 3 || toState == 4)																					// to third/fourth
+			transform.localPosition = new Vector3 (0f, thirdPos, 0f);																// adjust position
+		else if (toState == 5 || toState == 6) {																				// to fifth/sixth
+			if (shape == 1) transform.localPosition = new Vector3 (0f, firstPos, 0.075f);											// adjust position
+			else transform.localPosition = new Vector3 (0f, firstPos, 0f);															// adjust position
+		}
+		else if (toState == 7 || toState == 8) {																				// to seventh/eighth
+			if (shape == 1) transform.localPosition = new Vector3 (0f, seventhPos, 0.075f);											// adjust position
+			else transform.localPosition = new Vector3 (0f, seventhPos, 0f);														// adjust position
+		}
+		else if (toState == 9) {																								// to ninth
+			if (shape == 1) transform.localPosition = new Vector3 (0f, ninthPos, 0.075f);											// adjust position
+			else transform.localPosition = new Vector3 (0f, ninthPos, 0f);															// adjust position
+		}
+
 		if (lw) {																												// to light world
 			// from changes
 			if (!psp.isLight && f == 0) 																						// from dark zero
@@ -114,7 +137,7 @@ public class ParticleNucleusManager : MonoBehaviour {
 				}
 			}
 			if (!tl) {																												// if to dark
-				if (t == 0 || t == 1 || t == 3 || t == 5 || t == 7 || t == 9) {															// odd states
+				if (t == 0 || t == 1 || t == 5 || t == 7 || t == 9) {																	// dark nucleus states
 					colour = false;																											// change to white
 					shader = true;																											// change to white
 					changeColour = true;	 																								// start change timer
@@ -125,6 +148,11 @@ public class ParticleNucleusManager : MonoBehaviour {
 					shader = false;																											// change to white shader
 					changeColour = true;	 																								// start change timer
 					resetScale = true;																										// set reset scale flag
+				}	
+				else if (t == 3 ) {																										// to third
+					colour = false;																											// change to white
+					shader = true;																											// change to white
+					changeColour = true;	 																								// start change timer
 				}
 			}
 		}

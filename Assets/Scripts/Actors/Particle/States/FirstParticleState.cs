@@ -37,9 +37,12 @@ public class FirstParticleState : IParticleState
 		if (collisionTimer >= psp.stunDuration) {										// if timer up
 			canCollide = true;																// set collision ability
 			psp.sc[0].enabled = true;														// enable trigger collider
-			psp.stunned = false;															// reset stunned flag
 			collisionTimer = 0f;															// reset collision timer
 		}
+
+		if (canCollide)	psp.stunned = false;											// update stunned to false
+		else if (!canCollide) psp.stunned = true;										// update stunned to true
+
 	}
 
 	public void OnTriggerEnter(Collider other)
@@ -62,7 +65,6 @@ public class FirstParticleState : IParticleState
 					}
 					canCollide = false;																		// reset can collide trigger	
 					psp.sc[0].enabled = false;																// disable trigger collider
-					psp.stunned = true;																		// stun for duration
 					checkEvol = true;																		// check evol flag
 				}
 				pspOther = null;																		// clear pspOther
@@ -73,7 +75,6 @@ public class FirstParticleState : IParticleState
 				if (pspOther.inLightworld == psp.inLightworld) {										// if particles in same world
 					canCollide = false;																		// reset has collided trigger
 					psp.sc[0].enabled = false;																// disable trigger collider
-					psp.stunned = true;																		// stun for duration
 					if (pspOther.evolC == 0f) {																// if other = 0
 						psp.AddLight (0.5f);																	// add 0.5 light
 					}
@@ -95,7 +96,6 @@ public class FirstParticleState : IParticleState
 				if (pspOther.inLightworld == psp.inLightworld) {										// if player and particle in same world
 					canCollide = false;																		// reset has collided trigger
 					psp.sc[0].enabled = false;																// disable trigger collider
-					psp.stunned = true;																		// stun for duration
 					RollDie (pspOther);																		// roll die
 					checkEvol = true;																		// check evol flag
 				}
@@ -115,7 +115,6 @@ public class FirstParticleState : IParticleState
 				if (pspOther.inLightworld == psp.inLightworld) {										// if player and particle in same world
 					canCollide = false;																		// reset has collided trigger
 					psp.sc[0].enabled = false;																// disable trigger collider
-					psp.stunned = true;																		// stun for duration
 					if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);							// subtract other dark
 					if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);						// subtract other light
 					checkEvol = true;																		// check evol flag
@@ -150,21 +149,20 @@ public class FirstParticleState : IParticleState
 		}
 	}
 
-	public void ToOtherWorld(bool toLW, int fromState, int toState, bool toLight)
+	public void ToOtherWorld(bool toLW, int fs, int ts, bool tl)
 	{
-		psp.ChangeWorld(toLW, fromState, toState, toLight);								// trigger transition effects
-		//psp.SpawnZero(1);																	// spawn 1 zero
-		if (toState == 0) psp.currentState = psp.zeroState;								// set to zero state
-		else if (toState == 1) psp.currentState = psp.firstState;						// set to first state
-		else if (toState == 2) psp.currentState = psp.secondState;						// set to second state
-		else if (toState == 3) psp.currentState = psp.thirdState;						// set to third state
-		else if (toState == 4) psp.currentState = psp.fourthState;						// set to fourth state
-		else if (toState == 5) psp.currentState = psp.fifthState;						// set to fifth state
-		else if (toState == 6) psp.currentState = psp.sixthState;						// set to sixth state
-		else if (toState == 7) psp.currentState = psp.seventhState;						// set to seventh state
-		else if (toState == 8) psp.currentState = psp.eighthState;						// set to eighth state
-		else if (toState == 9) psp.currentState = psp.ninthState;						// set to ninth state
+		if (ts == 0) psp.currentState = psp.zeroState;									// set to zero state
+		else if (ts == 1) psp.currentState = psp.firstState;							// set to first state
+		else if (ts == 2) psp.currentState = psp.secondState;							// set to second state
+		else if (ts == 3) psp.currentState = psp.thirdState;							// set to third state
+		else if (ts == 4) psp.currentState = psp.fourthState;							// set to fourth state
+		else if (ts == 5) psp.currentState = psp.fifthState;							// set to fifth state
+		else if (ts == 6) psp.currentState = psp.sixthState;							// set to sixth state
+		else if (ts == 7) psp.currentState = psp.seventhState;							// set to seventh state
+		else if (ts == 8) psp.currentState = psp.eighthState;							// set to eighth state
+		else if (ts == 9) psp.currentState = psp.ninthState;							// set to ninth state
 
+		psp.ChangeWorld(toLW, fs, ts, tl);												// trigger transition effects
 		//ParticleStateEvents.toZero += psp.TransitionToZero;								// flag transition in delegate
 	}
 
@@ -173,7 +171,6 @@ public class FirstParticleState : IParticleState
 		psp.currentState = psp.zeroState;												// set to new state
 		psp.TransitionTo(1, 0, isLight, toLight, 0);									// trigger transition effects
 		//ParticleStateEvents.toZero += psp.TransitionToZero;								// flag transition in delegate
-		//psp.SpawnZero(1);																// spawn 1 zero
 	}
 
 	public void ToFirst(bool toLight)

@@ -507,7 +507,7 @@ public class PlayerStatePattern : MonoBehaviour {
 
 			//osf.enabled = false;														// disable orthosmoothfollow
 
-			//rendWorld.material.SetColor("_Color", Color.white);							// change world to white
+			rendWorld.material.SetColor("_Color", Color.white);							// change world to white
 			rendCore.material.SetColor("_Color", Color.black);							// change core to black
 			rendShell.material.SetColor("_Color", Color.black);							// change shell to black
 			rendNucleus.material.SetColor("_Color", Color.white);						// change nucleus to white

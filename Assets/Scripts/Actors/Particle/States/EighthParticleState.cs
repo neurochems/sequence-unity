@@ -40,9 +40,12 @@ public class EighthParticleState : IParticleState
 		if (collisionTimer >= psp.stunDuration) {										// if timer is up
 			canCollide = true;																// set collision ability
 			psp.sc[0].enabled = true;														// enable trigger collider
-			psp.stunned = false;															// reset stunned flag
 			collisionTimer = 0f;															// reset collision timer
 		}
+
+		if (canCollide)	psp.stunned = false;											// update stunned to false
+		else if (!canCollide) psp.stunned = true;										// update stunned to true
+
 	}
 
 	public void OnTriggerEnter(Collider other)
@@ -67,7 +70,6 @@ public class EighthParticleState : IParticleState
 					}
 					canCollide = false;																// reset can collide trigger	
 					psp.sc[0].enabled = false;														// disable trigger collider
-					psp.stunned = true;																// stun for duration
 					checkEvol = true;																// check evol flag
 				}
 				pspOther = null;																// clear pspOther
@@ -85,7 +87,6 @@ public class EighthParticleState : IParticleState
 				if (pspOther.inLightworld == psp.inLightworld) {								// if player and particle in same world
 					canCollide = false;																// reset has collided trigger
 					psp.sc[0].enabled = false;														// disable trigger collider
-					psp.stunned = true;																// set stunned flag
 					if (pspOther.evolC == 0f) {														// if other = 0
 						psp.AddLight (0.5f);															// add 0.5 light
 					}
@@ -107,7 +108,6 @@ public class EighthParticleState : IParticleState
 				if (pspOther.inLightworld == psp.inLightworld) {								// if player and particle in same world
 					canCollide = false;																// reset has collided trigger
 					psp.sc[0].enabled = false;														// disable trigger collider
-					psp.stunned = true;																// stun for duration
 					if (psp.evolC > pspOther.evolC) {													// if evol > other
 						if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvol);						// add dark of other
 						if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvol);					// add light of other
@@ -128,7 +128,6 @@ public class EighthParticleState : IParticleState
 				if (pspOther.inLightworld == psp.inLightworld) {								// if player and particle in same world
 					canCollide = false;																// reset has collided trigger
 					psp.sc[0].enabled = false;														// disable trigger collider
-					psp.stunned = true;																// stun for duration
 					if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvol);					// subtract other dark
 					if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvol);				// subtract other light
 					checkEvol = true;																// check evol flag
@@ -163,21 +162,20 @@ public class EighthParticleState : IParticleState
 		}
 	}
 
-	public void ToOtherWorld(bool toLW, int fromState, int toState, bool toLight)
+	public void ToOtherWorld(bool toLW, int fs, int ts, bool tl)
 	{
-		psp.ChangeWorld(toLW, fromState, toState, toLight);								// trigger transition effects
-		//psp.SpawnZero(1);																	// spawn 1 zero
-		if (toState == 0) psp.currentState = psp.zeroState;								// set to zero state
-		else if (toState == 1) psp.currentState = psp.firstState;						// set to first state
-		else if (toState == 2) psp.currentState = psp.secondState;						// set to second state
-		else if (toState == 3) psp.currentState = psp.thirdState;						// set to third state
-		else if (toState == 4) psp.currentState = psp.fourthState;						// set to fourth state
-		else if (toState == 5) psp.currentState = psp.fifthState;						// set to fifth state
-		else if (toState == 6) psp.currentState = psp.sixthState;						// set to sixth state
-		else if (toState == 7) psp.currentState = psp.seventhState;						// set to seventh state
-		else if (toState == 8) psp.currentState = psp.eighthState;						// set to eighth state
-		else if (toState == 9) psp.currentState = psp.ninthState;						// set to ninth state
+		if (ts == 0) psp.currentState = psp.zeroState;									// set to zero state
+		else if (ts == 1) psp.currentState = psp.firstState;							// set to first state
+		else if (ts == 2) psp.currentState = psp.secondState;							// set to second state
+		else if (ts == 3) psp.currentState = psp.thirdState;							// set to third state
+		else if (ts == 4) psp.currentState = psp.fourthState;							// set to fourth state
+		else if (ts == 5) psp.currentState = psp.fifthState;							// set to fifth state
+		else if (ts == 6) psp.currentState = psp.sixthState;							// set to sixth state
+		else if (ts == 7) psp.currentState = psp.seventhState;							// set to seventh state
+		else if (ts == 8) psp.currentState = psp.eighthState;							// set to eighth state
+		else if (ts == 9) psp.currentState = psp.ninthState;							// set to ninth state
 
+		psp.ChangeWorld(toLW, fs, ts, tl);												// trigger transition effects
 		//ParticleStateEvents.toZero += psp.TransitionToZero;								// flag transition in delegate
 	}
 
@@ -185,8 +183,6 @@ public class EighthParticleState : IParticleState
 	{
 		psp.TransitionTo(8, 0, isLight, toLight, 0);									// trigger transition effects
 		//ParticleStateEvents.toZero += psp.TransitionToZero;								// flag transition in delegate
-		psp.SpawnFirst(4);																// spawn 4 Firsts
-		psp.SpawnZero(3);																// spawn 3 Zeros
 		psp.currentState = psp.zeroState;												// set to new state
 	}
 
@@ -194,8 +190,6 @@ public class EighthParticleState : IParticleState
 	{
 		psp.TransitionTo(8, 1, isLight, toLight, 0);									// trigger transition effects
 		//ParticleStateEvents.toFirst += psp.TransitionToFirst;								// flag transition in delegate
-		psp.SpawnFirst(4);																// spawn 4 First
-		psp.SpawnZero(2);																// spawn 2 Zeros
 		psp.currentState = psp.firstState;												// set to new state
 	}
 
@@ -203,8 +197,6 @@ public class EighthParticleState : IParticleState
 	{
 		psp.TransitionTo(8, 2, isLight, toLight, 0);									// trigger transition effects
 		//ParticleStateEvents.toSecond += psp.TransitionToSecond;							// flag transition in delegate
-		psp.SpawnFirst(3);																// spawn 3 First
-		psp.SpawnZero(3);																// spawn 3 Zero
 		psp.currentState = psp.secondState;												// set to new state
 	}
 
@@ -212,8 +204,6 @@ public class EighthParticleState : IParticleState
 	{
 		psp.TransitionTo(8, 3, isLight, toLight, 0);									// trigger transition effects
 		//ParticleStateEvents.toThird += psp.TransitionToThird;								// flag transition in delegate
-		psp.SpawnFirst(3);																// spawn 3 First
-		psp.SpawnZero(2);																// spawn 2 Zero
 		psp.currentState = psp.thirdState;												// set to new state
 	}
 
@@ -221,8 +211,6 @@ public class EighthParticleState : IParticleState
 	{
 		psp.TransitionTo(8, 4, isLight, toLight, 0);									// trigger transition effects
 		//ParticleStateEvents.toFourth += psp.TransitionToFourth;							// flag transition in delegate
-		psp.SpawnFirst(2);																// spawn 2 First
-		psp.SpawnZero(3);																// spawn 3 Zero
 		psp.currentState = psp.fourthState;												// set to new state
 	}
 
@@ -230,7 +218,6 @@ public class EighthParticleState : IParticleState
 	{
 		psp.TransitionTo(8, 5, isLight, toLight, shape);								// trigger transition effects
 		//ParticleStateEvents.toFifth += psp.TransitionToFifth;								// flag transition in delegate
-		psp.SpawnFirst(3);																// spawn 3 First
 		psp.currentState = psp.fifthState;												// set to new state
 	}
 
@@ -238,8 +225,6 @@ public class EighthParticleState : IParticleState
 	{
 		psp.TransitionTo(8, 6, isLight, toLight, shape);								// trigger transition effects
 		//ParticleStateEvents.toSixth += psp.TransitionToSixth;								// flag transition in delegate
-		psp.SpawnFirst(2);																// spawn 2 First
-		psp.SpawnZero(1);																// spawn 1 Zero
 		psp.currentState = psp.sixthState;												// set to new state
 	}
 

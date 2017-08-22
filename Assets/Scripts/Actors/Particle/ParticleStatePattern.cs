@@ -58,6 +58,7 @@ public class ParticleStatePattern : MonoBehaviour {
 	private bool cwShell, cwNucleus;										// set change world part flags
 	private float setShellTimer, setNucleusTimer;							// set part timers
 	private float cwShellTimer, cwNucleusTimer;								// set change world part timers
+	private float inLightworldTimer;										// set change world part timers
 
 	public int die;															// collision conflict check
 	public bool roll;														// collision conflict check
@@ -152,6 +153,23 @@ public class ParticleStatePattern : MonoBehaviour {
 			}
 		}
 
+		if (toLightworld || toDarkworld) {										// if to opposite world
+			inLightworldTimer += Time.deltaTime;									// start timer
+			if (inLightworldTimer >= 2.5f) {										// if timer is 2.5 sec
+				if (toLightworld) {
+					inLightworld = true;												// set in lightworld flag
+					toLightworld = false;												// reset to light world flag
+					sc[0].enabled = true;												// enable trigger collider
+				}
+				else if (toDarkworld) {
+					inLightworld = false;												// set in lightworld flag
+					toDarkworld = false;												// reset to light world flag
+					sc[0].enabled = true;												// enable trigger collider
+				}
+				inLightworldTimer = 0f;												// reset timer
+			}
+		}
+
 		// set parts timers
 		if (setShell) {														// if set shell
 			setShellTimer += Time.deltaTime;									// start timer
@@ -225,20 +243,6 @@ public class ParticleStatePattern : MonoBehaviour {
 		//ParticleStateEvents.toSixth -= TransitionToSixth;					// untrigger transition event
 		//ParticleStateEvents.toSeventh -= TransitionToSeventh;					// untrigger transition event
 		// new state
-	}
-
-	// BEHAVIOURS \\ - PUT IN SEPARATE SCRIPT
-
-	public void SpawnZero (int num)
-	{
-		//Debug.Log ("spawn zero");
-		//GetComponent<SpawnParticle> ().SpawnPhoton (num);
-	}
-
-	public void SpawnFirst (int num)
-	{
-		//Debug.Log ("spawn first");
-		//GetComponent<SpawnParticle> ().SpawnElectron (num);
 	}
 
 	// EVOL CHANGES \\ - PUT IN SEPARATE SCRIPT
@@ -376,7 +380,8 @@ public class ParticleStatePattern : MonoBehaviour {
 
 	public void ChangeWorld(bool toLW, int f, int t, bool tl) 
 	{
-		toLightworld = toLW;														// store to lightworld
+		if (toLW) toLightworld = true;												// set to light world flag
+		if (!toLW) toDarkworld = true;												// set to dark world flag
 		fromState = f;																// store from state
 		toState = t;																// store to state
 		toLight = tl;																// store to light
@@ -384,7 +389,6 @@ public class ParticleStatePattern : MonoBehaviour {
 		pcm.ToOtherWorld (toLW, f, t, tl);											// change core
 		cwShell = true;																// start shell change timer
 		cwNucleus = true;															// start nucleus change timer
-
 
 		if (toState == 0) gameObject.tag = "Zero";									// if zero, set tag
 		else if (toState == 1) gameObject.tag = "First";							// if first, set tag
@@ -396,23 +400,10 @@ public class ParticleStatePattern : MonoBehaviour {
 		else if (toState == 7) gameObject.tag = "Seventh";							// if seventh, set tag
 		else if (toState == 8) gameObject.tag = "Eighth";							// if eighth, set tag
 		else if (toState == 9) gameObject.tag = "Ninth";							// if ninth, set tag
-	
-		if (toLW) {
-			toLightworld = false;													// if to light world, reset toLightworld flag
-			inLightworld = true;													// if to lightworld, set inLightworld
-		}
-		else if (!toLW)	{
-			toDarkworld = false;													// if to dark world, reset toDarkworld flag
-			inLightworld = false;													// if not to lightworld, reset inLightworld
-		}
+
+		updateStateIndicator = true;												// update state indicator
 
 	}
-
-	/*private void LightWorldNucleus()
-	{
-		rendNucleus.material.SetColor("_Color", Color.white);						// change nucleus to white
-		//changeParticles = false;													// reset change particles flag
-	}*/
 
 	// set particle parts (normal state transitions)
 	private void SetParts()

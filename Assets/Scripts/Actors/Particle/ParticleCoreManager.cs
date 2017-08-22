@@ -83,31 +83,11 @@ public class ParticleCoreManager : MonoBehaviour {
 			else if (f == 9) ScaleTo(true, "ninth", "hidden");														// scale from ninth
 
 			// to changes
-			//if (t == 0) {																							// if to light world zero
-				colour = false;																							// change to black
-				changeColour = true; 																					// start change timer
-				resetScale = true;																						// trigger rescale timer
-			/*}
-			else if (t == 1 || t == 2 || t == 5 || t == 6) {														// if to light world first/second/fifth/sixth
-				colour = false;																							// change to black
-				changeColour = true;																					// start change timer
-				resetScale = true;																						// trigger rescale timer
-			}
-			else if (t == 3 || t == 4) {																			// if to light world third/fourth
-				colour = false;																							// change to black
-				changeColour = true;																					// start change timer
-				resetScale = true;																						// trigger rescale timer
-			}
-			else if (t == 7 || t == 8) {																			// if to light world seventh/eighth
-				colour = false;																							// change to black
-				changeColour = true;																					// start change timer
-				resetScale = true;																						// trigger rescale timer
-			}
-			else if (t == 9) {																						// if to light world ninth
-				colour = false;																							// change to black
-				changeColour = true;																					// start change timer
-				resetScale = true;																						// trigger rescale timer
-			}*/																	
+			colour = false;																							// change to black
+			changeColour = true; 																					// start change timer
+			if (!l && (t == 3 || t == 4)) resetScale = false;														// don't trigger rescale timer
+			else resetScale = true;																					// trigger rescale timer
+																	
 		}
 
 		else if (!lw) {																								// if to dark world
@@ -119,31 +99,10 @@ public class ParticleCoreManager : MonoBehaviour {
 			else if (f == 9) ScaleTo(true, "ninth", "hidden");														// scale from ninth
 
 			// to changes
-			//if (t == 0) {																							// if to light world zero
-				colour = true;																							// change to white
-				changeColour = true; 																					// start change timer
-				resetScale = true;																						// trigger rescale timer
-				/*}
-			else if (t == 1 || t == 2 || t == 5 || t == 6) {														// if to light world first/second/fifth/sixth
-				colour = true;																							// change to white
-				changeColour = true;																					// start change timer
-				resetScale = true;																						// trigger rescale timer
-			}
-			else if (t == 3 || t == 4) {																			// if to light world third/fourth
-				colour = true;																							// change to white
-				changeColour = false;																					// start change timer
-				resetScale = true;																						// trigger rescale timer
-			}
-			else if (t == 7 || t == 8) {																			// if to light world seventh/eighth
-				colour = true;																							// change to white
-				changeColour = false;																					// start change timer
-				resetScale = true;																						// trigger rescale timer
-			}
-			else if (t == 9) {																						// if to light world ninth
-				colour = true;																							// change to white
-				changeColour = false;																					// start change timer
-				resetScale = true;																						// trigger rescale timer
-			}*/
+			colour = true;																							// change to white
+			changeColour = true; 																					// start change timer
+			if (!l && (t == 3 || t == 4)) resetScale = false;														// don't trigger rescale timer
+			else resetScale = true;																					// trigger rescale timer
 		}
 	}
 
@@ -1447,9 +1406,9 @@ public class ParticleCoreManager : MonoBehaviour {
 	///</summary>
 	private void SetShape(int s)
 	{
-		if (s == 0) GetComponent<MeshFilter>().mesh = sphere;									// change mesh to sphere
-		else if (s == 1) GetComponent<MeshFilter>().mesh = triangle;							// change mesh to triangle
-		else if (s == 2) GetComponent<MeshFilter>().mesh = square;								// change mesh to square
+		if (s == 0) GetComponent<MeshFilter>().mesh = sphere;														// change mesh to sphere
+		else if (s == 1) GetComponent<MeshFilter>().mesh = triangle;												// change mesh to triangle
+		else if (s == 2) GetComponent<MeshFilter>().mesh = square;													// change mesh to square
 	}
 
 	///<summary>
@@ -1461,22 +1420,22 @@ public class ParticleCoreManager : MonoBehaviour {
 	{
         if (l)
         {
-            //rend.material.SetColor("_Color", Color.white);																// change to white
-            //anim.SetTrigger("colour");																					// set colour change trigger
-            anim.SetBool("black", false);																				// reset previously active state
-            anim.SetBool("white", true);																				// set active state
+            //rend.material.SetColor("_Color", Color.white);															// change to white
+            //anim.SetTrigger("colour");																				// set colour change trigger
+            anim.SetBool("black", false);																			// reset previously active state
+            anim.SetBool("white", true);																			// set active state
         }
 		else if (!l)
         {
-            //rend.material.SetColor("_Color", Color.black);																// change to black
-            //anim.SetTrigger("colour");																					// set colour change trigger
-            anim.SetBool("white", false);																				// reset previously active state
-            anim.SetBool("black", true);																				// set active state
+            //rend.material.SetColor("_Color", Color.black);															// change to black
+            //anim.SetTrigger("colour");																				// set colour change trigger
+            anim.SetBool("white", false);																			// reset previously active state
+            anim.SetBool("black", true);																			// set active state
         }
-        //anim.ResetTrigger("colour");																						// reset colour change trigger
+        //anim.ResetTrigger("colour");																					// reset colour change trigger
 
-        //if (shade && light) rend.material.shader = lightShader;															// change to white shader
-        //else if (shade && !light) rend.material.shader = darkShader;    													// change to white shader
+        //if (shade && light) rend.material.shader = lightShader;														// change to white shader
+        //else if (shade && !light) rend.material.shader = darkShader;    												// change to black shader
 
     }
 
@@ -1489,15 +1448,15 @@ public class ParticleCoreManager : MonoBehaviour {
 	{
 		//Debug.Log("devol: " + devol);
         if (devol) {
-			anim.ResetTrigger ("scaleup");								// reset last stage
-			anim.SetTrigger ("scaledown");								// enable scaledown
+			anim.ResetTrigger ("scaleup");																			// reset last stage
+			anim.SetTrigger ("scaledown");																			// enable scaledown
 		}
 		else if (!devol) {
-			anim.ResetTrigger ("scaledown");							// reset last stage
-			anim.SetTrigger ("scaleup");								// enable scaleup
+			anim.ResetTrigger ("scaledown");																		// reset last stage
+			anim.SetTrigger ("scaleup");																			// enable scaleup
 
 		}
-		anim.SetBool(resetState, false);								// reset previously active state
-		anim.SetBool(setState, true);									// set active state
+		anim.SetBool(resetState, false);																			// reset previously active state
+		anim.SetBool(setState, true);																				// set active state
 	}
 }

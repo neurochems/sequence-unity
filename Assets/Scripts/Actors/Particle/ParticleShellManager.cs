@@ -9,7 +9,7 @@ public class ParticleShellManager : MonoBehaviour {
 
 	private int toState;																							// to state indicator
 	private bool colour;																							// colour indicator
-	private bool resetScale = false, changeColour = true, changeShape = false;										// timer trigger for changing shape, resetting scale after world switch;				// timer trigger for resetting scale after world switch
+	private bool resetScale = false, changeColour = false, changeShape = false;										// timer trigger for changing shape, resetting scale after world switch;				// timer trigger for resetting scale after world switch
 	private float resetScaleTimer, changeColourTimer;																// reset scale, change colour timer
 
 	void Awake () {
@@ -23,7 +23,6 @@ public class ParticleShellManager : MonoBehaviour {
 		// change colour timer
 		if (changeColour) changeColourTimer += Time.deltaTime;														// start timer
 		if (changeColourTimer >= 2.0f) {																			// when timer >= 4 sec
-			//Debug.Log("set colour: " + colour);
 			SetLight(colour);																							// set colour
 			changeColour = false;																						// reset reset scale flag
 			changeColourTimer = 0f;																						// reset timer
@@ -60,7 +59,8 @@ public class ParticleShellManager : MonoBehaviour {
 			// to changes
 			colour = false;																								// change to black
 			changeColour = true;																						// start change colour timer
-			resetScale = true;																							// start rescale timer
+			if (!l && (t == 3 || t == 4)) resetScale = true;															// start rescale timer
+			else if (t >= 5) resetScale = true;																			// start rescale timer
 		}
 		else if (!lw) {																								// if to dark world
 			// from changes
@@ -70,6 +70,7 @@ public class ParticleShellManager : MonoBehaviour {
 				ScaleTo (true, "seventh", "hidden");																		// scale to hidden
 			else if (f == 9) 																							// from ninth
 				ScaleTo (true, "ninth", "hidden");																			// scale to hidden
+
 			// to changes
 			colour = true;																								// change to white
 			changeColour = true;																						// start change colour timer
@@ -921,10 +922,26 @@ public class ParticleShellManager : MonoBehaviour {
 	///<para>true = white</para>
 	///<para>false = black</para>
 	///</summary>
-	private void SetLight (bool light)
+	private void SetLight (bool l)
 	{
-		if (light) rend.material.SetColor("_Color", Color.white);		// change to white
-		else rend.material.SetColor("_Color", Color.black);				// change to black
+		if (l)
+		{
+			//rend.material.SetColor("_Color", Color.white);															// change to white
+			//anim.SetTrigger("colour");																				// set colour change trigger
+			anim.SetBool("black", false);																			// reset previously active state
+			anim.SetBool("white", true);																			// set active state
+		}
+		else if (!l)
+		{
+			//rend.material.SetColor("_Color", Color.black);															// change to black
+			//anim.SetTrigger("colour");																				// set colour change trigger
+			anim.SetBool("white", false);																			// reset previously active state
+			anim.SetBool("black", true);																			// set active state
+		}
+		//anim.ResetTrigger("colour");																					// reset colour change trigger
+
+		//if (shade && light) rend.material.shader = lightShader;														// change to white shader
+		//else if (shade && !light) rend.material.shader = darkShader;    												// change to black shader
 	}
 
 	///<summary>
@@ -935,16 +952,15 @@ public class ParticleShellManager : MonoBehaviour {
 	private void ScaleTo (bool devol, string resetState, string setState)
 	{
 		if (devol) {
-			anim.ResetTrigger ("scaleup");											// reset last stage
-			anim.SetTrigger ("scaledown");											// enable scaledown
+			anim.ResetTrigger ("scaleup");																			// reset last stage
+			anim.SetTrigger ("scaledown");																			// enable scaledown
 		}
 		else {
-			anim.ResetTrigger ("scaledown");										// reset last stage
-			anim.SetTrigger ("scaleup");											// enable scaleup
+			anim.ResetTrigger ("scaledown");																		// reset last stage
+			anim.SetTrigger ("scaleup");																			// enable scaleup
 
 		}
-		anim.SetBool(resetState, false);											// reset previously active state
-		anim.SetBool(setState, true);												// set active state
-		Debug.Log (transform.parent.name + " shell second to dark third");
+		anim.SetBool(resetState, false);																			// reset previously active state
+		anim.SetBool(setState, true);																				// set active state
 	}
 }
