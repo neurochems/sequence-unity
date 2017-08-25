@@ -144,7 +144,7 @@ public class SecondParticleState : IParticleState
 		}
 	}
 
-	public void ToOtherWorld(bool toLW, int fs, int ts, bool tl)
+	public void ToOtherWorld(bool toLW, int ts, bool tl)
 	{
 		if (ts == 0) psp.currentState = psp.zeroState;									// set to zero state
 		else if (ts == 1) psp.currentState = psp.firstState;							// set to first state
@@ -157,7 +157,7 @@ public class SecondParticleState : IParticleState
 		else if (ts == 8) psp.currentState = psp.eighthState;							// set to eighth state
 		else if (ts == 9) psp.currentState = psp.ninthState;							// set to ninth state
 
-		psp.ChangeWorld(toLW, fs, ts, tl);												// trigger transition effects
+		psp.ChangeWorld(toLW, 2, ts, tl);												// trigger transition effects
 		//ParticleStateEvents.toZero += psp.TransitionToZero;							// flag transition in delegate
 	}
 
@@ -245,7 +245,7 @@ public class SecondParticleState : IParticleState
 		}
 			// to dark world
 		else if (evol == 0f && inLightworld) {												// to dark world light zero / from light world
-			ToOtherWorld(false, 2, 0, true);													// to dark world light zero
+			ToOtherWorld(false, 0, true);														// to dark world light zero
 		}
 
 		// half zero
@@ -256,13 +256,18 @@ public class SecondParticleState : IParticleState
 		}
 			// to light world
 		else if (evol == -0.5f && !inLightworld) {											// to light world zero / from dark world
-			if (deltaDark > deltaLight) ToOtherWorld(true, 2, 0, false);						// if lose more light than dark = to light world dark zero
-			else if (deltaDark <= deltaLight) ToOtherWorld(true, 2, 0, true);					// if lose more dark than light = to light world light zero
+			if (deltaDark > deltaLight) ToOtherWorld(true, 0, false);							// if lose more light than dark = to light world dark zero
+			else if (deltaDark <= deltaLight) ToOtherWorld(true, 0, true);						// if lose more dark than light = to light world light zero
 		}
 			// in light world
 		else if (evol == -0.5f && inLightworld) {											// to light world zero / from light world
 			if (deltaDark > deltaLight) ToZero(false);											// if lose more light than dark, to light world dark zero
 			else if (deltaDark <= deltaLight) ToZero(true);										// if lose more dark than light, to light world light zero
+		}
+			// to dark world
+		else if (evol == 0.5f && inLightworld) {											// to dark world half zero / from light world
+			if (deltaDark > deltaLight) ToOtherWorld(false, 0, false);							// if lose more light than dark = to dark world dark zero
+			else if (deltaDark <= deltaLight) ToOtherWorld(false, 0, true);						// if lose more dark than light = to dark world light zero
 		}
 
 		// first
@@ -273,13 +278,18 @@ public class SecondParticleState : IParticleState
 		}
 			// to light world
 		else if (evol == -1f && !inLightworld) {											// to light world first / from dark world
-			if (deltaDark > deltaLight) ToOtherWorld(true, 2, 1, false);						// if lose more light than dark = to light world dark first
-			else if (deltaDark <= deltaLight) ToOtherWorld(true, 2, 1, true);					// if lose more dark than light = to light world light first
+			if (deltaDark > deltaLight) ToOtherWorld(true, 1, false);							// if lose more light than dark = to light world dark first
+			else if (deltaDark <= deltaLight) ToOtherWorld(true, 1, true);						// if lose more dark than light = to light world light first
 		}
 			// in light world
 		else if (evol == -1f && inLightworld) {												// to light world first / from light world
 			if (deltaDark > deltaLight) ToFirst(false);											// if lose more light than dark = to light world dark first
 			else if (deltaDark <= deltaLight) ToFirst(true);									// if lose more dark than light = to light world light first
+		}
+			// to dark world
+		else if (evol == 1f && inLightworld) {												// to dark world first / from light world
+			if (deltaDark > deltaLight) ToOtherWorld(false, 1, false);							// if lose more light than dark = to dark world dark first
+			else if (deltaDark <= deltaLight) ToOtherWorld(false, 1, true);						// if lose more dark than light = to dark world light first
 		}
 
 		// second
@@ -287,11 +297,16 @@ public class SecondParticleState : IParticleState
 				// same state
 			// to light world
 		if (evol == -1.5f && !inLightworld) {												// to light world second / from dark world
-			if (deltaDark > deltaLight) ToOtherWorld(true, 2, 2, false);						// if lose more light than dark = to light world dark second
-			else if (deltaDark <= deltaLight) ToOtherWorld(true, 2, 2, true);					// if lose more dark than light = to light world light second
+			if (deltaDark > deltaLight) ToOtherWorld(true, 2, false);							// if lose more light than dark = to light world dark second
+			else if (deltaDark <= deltaLight) ToOtherWorld(true, 2, true);						// if lose more dark than light = to light world light second
 		}
 			// in light world
 				// same state
+			// to dark world
+		else if (evol == 1.5f && inLightworld) {											// to dark world second / from light world
+			if (deltaDark > deltaLight) ToOtherWorld(false, 2, false);							// if lose more light than dark = to dark world dark second
+			else if (deltaDark <= deltaLight) ToOtherWorld(false, 2, true);						// if lose more dark than light = to dark world light second
+		}
 
 		// third
 			// in dark world
@@ -301,13 +316,18 @@ public class SecondParticleState : IParticleState
 		} 
 			// to light world
 		else if ((evol <= -2f && evol > -3f) && !inLightworld) {							// to light world third / from dark world
-			if (deltaDark > deltaLight) ToOtherWorld(true, 2, 3, false);						// if lose more light than dark = to light world dark third
-			else if (deltaDark <= deltaLight) ToOtherWorld(true, 2, 3, true);					// if lose more dark than light = to light world light third
+			if (deltaDark > deltaLight) ToOtherWorld(true, 3, false);							// if lose more light than dark = to light world dark third
+			else if (deltaDark <= deltaLight) ToOtherWorld(true, 3, true);						// if lose more dark than light = to light world light third
 		}
 			// in light world
 		else if ((evol <= -2f && evol > -3f) && inLightworld) {								// to light world third / from light world
 			if (deltaDark > deltaLight) ToThird(false);											// if lose more light than dark = to light world dark third
 			else if (deltaDark <= deltaLight) ToThird(true);									// if lose more dark than light = to light world light third
+		}
+			// to dark world
+		else if ((evol >= 2f && evol < 3f) && inLightworld) {								// to dark world third / from light world
+			if (deltaDark > deltaLight) ToOtherWorld(false, 3, false);							// if lose more light than dark = to dark world dark third
+			else if (deltaDark <= deltaLight) ToOtherWorld(false, 3, true);						// if lose more dark than light = to dark world light third
 		}
 
 		// fourth
@@ -318,12 +338,17 @@ public class SecondParticleState : IParticleState
 		} 
 			// to light world
 		else if ((evol <= -3f && evol > -5f) && !inLightworld) {							// to light world fourth / from dark world
-			if (deltaDark > deltaLight) ToOtherWorld(true, 2, 4, false);						// if lose more light than dark = to light world dark fourth
-			else if (deltaDark <= deltaLight) ToOtherWorld(true, 2, 4, true);					// if lose more dark than light = to light world light fourth
+			if (deltaDark > deltaLight) ToOtherWorld(true, 4, false);							// if lose more light than dark = to light world dark fourth
+			else if (deltaDark <= deltaLight) ToOtherWorld(true, 4, true);						// if lose more dark than light = to light world light fourth
 		}
 		else if ((evol <= -3f && evol > -5f) && inLightworld) {								// to light world fourth / from light world
 			if (deltaDark > deltaLight) ToFourth(false);										// if lose more light than dark = to light world dark fourth
 			else if (deltaDark <= deltaLight) ToFourth(true);									// if lose more dark than light = to light world light fourth
+		}
+			// to dark world
+		else if ((evol >= 3f && evol < 5f) && inLightworld) {								// to dark world fourth / from light world
+			if (deltaDark > deltaLight) ToOtherWorld(false, 4, false);							// if lose more light than dark = to dark world dark fourth
+			else if (deltaDark <= deltaLight) ToOtherWorld(false, 4, true);						// if lose more dark than light = to dark world light fourth
 		}
 
 		// fifth
@@ -331,8 +356,8 @@ public class SecondParticleState : IParticleState
 				// can't evolve second to fifth
 			// to light world
 		if ((evol <= -5f && evol > -8f) && !inLightworld) {									// to light world fifth / from dark world
-			if (deltaDark > deltaLight) ToOtherWorld(true, 2, 5, false);						// if lose more light than dark = to light world dark circle fifth
-			else if (deltaDark <= deltaLight) ToOtherWorld(true, 2, 5, true);					// if lose more dark than light = to light world light circle fifth
+			if (deltaDark > deltaLight) ToOtherWorld(true, 5, false);							// if lose more light than dark = to light world dark circle fifth
+			else if (deltaDark <= deltaLight) ToOtherWorld(true, 5, true);						// if lose more dark than light = to light world light circle fifth
 		}
 			// in light world
 		else if ((evol <= -5f && evol > -8f) && inLightworld) {								// to light world fifth / from light world
@@ -345,8 +370,8 @@ public class SecondParticleState : IParticleState
 				// can't evolve second to sixth
 			// to light world
 		if ((evol <= -8f && evol > -13f) && !inLightworld) {								// to light world sixth / from dark world
-			if (deltaDark > deltaLight) ToOtherWorld(true, 2, 6, false);						// if lose more light than dark = to light world dark circle sixth
-			else if (deltaDark <= deltaLight) ToOtherWorld(true, 2, 6, true);					// if lose more dark than light = to light world light circle sixth
+			if (deltaDark > deltaLight) ToOtherWorld(true, 6, false);							// if lose more light than dark = to light world dark circle sixth
+			else if (deltaDark <= deltaLight) ToOtherWorld(true, 6, true);						// if lose more dark than light = to light world light circle sixth
 		}
 			// in light world
 		else if ((evol <= -8f && evol > -13f) && inLightworld) {							// to light world sixth / from light world
@@ -359,8 +384,8 @@ public class SecondParticleState : IParticleState
 				// can't evolve second to seventh
 			// to light world
 		if ((evol <= -13f && evol > -21f) && !inLightworld) {								// to light world seventh / from dark world
-			if (deltaDark > deltaLight) ToOtherWorld(true, 2, 7, false);						// if lose more light than dark = to light world dark circle seventh
-			else if (deltaDark <= deltaLight) ToOtherWorld(true, 2, 7, true);					// if lose more dark than light = to light world light circle seventh
+			if (deltaDark > deltaLight) ToOtherWorld(true, 7, false);							// if lose more light than dark = to light world dark circle seventh
+			else if (deltaDark <= deltaLight) ToOtherWorld(true, 7, true);						// if lose more dark than light = to light world light circle seventh
 		}
 			// in light world
 		else if ((evol <= -13f && evol > -21f) && inLightworld) {							// to light world seventh / from light world
@@ -373,8 +398,8 @@ public class SecondParticleState : IParticleState
 				// can't evolve second to eighth
 			// to light world
 		if ((evol <= -21f && evol > -34f) && !inLightworld) {								// to light world eighth / from dark world
-			if (deltaDark > deltaLight) ToOtherWorld(true, 2, 8, false);						// if lose more light than dark = to light world dark eighth
-			else if (deltaDark <= deltaLight) ToOtherWorld(true, 2, 8, true);					// if lose more dark than light = to light world light eighth
+			if (deltaDark > deltaLight) ToOtherWorld(true, 8, false);							// if lose more light than dark = to light world dark eighth
+			else if (deltaDark <= deltaLight) ToOtherWorld(true, 8, true);						// if lose more dark than light = to light world light eighth
 		}
 		else if ((evol <= -21f && evol > -34f) && inLightworld) {							// to light world eighth / from light world
 			if (deltaDark > deltaLight) ToEighth(false, 0);										// if lose more light than dark = to light world dark eighth
@@ -386,8 +411,8 @@ public class SecondParticleState : IParticleState
 				// can't evolve second to ninth
 			// to light world
 		if ((evol <= -34f && evol > -55f) && !inLightworld) {								// to light world ninth / from dark world
-			if (deltaDark > deltaLight) ToOtherWorld(true, 2, 9, false);						// if lose more light than dark = to light world dark ninth
-			else if (deltaDark <= deltaLight) ToOtherWorld(true, 2, 9, true);					// if lose more dark than light = to light world light ninth
+			if (deltaDark > deltaLight) ToOtherWorld(true, 9, false);							// if lose more light than dark = to light world dark ninth
+			else if (deltaDark <= deltaLight) ToOtherWorld(true, 9, true);						// if lose more dark than light = to light world light ninth
 		}
 		else if ((evol <= -34f && evol > -55f) && inLightworld) {							// to light world ninth / from light world
 			if (deltaDark > deltaLight) ToNinth(false, 0);										// if lose more light than dark = to light world dark ninth

@@ -6,238 +6,303 @@ public class CameraManager : MonoBehaviour {
 	private Animator anim;																				// animator on camera ref
 	private PlayerStatePattern psp;																		// psp ref
 
-	private bool switchWorld;																			// switch world flag
+	private int fromState, toState;																		// from state/to state
+
+	private bool resetZoom = false;																		// reset zoom flag
+	private float resetZoomTimer;																		// reset zoom timer
+
+	void Update() 
+	{
+		// reset scale timer
+		if (resetZoom) resetZoomTimer += Time.deltaTime;												// start timer
+		if (resetZoomTimer >= 2.0f) {																	// when timer >= 2 sec
+			Debug.Log ("reset camera zoom");
+			anim.ResetTrigger ("zoomin");																	// reset scale down trigger
+			anim.SetTrigger ("zoomout");																	// set scale up trigger
+			anim.SetBool ("switchworld", false);															// reset switchworld
+			resetZoom = false;																				// reset reset scale flag
+			resetZoomTimer = 0f;																			// reset timer
+		}
+	}
 
 	void Start () {
 		anim = GetComponent<Animator>();																// init animator ref
 		psp = GetComponentInParent<PlayerStatePattern>();												// init psp ref
 	}
-	
-	public void ZoomCamera (bool switchworld, int fromState, int toState)
+
+	public void ToOtherWorld (int f, int t)
+	{
+		fromState = f;																					// store from state
+		toState = t;																					// store to state
+
+		///// zero \\\\\
+
+		if (f == 0 && t == 0) SwitchWorld ("zero", "zero");												// zoom out
+		else if (f == 0 && t == 1) SwitchWorld ("zero", "first");										// zoom out
+		else if (f == 0 && t == 2) SwitchWorld ("zero", "first");										// zoom out
+		else if (f == 0 && t == 3) SwitchWorld ("zero", "third");										// zoom out
+		else if (f == 0 && t == 4) SwitchWorld ("zero", "third");										// zoom out
+		else if (f == 0 && t == 5) SwitchWorld ("zero", "fifth");										// zoom out
+		else if (f == 0 && t == 6) SwitchWorld ("zero", "fifth");										// zoom out
+		else if (f == 0 && t == 7) SwitchWorld ("zero", "seventh");										// zoom out
+		else if (f == 0 && t == 8) SwitchWorld ("zero", "seventh");										// zoom out
+		else if (f == 0 && t == 9) SwitchWorld ("zero", "ninth");										// zoom out
+
+		///// first \\\\\
+
+		if (f == 1 && t == 0) SwitchWorld ("first", "zero");											// zoom out
+		else if (f == 1 && t == 1) SwitchWorld ("first", "first");										// zoom out
+		else if (f == 1 && t == 2) SwitchWorld ("first", "first");										// zoom out
+		else if (f == 1 && t == 3) SwitchWorld ("first", "third");										// zoom out
+		else if (f == 1 && t == 4) SwitchWorld ("first", "third");										// zoom out
+		else if (f == 1 && t == 5) SwitchWorld ("first", "fifth");										// zoom out	
+		else if (f == 1 && t == 6) SwitchWorld ("first", "fifth");										// zoom out	
+		else if (f == 1 && t == 7) SwitchWorld ("first", "seventh");									// zoom out
+		else if (f == 1 && t == 8) SwitchWorld ("first", "seventh");									// zoom out
+		else if (f == 1 && t == 9) SwitchWorld ("first", "ninth");										// zoom out
+
+		///// second \\\\\
+
+		if (f == 2 && t == 0) SwitchWorld ("first", "zero");											// zoom in
+		else if (f == 2 && t == 1) SwitchWorld ("first", "first");										// zoom out
+		else if (f == 2 && t == 2) SwitchWorld ("first", "first");										// zoom out
+		else if (f == 2 && t == 3) SwitchWorld ("first", "third");										// zoom out
+		else if (f == 2 && t == 4) SwitchWorld ("first", "third");										// zoom out
+		else if (f == 2 && t == 5) SwitchWorld ("first", "fifth");										// zoom out	
+		else if (f == 2 && t == 6) SwitchWorld ("first", "fifth");										// zoom out	
+		else if (f == 2 && t == 7) SwitchWorld ("first", "seventh");									// zoom out
+		else if (f == 2 && t == 8) SwitchWorld ("first", "seventh");									// zoom out
+		else if (f == 2 && t == 9) SwitchWorld ("first", "ninth");										// zoom out
+
+		///// third \\\\\
+
+		if (f == 3 && t == 0) SwitchWorld ("third", "zero");											// zoom in
+		else if (f == 3 && t == 1) SwitchWorld ("third", "first");										// zoom in
+		else if (f == 3 && t == 2) SwitchWorld ("third", "first");										// zoom in	
+		else if (f == 3 && t == 3) SwitchWorld ("third", "third");										// zoom in	
+		else if (f == 3 && t == 4) SwitchWorld ("third", "third");										// zoom in	
+		else if (f == 3 && t == 5) SwitchWorld ("third", "fifth");										// zoom out	
+		else if (f == 3 && t == 6) SwitchWorld ("third", "fifth");										// zoom out	
+		else if (f == 3 && t == 7) SwitchWorld ("third", "seventh");									// zoom out
+		else if (f == 3 && t == 8) SwitchWorld ("third", "seventh");									// zoom out
+		else if (f == 3 && t == 9) SwitchWorld ("third", "ninth");										// zoom out
+
+		///// fourth \\\\\
+
+		if (f == 4 && t == 0) SwitchWorld ("third", "zero");											// zoom in
+		else if (f == 4 && t == 1) SwitchWorld ("third", "first");										// zoom in
+		else if (f == 4 && t == 2) SwitchWorld ("third", "first");										// zoom in
+		else if (f == 4 && t == 3) SwitchWorld ("third", "third");										// zoom in
+		else if (f == 4 && t == 4) SwitchWorld ("third", "third");										// zoom in
+		else if (f == 4 && t == 5) SwitchWorld ("third", "fifth");										// zoom out	
+		else if (f == 4 && t == 6) SwitchWorld ("third", "fifth");										// zoom out	
+		else if (f == 4 && t == 7) SwitchWorld ("third", "seventh");									// zoom out
+		else if (f == 4 && t == 8) SwitchWorld ("third", "seventh");									// zoom out
+		else if (f == 4 && t == 9) SwitchWorld ("third", "ninth");										// zoom out
+
+		///// fifth \\\\\
+
+		if (f == 5 && t == 0) SwitchWorld ("fifth", "zero");											// zoom in
+		else if (f == 5 && t == 1) SwitchWorld ("fifth", "first");										// zoom in
+		else if (f == 5 && t == 2) SwitchWorld ("fifth", "first");										// zoom in	
+		else if (f == 5 && t == 3) SwitchWorld ("fifth", "third");										// zoom in
+		else if (f == 5 && t == 4) SwitchWorld ("fifth", "third");										// zoom in
+		else if (f == 5 && t == 5) SwitchWorld ("fifth", "fifth");										// zoom in
+		else if (f == 5 && t == 6) SwitchWorld ("fifth", "fifth");										// zoom in
+		else if (f == 5 && t == 7) SwitchWorld ("fifth", "seventh");									// zoom out
+		else if (f == 5 && t == 8) SwitchWorld ("fifth", "seventh");									// zoom out
+		else if (f == 5 && t == 9) SwitchWorld ("fifth", "ninth");										// zoom out
+
+		///// sixth \\\\\
+
+		if (f == 6 && t == 0) SwitchWorld ("fifth", "zero");											// zoom in
+		else if (f == 6 && t == 1) SwitchWorld ("fifth", "first");										// zoom in
+		else if (f == 6 && t == 2) SwitchWorld ("fifth", "first");										// zoom in
+		else if (f == 6 && t == 3) SwitchWorld ("fifth", "third");										// zoom in
+		else if (f == 6 && t == 4) SwitchWorld ("fifth", "third");										// zoom in
+		else if (f == 6 && t == 5) SwitchWorld ("fifth", "fifth");										// zoom in
+		else if (f == 6 && t == 6) SwitchWorld ("fifth", "fifth");										// zoom in
+		else if (f == 6 && t == 7) SwitchWorld ("fifth", "seventh");									// zoom out
+		else if (f == 6 && t == 8) SwitchWorld ("fifth", "seventh");									// zoom out
+		else if (f == 6 && t == 9) SwitchWorld ("fifth", "ninth");										// zoom out
+
+		///// seventh \\\\\
+
+		if (f == 7 && t == 0) SwitchWorld ("seventh", "zero");											// zoom in
+		else if (f == 7 && t == 1) SwitchWorld ("seventh", "first");									// zoom in
+		else if (f == 7 && t == 2) SwitchWorld ("seventh", "first");									// zoom in
+		else if (f == 7 && t == 3) SwitchWorld ("seventh", "third");									// zoom in
+		else if (f == 7 && t == 4) SwitchWorld ("seventh", "third");									// zoom in
+		else if (f == 7 && t == 5) SwitchWorld ("seventh", "fifth");									// zoom in	
+		else if (f == 7 && t == 6) SwitchWorld ("seventh", "fifth");									// zoom in	
+		else if (f == 7 && t == 7) SwitchWorld ("seventh", "seventh");									// zoom in	
+		else if (f == 7 && t == 8) SwitchWorld ("seventh", "seventh");									// zoom in	
+		else if (f == 7 && t == 9) SwitchWorld ("seventh", "ninth");									// zoom out
+
+		///// eighth \\\\\
+
+		if (f == 8 && t == 0) SwitchWorld ("seventh", "zero");											// zoom in
+		else if (f == 8 && t == 1) SwitchWorld ("seventh", "first");									// zoom in
+		else if (f == 8 && t == 2) SwitchWorld ("seventh", "first");									// zoom in
+		else if (f == 8 && t == 3) SwitchWorld ("seventh", "third");									// zoom in
+		else if (f == 8 && t == 4) SwitchWorld ("seventh", "third");									// zoom in
+		else if (f == 8 && t == 5) SwitchWorld ("seventh", "fifth");									// zoom in	
+		else if (f == 8 && t == 6) SwitchWorld ("seventh", "fifth");									// zoom in	
+		else if (f == 8 && t == 7) SwitchWorld ("seventh", "seventh");									// zoom in	
+		else if (f == 8 && t == 8) SwitchWorld ("seventh", "seventh");									// zoom in	
+		else if (f == 8 && t == 9) SwitchWorld ("seventh", "ninth");									// zoom out
+
+		///// ninth \\\\\
+
+		if (f == 9 && t == 0) SwitchWorld ("ninth", "zero");											// zoom in
+		else if (f == 9 && t == 1) SwitchWorld ("ninth", "first");										// zoom in
+		else if (f == 9 && t == 2) SwitchWorld ("ninth", "first");										// zoom in
+		else if (f == 9 && t == 3) SwitchWorld ("ninth", "third");										// zoom in
+		else if (f == 9 && t == 4) SwitchWorld ("ninth", "third");										// zoom in
+		else if (f == 9 && t == 5) SwitchWorld ("ninth", "fifth");										// zoom in	
+		else if (f == 9 && t == 6) SwitchWorld ("ninth", "fifth");										// zoom in	
+		else if (f == 9 && t == 7) SwitchWorld ("ninth", "seventh");									// zoom in
+		else if (f == 9 && t == 8) SwitchWorld ("ninth", "seventh");									// zoom in
+		else if (f == 9 && t == 9) SwitchWorld ("ninth", "ninth");										// zoom in
+
+	}
+
+	public void ZoomCamera (int f, int t)
 	{
 
-		switchWorld = switchworld;																		// set switch world flag
 
-		// EVOLUTIONS \\
+	///// zero \\\\\
 
-		// from light world zero
-			// to dark world zero
-		if (switchworld && fromState == 0 && toState == 0) {
-			Debug.Log ("camera zero to zero");
-			ZoomTo (true, "zero", "zero");		// zoom out
-		}
-		if (!switchworld && fromState == 0 && toState == 0) {
-			Debug.Log ("camera zero reset to zero");
-			ZoomTo (false, "zero", "zero");		// zoom out
-		}
-			// to light world first
-		if (switchworld && fromState == 0 && toState == 1) {
-			Debug.Log ("camera zero to light world first");
-			ZoomTo (true, "zero", "first");		// zoom out
-		}
-			// to first
-		if (!switchworld && fromState == 0 && toState == 1) {
-			Debug.Log ("camera zero to first");
-			ZoomTo (false, "zero", "first");		// zoom out
-		}
-		// to light world second
-		if (switchworld && fromState == 0 && toState == 2) {
-			Debug.Log ("camera zero to light world second");
-			ZoomTo (true, "zero", "first");		// zoom out
-		}
-			// to third
-		else if (fromState == 0 && toState == 3) ZoomTo (false, "zero", "third");						// zoom out
-			// to fifth
-		else if (fromState == 0 && toState == 5) ZoomTo (false, "zero", "fifth");						// zoom out
-			// to seventh
-		else if (fromState == 0 && toState == 7) ZoomTo (false, "zero", "seventh");						// zoom out
-			// to ninth
-		else if (fromState == 0 && toState == 9) ZoomTo (false, "zero", "ninth");						// zoom out
+		//if (f == 0 && t == 0) Zoom (false, "zero", "zero");											// zoom out
 
-		// from first
-			// to third
-		if (fromState == 1 && toState == 3)	ZoomTo (false, "first", "third");							// zoom out
-			// to fifth
-		else if (fromState == 1 && toState == 5) ZoomTo (false, "first", "fifth");						// zoom out	
-			// to seventh
-		else if (fromState == 1 && toState == 7) ZoomTo (false, "first", "seventh");					// zoom out
-			// to ninth
-		else if (fromState == 1 && toState == 9) ZoomTo (false, "first", "ninth");						// zoom out
+		if (f == 0 && t == 1) Zoom (false, "zero", "first");											// zoom out
+		else if (f == 0 && t == 2) Zoom (false, "zero", "first");										// zoom out
+		else if (f == 0 && t == 3) Zoom (false, "zero", "third");										// zoom out
+		else if (f == 0 && t == 4) Zoom (false, "zero", "third");										// zoom out
+		else if (f == 0 && t == 5) Zoom (false, "zero", "fifth");										// zoom out
+		else if (f == 0 && t == 6) Zoom (false, "zero", "fifth");										// zoom out
+		else if (f == 0 && t == 7) Zoom (false, "zero", "seventh");									// zoom out
+		else if (f == 0 && t == 8) Zoom (false, "zero", "seventh");									// zoom out
+		else if (f == 0 && t == 9) Zoom (false, "zero", "ninth");										// zoom out
 
-		// from second
-			// to third
-		if (fromState == 2 && toState == 3)	ZoomTo (false, "first", "third");							// zoom out
-			// to fifth
-		else if (fromState == 2 && toState == 5) ZoomTo (false, "first", "fifth");						// zoom out	
-			// to seventh
-		else if (fromState == 2 && toState == 7) ZoomTo (false, "first", "seventh");					// zoom out
-			// to ninth
-		else if (fromState == 2 && toState == 9) ZoomTo (false, "first", "ninth");						// zoom out
-
-		// from third
-			// to fifth
-		if (fromState == 3 && toState == 5) ZoomTo (false, "third", "fifth");							// zoom out	
-			// to seventh
-		else if (fromState == 3 && toState == 7) ZoomTo (false, "third", "seventh");					// zoom out
-			// to ninth
-		else if (fromState == 3 && toState == 9) ZoomTo (false, "third", "ninth");						// zoom out
-
-		// from fourth
-			// to fifth
-		if (fromState == 4 && toState == 5) ZoomTo (false, "third", "fifth");							// zoom out	
-			// to seventh
-		else if (fromState == 4 && toState == 7) ZoomTo (false, "third", "seventh");					// zoom out
-			// to ninth
-		else if (fromState == 4 && toState == 9) ZoomTo (false, "third", "ninth");						// zoom out
-
-		// from fifth
-			// to seventh
-		if (fromState == 5 && toState == 7) ZoomTo (false, "fifth", "seventh");							// zoom out
-			// to ninth
-		else if (fromState == 5 && toState == 9) ZoomTo (false, "fifth", "ninth");						// zoom out
-
-		// from sixth
-			// to seventh
-		if (fromState == 6 && toState == 7) ZoomTo (false, "fifth", "seventh");							// zoom out
-			// to ninth
-		else if (fromState == 6 && toState == 9) ZoomTo (false, "fifth", "ninth");						// zoom out
-
-		// from seventh
-			// to ninth
-		if (fromState == 7 && toState == 9)	ZoomTo (false, "seventh", "ninth");							// zoom out
-
-		// from eighth
-			// to ninth
-		if (fromState == 8 && toState == 9)	ZoomTo (false, "seventh", "ninth");							// zoom out
-
-		// from ninth
-			// to tenth
-		if (fromState == 9 && toState == 10) ZoomTo (false, "ninth", "tenth");							// zoom out
-
-
-		// DEVOLUTIONS \\
-
-
-		// from first
-			// to zero
-		if (fromState == 1 && toState == 0) ZoomTo (true, "first", "zero");								// zoom in
+	///// first \\\\\
 			
-		// from light world first
-			// to dark world zero
-		if (psp.resetScale && fromState == 1 && toState == 0) ZoomTo (false, "first", "zero");			// zoom out
+		if (f == 1 && t == 0) Zoom (true, "first", "zero");											// zoom out
+		else if (f == 1 && t == 3) Zoom (false, "first", "third");									// zoom out
+		else if (f == 1 && t == 4) Zoom (false, "first", "third");									// zoom out
+		else if (f == 1 && t == 5) Zoom (false, "first", "fifth");									// zoom out	
+		else if (f == 1 && t == 6) Zoom (false, "first", "fifth");									// zoom out	
+		else if (f == 1 && t == 7) Zoom (false, "first", "seventh");									// zoom out
+		else if (f == 1 && t == 8) Zoom (false, "first", "seventh");									// zoom out
+		else if (f == 1 && t == 9) Zoom (false, "first", "ninth");									// zoom out
 
-		// from second
-			// to zero
-		if (fromState == 2 && toState == 0) ZoomTo (true, "first", "zero");								// zoom in
+	///// second \\\\\
 
-		// from third
-			// to second
-		if (fromState == 3 && toState == 2)	ZoomTo (true, "third", "first");							// zoom in	
-			// to first
-		else if (fromState == 3 && toState == 1) ZoomTo (true, "third", "first");						// zoom in
-			// to zero
-		else if (fromState == 3 && toState == 0) ZoomTo (true, "third", "zero");						// zoom in
+		if (f == 2 && t == 0) Zoom (true, "first", "zero");											// zoom in
+		else if (f == 2 && t == 3) Zoom (false, "first", "third");									// zoom out
+		else if (f == 2 && t == 4) Zoom (false, "first", "third");									// zoom out
+		else if (f == 2 && t == 5) Zoom (false, "first", "fifth");									// zoom out	
+		else if (f == 2 && t == 6) Zoom (false, "first", "fifth");									// zoom out	
+		else if (f == 2 && t == 7) Zoom (false, "first", "seventh");									// zoom out
+		else if (f == 2 && t == 8) Zoom (false, "first", "seventh");									// zoom out
+		else if (f == 2 && t == 9) Zoom (false, "first", "ninth");									// zoom out
 
-		// from light world third
-			// to dark world zero
-		if (psp.resetScale && fromState == 3 && toState == 0) ZoomTo (false, "third", "zero");			// zoom out
+	///// third \\\\\
+			
+		if (f == 3 && t == 0) Zoom (true, "third", "zero");											// zoom in
+		else if (f == 3 && t == 1) Zoom (true, "third", "first");										// zoom in
+		else if (f == 3 && t == 2) Zoom (true, "third", "first");										// zoom in	
+		else if (f == 3 && t == 5) Zoom (false, "third", "fifth");									// zoom out	
+		else if (f == 3 && t == 6) Zoom (false, "third", "fifth");									// zoom out	
+		else if (f == 3 && t == 7) Zoom (false, "third", "seventh");									// zoom out
+		else if (f == 3 && t == 8) Zoom (false, "third", "seventh");									// zoom out
+		else if (f == 3 && t == 9) Zoom (false, "third", "ninth");									// zoom out
 
-		// from fifth
-			// to fourth
-		if (fromState == 5 && toState == 4) ZoomTo (true, "fifth", "third");							// zoom in
-			// to third
-		else if (fromState == 5 && toState == 3) ZoomTo (true, "fifth", "third");						// zoom in
-			// to second
-		else if (fromState == 3 && toState == 2) ZoomTo (true, "third", "first");						// zoom in	
-			// to first
-		else if (fromState == 5 && toState == 1) ZoomTo (true, "fifth", "first");						// zoom in
-			// to zero
-		else if (fromState == 5 && toState == 0) ZoomTo (true, "fifth", "zero");						// zoom in
+	///// fourth \\\\\
 
-		// from light world fifth
-			// to dark world zero
-		if (psp.resetScale && fromState == 5 && toState == 0) ZoomTo (false, "fifth", "zero");			// zoom out
+		if (f == 4 && t == 0) Zoom (true, "third", "zero");											// zoom in
+		else if (f == 4 && t == 1) Zoom (true, "third", "first");										// zoom in
+		else if (f == 4 && t == 2) Zoom (true, "third", "first");										// zoom in
+		else if (f == 4 && t == 5) Zoom (false, "third", "fifth");										// zoom out	
+		else if (f == 4 && t == 6) Zoom (false, "third", "fifth");										// zoom out	
+		else if (f == 4 && t == 7) Zoom (false, "third", "seventh");									// zoom out
+		else if (f == 4 && t == 8) Zoom (false, "third", "seventh");									// zoom out
+		else if (f == 4 && t == 9) Zoom (false, "third", "ninth");									// zoom out
 
-		// from seventh
-			// to sixth
-		if (fromState == 7 && toState == 6)	ZoomTo (true, "seventh", "fifth");							// zoom in	
-			// to fifth
-		else if (fromState == 7 && toState == 5) ZoomTo (true, "seventh", "fifth");						// zoom in	
-			// to fourth
-		else if (fromState == 5 && toState == 4) ZoomTo (true, "fifth", "third");						// zoom in
-			// to third
-		else if (fromState == 7 && toState == 3) ZoomTo (true, "seventh", "third");						// zoom in
-			// to second
-		else if (fromState == 3 && toState == 2) ZoomTo (true, "third", "first");						// zoom in
-			// to first
-		else if (fromState == 7 && toState == 1) ZoomTo (true, "seventh", "first");						// zoom in
-			// to zero
-		else if (fromState == 7 && toState == 0) ZoomTo (true, "seventh", "zero");						// zoom in
+	///// fifth \\\\\
 
-		// from light world seventh
-			// to dark world zero
-		if (psp.resetScale && fromState == 7 && toState == 0) ZoomTo (false, "seventh", "zero");			// zoom out
+		if (f == 5 && t == 0) Zoom (true, "fifth", "zero");											// zoom in
+		else if (f == 5 && t == 1) Zoom (true, "fifth", "first");										// zoom in
+		else if (f == 5 && t == 2) Zoom (true, "fifth", "first");										// zoom in	
+		else if (f == 5 && t == 3) Zoom (true, "fifth", "third");										// zoom in
+		else if (f == 5 && t == 4) Zoom (true, "fifth", "third");										// zoom in
+		else if (f == 5 && t == 7) Zoom (false, "fifth", "seventh");									// zoom out
+		else if (f == 5 && t == 8) Zoom (false, "fifth", "seventh");									// zoom out
+		else if (f == 5 && t == 9) Zoom (false, "fifth", "ninth");									// zoom out
 
-		// from ninth
-			// to eighth
-		if (fromState == 9 && toState == 8) ZoomTo (true, "ninth", "seventh");							// zoom in
-			// to seventh
-		else if (fromState == 9 && toState == 7) ZoomTo (true, "ninth", "seventh");						// zoom in
-			// to sixth
-		else if (fromState == 7 && toState == 6) ZoomTo (true, "seventh", "fifth");						// zoom in	
-			// to fifth
-		else if (fromState == 9 && toState == 5) ZoomTo (true, "ninth", "fifth");						// zoom in	
-			// to fourth
-		else if (fromState == 5 && toState == 4) ZoomTo (true, "fifth", "third");						// zoom in
-			// to third
-		else if (fromState == 9 && toState == 3) ZoomTo (true, "ninth", "third");						// zoom in
-			// to second
-		else if (fromState == 3 && toState == 2) ZoomTo (true, "third", "first");						// zoom in
-			// to first
-		else if (fromState == 9 && toState == 1) ZoomTo (true, "ninth", "first");						// zoom in
-			// to zero
-		else if (fromState == 9 && toState == 0) ZoomTo (true, "ninth", "zero");						// zoom in
+	///// sixth \\\\\
 
-		// from light world ninth
-			// to dark world zero
-		if (psp.resetScale && fromState == 7 && toState == 0) ZoomTo (false, "ninth", "zero");			// zoom out
+		if (f == 6 && t == 0) Zoom (true, "fifth", "zero");											// zoom in
+		else if (f == 6 && t == 1) Zoom (true, "fifth", "first");										// zoom in
+		else if (f == 6 && t == 2) Zoom (true, "fifth", "first");										// zoom in
+		else if (f == 6 && t == 3) Zoom (true, "fifth", "third");										// zoom in
+		else if (f == 6 && t == 4) Zoom (true, "fifth", "third");										// zoom in
+		else if (f == 6 && t == 7) Zoom (false, "fifth", "seventh");									// zoom out
+		else if (f == 6 && t == 8) Zoom (false, "fifth", "seventh");									// zoom out
+		else if (f == 6 && t == 9) Zoom (false, "fifth", "ninth");									// zoom out
+
+	///// seventh \\\\\
+
+		if (f == 7 && t == 0) Zoom (true, "seventh", "zero");											// zoom in
+		else if (f == 7 && t == 1) Zoom (true, "seventh", "first");									// zoom in
+		else if (f == 7 && t == 2) Zoom (true, "seventh", "first");									// zoom in
+		else if (f == 7 && t == 3) Zoom (true, "seventh", "third");									// zoom in
+		else if (f == 7 && t == 4) Zoom (true, "seventh", "third");									// zoom in
+		else if (f == 7 && t == 5) Zoom (true, "seventh", "fifth");									// zoom in	
+		else if (f == 7 && t == 6) Zoom (true, "seventh", "fifth");									// zoom in	
+		else if (f == 7 && t == 9) Zoom (false, "seventh", "ninth");									// zoom out
+
+	///// eighth \\\\\
+
+		if (f == 8 && t == 0) Zoom (true, "seventh", "zero");											// zoom in
+		else if (f == 8 && t == 1) Zoom (true, "seventh", "first");									// zoom in
+		else if (f == 8 && t == 2) Zoom (true, "seventh", "first");									// zoom in
+		else if (f == 8 && t == 3) Zoom (true, "seventh", "third");									// zoom in
+		else if (f == 8 && t == 4) Zoom (true, "seventh", "third");									// zoom in
+		else if (f == 8 && t == 5) Zoom (true, "seventh", "fifth");									// zoom in	
+		else if (f == 8 && t == 6) Zoom (true, "seventh", "fifth");									// zoom in	
+		else if (f == 8 && t == 9) Zoom (false, "seventh", "ninth");									// zoom out
+
+	///// ninth \\\\\
+
+		if (f == 9 && t == 0) Zoom (true, "ninth", "zero");											// zoom in
+		else if (f == 9 && t == 1) Zoom (true, "ninth", "first");										// zoom in
+		else if (f == 9 && t == 2) Zoom (true, "ninth", "first");										// zoom in
+		else if (f == 9 && t == 3) Zoom (true, "ninth", "third");										// zoom in
+		else if (f == 9 && t == 4) Zoom (true, "ninth", "third");										// zoom in
+		else if (f == 9 && t == 5) Zoom (true, "ninth", "fifth");										// zoom in	
+		else if (f == 9 && t == 6) Zoom (true, "ninth", "fifth");										// zoom in	
+		else if (f == 9 && t == 7) Zoom (true, "ninth", "seventh");									// zoom in
+		else if (f == 9 && t == 8) Zoom (true, "ninth", "seventh");									// zoom in
+
+		else if (f == 9 && t == 10) Zoom (false, "ninth", "tenth");									// zoom out
 	
 	}
 
-	public void ZoomTo (bool devol, string resetState, string setState) {
+	public void SwitchWorld (string resetState, string setState) {
 
-		// private void SwitchTo (bool devol, string resetState, string setState) {}
-		// FIX THIS 
-		Debug.Log("camera ZoomTo switchWorld: " + switchWorld);
-		if (switchWorld) {
-			//if (psp.lightworld) {																		// if in light world
-			//	Debug.Log ("camera to dark world");
-			//	anim.SetBool ("switchworld", false);														// reset switchworld
-			//}
-			//else if (!psp.lightworld) {																		// if in dark world
-				Debug.Log ("camera: switch world");
-				anim.SetBool ("switchworld", true);															// set switchworld
-			//}
-			if (devol) {																				// if devol true
-				anim.ResetTrigger ("zoomout");																// reset scale up trigger
-				anim.SetTrigger ("zoomin");																	// set scale down trigger
-			}																								
-			else {																						// else
-				anim.ResetTrigger ("zoomin");																// reset scale down trigger
-				anim.SetTrigger ("zoomout");																// set scale up trigger
-			}																											
+			anim.SetBool ("switchworld", true);															// set switchworld
 
-			//anim.SetBool (resetState, false);															// reset previously active state
-			//anim.SetBool (setState, true);																// set new active state
-
-			//anim.SetBool ("lightworld", false);															// reset lightworld to not keep switching worlds
-		}
+			anim.SetBool (resetState, false);															// reset previously active state
+			anim.SetBool (setState, true);																// set new active state
 			
-		else {
+			anim.ResetTrigger ("zoomout");																// reset scale up trigger
+			anim.SetTrigger ("zoomin");																	// set scale down trigger
 
-			//Debug.Log ("camera zoom out");
+			resetZoom = true;																			// set reset zoom flag
+	}
 
-			anim.SetBool ("switchworld", false);													// reset lightworld to not switch worlds
+	public void Zoom (bool devol, string resetState, string setState) {
 
 			if (devol) {																				// if devol true
 				anim.ResetTrigger ("zoomout");																// reset scale up trigger
@@ -250,7 +315,6 @@ public class CameraManager : MonoBehaviour {
 
 			anim.SetBool (resetState, false);															// reset previously active state
 			anim.SetBool (setState, true);																// set new active state
-		}
 
 	}
 
