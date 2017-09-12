@@ -8,6 +8,7 @@ public class NinthParticleState : IParticleState
 
 	public bool isLight = true;															// 'is light' flag
 	private bool lightworld, inLightworld;												// is light world ref, in light world ref
+	private int shape;																	// shape indicator
 	public bool circle, triangle, square;												// shape flags flag
 	public float evol, deltaDark, deltaLight;											// evol tracking refs
 	private bool checkEvol;																// check evol flag
@@ -51,6 +52,7 @@ public class NinthParticleState : IParticleState
 	public void OnTriggerEnter(Collider other)
 	{
 		// state class doesn't know what shape it is until it contacts another
+		shape = psp.shape;																		// set shape indicator
 		circle = psp.circle;																	// set current circle flag
 		triangle = psp.triangle;																// set current triangle flag
 		square = psp.square;																	// set current square flag
@@ -61,12 +63,24 @@ public class NinthParticleState : IParticleState
 				= other.gameObject.GetComponent<PlayerStatePattern>();							// ref other ParticleStatePattern
 				if (pspOther.lightworld == psp.inLightworld) {									// if player and particle in same world
 					if (psp.evolC > pspOther.evolC) {													// if player evol is lower
-						if (pspOther.darkEvolC != 0f) psp.AddDark(pspOther.darkEvol);						// add player dark evol
-						if (pspOther.lightEvolC != 0f) psp.AddLight(pspOther.lightEvol);					// add player light evol
+						if (pspOther.evolC > 0f) {															// other > 0
+							if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC);						// add other dark
+							if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC);					// add other light
+						}
+						else if (pspOther.evolC < 0f) {														// other < 0
+							if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC * -1);				// add other negated dark
+							if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC * -1);				// add other negated light
+						}
 					}
 					else if (psp.evolC <= pspOther.evolC) {												// else player is higher
-						if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvol);						// subtract player dark
-						if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvol);					// subtract player light
+						if (pspOther.evolC > 0f) {															// other > 0
+							if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);						// sub other dark
+							if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);					// sub other light
+						}
+						else if (pspOther.evolC < 0f) {														// other < 0
+							if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC * -1);				// sub other negated dark
+							if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC * -1);				// sub other negated light
+						}
 					}
 					canCollide = false;																// reset can collide trigger	
 					psp.sc[0].enabled = false;														// disable trigger collider
@@ -110,13 +124,25 @@ public class NinthParticleState : IParticleState
 					canCollide = false;																// reset has collided trigger
 					psp.sc[0].enabled = false;														// disable trigger collider
 					if (psp.evolC > pspOther.evolC) {													// if evol > other
-						if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvol);						// add dark of other
-						if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvol);					// add light of other
+						if (pspOther.evolC > 0f) {															// other > 0
+							if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC);						// add other dark
+							if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC);					// add other light
+						}
+						else if (pspOther.evolC < 0f) {														// other < 0
+							if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC * -1);				// add other negated dark
+							if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC * -1);				// add other negated light
+						}
 					}
 					else if (psp.evolC == pspOther.evolC) RollDie (pspOther);							// if evol = other, roll die
 					if (psp.evolC < pspOther.evolC) {													// if evol < other
-						if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvol);						// sub dark of other
-						if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvol);					// sub light of other
+						if (pspOther.evolC > 0f) {															// other > 0
+							if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);						// sub other dark
+							if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);					// sub other light
+						}
+						else if (pspOther.evolC < 0f) {														// other < 0
+							if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC * -1);				// sub other negated dark
+							if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC * -1);				// sub other negated light
+						}
 					}
 					checkEvol = true;																// check evol flag
 				}
@@ -128,19 +154,25 @@ public class NinthParticleState : IParticleState
 	private void RollDie(ParticleStatePattern pspOther) {
 		if (psp.die > pspOther.die) {														// if this die > other die
 			//Debug.Log ("die roll: this > other");
-			if (pspOther.evolC == 0) psp.AddLight (0.5f);										// if other = 0, add light
-			else {																				// else
-				if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC);						// add dark of other
-				if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC);					// add light of other
+			if (pspOther.evolC > 0f) {															// other > 0
+				if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC);						// add other dark
+				if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC);					// add other light
+			}
+			else if (pspOther.evolC < 0f) {														// other < 0
+				if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC * -1);				// add other negated dark
+				if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC * -1);				// add other negated light
 			}
 			psp.roll = true;																	// re-roll die
 		}
 		else if (psp.die < pspOther.die) {													// if this die < other die
 			//Debug.Log ("die roll: this < other");
-			if (pspOther.evolC == 0) psp.SubLight (0.5f);										// if other = 0, add light
-			else {																				// else
-				if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);						// sub dark of other
-				if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);					// sub light of other
+			if (pspOther.evolC > 0f) {															// other > 0
+				if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);						// sub other dark
+				if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);					// sub other light
+			}
+			else if (pspOther.evolC < 0f) {														// other < 0
+				if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC * -1);				// sub other negated dark
+				if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC * -1);				// sub other negated light
 			}
 			psp.roll = true;																	// re-roll die
 		}
@@ -150,87 +182,87 @@ public class NinthParticleState : IParticleState
 		}
 	}
 
-	public void ToOtherWorld(bool toLW, int ts, bool tl)
+	public void ToOtherWorld(bool toLW, int tst8, bool tl, int ts)
 	{
-		if (ts == 0) psp.currentState = psp.zeroState;									// set to zero state
-		else if (ts == 1) psp.currentState = psp.firstState;							// set to first state
-		else if (ts == 2) psp.currentState = psp.secondState;							// set to second state
-		else if (ts == 3) psp.currentState = psp.thirdState;							// set to third state
-		else if (ts == 4) psp.currentState = psp.fourthState;							// set to fourth state
-		else if (ts == 5) psp.currentState = psp.fifthState;							// set to fifth state
-		else if (ts == 6) psp.currentState = psp.sixthState;							// set to sixth state
-		else if (ts == 7) psp.currentState = psp.seventhState;							// set to seventh state
+		if (tst8 == 0) psp.currentState = psp.zeroState;								// set to zero state
+		else if (tst8 == 1) psp.currentState = psp.firstState;							// set to first state
+		else if (tst8 == 2) psp.currentState = psp.secondState;							// set to second state
+		else if (tst8 == 3) psp.currentState = psp.thirdState;							// set to third state
+		else if (tst8 == 4) psp.currentState = psp.fourthState;							// set to fourth state
+		else if (tst8 == 5) psp.currentState = psp.fifthState;							// set to fifth state
+		else if (tst8 == 6) psp.currentState = psp.sixthState;							// set to sixth state
+		else if (tst8 == 7) psp.currentState = psp.seventhState;						// set to seventh state
 
-		psp.ChangeWorld(toLW, 9, ts, tl);												// trigger transition effects
+		psp.ChangeWorld(toLW, 9, tst8, tl, shape, ts);									// trigger transition effects
 		//ParticleStateEvents.toZero += psp.TransitionToZero;								// flag transition in delegate
 	}
 
 	public void ToZero(bool toLight)
 	{
-		psp.TransitionTo(8, 0, isLight, toLight, 0);									// trigger transition effects
+		psp.TransitionTo(8, 0, isLight, toLight, shape, 0);								// trigger transition effects
 		//ParticleStateEvents.toZero += psp.TransitionToZero;								// flag transition in delegate
 		psp.currentState = psp.zeroState;												// set to new state
 	}
 
 	public void ToFirst(bool toLight)
 	{
-		psp.TransitionTo(8, 1, isLight, toLight, 0);									// trigger transition effects
+		psp.TransitionTo(8, 1, isLight, toLight, shape, 0);								// trigger transition effects
 		//ParticleStateEvents.toFirst += psp.TransitionToFirst;								// flag transition in delegate
 		psp.currentState = psp.firstState;												// set to new state
 	}
 
 	public void ToSecond(bool toLight)
 	{
-		psp.TransitionTo(8, 2, isLight, toLight, 0);									// trigger transition effects
+		psp.TransitionTo(8, 2, isLight, toLight, shape, 0);								// trigger transition effects
 		//ParticleStateEvents.toSecond += psp.TransitionToSecond;							// flag transition in delegate
 		psp.currentState = psp.secondState;												// set to new state
 	}
 
 	public void ToThird(bool toLight)
 	{
-		psp.TransitionTo(8, 3, isLight, toLight, 0);									// trigger transition effects
+		psp.TransitionTo(8, 3, isLight, toLight, shape, 0);								// trigger transition effects
 		//ParticleStateEvents.toThird += psp.TransitionToThird;								// flag transition in delegate
 		psp.currentState = psp.thirdState;												// set to new state
 	}
 
 	public void ToFourth(bool toLight)
 	{
-		psp.TransitionTo(8, 4, isLight, toLight, 0);									// trigger transition effects
+		psp.TransitionTo(8, 4, isLight, toLight, shape, 0);								// trigger transition effects
 		//ParticleStateEvents.toFourth += psp.TransitionToFourth;							// flag transition in delegate
 		psp.currentState = psp.fourthState;												// set to new state
 	}
 
-	public void ToFifth(bool toLight, int shape)
+	public void ToFifth(bool toLight, int toShape)
 	{
-		psp.TransitionTo(8, 5, isLight, toLight, shape);								// trigger transition effects
+		psp.TransitionTo(8, 5, isLight, toLight, shape, toShape);						// trigger transition effects
 		//ParticleStateEvents.toFifth += psp.TransitionToFifth;								// flag transition in delegate
 		psp.currentState = psp.fifthState;												// set to new state
 	}
 
-	public void ToSixth(bool toLight, int shape)
+	public void ToSixth(bool toLight, int toShape)
 	{
-		psp.TransitionTo(8, 6, isLight, toLight, shape);								// trigger transition effects
+		psp.TransitionTo(8, 6, isLight, toLight, shape, toShape);						// trigger transition effects
 		//ParticleStateEvents.toSixth += psp.TransitionToSixth;								// flag transition in delegate
 		psp.currentState = psp.sixthState;												// set to new state
 	}
 
-	public void ToSeventh(bool toLight, int shape)
+	public void ToSeventh(bool toLight, int toShape)
 	{
-		psp.TransitionTo(8, 7, isLight, toLight, shape);								// trigger transition effects
+		psp.TransitionTo(8, 7, isLight, toLight, shape, toShape);						// trigger transition effects
 		//ParticleStateEvents.toEighth += psp.TransitionToEighth;							// flag transition in delegate
 		psp.currentState = psp.seventhState;											// set to new state
 	}
 
-	public void ToEighth(bool toLight, int shape)
+	public void ToEighth(bool toLight, int toShape)
 	{
-		psp.TransitionTo(9, 8, isLight, toLight, shape);							// trigger transition effects
-		//ParticleStateEvents.toEighth += psp.TransitionToEighth;						// flag transition in delegate
-		psp.currentState = psp.eighthState;											// set to new state
+		psp.TransitionTo(9, 8, isLight, toLight, shape, toShape);						// trigger transition effects
+		//ParticleStateEvents.toEighth += psp.TransitionToEighth;							// flag transition in delegate
+		psp.currentState = psp.eighthState;												// set to new state
 	}
 
-	public void ToNinth(bool toLight, int shape)
+	public void ToNinth(bool toLight, int toShape)
 	{
-		Debug.Log ("Can't transition to same state");
+		psp.TransitionTo(9, 9, isLight, toLight, shape, toShape);						// trigger transition effects
 	}
 
 	public void Evol()
@@ -249,7 +281,7 @@ public class NinthParticleState : IParticleState
 		}
 			// to dark world
 		else if (evol == 0f && inLightworld) {												// to dark world zero / from light world
-			ToOtherWorld(false, 0, true);														// to dark world light zero
+			ToOtherWorld(false, 0, true, 0);													// to dark world light zero
 		}
 
 		// half zero
@@ -260,8 +292,8 @@ public class NinthParticleState : IParticleState
 		}
 			// to light world
 		else if (evol == -0.5f && !inLightworld) {											// to light world zero / from dark world
-			if (deltaDark > deltaLight) ToOtherWorld(true, 0, true);							// if lose more light than dark = to light world dark zero
-			else if (deltaDark <= deltaLight) ToOtherWorld(true, 0, true);						// if lose more dark than light = to light world light zero
+			if (deltaDark > deltaLight) ToOtherWorld(true, 0, true, 0);							// if lose more light than dark = to light world dark zero
+			else if (deltaDark <= deltaLight) ToOtherWorld(true, 0, true, 0);					// if lose more dark than light = to light world light zero
 		}
 			// in light world
 		else if (evol == -0.5f && inLightworld) {											// to light world zero / from light world 
@@ -277,8 +309,8 @@ public class NinthParticleState : IParticleState
 		}
 			// to light world
 		else if (evol == -1f && !inLightworld) {											// to light world first / from dark world
-			if (deltaDark > deltaLight) ToOtherWorld(true, 1, false);							// if lose more light than dark = to light world dark first
-			else if (deltaDark <= deltaLight) ToOtherWorld(true, 1, true);						// if lose more dark than light = to light world light first
+			if (deltaDark > deltaLight) ToOtherWorld(true, 1, false, 0);						// if lose more light than dark = to light world dark first
+			else if (deltaDark <= deltaLight) ToOtherWorld(true, 1, true, 0);					// if lose more dark than light = to light world light first
 		}
 			// in light world
 		else if (evol == -1f && inLightworld) {												// to light world first / from light world
@@ -294,8 +326,8 @@ public class NinthParticleState : IParticleState
 		}
 			// to light world
 		else if (evol == -1.5f && !inLightworld) {											// to light world second / from dark world
-			if (deltaDark > deltaLight) ToOtherWorld(true, 2, false);							// if lose more light than dark = to light world dark second
-			else if (deltaDark <= deltaLight) ToOtherWorld(true, 2, true);						// if lose more dark than light = to light world light second
+			if (deltaDark > deltaLight) ToOtherWorld(true, 2, false, 0);						// if lose more light than dark = to light world dark second
+			else if (deltaDark <= deltaLight) ToOtherWorld(true, 2, true, 0);					// if lose more dark than light = to light world light second
 		}
 			// in light world
 		else if (evol == -1.5f && inLightworld) {											// to light world second / from light world
@@ -311,8 +343,8 @@ public class NinthParticleState : IParticleState
 		}
 			// to light world
 		else if ((evol <= -2f && evol > -3f) && !inLightworld) {							// to light world third / from dark world
-			if (deltaDark > deltaLight) ToOtherWorld(true, 3, false);							// if lose more light than dark = to light world dark third
-			else if (deltaDark <= deltaLight) ToOtherWorld(true, 3, true);						// if lose more dark than light = to light world light third
+			if (deltaDark > deltaLight) ToOtherWorld(true, 3, false, 0);						// if lose more light than dark = to light world dark third
+			else if (deltaDark <= deltaLight) ToOtherWorld(true, 3, true, 0);					// if lose more dark than light = to light world light third
 		}
 			// in light world
 		else if ((evol <= -2f && evol > -3f) && inLightworld) {								// to light world third / from light world
@@ -332,8 +364,8 @@ public class NinthParticleState : IParticleState
 		}
 			// to light world
 		else if ((evol <= -3f && evol > -5f) && !inLightworld) {							// to light world fourth / from dark world
-			if (deltaDark > deltaLight) ToOtherWorld(true, 4, false);							// if lose more light than dark = to light world dark fourth
-			else if (deltaDark <= deltaLight) ToOtherWorld(true, 4, true);						// if lose more dark than light = to light world light fourth
+			if (deltaDark > deltaLight) ToOtherWorld(true, 4, false, 0);						// if lose more light than dark = to light world dark fourth
+			else if (deltaDark <= deltaLight) ToOtherWorld(true, 4, true, 0);					// if lose more dark than light = to light world light fourth
 		}
 			// in light world
 		else if ((evol <= -3f && evol > -5f) && inLightworld) {								// to light world fourth / from light world
@@ -353,8 +385,8 @@ public class NinthParticleState : IParticleState
 		} 
 			// to light world
 		else if ((evol <= -5f && evol > -8f) && !inLightworld) {							// to light world fifth / from dark world
-			if (deltaDark > deltaLight) ToOtherWorld(true, 5, false);							// if lose more light than dark = to light world dark circle fifth
-			else if (deltaDark <= deltaLight) ToOtherWorld(true, 5, true);						// if lose more dark than light = to light world light circle fifth
+			if (deltaDark > deltaLight) ToOtherWorld(true, 5, false, 0);						// if lose more light than dark = to light world dark circle fifth
+			else if (deltaDark <= deltaLight) ToOtherWorld(true, 5, true, 0);					// if lose more dark than light = to light world light circle fifth
 		}
 			// in light world
 		else if ((evol <= -5f && evol > -8f) && inLightworld) {								// to light world fifth / from light world
@@ -374,8 +406,8 @@ public class NinthParticleState : IParticleState
 		} 
 			// to light world
 		else if ((evol <= -8f && evol > -13f) && !inLightworld) {							// to light world sixth / from dark world
-			if (deltaDark > deltaLight) ToOtherWorld(true, 6, false);							// if lose more light than dark = to light world dark circle sixth
-			else if (deltaDark <= deltaLight) ToOtherWorld(true, 6, true);						// if lose more dark than light = to light world light circle sixth
+			if (deltaDark > deltaLight) ToOtherWorld(true, 6, false, 0);						// if lose more light than dark = to light world dark circle sixth
+			else if (deltaDark <= deltaLight) ToOtherWorld(true, 6, true, 0);					// if lose more dark than light = to light world light circle sixth
 		}
 			// in light world
 		else if ((evol <= -8f && evol > -13f) && inLightworld) {							// to light world sixth / from light world
@@ -395,8 +427,8 @@ public class NinthParticleState : IParticleState
 		} 
 			// to light world
 		else if ((evol <= -13f && evol > -21f) && !inLightworld) {							// to light world seventh / from dark world
-			if (deltaDark > deltaLight) ToOtherWorld(true, 7, false);							// if lose more light than dark = to light world dark circle seventh
-			else if (deltaDark <= deltaLight) ToOtherWorld(true, 7, true);						// if lose more dark than light = to light world light circle seventh
+			if (deltaDark > deltaLight) ToOtherWorld(true, 7, false, 0);						// if lose more light than dark = to light world dark circle seventh
+			else if (deltaDark <= deltaLight) ToOtherWorld(true, 7, true, 0);					// if lose more dark than light = to light world light circle seventh
 		}
 			// in light world
 		else if ((evol <= -13f && evol > -21f) && inLightworld) {							// to light world seventh / from light world
@@ -416,8 +448,8 @@ public class NinthParticleState : IParticleState
 		}
 		// to light world
 		else if ((evol <= -21f && evol > -34f) && !inLightworld) {							// to light world eighth / from dark world
-			if (deltaDark > deltaLight) ToOtherWorld(true, 8, false);							// if lose more light than dark = to light world dark eighth
-			else if (deltaDark <= deltaLight) ToOtherWorld(true, 8, true);						// if lose more dark than light = to light world light eighth
+			if (deltaDark > deltaLight) ToOtherWorld(true, 8, false, 0);						// if lose more light than dark = to light world dark eighth
+			else if (deltaDark <= deltaLight) ToOtherWorld(true, 8, true, 0);					// if lose more dark than light = to light world light eighth
 		}
 		// in light world
 		else if (evol <= -21 && evol > -34) {												// to light world eighth / from light world
@@ -430,8 +462,8 @@ public class NinthParticleState : IParticleState
 				// same state
 			// to light world
 		if ((evol <= -34f && evol > -55f) && !inLightworld) {								// to light world ninth / from dark world
-			if (deltaDark > deltaLight) ToOtherWorld(true, 9, false);							// if lose more light than dark = to light world dark ninth
-			else if (deltaDark <= deltaLight) ToOtherWorld(true, 9, true);						// if lose more dark than light = to light world light ninth
+			if (deltaDark > deltaLight) ToOtherWorld(true, 9, false, 0);						// if lose more light than dark = to light world dark ninth
+			else if (deltaDark <= deltaLight) ToOtherWorld(true, 9, true, 0);					// if lose more dark than light = to light world light ninth
 		}
 			// in light world
 				// same state

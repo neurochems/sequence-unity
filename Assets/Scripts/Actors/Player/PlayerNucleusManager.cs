@@ -10,7 +10,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 
 	private float zeroPos, firstPos, thirdPos, seventhPos, ninthPos;															// y positions
 
-	private int toState, shape;																									// to state indicator, shape index
+	private int toState, fromShape, toShape;																					// to state indicator, from shape/to shape index
 	private bool toLight, colour; 																								// to light indicator, colour indicator
 	private bool changeColour = false, changeShape = false, resetScale = false;													// timer trigger for changing shape, resetting scale after world switch
 	private float changeColourTimer, changeShapeTimer, resetScaleTimer;															// change shape timer, reset scale timer
@@ -36,34 +36,31 @@ public class PlayerNucleusManager : MonoBehaviour {
 		// change colour timer
 		if (changeColour) changeColourTimer += Time.deltaTime;																	// start timer
 		if (changeColourTimer >= 2.0f) {																						// when timer >= 2 sec
-			Debug.Log("set colour: " + colour);
-			SetLight(colour);																										// set colour to dark
+			SetLight(toLight);																										// set colour
 			changeColour = false;																									// reset change colour flag
 			changeColourTimer = 0f;																									// reset timer
 		}
 		// change shape timer
 		if (changeShape) changeShapeTimer += Time.deltaTime;																	// start timer
 		if (changeShapeTimer >= 2.0f) {																							// when timer >= 2 sec
-			Debug.Log("set shape: " + shape);
-			SetShape(shape);																										// set shape
+			SetShape(toShape);																										// set shape
 			changeShape = false;																									// reset change shape flag
 			changeShapeTimer = 0f;																									// reset timer
 		}
 		// reset scale timer
 		if (resetScale) resetScaleTimer += Time.deltaTime;																		// start timer
 		if (resetScaleTimer >= 2.75f) {																							// when timer >= 4 sec
-			//anim.ResetTrigger("colour");	
 			if (toState == 0) 																										// if to zero
 				ScaleTo (false, "hidden", "zero");																						// grow to zero
 			if (!toLight && (toState == 1 || toState == 2 ||toState == 4 ||  toState == 5 || toState == 6))	 						// if to dark first/second/fifth/sixth
 				ScaleTo (false, "hidden", "first");																						// grow to first
 			if (!toLight && (toState == 4))																	 						// if to dark fourth
 				ScaleTo (false, "hidden", "zero");																						// grow to zero
-			if (shape == 0 && toLight && (toState == 2 || toState == 4 || toState == 6))	 										// if to light circle second/fourth/sixth
+			if (toShape == 0 && toLight && (toState == 2 || toState == 4 || toState == 6))	 										// if to light circle second/fourth/sixth
 				ScaleTo (false, "hidden", "zero");																						// grow to zero
 			if (!toLight && (toState == 7 || toState == 8)) 																		// if to dark seventh/eighth
 				ScaleTo (false, "hidden", "seventh");																					// grow to seventh
-			if (shape == 0 && toLight && toState == 8) 																				// if to light circle eighth
+			if (toShape == 0 && toLight && toState == 8) 																				// if to light circle eighth
 				ScaleTo (false, "hidden", "first");																						// grow to first
 			if (toState == 9) 																										// if to ninth,
 				ScaleTo (false, "hidden", "ninth");																						// grow to ninth
@@ -72,12 +69,13 @@ public class PlayerNucleusManager : MonoBehaviour {
 		}
 	}
 
-	public void Nucleus (int f, int t, bool fl, bool tl, int s) 
+	public void Nucleus (int f, int t, bool fl, bool tl, int fs, int ts) 
 	{
 		// set up
 		toState = t;																											// set to state
 		toLight = tl;																											// set to light
-		shape = s;																												// set s
+		fromShape = fs;																											// set from shape
+		toShape = ts;																											// set to shape
 
 		// ADJUST NUCLEUS HEIGHT FOR VISIBILITY
 		if (toState == 0)	 																									// to zero
@@ -87,15 +85,15 @@ public class PlayerNucleusManager : MonoBehaviour {
 		else if (toState == 3 || toState == 4)																					// to third/fourth
 			transform.localPosition = new Vector3 (0f, thirdPos, 0f);																// adjust position
 		else if (toState == 5 || toState == 6) {																				// to fifth/sixth
-			if (shape == 1) transform.localPosition = new Vector3 (0f, firstPos, 0.075f);											// adjust position
+			if (toShape == 1) transform.localPosition = new Vector3 (0f, firstPos, 0.075f);											// adjust position
 			else transform.localPosition = new Vector3 (0f, firstPos, 0f);															// adjust position
 		}
 		else if (toState == 7 || toState == 8) {																				// to seventh/eighth
-			if (shape == 1) transform.localPosition = new Vector3 (0f, seventhPos, 0.075f);											// adjust position
+			if (toShape == 1) transform.localPosition = new Vector3 (0f, seventhPos, 0.075f);										// adjust position
 			else transform.localPosition = new Vector3 (0f, seventhPos, 0f);														// adjust position
 		}
 		else if (toState == 9) {																								// to ninth
-			if (shape == 1) transform.localPosition = new Vector3 (0f, ninthPos, 0.075f);											// adjust position
+			if (toShape == 1) transform.localPosition = new Vector3 (0f, ninthPos, 0.075f);											// adjust position
 			else transform.localPosition = new Vector3 (0f, ninthPos, 0f);															// adjust position
 		}
 
@@ -118,28 +116,24 @@ public class PlayerNucleusManager : MonoBehaviour {
 		if (f == 0 && t == 1 && !fl && !tl) ScaleTo (false, "zero", "first");													// scale to first
 		else if (f == 0 && t == 2 && !fl && !tl) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 0 && t == 3 && !fl && !tl) ScaleTo (true, "zero", "hidden");												// scale to third
 		else if (f == 0 && t == 4 && !fl && !tl) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 0 && t == 5 && !fl && !tl) ScaleTo (false, "zero", "first");												// scale to first
 		else if (f == 0 && t == 6 && !fl && !tl) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 0 && t == 7 && !fl && !tl) ScaleTo (false, "zero", "seventh");											// scale to seventh
 		else if (f == 0 && t == 8 && !fl && !tl) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
@@ -149,7 +143,6 @@ public class PlayerNucleusManager : MonoBehaviour {
 		else if (f == 0 && t == 1 && !fl && tl) ScaleTo (true, "zero", "hidden");												// scale to first
 		else if (f == 0 && t == 2 && !fl && tl) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
@@ -157,14 +150,12 @@ public class PlayerNucleusManager : MonoBehaviour {
 		else if (f == 0 && t == 5 && !fl && tl) ScaleTo (true, "zero", "hidden");												// scale to hidden
 		else if (f == 0 && t == 6 && !fl && tl) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 0 && t == 7 && !fl && tl) ScaleTo (true, "zero", "hidden");												// scale to seventh
 		else if (f == 0 && t == 8 && !fl && tl) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
@@ -174,39 +165,39 @@ public class PlayerNucleusManager : MonoBehaviour {
 			// to dark
 		if (f == 0 && t == 1 && fl && !tl) ScaleTo (false, "hidden", "first");													// scale to first
 		else if (f == 0 && t == 2 && fl && !tl) {
-			SetLight (true);																									// change to white shader
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 0 && t == 4 && fl && !tl) {
-			SetLight (true);																									// change to white shader
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 0 && t == 5 && fl && !tl) ScaleTo (false, "hidden", "first");												// scale to first
 		else if (f == 0 && t == 6 && fl && !tl) {
-			SetLight (true);																									// change to white shader
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 0 && t == 7 && fl && !tl) ScaleTo (false, "hidden", "seventh");											// scale to seventh
 		else if (f == 0 && t == 8 && fl && !tl) {
-			SetLight (true);																									// change to white shader
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 0 && t == 9 && fl && !tl) ScaleTo (false, "hidden", "ninth");												// scale to ninth
 			// to light
 		else if (f == 0 && t == 2 && fl && tl) {
-			SetLight (false);																									// change to black shader
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 0 && t == 4 && fl && tl) {
-			SetLight (false);																									// change to black shader
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 0 && t == 6 && fl && tl) {
-			SetLight (false);																									// change to black shader
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 0 && t == 8 && fl && tl) {
-			SetLight (false);																									// change to black shader
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 
@@ -218,25 +209,21 @@ public class PlayerNucleusManager : MonoBehaviour {
 		if (f == 1 && t == 0 && !fl && !tl) ScaleTo (true, "first", "zero");													// scale to zero
 		else if (f == 1 && t == 2 && !fl && !tl) {
 			//ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			//resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 1 && t == 3 && !fl && !tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 1 && t == 4 && !fl && !tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 1 && t == 7 && !fl && !tl) ScaleTo (false, "first", "seventh");											// scale to seventh
 		else if (f == 1 && t == 8 && !fl && !tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
@@ -246,32 +233,27 @@ public class PlayerNucleusManager : MonoBehaviour {
 		else if (f == 1 && t == 1 && !fl && tl) ScaleTo (true, "first", "hidden");												// scale to hidden
 		else if (f == 1 && t == 2 && !fl && tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to zero
-			colour = false;																										// colour to black shader
 			resetScale = true;																									// set reset scale flag
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 1 && t == 3 && !fl && tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 1 && t == 4 && !fl && tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to zero
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 1 && t == 5 && !fl && tl) ScaleTo (true, "first", "hidden");												// scale to hidden
 		else if (f == 1 && t == 6 && !fl && tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to zero
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 1 && t == 7 && !fl && tl) ScaleTo (true, "first", "hidden");												// scale to hidden
 		else if (f == 1 && t == 8 && !fl && tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to zero
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
@@ -281,39 +263,39 @@ public class PlayerNucleusManager : MonoBehaviour {
 			// to dark
 		if (f == 1 && t == 0 && fl && !tl) ScaleTo (true, "first", "zero");														// scale to zero
 		else if (f == 1 && t == 2 && fl && !tl) {			
-			SetLight (true);																									// change to white shader
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 1 && t == 4 && fl && !tl) {			
-			SetLight (true);																									// change to white shader
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 1 && t == 5 && fl && !tl) ScaleTo (false, "hidden", "first");												// scale to first
 		else if (f == 1 && t == 6 && fl && !tl) {			
-			SetLight (true);																									// change to white shader
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 1 && t == 7 && fl && !tl) ScaleTo (false, "hidden", "seventh");											// scale to seventh
 		else if (f == 1 && t == 8 && fl && !tl) {			
-			SetLight (true);																									// change to white shader
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 1 && t == 9 && fl && !tl) ScaleTo (false, "hidden", "ninth");												// scale to ninth
 			// to light
 		if (f == 1 && t == 2 && fl && tl) {
-			SetLight (false);																									// change to white shader
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 1 && t == 4 && fl && tl) {
-			SetLight (false);																									// change to white shader
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 1 && t == 6 && fl && tl) {
-			SetLight (false);																									// change to white shader
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 1 && t == 8 && fl && tl) {
-			SetLight (false);																									// change to white shader
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 
@@ -325,94 +307,78 @@ public class PlayerNucleusManager : MonoBehaviour {
 			// to dark
 		if (f == 2 && t == 0 && !fl && !tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 2 && t == 1 && !fl && !tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 2 && t == 3 && !fl && !tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 2 && t == 4 && !fl && !tl) ScaleTo (true, "first", "zero");												// scale to zero
 		else if (f == 2 && t == 5 && !fl && !tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 2 && t == 7 && !fl && !tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 2 && t == 8 && !fl && !tl) ScaleTo (false, "first", "seventh");											// scale to seventh
 		else if (f == 2 && t == 9 && !fl && !tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 			// to light
 		if (f == 2 && t == 0 && !fl && tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 2 && t == 1 && !fl && tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 2 && t == 2 && !fl && tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 2 && t == 3 && !fl && tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 2 && t == 4 && !fl && tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 2 && t == 5 && !fl && tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 2 && t == 6 && !fl && tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 2 && t == 7 && !fl && tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 2 && t == 8 && !fl && tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 2 && t == 9 && !fl && tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
 
@@ -420,93 +386,77 @@ public class PlayerNucleusManager : MonoBehaviour {
 			// to dark
 		if (f == 2 && t == 0 && fl && !tl) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 2 && t == 1 && fl && !tl) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 2 && t == 2 && fl && !tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 2 && t == 3 && fl && !tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 2 && t == 4 && fl && !tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 2 && t == 5 && fl && !tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 2 && t == 6 && fl && !tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 2 && t == 7 && fl && !tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 2 && t == 8 && fl && !tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 2 && t == 9 && fl && !tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 			// to light
 		if (f == 2 && t == 0 && fl && tl) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 2 && t == 1 && fl && tl) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 2 && t == 3 && fl && tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 2 && t == 5 && fl && tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 2 && t == 7 && fl && tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 2 && t == 8 && fl && tl) ScaleTo (false, "zero", "first");												// scale to first
 		else if (f == 2 && t == 9 && fl && tl) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
 
@@ -516,103 +466,103 @@ public class PlayerNucleusManager : MonoBehaviour {
 
 		// from dark third
 			// to dark circle
-		if (f == 3 && t == 0 && !fl && !tl && s == 0) ScaleTo (false, "hidden", "zero");										// scale to zero
-		else if (f == 3 && t == 1 && !fl && !tl && s == 0) ScaleTo (false, "hidden", "first");									// scale to first
-		else if (f == 3 && t == 2 && !fl && !tl && s == 0) {
-			SetLight(true);																										// change to white shader
+		if (f == 3 && t == 0 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "zero");										// scale to zero
+		else if (f == 3 && t == 1 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "first");									// scale to first
+		else if (f == 3 && t == 2 && !fl && !tl && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 3 && t == 4 && !fl && !tl && s == 0) {
-			SetLight (true);																									// change to white shader
+		else if (f == 3 && t == 4 && !fl && !tl && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 3 && t == 5 && !fl && !tl && s == 0) ScaleTo (false, "hidden", "first");									// scale to first
-		else if (f == 3 && t == 6 && !fl && !tl && s == 0) {
-			SetLight (true);																									// change to white shader
+		else if (f == 3 && t == 5 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "first");									// scale to first
+		else if (f == 3 && t == 6 && !fl && !tl && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 3 && t == 7 && !fl && !tl && s == 0) ScaleTo (false, "hidden", "seventh");								// scale to seventh
-		else if (f == 3 && t == 8 && !fl && !tl && s == 0) {
-			SetLight (true);																									// change to white shader
+		else if (f == 3 && t == 7 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "seventh");								// scale to seventh
+		else if (f == 3 && t == 8 && !fl && !tl && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 3 && t == 9 && !fl && !tl && s == 0) ScaleTo (false, "hidden", "ninth");									// scale to ninth
+		else if (f == 3 && t == 9 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "ninth");									// scale to ninth
 			// to light circle
-		if (f == 3 && t == 2 && !fl && tl && s == 0) {
-			SetLight(false);																									// change to black shader
+		if (f == 3 && t == 2 && !fl && tl && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 3 && t == 4 && !fl && tl && s == 0) {
-			SetLight (false);																									// change to black shader
+		else if (f == 3 && t == 4 && !fl && tl && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 3 && t == 6 && !fl && tl && s == 0) {
-			SetLight (false);																									// change to black shader
+		else if (f == 3 && t == 6 && !fl && tl && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 3 && t == 8 && !fl && tl && s == 0) {
-			SetLight (false);																									// change to black shader
+		else if (f == 3 && t == 8 && !fl && tl && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 			// to light triangle
-		if (f == 3 && t == 5 && !fl && tl && s == 1) {
-			SetShape(1);																										// change to triangle
+		if (f == 3 && t == 5 && !fl && tl && ts == 1) {
+			changeShape = true;																									// set change shape flag
 			resetScale = true;																									// set reset scale flag
 		}
 			// to light square
-		if (f == 3 && t == 5 && !fl && tl && s == 2) {
-			SetShape(2);																										// change to square
+		if (f == 3 && t == 5 && !fl && tl && ts == 2) {
+			changeShape = true;																									// set change shape flag
 			resetScale = true;																									// set reset scale flag
 		}
 
 		// from light third
 			// to dark circle
-		if (f == 3 && t == 0 && fl && !tl && s == 0) ScaleTo (false, "hidden", "zero");											// scale to zero
-		else if (f == 3 && t == 1 && fl && !tl && s == 0) ScaleTo (false, "hidden", "first");									// scale to first
-		else if (f == 3 && t == 2 && fl && !tl && s == 0) {
-			SetLight(true);																										// change to white shader
+		if (f == 3 && t == 0 && fl && !tl && ts == 0) ScaleTo (false, "hidden", "zero");											// scale to zero
+		else if (f == 3 && t == 1 && fl && !tl && ts == 0) ScaleTo (false, "hidden", "first");									// scale to first
+		else if (f == 3 && t == 2 && fl && !tl && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 3 && t == 4 && fl && !tl && s == 0) {
-			SetLight (true);																									// change to white shader
+		else if (f == 3 && t == 4 && fl && !tl && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 3 && t == 5 && fl && !tl && s == 0) ScaleTo (false, "hidden", "first");									// scale to first
-		else if (f == 3 && t == 6 && fl && !tl && s == 0) {
-			SetLight (true);																									// change to white shader
+		else if (f == 3 && t == 5 && fl && !tl && ts == 0) ScaleTo (false, "hidden", "first");									// scale to first
+		else if (f == 3 && t == 6 && fl && !tl && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 3 && t == 7 && fl && !tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
-		else if (f == 3 && t == 8 && fl && !tl && s == 0) {
-			SetLight (true);																									// change to white shader
+		else if (f == 3 && t == 7 && fl && !tl && ts == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 3 && t == 8 && fl && !tl && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 3 && t == 9 && fl && !tl && s == 0) ScaleTo (false, "hidden", "ninth");									// scale to ninth
+		else if (f == 3 && t == 9 && fl && !tl && ts == 0) ScaleTo (false, "hidden", "ninth");									// scale to ninth
 			// to light circle
-		if (f == 3 && t == 2 && fl && tl && s == 0) {
-			SetLight(false);																									// change to white shader
+		if (f == 3 && t == 2 && fl && tl && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 3 && t == 4 && fl && tl && s == 0) {
-			SetLight (false);																									// change to black shader
+		else if (f == 3 && t == 4 && fl && tl && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 3 && t == 6 && fl && tl && s == 0) {
-			SetLight (false);																									// change to black shader
+		else if (f == 3 && t == 6 && fl && tl && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 3 && t == 8 && fl && tl && s == 0) {
-			SetLight (false);																									// change to black shader
+		else if (f == 3 && t == 8 && fl && tl && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 			// to light triangle
-		if (f == 3 && t == 5 && fl && tl && s == 1) {
-			SetShape(1);																										// change to triangle
+		if (f == 3 && t == 5 && fl && tl && ts == 1) {
+			changeShape = true;																									// set change shape flag
 			resetScale = true;																									// set reset scale flag
 		}
 			// to light square
-		if (f == 3 && t == 5 && fl && tl && s == 2) {
-			SetShape(2);																										// change to square
+		if (f == 3 && t == 5 && fl && tl && ts == 2) {
+			changeShape = true;																									// set change shape flag
 			resetScale = true;																									// set reset scale flag
 		}
 
@@ -622,210 +572,259 @@ public class PlayerNucleusManager : MonoBehaviour {
 
 		// from dark fourth
 			// to dark circle
-		if (f == 4 && t == 0 && !fl && !tl && s == 0) {
+		if (f == 4 && t == 0 && !fl && !tl && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 4 && t == 1 && !fl && !tl && s == 0) {
+		else if (f == 4 && t == 1 && !fl && !tl && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 4 && t == 2 && !fl && !tl && s == 0) ScaleTo (false, "zero", "first");									// scale to first
-		else if (f == 4 && t == 3 && !fl && !tl && s == 0) {
+		else if (f == 4 && t == 2 && !fl && !tl && ts == 0) ScaleTo (false, "zero", "first");									// scale to first
+		else if (f == 4 && t == 3 && !fl && !tl && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 4 && t == 5 && !fl && !tl && s == 0) {			
+		else if (f == 4 && t == 5 && !fl && !tl && ts == 0) {			
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 4 && t == 6 && !fl && !tl && s == 0) {
+		else if (f == 4 && t == 6 && !fl && !tl && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 4 && t == 7 && !fl && !tl && s == 0) {			
+		else if (f == 4 && t == 7 && !fl && !tl && ts == 0) {			
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 4 && t == 8 && !fl && !tl && s == 0) {
+		else if (f == 4 && t == 8 && !fl && !tl && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 4 && t == 9 && !fl && !tl && s == 0) {			
+		else if (f == 4 && t == 9 && !fl && !tl && ts == 0) {			
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 			// to light circle
-		if (f == 4 && t == 0 && !fl && tl && s == 0) {
+		if (f == 4 && t == 0 && !fl && tl && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 4 && t == 1 && !fl && tl && s == 0) {
+		else if (f == 4 && t == 1 && !fl && tl && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 4 && t == 2 && !fl && tl && s == 0) {
+		else if (f == 4 && t == 2 && !fl && tl && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 4 && t == 3 && !fl && tl && s == 0) {
+		else if (f == 4 && t == 3 && !fl && tl && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 4 && t == 4 && !fl && tl && s == 0) {
+		else if (f == 4 && t == 4 && !fl && tl && ts == 0) {
 			//ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			//resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 4 && t == 5 && !fl && tl && s == 0) {
+		else if (f == 4 && t == 5 && !fl && tl && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 4 && t == 6 && !fl && tl && s == 0) {
+		else if (f == 4 && t == 6 && !fl && tl && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 4 && t == 7 && !fl && tl && s == 0) {
+		else if (f == 4 && t == 7 && !fl && tl && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 4 && t == 8 && !fl && tl && s == 0) {
+		else if (f == 4 && t == 8 && !fl && tl && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 4 && t == 9 && !fl && tl && s == 0) {
+		else if (f == 4 && t == 9 && !fl && tl && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
 
 		// from light fourth
 			// to dark circle
-		if (f == 4 && t == 0 && fl && !tl && s == 0) {
+		if (f == 4 && t == 0 && fl && !tl && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		if (f == 4 && t == 1 && fl && !tl && s == 0) {
+		else if (f == 4 && t == 1 && fl && !tl && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		if (f == 4 && t == 2 && fl && !tl && s == 0) {
+		else if (f == 4 && t == 2 && fl && !tl && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		if (f == 4 && t == 3 && fl && !tl && s == 0) {
+		else if (f == 4 && t == 3 && fl && !tl && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 		}
-		if (f == 4 && t == 4 && fl && !tl && s == 0) {
+		else if (f == 4 && t == 4 && fl && !tl && ts == 0) {
 			//ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
+		}
+		else if (f == 4 && t == 5 && fl && !tl && ts == 0) {
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 4 && t == 6 && fl && !tl && ts == 0) {
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 4 && t == 7 && fl && !tl && ts == 0) {
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 4 && t == 8 && fl && !tl && ts == 0) {
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 4 && t == 9 && fl && !tl && ts == 0) {
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
 		}
 			// to light circle
-		if (f == 4 && t == 0 && fl && tl && s == 0) {
+		if (f == 4 && t == 0 && fl && tl && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 4 && t == 1 && fl && tl && s == 0) {
+		else if (f == 4 && t == 1 && fl && tl && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 4 && t == 3 && fl && tl && s == 0) {
+		else if (f == 4 && t == 3 && fl && tl && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
+			changeColour = true;																								// set change colour flag
+		}
+		else if (f == 4 && t == 5 && fl && tl && ts == 0) {
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			changeColour = true;																								// set change colour flag
+		}
+		else if (f == 4 && t == 6 && fl && tl && ts == 0) {
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 4 && t == 7 && fl && tl && ts == 0) {
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 4 && t == 8 && fl && tl && ts == 0) {
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 4 && t == 9 && fl && tl && ts == 0) {
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+			// to dark triangle
+		if (f == 4 && t == 6 && fl && !tl && ts == 1) {
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 4 && t == 7 && fl && !tl && ts == 1) {
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+		}
+		else if (f == 4 && t == 8 && fl && !tl && ts == 1) {
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 4 && t == 9 && fl && !tl && ts == 1) {
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+		}
+			// to dark square
+		if (f == 4 && t == 6 && fl && !tl && ts == 2) {
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 4 && t == 7 && fl && !tl && ts == 2) {
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+		}
+		else if (f == 4 && t == 8 && fl && !tl && ts == 2) {
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 4 && t == 9 && fl && !tl && ts == 2) {
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
 			changeColour = true;																								// set change colour flag
 		}
 			// to light triangle
-		if (f == 4 && t == 5 && fl && tl && s == 1) {
+		if (f == 4 && t == 5 && fl && tl && ts == 1) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			shape = 1;																											// change to triangle
 			changeShape = true;																									// set change shape flag
 		}
-		else if (f == 4 && t == 6 && fl && tl && s == 1) {
+		else if (f == 4 && t == 7 && fl && tl && ts == 1) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			shape = 1;																											// change to triangle
-			changeShape = true;																									// set change shape flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 4 && t == 7 && fl && tl && s == 1) {
-			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			shape = 1;																											// change to triangle
 			changeShape = true;																									// set change shape flag
 		}
-		else if (f == 4 && t == 8 && fl && tl && s == 1) {
+		else if (f == 4 && t == 8 && fl && tl && ts == 1) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			shape = 1;																											// change to triangle
 			changeShape = true;																									// set change shape flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 4 && t == 9 && fl && tl && s == 1) {
+		else if (f == 4 && t == 9 && fl && tl && ts == 1) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			shape = 1;																											// change to triangle
 			changeShape = true;																									// set change shape flag
 		}
 			// to light square
-		if (f == 4 && t == 5 && fl && tl && s == 2) {
+		if (f == 4 && t == 5 && fl && tl && ts == 2) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			shape = 2;																											// change to triangle
 			changeShape = true;																									// set change shape flag
 		}
-		else if (f == 4 && t == 6 && fl && tl && s == 2) {
+		else if (f == 4 && t == 7 && fl && tl && ts == 2) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			shape = 2;																											// change to triangle
-			changeShape = true;																									// set change shape flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 4 && t == 7 && fl && tl && s == 2) {
-			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			shape = 2;																											// change to triangle
 			changeShape = true;																									// set change shape flag
 		}
-		else if (f == 4 && t == 8 && fl && tl && s == 2) {
+		else if (f == 4 && t == 8 && fl && tl && ts == 2) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			shape = 2;																											// change to triangle
 			changeShape = true;																									// set change shape flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 4 && t == 9 && fl && tl && s == 2) {
+		else if (f == 4 && t == 9 && fl && tl && ts == 2) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			shape = 2;																											// change to triangle
 			changeShape = true;																									// set change shape flag
 		}
 
@@ -835,190 +834,186 @@ public class PlayerNucleusManager : MonoBehaviour {
 	
 		// from dark circle fifth
 			// to dark circle
-		if (f == 5 && t == 0 && !fl && !tl && s == 0) ScaleTo (true, "first", "zero");											// scale to zero
-		else if (f == 5 && t == 2 && !fl && !tl && s == 0) {
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-		}
-		else if (f == 5 && t == 3 && !fl && !tl && s == 0) ScaleTo (true, "first", "hidden");									// scale to hidden
-		else if (f == 5 && t == 4 && !fl && !tl && s == 0) {
+		if (f == 5 && t == 0 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "first", "zero");											// scale to zero
+		else if (f == 5 && t == 2 && !fl && !tl && fs == 0 && ts == 0) changeColour = true;													// set change colour flag
+		else if (f == 5 && t == 3 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "first", "hidden");									// scale to hidden
+		else if (f == 5 && t == 4 && !fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 5 && t == 6 && !fl && !tl && s == 0) {
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-		}
-		else if (f == 5 && t == 7 && !fl && !tl && s == 0) ScaleTo (false, "first", "seventh");									// scale to seventh
-		else if (f == 5 && t == 8 && !fl && !tl && s == 0) {
+		else if (f == 5 && t == 6 && !fl && !tl && fs == 0 && ts == 0) changeColour = true;													// set change colour flag
+		else if (f == 5 && t == 7 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "first", "seventh");									// scale to seventh
+		else if (f == 5 && t == 8 && !fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (false, "first", "seventh");																				// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 5 && t == 9 && !fl && !tl && s == 0) ScaleTo (false, "first", "ninth");									// scale to ninth
+		else if (f == 5 && t == 9 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "first", "ninth");									// scale to ninth
 			// to light circle
-		if (f == 5 && t == 0 && !fl && tl && s == 0) ScaleTo (true, "first", "hidden");											// scale to hidden
-		else if (f == 5 && t == 1 && !fl && tl && s == 0) ScaleTo (true, "first", "hidden");									// scale to hidden
-		else if (f == 5 && t == 2 && !fl && tl && s == 0) {
+		if (f == 5 && t == 0 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "first", "hidden");											// scale to hidden
+		else if (f == 5 && t == 1 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "first", "hidden");									// scale to hidden
+		else if (f == 5 && t == 2 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 5 && t == 3 && !fl && tl && s == 0) ScaleTo (true, "first", "hidden");									// scale to hidden
-		else if (f == 5 && t == 4 && !fl && tl && s == 0) {
+		else if (f == 5 && t == 3 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "first", "hidden");									// scale to hidden
+		else if (f == 5 && t == 4 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 5 && t == 5 && !fl && tl && s == 0) ScaleTo (true, "first", "hidden");									// scale to hidden
-		else if (f == 5 && t == 6 && !fl && tl && s == 0) {
+		else if (f == 5 && t == 5 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "first", "hidden");									// scale to hidden
+		else if (f == 5 && t == 6 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 5 && t == 7 && !fl && tl && s == 0) ScaleTo (true, "first", "hidden");									// scale to hidden
-		else if (f == 5 && t == 8 && !fl && tl && s == 0) {
+		else if (f == 5 && t == 7 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "first", "hidden");									// scale to hidden
+		else if (f == 5 && t == 8 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 5 && t == 9 && !fl && tl && s == 0) ScaleTo (true, "first", "hidden");									// scale to hidden
+		else if (f == 5 && t == 9 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "first", "hidden");									// scale to hidden
 
 		// from light circle fifth
 			// to dark circle
-		if (f == 5 && t == 0 && fl && !tl && s == 0) ScaleTo (false, "hidden", "zero");											// scale to zero
-		else if (f == 5 && t == 1 && fl && !tl && s == 0) ScaleTo (false, "hidden", "zero");									// scale to zero
-		else if (f == 5 && t == 2 && fl && !tl && s == 0) {
-			SetLight(true);																										// change to white shader	
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 5 && t == 4 && fl && !tl && s == 0) {
-			SetLight(true);																										// change to white
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 5 && t == 5 && fl && !tl && s == 0) ScaleTo (false, "hidden", "first");									// scale to first
-		else if (f == 5 && t == 6 && fl && !tl && s == 0) {
-			SetLight(true);																										// set to white shader
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 5 && t == 7 && fl && !tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
-		else if (f == 5 && t == 8 && fl && !tl && s == 0) {
-			SetLight(true);																										// set to white shader
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 5 && t == 9 && fl && !tl && s == 0) ScaleTo (false, "hidden", "ninth");									// scale to ninth
-			// to light circle
-		if (f == 5 && t == 2 && fl && tl && s == 0) {
-			SetLight(false);																									// change to black shader	
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 5 && t == 4 && fl && tl && s == 0) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black shader
+		if (f == 5 && t == 0 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "hidden", "zero");											// scale to zero
+		else if (f == 5 && t == 1 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "hidden", "zero");									// scale to zero
+		else if (f == 5 && t == 2 && fl && !tl && fs == 0 && ts == 0) {
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 5 && t == 6 && fl && tl && s == 0) {
-			SetLight(false);																									// set to black shader
+		else if (f == 5 && t == 4 && fl && !tl && fs == 0 && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 5 && t == 7 && fl && tl && s == 0) ScaleTo (false, "first", "seventh");									// scale to seventh
-		else if (f == 5 && t == 8 && fl && tl && s == 0) {
-			SetLight(false);																									// set to black shader
+		else if (f == 5 && t == 5 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "hidden", "first");									// scale to first
+		else if (f == 5 && t == 6 && fl && !tl && fs == 0 && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 5 && t == 9 && fl && tl && s == 0) ScaleTo (false, "first", "ninth");										// scale to ninth
+		else if (f == 5 && t == 7 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 5 && t == 8 && fl && !tl && fs == 0 && ts == 0) {
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 5 && t == 9 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "hidden", "ninth");									// scale to ninth
+			// to light circle
+		if (f == 5 && t == 2 && fl && tl && fs == 0 && ts == 0) {
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 5 && t == 4 && fl && tl && fs == 0 && ts == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 5 && t == 6 && fl && tl && fs == 0 && ts == 0) {
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 5 && t == 7 && fl && tl && fs == 0 && ts == 0) ScaleTo (false, "first", "seventh");									// scale to seventh
+		else if (f == 5 && t == 8 && fl && tl && fs == 0 && ts == 0) {
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 5 && t == 9 && fl && tl && fs == 0 && ts == 0) ScaleTo (false, "first", "ninth");										// scale to ninth
+
+		// from light triangle/square fifth
+			// to dark circle
+		if (f == 5 && t == 0 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 5 && t == 1 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {											
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 5 && t == 2 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		} 
+		else if (f == 5 && t == 3 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;													// set change shape flag
+		else if (f == 5 && t == 4 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		} 
+		else if (f == 5 && t == 5 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		} 
+		else if (f == 5 && t == 6 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		} 
+		else if (f == 5 && t == 7 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		} 
+		else if (f == 5 && t == 8 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 5 && t == 9 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		} 
+			// to light circle
+		if (f == 5 && t == 0 && fl && tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;															// set change shape flag
+		else if (f == 5 && t == 1 && fl && tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;													// set change shape flag
+		else if (f == 5 && t == 2 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 5 && t == 3 && fl && tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;													// set change shape flag
+		else if (f == 5 && t == 4 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 5 && t == 5 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+		} 
+		else if (f == 5 && t == 6 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		} 
+		else if (f == 5 && t == 7 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		} 
+		else if (f == 5 && t == 8 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 5 && t == 9 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		} 
 
 		// from light triangle fifth
-			// to dark circle
-		if (f == 5 && t == 0 && fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 5 && t == 1 && fl && !tl && s == 0) {											
-			SetShape(0);																										// change to sphere
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 5 && t == 2 && fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		} 
-		else if (f == 5 && t == 3 && fl && !tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 5 && t == 4 && fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		} 
-			// to light circle
-		if (f == 5 && t == 0 && fl && tl && s == 0) SetShape(0);																// change to sphere
-		else if (f == 5 && t == 1 && fl && tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 5 && t == 2 && fl && tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 5 && t == 3 && fl && tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 5 && t == 4 && fl && tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
 			// to dark triangle	
-		if (f == 5 && t == 6 && fl && !tl && s == 1) ScaleTo (false, "hidden", "first");										// scale to first
+		if (f == 5 && t == 6 && fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "hidden", "first");										// scale to first
 			// to seventh = no change
 
 		// from light square fifth
-			// to dark circle
-		if (f == 5 && t == 0 && fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 5 && t == 1 && fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 5 && t == 2 && fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		} 
-		else if (f == 5 && t == 3 && fl && !tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 5 && t == 4 && fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		} 
-			// to light circle
-		if (f == 5 && t == 0 && fl && tl && s == 0) SetShape(0);																// change to sphere
-		else if (f == 5 && t == 1 && fl && tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 5 && t == 2 && fl && tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 5 && t == 3 && fl && tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 5 && t == 4 && fl && tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
 			// to dark square
-		if (f == 5 && t == 6 && fl && !tl && s == 2) ScaleTo (false, "hidden", "first");										// scale to first
+		if (f == 5 && t == 6 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "hidden", "first");										// scale to first
 			// to seventh = no change	
 
 
@@ -1027,352 +1022,296 @@ public class PlayerNucleusManager : MonoBehaviour {
 
 		// from dark circle sixth
 			// to dark circle
-		if (f == 6 && t == 0 && !fl && !tl && s == 0) {
+		if (f == 6 && t == 0 && !fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 6 && t == 1 && !fl && !tl && s == 0) {
+		else if (f == 6 && t == 1 && !fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		} 
-		else if (f == 6 && t == 3 && !fl && !tl && s == 0) {
+		else if (f == 6 && t == 3 && !fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		} 
-		else if (f == 6 && t == 4 && !fl && !tl && s == 0) {
+		else if (f == 6 && t == 4 && !fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 6 && t == 5 && !fl && !tl && s == 0) {
+		else if (f == 6 && t == 5 && !fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 6 && t == 7 && !fl && !tl && s == 0) {			
+		else if (f == 6 && t == 7 && !fl && !tl && fs == 0 && ts == 0) {			
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 6 && t == 8 && !fl && !tl && s == 0) ScaleTo (false, "first", "seventh");									// scale to seventh
-		else if (f == 6 && t == 9 && !fl && !tl && s == 0) {			
+		else if (f == 6 && t == 8 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "first", "seventh");									// scale to seventh
+		else if (f == 6 && t == 9 && !fl && !tl && fs == 0 && ts == 0) {			
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 			// to light circle
-		if (f == 6 && t == 0 && !fl && tl && s == 0) {
+		if (f == 6 && t == 0 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 6 && t == 1 && !fl && tl && s == 0) {
+		else if (f == 6 && t == 1 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 6 && t == 2 && !fl && tl && s == 0) {
+		else if (f == 6 && t == 2 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 6 && t == 3 && !fl && tl && s == 0) {
+		else if (f == 6 && t == 3 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 6 && t == 4 && !fl && tl && s == 0) {
+		else if (f == 6 && t == 4 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 6 && t == 5 && !fl && tl && s == 0) {
+		else if (f == 6 && t == 5 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 6 && t == 6 && !fl && tl && s == 0) {
+		else if (f == 6 && t == 6 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 6 && t == 7 && !fl && tl && s == 0) {			
+		else if (f == 6 && t == 7 && !fl && tl && fs == 0 && ts == 0) {			
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 6 && t == 8 && !fl && tl && s == 0) {
+		else if (f == 6 && t == 8 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 6 && t == 9 && !fl && tl && s == 0) {			
+		else if (f == 6 && t == 9 && !fl && tl && fs == 0 && ts == 0) {			
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
 
 		// from light circle sixth
 			// to dark circle
-		if (f == 6 && t == 0 && fl && !tl && s == 0) {
+		if (f == 6 && t == 0 && fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 6 && t == 1 && fl && !tl && s == 0) {
+		else if (f == 6 && t == 1 && fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 6 && t == 2 && fl && !tl && s == 0) {
+		else if (f == 6 && t == 2 && fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 6 && t == 3 && fl && !tl && s == 0) {
+		else if (f == 6 && t == 3 && fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 6 && t == 4 && fl && !tl && s == 0) {
+		else if (f == 6 && t == 4 && fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 6 && t == 5 && fl && !tl && s == 0) {
+		else if (f == 6 && t == 5 && fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 6 && t == 6 && fl && !tl && s == 0) {
+		else if (f == 6 && t == 6 && fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 6 && t == 7 && fl && !tl && s == 0) {
+		else if (f == 6 && t == 7 && fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 6 && t == 8 && fl && !tl && s == 0) {
+		else if (f == 6 && t == 8 && fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 6 && t == 9 && fl && !tl && s == 0) {
+		else if (f == 6 && t == 9 && fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 			// to light circle
-		if (f == 6 && t == 0 && fl && tl && s == 0) {
+		if (f == 6 && t == 0 && fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 6 && t == 1 && fl && tl && s == 0) {
+		else if (f == 6 && t == 1 && fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 6 && t == 3 && fl && tl && s == 0) {
+		else if (f == 6 && t == 3 && fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
 			// fourth = no change
-		else if (f == 6 && t == 5 && fl && tl && s == 0) {
+		else if (f == 6 && t == 5 && fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 6 && t == 7 && fl && tl && s == 0) {
+		else if (f == 6 && t == 7 && fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 6 && t == 8 && fl && tl && s == 0) ScaleTo (false, "first", "seventh");									// scale to seventh
-		else if (f == 6 && t == 9 && fl && tl && s == 0) {
+		else if (f == 6 && t == 8 && fl && tl && fs == 0 && ts == 0) ScaleTo (false, "first", "seventh");									// scale to seventh
+		else if (f == 6 && t == 9 && fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
+		}
+
+		// from dark triangle/square sixth
+			// to dark circle
+		if (f == 6 && t == 0 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 6 && t == 1 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 6 && t == 2 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		} 
+		else if (f == 6 && t == 3 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+		}
+		else if (f == 6 && t == 4 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		} 
+		else if (f == 6 && t == 5 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		} 
+		else if (f == 6 && t == 6 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		} 
+		else if (f == 6 && t == 7 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		} 
+		else if (f == 6 && t == 8 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 6 && t == 9 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		} 
+			// to light circle
+		if (f == 6 && t == 0 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+		}
+		else if (f == 6 && t == 1 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+		}
+		else if (f == 6 && t == 2 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 6 && t == 3 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+		}
+		else if (f == 6 && t == 4 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 6 && t == 5 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+		} 
+		else if (f == 6 && t == 6 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		} 
+		else if (f == 6 && t == 7 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		} 
+		else if (f == 6 && t == 8 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 6 && t == 9 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
 		}
 
 		// from dark triangle sixth
-			// to dark circle
-		if (f == 6 && t == 0 && !fl && !tl && s == 0) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 6 && t == 1 && !fl && !tl && s == 0) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 6 && t == 2 && !fl && !tl && s == 0) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		} 
-		else if (f == 6 && t == 3 && !fl && !tl && s == 0) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
-		else if (f == 6 && t == 4 && !fl && !tl && s == 0) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		} 
-			// to light circle
-		if (f == 6 && t == 0 && !fl && tl && s == 0) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
-		else if (f == 6 && t == 1 && !fl && tl && s == 0) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
-		else if (f == 6 && t == 2 && !fl && tl && s == 0) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 6 && t == 3 && !fl && tl && s == 0) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
-		else if (f == 6 && t == 4 && !fl && tl && s == 0) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 6 && t == 5 && !fl && tl && s == 0) ScaleTo (true, "first", "hidden");									// scale to hidden
 			// to dark triangle
-		if (f == 6 && t == 7 && !fl && !tl && s == 1) ScaleTo (true, "first", "hidden");										// scale to hidden
-			// to eighth = no change
+		if (f == 6 && t == 7 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (true, "first", "hidden");										// scale to hidden
+		else if (f == 6 && t == 8 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "first", "seventh");									// scale to seventh
 			// to light triangle
-		if (f == 6 && t == 7 && !fl && tl && s == 1) ScaleTo (true, "first", "hidden");											// scale to hidden
-			// to eighth = no change
+		if (f == 6 && t == 5 && !fl && tl && fs == 1 && ts == 1) ScaleTo (true, "first", "hidden");											// scale to hidden
+		else if (f == 6 && t == 7 && !fl && tl && fs == 1 && ts == 1) ScaleTo (true, "first", "hidden");									// scale to hidden
+		else if (f == 6 && t == 8 && !fl && tl && fs == 1 && ts == 1) ScaleTo (false, "first", "seventh");									// scale to seventh
 
 		// from dark square sixth
-			// to dark circle
-		if (f == 6 && t == 0 && !fl && !tl && s == 0) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 6 && t == 1 && !fl && !tl && s == 0) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 6 && t == 2 && !fl && !tl && s == 0) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 6 && t == 3 && !fl && !tl && s == 0) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
-		else if (f == 6 && t == 4 && !fl && !tl && s == 0) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		} 
-			// to light circle
-		if (f == 6 && t == 0 && !fl && tl && s == 0) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
-		else if (f == 6 && t == 1 && !fl && tl && s == 0) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
-		else if (f == 6 && t == 2 && !fl && tl && s == 0) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 6 && t == 3 && !fl && tl && s == 0) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
-		else if (f == 6 && t == 4 && !fl && tl && s == 0) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 6 && t == 5 && !fl && tl && s == 0) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
 			// to dark square
-		if (f == 6 && t == 7 && !fl && !tl && s == 2) ScaleTo (true, "first", "hidden");										// scale to hidden
-			// to eighth = no change
+		if (f == 6 && t == 7 && !fl && !tl && fs == 2 && ts == 2) ScaleTo (true, "first", "hidden");										// scale to hidden
+		else if (f == 6 && t == 8 && !fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");									// scale to seventh
 			// to light square
-		if (f == 6 && t == 7 && !fl && tl && s == 2) ScaleTo (true, "first", "hidden");											// scale to hidden
-			// to eighth = no change
+		if (f == 6 && t == 5 && !fl && tl && fs == 2 && ts == 2) ScaleTo (true, "first", "hidden");											// scale to hidden
+		else if (f == 6 && t == 7 && !fl && tl && fs == 2 && ts == 2) ScaleTo (true, "first", "hidden");									// scale to hidden
+		else if (f == 6 && t == 8 && !fl && tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");									// scale to seventh
 
 
 	///// seventh \\\\\
@@ -1380,290 +1319,285 @@ public class PlayerNucleusManager : MonoBehaviour {
 
 		// from dark circle seventh
 			// to dark circle
-		if (f == 7 && t == 0 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "zero");										// scale to zero
-		else if (f == 7 && t == 1 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "first");									// scale to first
-		else if (f == 7 && t == 2 && !fl && !tl && s == 0) {
+		if (f == 7 && t == 0 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "zero");										// scale to zero
+		else if (f == 7 && t == 1 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "first");									// scale to first
+		else if (f == 7 && t == 2 && !fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 7 && t == 3 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
-		else if (f == 7 && t == 4 && !fl && !tl && s == 0) {
+		else if (f == 7 && t == 3 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 4 && !fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 7 && t == 5 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "first");									// scale to first
-		else if (f == 7 && t == 6 && !fl && !tl && s == 0) {
+		else if (f == 7 && t == 5 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "first");									// scale to first
+		else if (f == 7 && t == 6 && !fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 7 && t == 8 && !fl && !tl && s == 0) {
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-		}
-		else if (f == 7 && t == 9 && !fl && !tl && s == 0) ScaleTo (false, "seventh", "ninth");									// scale to ninth
+		else if (f == 7 && t == 8 && !fl && !tl && fs == 0 && ts == 0) changeColour = true;													// set change colour flag
+		else if (f == 7 && t == 9 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "seventh", "ninth");									// scale to ninth
 			// to light circle
-		if (f == 7 && t == 0 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");										// scale to hidden
-		else if (f == 7 && t == 1 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
-		else if (f == 7 && t == 2 && !fl && tl && s == 0) {
+		if (f == 7 && t == 0 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 7 && t == 1 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 2 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 7 && t == 3 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
-		else if (f == 7 && t == 4 && !fl && tl && s == 0) {
+		else if (f == 7 && t == 3 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 4 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 7 && t == 5 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
-		else if (f == 7 && t == 6 && !fl && tl && s == 0) {
+		else if (f == 7 && t == 5 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 6 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 7 && t == 7 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
-		else if (f == 7 && t == 8 && !fl && tl && s == 0) {
+		else if (f == 7 && t == 7 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 8 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 7 && t == 9 && !fl && tl && s == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 7 && t == 9 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "hidden");									// scale to hidden
 
 		// from light circle seventh
 			// to dark circle
-		if (f == 7 && t == 0 && fl && !tl && s == 0) ScaleTo (true, "hidden", "zero");											// scale to zero
-		else if (f == 7 && t == 1 && fl && !tl && s == 0) ScaleTo (true, "hidden", "first");									// scale to first
-		else if (f == 7 && t == 2 && fl && !tl && s == 0) {
-			SetLight(true);																										// change to white shader
+		if (f == 7 && t == 0 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "hidden", "zero");											// scale to zero
+		else if (f == 7 && t == 1 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "hidden", "first");									// scale to first
+		else if (f == 7 && t == 2 && fl && !tl && fs == 0 && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 7 && t == 4 && fl && !tl && s == 0) {
-			SetLight(true);																										// change to white shader
+		else if (f == 7 && t == 4 && fl && !tl && fs == 0 && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 7 && t == 5 && fl && !tl && s == 0) ScaleTo (true, "hidden", "first");									// scale to first
-		else if (f == 7 && t == 6 && fl && !tl && s == 0) {
-			SetLight(true);																										// change to white shader
+		else if (f == 7 && t == 5 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "hidden", "first");									// scale to first
+		else if (f == 7 && t == 6 && fl && !tl && fs == 0 && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 7 && t == 7 && fl && !tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
-		else if (f == 7 && t == 8 && fl && !tl && s == 0) {
-			SetLight(true);																										// change to white shader
+		else if (f == 7 && t == 7 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 7 && t == 8 && fl && !tl && fs == 0 && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 7 && t == 9 && fl && !tl && s == 0) ScaleTo (false, "hidden", "ninth");									// scale to ninth
+		else if (f == 7 && t == 9 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "hidden", "ninth");									// scale to ninth
 			// to light circle
-		if (f == 7 && t == 2 && fl && tl && s == 0) {
-			SetLight(false);																									// change to black shader
+		if (f == 7 && t == 2 && fl && tl && fs == 0 && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 7 && t == 4 && fl && tl && s == 0) {
-			SetLight(false);																									// change to black shader
+		else if (f == 7 && t == 4 && fl && tl && fs == 0 && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 7 && t == 6 && fl && tl && s == 0) {
-			SetLight(false);																									// change to black shader
+		else if (f == 7 && t == 6 && fl && tl && fs == 0 && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 7 && t == 8 && fl && tl && s == 0) {
-			SetLight(false);																									// change to black shader
+		else if (f == 7 && t == 8 && fl && tl && fs == 0 && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
+
+		// from dark triangle/square seventh
+			// to dark circle
+		if (f == 7 && t == 0 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 7 && t == 1 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 7 && t == 2 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 7 && t == 3 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;													// set change shape flag
+		else if (f == 7 && t == 4 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 7 && t == 5 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 7 && t == 6 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 7 && t == 7 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 7 && t == 8 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 7 && t == 9 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+			// to light circle
+		if (f == 7 && t == 0 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;														// set change shape flag
+		else if (f == 7 && t == 1 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;													// set change shape flag
+		else if (f == 7 && t == 2 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 7 && t == 3 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;													// set change shape flag
+		else if (f == 7 && t == 4 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 7 && t == 5 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+		}
+		else if (f == 7 && t == 6 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 7 && t == 7 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+		}
+		else if (f == 7 && t == 8 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 7 && t == 9 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+		}
+
+		// from light triangle/square seventh
+			// to dark circle
+		if (f == 7 && t == 0 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 7 && t == 1 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 7 && t == 2 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 7 && t == 3 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;													// set change shape flag
+		else if (f == 7 && t == 4 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 7 && t == 5 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 7 && t == 6 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 7 && t == 7 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 7 && t == 8 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 7 && t == 9 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+			// to light circle
+		if (f == 7 && t == 0 && fl && tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;															// set change shape flag
+		else if (f == 7 && t == 1 && fl && tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;													// set change shape flag
+		else if (f == 7 && t == 2 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 7 && t == 3 && fl && tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;													// set change shape flag
+		else if (f == 7 && t == 4 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 7 && t == 5 && fl && tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;							// set change shape flag
+		else if (f == 7 && t == 6 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 7 && t == 7 && fl && tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;							// set change shape flag
+		else if (f == 7 && t == 8 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 7 && t == 9 && fl && tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;							// set change shape flag
 
 		// from dark triangle seventh
-			// to dark circle
-		if (f == 7 && t == 0 && !fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 7 && t == 1 && !fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 7 && t == 2 && !fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 7 && t == 3 && !fl && !tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 7 && t == 4 && !fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-			// to light circle
-		if (f == 7 && t == 0 && !fl && tl && s == 0) SetShape(0);																// change to sphere
-		else if (f == 7 && t == 1 && !fl && tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 7 && t == 2 && !fl && tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 7 && t == 3 && !fl && tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 7 && t == 4 && !fl && tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
 			// to dark triangle
-		if (f == 7 && t == 6 && !fl && !tl && s == 1) ScaleTo (false, "hidden", "first");										// scale to first
-		else if (f == 7 && t == 8 && !fl && !tl && s == 1) ScaleTo (false, "hidden", "seventh");								// scale to seventh
+		if (f == 7 && t == 6 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "hidden", "first");										// scale to first
+		else if (f == 7 && t == 8 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "hidden", "seventh");								// scale to seventh
 			// ninth = no change
 			// to light triangle
-		else if (f == 7 && t == 8 && !fl && tl && s == 1) ScaleTo (false, "first", "seventh");									// scale to seventh
+		else if (f == 7 && t == 8 && !fl && tl && fs == 1 && ts == 1) ScaleTo (false, "first", "seventh");									// scale to seventh
 			// ninth = no change
-	
+
 		// from light triangle seventh
-			// to dark circle
-		if (f == 7 && t == 0 && fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 7 && t == 1 && fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 7 && t == 2 && fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 7 && t == 3 && fl && !tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 7 && t == 4 && fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-			// to light circle
-		if (f == 7 && t == 0 && fl && tl && s == 0) SetShape(0);																// change to sphere
-		else if (f == 7 && t == 1 && fl && tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 7 && t == 2 && fl && tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 7 && t == 3 && fl && tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 7 && t == 4 && fl && tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
 			// to dark triangle
-		if (f == 7 && t == 6 && fl && !tl && s == 1) ScaleTo (false, "hidden", "first");										// scale to first
-		else if (f == 7 && t == 8 && fl && !tl && s == 1) ScaleTo (false, "first", "seventh");									// scale to seventh
+		if (f == 7 && t == 6 && fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "hidden", "first");										// scale to first
+		else if (f == 7 && t == 8 && fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "first", "seventh");									// scale to seventh
 			// to light triangle
-		if (f == 7 && t == 8 && fl && tl && s == 1) ScaleTo (false, "first", "seventh");										// scale to seventh
+		if (f == 7 && t == 8 && fl && tl && fs == 1 && ts == 1) ScaleTo (false, "first", "seventh");										// scale to seventh
 
 		// from dark square seventh
-			// to dark circle
-		if (f == 7 && t == 0 && !fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 7 && t == 1 && !fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 7 && t == 2 && !fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		} 
-		else if (f == 7 && t == 3 && !fl && !tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 7 && t == 4 && !fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-			// to light circle
-		if (f == 7 && t == 0 && !fl && tl && s == 0) SetShape(0);																// change to sphere
-		else if (f == 7 && t == 1 && !fl && tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 7 && t == 2 && !fl && tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 7 && t == 3 && !fl && tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 7 && t == 4 && !fl && tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}	
 			// to dark square
-		if (f == 7 && t == 6 && !fl && !tl && s == 2) ScaleTo (false, "hidden", "first");										// scale to first
-		else if (f == 7 && t == 8 && !fl && !tl && s == 2) ScaleTo (false, "first", "seventh");									// scale to seventh
+		if (f == 7 && t == 6 && !fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "hidden", "first");										// scale to first
+		else if (f == 7 && t == 8 && !fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");									// scale to seventh
 			// ninth = no change
 			// to light square
-		if (f == 7 && t == 8 && !fl && tl && s == 2) ScaleTo (false, "first", "seventh");										// scale to seventh
+		if (f == 7 && t == 8 && !fl && tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");										// scale to seventh
 			// ninth = no change
 
 		// from light square seventh
-			// to dark circle
-		if (f == 7 && t == 0 && fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 7 && t == 1 && fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 7 && t == 2 && fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 7 && t == 3 && fl && !tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 7 && t == 4 && fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-			// to light circle
-		if (f == 7 && t == 0 && fl && tl && s == 0) SetShape(0);																// change to sphere
-		else if (f == 7 && t == 1 && fl && tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 7 && t == 2 && fl && tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 7 && t == 3 && fl && tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 7 && t == 4 && fl && tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
 			// to dark square
-		if (f == 7 && t == 6 && fl && !tl && s == 2) ScaleTo (false, "hidden", "first");										// scale to first
-		else if (f == 7 && t == 8 && fl && !tl && s == 2) ScaleTo (false, "first", "seventh");									// scale to seventh
+		if (f == 7 && t == 6 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "hidden", "first");										// scale to first
+		else if (f == 7 && t == 8 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");									// scale to seventh
 			// ninth = no change
 			// to light square
-		if (f == 7 && t == 8 && fl && tl && s == 2) ScaleTo (false, "first", "seventh");										// scale to seventh
+		if (f == 7 && t == 8 && fl && tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");										// scale to seventh
 			// ninth = no change
 
 
@@ -1672,503 +1606,422 @@ public class PlayerNucleusManager : MonoBehaviour {
 
 		// from dark circle eighth
 			// to dark circle
-		if (f == 8 && t == 0 && !fl && !tl && s == 0) {
+		if (f == 8 && t == 0 && !fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 8 && t == 1 && !fl && !tl && s == 0) {
+		else if (f == 8 && t == 1 && !fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		} 
-		else if (f == 8 && t == 2 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "first");									// scale to first
-		else if (f == 8 && t == 3 && !fl && !tl && s == 0) {
+		else if (f == 8 && t == 2 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "first");									// scale to first
+		else if (f == 8 && t == 3 && !fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 8 && t == 4 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "zero");									// scale to first
-		else if (f == 8 && t == 5 && !fl && !tl && s == 0) {
+		else if (f == 8 && t == 4 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "zero");									// scale to first
+		else if (f == 8 && t == 5 && !fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 8 && t == 6 && !fl && !tl && s == 0) ScaleTo (true, "seventh", "first");									// scale to first
-		else if (f == 8 && t == 7 && !fl && !tl && s == 0) {
+		else if (f == 8 && t == 6 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "first");									// scale to first
+		else if (f == 8 && t == 7 && !fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 8 && t == 9 && !fl && !tl && s == 0) {			
+		else if (f == 8 && t == 9 && !fl && !tl && fs == 0 && ts == 0) {			
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 			// to light circle
-		if (f == 8 && t == 0 && !fl && tl && s == 0) {
+		if (f == 8 && t == 0 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 8 && t == 1 && !fl && tl && s == 0) {
+		else if (f == 8 && t == 1 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 8 && t == 2 && !fl && tl && s == 0) {
+		else if (f == 8 && t == 2 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 8 && t == 3 && !fl && tl && s == 0) {
+		else if (f == 8 && t == 3 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 8 && t == 4 && !fl && tl && s == 0) {
+		else if (f == 8 && t == 4 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 8 && t == 5 && !fl && tl && s == 0) {
+		else if (f == 8 && t == 5 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 8 && t == 6 && !fl && tl && s == 0) {
+		else if (f == 8 && t == 6 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 8 && t == 7 && !fl && tl && s == 0) {
+		else if (f == 8 && t == 7 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 8 && t == 8 && !fl && tl && s == 0) {
+		else if (f == 8 && t == 8 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 8 && t == 9 && !fl && tl && s == 0) {		
+		else if (f == 8 && t == 9 && !fl && tl && fs == 0 && ts == 0) {		
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
 
 		// from light circle eighth
 			// to dark circle
-		if (f == 8 && t == 0 && fl && !tl && s == 0) {
+		if (f == 8 && t == 0 && fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 8 && t == 1 && fl && !tl && s == 0) {
+		else if (f == 8 && t == 1 && fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 8 && t == 2 && fl && !tl && s == 0) {
+		else if (f == 8 && t == 2 && fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 8 && t == 3 && fl && !tl && s == 0) {
+		else if (f == 8 && t == 3 && fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 8 && t == 4 && fl && !tl && s == 0) {
+		else if (f == 8 && t == 4 && fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 8 && t == 5 && fl && !tl && s == 0) {
+		else if (f == 8 && t == 5 && fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 8 && t == 6 && fl && !tl && s == 0) {
+		else if (f == 8 && t == 6 && fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 8 && t == 7 && fl && !tl && s == 0) {
+		else if (f == 8 && t == 7 && fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 8 && t == 8 && fl && !tl && s == 0) {
+		else if (f == 8 && t == 8 && fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 8 && t == 9 && fl && !tl && s == 0) {
+		else if (f == 8 && t == 9 && fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 			// to light circle
-		if (f == 8 && t == 0 && fl && tl && s == 0) {
+		if (f == 8 && t == 0 && fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 8 && t == 1 && fl && tl && s == 0) {
+		else if (f == 8 && t == 1 && fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 8 && t == 2 && fl && tl && s == 0) ScaleTo (true, "first", "zero");										// scale to zero
-		else if (f == 8 && t == 3 && fl && tl && s == 0) {
+		else if (f == 8 && t == 2 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "first", "zero");										// scale to zero
+		else if (f == 8 && t == 3 && fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 8 && t == 4 && fl && tl && s == 0) {
+		else if (f == 8 && t == 4 && fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																				// scale to hidden
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 8 && t == 5 && fl && tl && s == 0) {
+		else if (f == 8 && t == 5 && fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 8 && t == 6 && fl && tl && s == 0) ScaleTo (true, "first", "zero");										// scale to zero
-		else if (f == 8 && t == 7 && fl && tl && s == 0) {
+		else if (f == 8 && t == 6 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "first", "zero");										// scale to zero
+		else if (f == 8 && t == 7 && fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 8 && t == 9 && fl && tl && s == 0) {
+		else if (f == 8 && t == 9 && fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			colour = false;																										// colour to black
 			changeColour = true;																								// set change colour flag
+		}
+
+		// from dark triangle/square eighth
+			// to dark circle
+		if (f == 8 && t == 0 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 8 && t == 1 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 8 && t == 2 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		} 
+		else if (f == 8 && t == 3 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+		}
+		else if (f == 8 && t == 4 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 8 && t == 5 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 8 && t == 6 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 8 && t == 7 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 8 && t == 8 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 8 && t == 9 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+			// to light circle
+		if (f == 8 && t == 0 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+		}
+		else if (f == 8 && t == 1 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+		}
+		else if (f == 8 && t == 2 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 8 && t == 3 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+		}
+		else if (f == 8 && t == 4 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 8 && t == 5 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+		}
+		else if (f == 8 && t == 6 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 8 && t == 7 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+		}
+		else if (f == 8 && t == 8 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 8 && t == 9 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+		}
+
+		// from light triangle/square eighth
+			// to dark circle
+		if (f == 8 && t == 0 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 8 && t == 1 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 8 && t == 2 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 8 && t == 3 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+		}
+		else if (f == 8 && t == 4 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 8 && t == 5 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 8 && t == 6 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 8 && t == 7 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 8 && t == 8 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 8 && t == 9 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
+		}
+			// to light circle
+		if (f == 8 && t == 0 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+		}
+		else if (f == 8 && t == 1 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+		}
+		else if (f == 8 && t == 2 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 8 && t == 3 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+		}
+		else if (f == 8 && t == 4 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 8 && t == 5 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+		}
+		else if (f == 8 && t == 6 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 8 && t == 7 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+		}
+		else if (f == 8 && t == 8 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 8 && t == 9 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			changeShape = true;																									// set change shape flag
 		}
 
 		// from dark triangle eighth
-			// to dark circle
-		if (f == 8 && t == 0 && !fl && !tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 8 && t == 1 && !fl && !tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 8 && t == 2 && !fl && !tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		} 
-		else if (f == 8 && t == 3 && !fl && !tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
-		else if (f == 8 && t == 4 && !fl && !tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-			// to light circle
-		if (f == 8 && t == 0 && !fl && tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
-		else if (f == 8 && t == 1 && !fl && tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
-		else if (f == 8 && t == 2 && !fl && tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 8 && t == 3 && !fl && tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
-		else if (f == 8 && t == 4 && !fl && tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
 			// to dark triangle
-		if (f == 8 && t == 6 && !fl && !tl && s == 1) ScaleTo (true, "seventh", "first");										// scale to first
-		else if (f == 8 && t == 7 && !fl && !tl && s == 1) ScaleTo (true, "seventh", "hidden");									// scale to hidden
-		else if (f == 8 && t == 9 && !fl && !tl && s == 1) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		if (f == 8 && t == 6 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (true, "seventh", "first");										// scale to first
+		else if (f == 8 && t == 7 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 9 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (true, "seventh", "hidden");									// scale to hidden
 			// to light triangle
-		if (f == 8 && t == 5 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");										// scale to hidden
-		else if (f == 8 && t == 7 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");									// scale to hidden
-		else if (f == 8 && t == 9 && !fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		if (f == 8 && t == 5 && !fl && tl && fs == 1 && ts == 1) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 8 && t == 7 && !fl && tl && fs == 1 && ts == 1) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 9 && !fl && tl && fs == 1 && ts == 1) ScaleTo (true, "seventh", "hidden");									// scale to hidden
 
 		// from light triangle eighth
-			// to dark circle
-		if (f == 8 && t == 0 && fl && !tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 8 && t == 1 && fl && !tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 8 && t == 2 && fl && !tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 8 && t == 3 && fl && !tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
-		else if (f == 8 && t == 4 && fl && !tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-			// to light circle
-		if (f == 8 && t == 0 && fl && tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
-		else if (f == 8 && t == 1 && fl && tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
-		else if (f == 8 && t == 2 && fl && tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 8 && t == 3 && fl && tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
-		else if (f == 8 && t == 4 && fl && tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
 			// to dark triangle
-		if (f == 8 && t == 6 && fl && !tl && s == 1) ScaleTo (true, "seventh", "first");										// scale to first
-		else if (f == 8 && t == 7 && fl && !tl && s == 1) ScaleTo (true, "seventh", "hidden");									// scale to hidden
-		else if (f == 8 && t == 9 && fl && !tl && s == 1) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		if (f == 8 && t == 6 && fl && !tl && fs == 1 && ts == 1) ScaleTo (true, "seventh", "first");										// scale to first
+		else if (f == 8 && t == 7 && fl && !tl && fs == 1 && ts == 1) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 9 && fl && !tl && fs == 1 && ts == 1) ScaleTo (true, "seventh", "hidden");									// scale to hidden
 			// to light triangle
-		if (f == 8 && t == 5 && fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");										// scale to hidden
-		else if (f == 8 && t == 7 && fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");									// scale to hidden
-		else if (f == 8 && t == 9 && fl && tl && s == 1) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		if (f == 8 && t == 5 && fl && tl && fs == 1 && ts == 1) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 8 && t == 7 && fl && tl && fs == 1 && ts == 1) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 9 && fl && tl && fs == 1 && ts == 1) ScaleTo (true, "seventh", "hidden");									// scale to hidden
 
 		// from dark square eighth
-			// to dark circle
-		if (f == 8 && t == 0 && !fl && !tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 8 && t == 1 && !fl && !tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 8 && t == 2 && !fl && !tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 8 && t == 3 && !fl && !tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
-		else if (f == 8 && t == 4 && !fl && !tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-			// to light circle
-		if (f == 8 && t == 0 && !fl && tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
-		else if (f == 8 && t == 1 && !fl && tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
-		else if (f == 8 && t == 2 && !fl && tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 8 && t == 3 && !fl && tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
-		else if (f == 8 && t == 4 && !fl && tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
 			// to dark square
-		if (f == 8 && t == 6 && !fl && !tl && s == 2) ScaleTo (true, "seventh", "first");										// scale to first
-		else if (f == 8 && t == 7 && !fl && !tl && s == 2) ScaleTo (true, "seventh", "hidden");									// scale to hidden
-		else if (f == 8 && t == 9 && !fl && !tl && s == 2) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		if (f == 8 && t == 6 && !fl && !tl && fs == 2 && ts == 2) ScaleTo (true, "seventh", "first");										// scale to first
+		else if (f == 8 && t == 7 && !fl && !tl && fs == 2 && ts == 2) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 9 && !fl && !tl && fs == 2 && ts == 2) ScaleTo (true, "seventh", "hidden");									// scale to hidden
 			// to light square
-		if (f == 8 && t == 5 && !fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");										// scale to hidden
-		else if (f == 8 && t == 7 && !fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");									// scale to hidden
-		else if (f == 8 && t == 9 && !fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		if (f == 8 && t == 5 && !fl && tl && fs == 2 && ts == 2) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 8 && t == 7 && !fl && tl && fs == 2 && ts == 2) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 9 && !fl && tl && fs == 2 && ts == 2) ScaleTo (true, "seventh", "hidden");									// scale to hidden
 
 		// from light square eighth
-			// to dark circle
-		if (f == 8 && t == 0 && fl && !tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 8 && t == 1 && fl && !tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 8 && t == 2 && fl && !tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		} 
-		else if (f == 8 && t == 3 && fl && !tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
-		else if (f == 8 && t == 4 && fl && !tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-			// to light circle
-		if (f == 8 && t == 0 && fl && tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
-		else if (f == 8 && t == 1 && fl && tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
-		else if (f == 8 && t == 2 && fl && tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 8 && t == 3 && fl && tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-		}
-		else if (f == 8 && t == 4 && fl && tl && s == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			shape = 0;																											// change to sphere
-			changeShape = true;																									// set change shape flag
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
 			// to dark square
-		if (f == 8 && t == 6 && fl && !tl && s == 2) ScaleTo (true, "seventh", "first");										// scale to first
-		else if (f == 8 && t == 7 && fl && !tl && s == 2) ScaleTo (true, "seventh", "hidden");									// scale to hidden
-		else if (f == 8 && t == 9 && fl && !tl && s == 2) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		if (f == 8 && t == 6 && fl && !tl && fs == 2 && ts == 2) ScaleTo (true, "seventh", "first");										// scale to first
+		else if (f == 8 && t == 7 && fl && !tl && fs == 2 && ts == 2) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 9 && fl && !tl && fs == 2 && ts == 2) ScaleTo (true, "seventh", "hidden");									// scale to hidden
 			// to light square
-		if (f == 8 && t == 5 && fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");										// scale to hidden
-		else if (f == 8 && t == 7 && fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");									// scale to hidden
-		else if (f == 8 && t == 9 && fl && tl && s == 2) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		if (f == 8 && t == 5 && fl && tl && fs == 2 && ts == 2) ScaleTo (true, "seventh", "hidden");										// scale to hidden
+		else if (f == 8 && t == 7 && fl && tl && fs == 2 && ts == 2) ScaleTo (true, "seventh", "hidden");									// scale to hidden
+		else if (f == 8 && t == 9 && fl && tl && fs == 2 && ts == 2) ScaleTo (true, "seventh", "hidden");									// scale to hidden
 
 
 	//// ninth \\\\\
@@ -2176,296 +2029,278 @@ public class PlayerNucleusManager : MonoBehaviour {
 
 		// from dark circle ninth
 			// to dark circle
-		if (f == 9 && t == 0 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "zero");											// scale to hidden
-		else if (f == 9 && t == 1 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "first");									// scale to hidden
-		else if (f == 9 && t == 2 && !fl && !tl && s == 0) {
+		if (f == 9 && t == 0 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "zero");											// scale to hidden
+		else if (f == 9 && t == 1 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "first");									// scale to hidden
+		else if (f == 9 && t == 2 && !fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "ninth", "hidden");																					// scale to first
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 9 && t == 3 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
-		else if (f == 9 && t == 4 && !fl && !tl && s == 0) {
+		else if (f == 9 && t == 3 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+		else if (f == 9 && t == 4 && !fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "ninth", "hidden");																					// scale to first
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 9 && t == 5 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "first");									// scale to hidden
-		else if (f == 9 && t == 6 && !fl && !tl && s == 0) {
+		else if (f == 9 && t == 5 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "first");									// scale to hidden
+		else if (f == 9 && t == 6 && !fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "ninth", "hidden");																					// scale to first
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 9 && t == 7 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "seventh");									// scale to hidden
-		else if (f == 9 && t == 8 && !fl && !tl && s == 0) {
+		else if (f == 9 && t == 7 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "seventh");									// scale to hidden
+		else if (f == 9 && t == 8 && !fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "ninth", "hidden");																					// scale to first
-			colour = true;																										// colour to white shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 9 && t == 10 && !fl && !tl && s == 0) ScaleTo (true, "ninth", "tenth");									// scale to tenth
+		else if (f == 9 && t == 10 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "tenth");									// scale to tenth
 			// to light circle
-		if (f == 9 && t == 0 && !fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");											// scale to hidden
-		else if (f == 9 && t == 1 && !fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
-		else if (f == 9 && t == 2 && !fl && tl && s == 0) {
+		if (f == 9 && t == 0 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "hidden");											// scale to hidden
+		else if (f == 9 && t == 1 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+		else if (f == 9 && t == 2 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "ninth", "hidden");																					// scale to first
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 9 && t == 3 && !fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
-		else if (f == 9 && t == 4 && !fl && tl && s == 0) {
+		else if (f == 9 && t == 3 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+		else if (f == 9 && t == 4 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "ninth", "hidden");																					// scale to hidden
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 9 && t == 5 && !fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
-		else if (f == 9 && t == 6 && !fl && tl && s == 0) {
+		else if (f == 9 && t == 5 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+		else if (f == 9 && t == 6 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "ninth", "hidden");																					// scale to first
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 9 && t == 7 && !fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
-		else if (f == 9 && t == 8 && !fl && tl && s == 0) {
+		else if (f == 9 && t == 7 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+		else if (f == 9 && t == 8 && !fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "ninth", "hidden");																					// scale to first
-			colour = false;																										// colour to black shader
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 9 && t == 10 && !fl && tl && s == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
+		else if (f == 9 && t == 10 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "hidden");									// scale to hidden
 
 		// from light circle ninth
 			// to dark circle
-		if (f == 9 && t == 0 && fl && !tl && s == 0) ScaleTo (false, "hidden", "zero");											// scale to zero
-		else if (f == 9 && t == 1 && fl && !tl && s == 0) ScaleTo (false, "hidden", "first");									// scale to first
-		else if (f == 9 && t == 2 && fl && !tl && s == 0) {
-			SetLight(true);																										// change to white shader
+		if (f == 9 && t == 0 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "hidden", "zero");											// scale to zero
+		else if (f == 9 && t == 1 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "hidden", "first");									// scale to first
+		else if (f == 9 && t == 2 && fl && !tl && fs == 0 && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 9 && t == 4 && fl && !tl && s == 0) {
-			SetLight(true);																										// change to white shader
+		else if (f == 9 && t == 4 && fl && !tl && fs == 0 && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 9 && t == 5 && fl && !tl && s == 0) ScaleTo (false, "hidden", "first");									// scale to first
-		else if (f == 9 && t == 6 && fl && !tl && s == 0) {
-			SetLight(true);																										// change to white shader
+		else if (f == 9 && t == 5 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "hidden", "first");									// scale to first
+		else if (f == 9 && t == 6 && fl && !tl && fs == 0 && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 9 && t == 7 && fl && !tl && s == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
-		else if (f == 9 && t == 8 && fl && !tl && s == 0) {
-			SetLight(true);																										// change to white shader
+		else if (f == 9 && t == 7 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 9 && t == 8 && fl && !tl && fs == 0 && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 9 && t == 10 && fl && !tl && s == 0) ScaleTo (false, "hidden", "tenth");									// scale to tenth
+		else if (f == 9 && t == 10 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "hidden", "tenth");									// scale to tenth
 			// to light circle 
-		if (f == 9 && t == 2 && fl && tl && s == 0) {
-			SetLight(false);																									// change to black shader
+		if (f == 9 && t == 2 && fl && tl && fs == 0 && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 9 && t == 4 && fl && tl && s == 0) {
-			SetLight(false);																									// change to black shader
+		else if (f == 9 && t == 4 && fl && tl && fs == 0 && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 9 && t == 6 && fl && tl && s == 0) {
-			SetLight(false);																									// change to black shader
+		else if (f == 9 && t == 6 && fl && tl && fs == 0 && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 9 && t == 8 && fl && tl && s == 0) {
-			SetLight(false);																									// change to black shader
+		else if (f == 9 && t == 8 && fl && tl && fs == 0 && ts == 0) {
+			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 			//tenth (no change)
 
-		// from dark triangle ninth
+		// from dark triangle/square ninth
 			// to dark circle
-		if (f == 9 && t == 0 && !fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
+		if (f == 9 && t == 0 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 9 && t == 1 && !fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
+		else if (f == 9 && t == 1 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 9 && t == 2 && !fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = true;																										// colour to white shader
+		else if (f == 9 && t == 2 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 9 && t == 3 && !fl && !tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 9 && t == 4 && !fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = true;																										// colour to white shader
+		else if (f == 9 && t == 3 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;													// set change shape flag
+		else if (f == 9 && t == 4 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
 			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 9 && t == 5 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 9 && t == 6 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 9 && t == 7 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 9 && t == 8 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 9 && t == 9 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
 			resetScale = true;																									// set reset scale flag
 		}
 			// to light circle
-		if (f == 9 && t == 0 && !fl && tl && s == 0) SetShape(0);																// change to sphere
-		else if (f == 9 && t == 1 && !fl && tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 9 && t == 2 && !fl && tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = false;																										// colour to black shader
+		if (f == 9 && t == 0 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;														// set change shape flag
+		else if (f == 9 && t == 1 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;													// set change shape flag
+		else if (f == 9 && t == 2 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		} 
-		else if (f == 9 && t == 3 && !fl && tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 9 && t == 4 && !fl && tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = false;																										// colour to black shader
+		else if (f == 9 && t == 3 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;													// set change shape flag
+		else if (f == 9 && t == 4 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		} 
+		else if (f == 9 && t == 5 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;							// set change shape flag
+		else if (f == 9 && t == 6 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 9 && t == 7 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;							// set change shape flag
+		else if (f == 9 && t == 8 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 9 && t == 9 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;							// set change shape flag
+
+		// from light triangle/square ninth
+			// to dark circle
+		if (f == 9 && t == 0 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 9 && t == 1 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 9 && t == 2 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 9 && t == 3 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;													// set change shape flag
+		else if (f == 9 && t == 4 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 9 && t == 5 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 9 && t == 6 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 9 && t == 7 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 9 && t == 8 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 9 && t == 9 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			resetScale = true;																									// set reset scale flag
+		}
+			// to light circle
+		if (f == 9 && t == 0 && fl && tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;															// set change shape flag
+		else if (f == 9 && t == 1 && fl && tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;													// set change shape flag
+		else if (f == 9 && t == 2 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		} 
+		else if (f == 9 && t == 3 && fl && tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;													// set change shape flag
+		else if (f == 9 && t == 4 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 9 && t == 5 && fl && tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;							// set change shape flag
+		else if (f == 9 && t == 6 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 9 && t == 7 && fl && tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;							// set change shape flag
+		else if (f == 9 && t == 8 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
+			changeShape = true;																									// set change shape flag
+			changeColour = true;																								// set change colour flag
+			resetScale = true;																									// set reset scale flag
+		}
+		else if (f == 9 && t == 9 && fl && tl && (fs == 1 || fs == 2) && ts == 0) changeShape = true;							// set change shape flag
+
+		// from dark triangle ninth
 			// to dark triangle
-		if (f == 9 && t == 6 && !fl && !tl && s == 1) ScaleTo (false, "hidden", "first");										// scale to first
-		else if (f == 9 && t == 8 && !fl && !tl && s == 1) ScaleTo (false, "hidden", "seventh");								// scale to seventh
-		else if (f == 9 && t == 10 && !fl && !tl && s == 1) ScaleTo (false, "ninth", "tenth");									// scale to tenth
+		if (f == 9 && t == 6 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "hidden", "first");										// scale to first
+		else if (f == 9 && t == 8 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "hidden", "seventh");								// scale to seventh
+		else if (f == 9 && t == 10 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "ninth", "tenth");									// scale to tenth
 			// to light triangle 
-		if (f == 9 && t == 8 && !fl && tl && s == 1) ScaleTo (false, "hidden", "seventh");										// scale to seventh	
+		if (f == 9 && t == 8 && !fl && tl && fs == 1 && ts == 1) ScaleTo (false, "hidden", "seventh");										// scale to seventh	
 			// tenth (no nucleus change)
 
 		// from light triangle ninth
-			// to dark circle
-		if (f == 9 && t == 0 && fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 9 && t == 1 && fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 9 && t == 2 && fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 9 && t == 3 && fl && !tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 9 && t == 4 && fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-			// to light circle
-		if (f == 9 && t == 0 && fl && tl && s == 0) SetShape(0);																// change to sphere
-		else if (f == 9 && t == 1 && fl && tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 9 && t == 2 && fl && tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		} 
-		else if (f == 9 && t == 3 && fl && tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 9 && t == 4 && fl && tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
 			// to dark triangle
-		if (f == 9 && t == 6 && fl && !tl && s == 1) ScaleTo (false, "hidden", "first");										// scale to first
-		else if (f == 9 && t == 8 && fl && !tl && s == 1) ScaleTo (false, "hidden", "seventh");									// scale to seventh
-		else if (f == 9 && t == 10 && fl && !tl && s == 1) ScaleTo (false, "ninth", "tenth");									// scale to tenth
+		if (f == 9 && t == 6 && fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "hidden", "first");										// scale to first
+		else if (f == 9 && t == 8 && fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 9 && t == 10 && fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "ninth", "tenth");									// scale to tenth
 			// to light triangle
-		if (f == 9 && t == 8 && fl && tl && s == 1) ScaleTo (false, "hidden", "seventh");										// scale to seventh	
+		if (f == 9 && t == 8 && fl && tl && fs == 1 && ts == 1) ScaleTo (false, "hidden", "seventh");										// scale to seventh	
 			// tenth (no nucleus change)
 
 		// from dark square ninth
-			// to dark circle
-		if (f == 9 && t == 0 && !fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 9 && t == 1 && !fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 9 && t == 2 && !fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 9 && t == 3 && !fl && !tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 9 && t == 4 && !fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-			// to light circle
-		if (f == 9 && t == 0 && !fl && tl && s == 0) SetShape(0);																// change to sphere
-		else if (f == 9 && t == 1 && !fl && tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 9 && t == 2 && !fl && tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 9 && t == 3 && !fl && tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 9 && t == 4 && !fl && tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
 			// to dark square
-		if (f == 9 && t == 6 && !fl && !tl && s == 2) ScaleTo (false, "hidden", "first");										// scale to first
-		else if (f == 9 && t == 8 && !fl && !tl && s == 2) ScaleTo (false, "hidden", "seventh");								// scale to seventh
-		else if (f == 9 && t == 10 && !fl && !tl && s == 2) ScaleTo (false, "ninth", "tenth");									// scale to tenth
+		if (f == 9 && t == 6 && !fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "hidden", "first");										// scale to first
+		else if (f == 9 && t == 8 && !fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "hidden", "seventh");								// scale to seventh
+		else if (f == 9 && t == 10 && !fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "ninth", "tenth");									// scale to tenth
 			// to light square
-		if (f == 9 && t == 8 && !fl && tl && s == 2) ScaleTo (false, "hidden", "seventh");										// scale to seventh	
+		if (f == 9 && t == 8 && !fl && tl && fs == 2 && ts == 2) ScaleTo (false, "hidden", "seventh");										// scale to seventh	
 			// tenth (no nucleus change)
 
 		// from light square ninth
-			// to dark circle
-		if (f == 9 && t == 0 && fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 9 && t == 1 && fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 9 && t == 2 && fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 9 && t == 3 && fl && !tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 9 && t == 4 && fl && !tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = true;																										// colour to white shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-			// to light circle
-		if (f == 9 && t == 0 && fl && tl && s == 0) SetShape(0);																// change to sphere
-		else if (f == 9 && t == 1 && fl && tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 9 && t == 2 && fl && tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
-		else if (f == 9 && t == 3 && fl && tl && s == 0) SetShape(0);															// change to sphere
-		else if (f == 9 && t == 4 && fl && tl && s == 0) {
-			SetShape(0);																										// change to sphere
-			colour = false;																										// colour to black shader
-			changeColour = true;																								// set change colour flag
-			resetScale = true;																									// set reset scale flag
-		}
 			// to dark square
-		if (f == 9 && t == 6 && fl && !tl && s == 2) ScaleTo (true, "hidden", "first");											// scale to first
-		else if (f == 9 && t == 8 && fl && !tl && s == 2) ScaleTo (false, "hidden", "seventh");									// scale to seventh
-		else if (f == 9 && t == 10 && fl && !tl && s == 2) ScaleTo (false, "ninth", "tenth");									// scale to tenth
+		if (f == 9 && t == 6 && fl && !tl && fs == 2 && ts == 2) ScaleTo (true, "hidden", "first");											// scale to first
+		else if (f == 9 && t == 8 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "hidden", "seventh");									// scale to seventh
+		else if (f == 9 && t == 10 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "ninth", "tenth");									// scale to tenth
 			// to light square
-		else if (f == 9 && t == 8 && fl && tl && s == 2) ScaleTo (false, "hidden", "seventh");									// scale to seventh	
+		else if (f == 9 && t == 8 && fl && tl && fs == 2 && ts == 2) ScaleTo (false, "hidden", "seventh");									// scale to seventh	
 			// tenth (no nucleus change)
 
 	}
@@ -2475,11 +2310,11 @@ public class PlayerNucleusManager : MonoBehaviour {
 	///<para>1 = triangle</para>
 	///<para>2 = square</para>
 	///</summary>
-	private void SetShape(int s)
+	private void SetShape(int ts)
 	{
-		if (s == 0) GetComponent<MeshFilter>().mesh = sphere;																	// change mesh to sphere
-		else if (s == 1) GetComponent<MeshFilter>().mesh = triangle;															// change mesh to triangle
-		else if (s == 2) GetComponent<MeshFilter>().mesh = square;																// change mesh to square
+		if (ts == 0) GetComponent<MeshFilter>().mesh = sphere;																	// change mesh to sphere
+		else if (ts == 1) GetComponent<MeshFilter>().mesh = triangle;															// change mesh to triangle
+		else if (ts == 2) GetComponent<MeshFilter>().mesh = square;																// change mesh to square
 	}
 
 	///<summary>
@@ -2488,20 +2323,20 @@ public class PlayerNucleusManager : MonoBehaviour {
 	///</summary>
 	private void SetLight (bool l)
 	{
-		if (l && !psp.lightworld) {
-			rend.material.shader = lightShader;																					// change to white shader
+		if (!l && !psp.lightworld) {
+			if (toState != 0 && (toState % 2 == 0))	rend.material.shader = lightShader;											// change to white shader
 		} 
-		else if (!l && !psp.lightworld) {
+		else if (l && !psp.lightworld) {
 			if (toState != 0 && (toState % 2 == 0))	rend.material.shader = darkShader;											// if even # state, change to black shader
 			else {
 				rend.material.shader = Shader.Find("Unlit/Color");																// change to unlit colour shader
 				rend.material.SetColor("_Color", Color.black);																	// change to black
 			}
 		}
-		else if (l && psp.lightworld) {
+		else if (!l && psp.lightworld) {
 			rend.material.shader = darkShader;																					// change to black shader
 		}
-		else if (!l && psp.lightworld) {
+		else if (l && psp.lightworld) {
 			if (toState != 0 && (toState % 2 == 0)) rend.material.shader = lightShader;											// if even # state, change to white shader
 			else { 
 				rend.material.shader = Shader.Find("Unlit/Color");																	// change to unlit colour shader

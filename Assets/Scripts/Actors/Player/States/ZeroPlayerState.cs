@@ -9,6 +9,7 @@ public class ZeroPlayerState : IParticleState
 	public bool isLight = true;															// 'is light' flag
 	public float evol, deltaDark, deltaLight;											// evol tracking refs
 	private bool checkEvol;																// check evol flag
+	private bool init = true;															// is init flag
 
 	[HideInInspector] public bool canCollide = false;									// can collide flag (init false to begin stunned)
 	private float collisionTimer;														// reset collision timer
@@ -28,7 +29,10 @@ public class ZeroPlayerState : IParticleState
 			checkEvol = false;															// reset check evol flag
 		}
 
-        if (psp.isInit) Init();                                                         // if init, init
+		if (psp.isInit && !init) {														// if init
+			Init();                                                         				// call init
+			init = false;																	// reset is init flag
+		}
 
         // allow collisions timer
         if (!canCollide) collisionTimer += Time.deltaTime;								// start timer
@@ -83,8 +87,14 @@ public class ZeroPlayerState : IParticleState
 					psp.sc [0].enabled = false;														// disable trigger collider
 					psp.stunned = true;																// set stunned flag
 					Debug.Log ("player+else: sub evol");
-					psp.SubDark (pspOther.darkEvol);												// subtract other dark
-					psp.SubLight (pspOther.lightEvol);                                              // subtract other light
+					if (pspOther.evolC > 0f) {														// other > 0
+						if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);					// sub other dark
+						if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);				// sub other light
+					}
+					else if (pspOther.evolC < 0f) {													// other < 0
+						if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC * -1);			// sub other negated dark
+						if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC * -1);			// sub other negated light
+					}
 					checkEvol = true;																// set check evol flag
 				}
 			}
@@ -93,74 +103,74 @@ public class ZeroPlayerState : IParticleState
 
 	public void ToZero(bool toLight)
 	{
-		psp.TransitionTo(0, 0, isLight, toLight, 0);									// trigger transition effects
+		psp.TransitionTo(0, 0, isLight, toLight, 0, 0);									// trigger transition effects
 	}
 
 	public void ToHalfZero(bool toLight)
 	{
-		psp.TransitionTo(0, 0, isLight, toLight, 0);
+		psp.TransitionTo(0, 0, isLight, toLight, 0, 0);
 		//ParticleStateEvents.toLightZero += psp.TransitionToLightZero;
 	}
 
 	public void ToFirst(bool toLight)
 	{
-		psp.TransitionTo(0, 1, isLight, toLight, 0);									// trigger transition effects
+		psp.TransitionTo(0, 1, isLight, toLight, 0, 0);									// trigger transition effects
 		//ParticleStateEvents.toFirst += psp.TransitionToFirst;								// flag transition in delegate
 		psp.currentState = psp.firstState;												// set to new state
 	}
 
 	public void ToSecond(bool toLight)
 	{
-		psp.TransitionTo(0, 2, isLight, toLight, 0);									// trigger transition effects
+		psp.TransitionTo(0, 2, isLight, toLight, 0, 0);									// trigger transition effects
 		//ParticleStateEvents.toSecond += psp.TransitionToSecond;							// flag transition in delegate
 		psp.currentState = psp.secondState;												// set to new state
 	}
 
 	public void ToThird(bool toLight)
 	{
-		psp.TransitionTo(0, 3, isLight, toLight, 0);									// trigger transition effects
+		psp.TransitionTo(0, 3, isLight, toLight, 0, 0);									// trigger transition effects
 		//ParticleStateEvents.toThird += psp.TransitionToThird;								// flag transition in delegate
 		psp.currentState = psp.thirdState;												// set to new state
 	}
 
 	public void ToFourth(bool toLight)
 	{
-		psp.TransitionTo(0, 4, isLight, toLight, 0);									// trigger transition effects
+		psp.TransitionTo(0, 4, isLight, toLight, 0, 0);									// trigger transition effects
 		//ParticleStateEvents.toFourth += psp.TransitionToFourth;							// flag transition in delegate
 		psp.currentState = psp.fourthState;												// set to new state
 	}
 
-	public void ToFifth(bool toLight, int shape)
+	public void ToFifth(bool toLight, int toShape)
 	{
-		psp.TransitionTo(0, 5, isLight, toLight, shape);								// trigger transition effects
+		psp.TransitionTo(0, 5, isLight, toLight, 0, toShape);							// trigger transition effects
 		//ParticleStateEvents.toFifth += psp.TransitionToFifth;								// flag transition in delegate
 		psp.currentState = psp.fifthState;												// set to new state
 	}
 
-	public void ToSixth(bool toLight, int shape)
+	public void ToSixth(bool toLight, int toShape)
 	{
-		psp.TransitionTo(0, 6, isLight, toLight, shape);								// trigger transition effects
+		psp.TransitionTo(0, 6, isLight, toLight, 0, toShape);							// trigger transition effects
 		//ParticleStateEvents.toSixth += psp.TransitionToSixth;								// flag transition in delegate
 		psp.currentState = psp.sixthState;												// set to new state
 	}
 
-	public void ToSeventh(bool toLight, int shape)
+	public void ToSeventh(bool toLight, int toShape)
 	{
-		psp.TransitionTo(0, 7, isLight, toLight, shape);								// trigger transition effects
+		psp.TransitionTo(0, 7, isLight, toLight, 0, toShape);							// trigger transition effects
 		//ParticleStateEvents.toSeventh += psp.TransitionToSeventh;							// flag transition in delegate
 		psp.currentState = psp.seventhState;											// set to new state
 	}
 
-	public void ToEighth(bool toLight, int shape)
+	public void ToEighth(bool toLight, int toShape)
 	{
-		psp.TransitionTo(0, 8, isLight, toLight, shape);								// trigger transition effects
+		psp.TransitionTo(0, 8, isLight, toLight, 0, toShape);							// trigger transition effects
 		//ParticleStateEvents.toSeventh += psp.TransitionToSeventh;							// flag transition in delegate
 		psp.currentState = psp.eighthState;												// set to new state
 	}
 
-	public void ToNinth(bool toLight, int shape)
+	public void ToNinth(bool toLight, int toShape)
 	{
-		psp.TransitionTo(0, 9, isLight, toLight, shape);								// trigger transition effects
+		psp.TransitionTo(0, 9, isLight, toLight, 0, toShape);							// trigger transition effects
 		//ParticleStateEvents.toSeventh += psp.TransitionToSeventh;							// flag transition in delegate
 		psp.currentState = psp.ninthState;												// set to new state
 	}
@@ -234,8 +244,8 @@ public class ZeroPlayerState : IParticleState
         // half zero
 			// in either world
 		if ((evol == 0.5f) || (evol == -0.5f)) {										// to either half zero
-			if (deltaDark == 0.5f || deltaDark == -0.5f) ToHalfZero (false);		    	// if gain dark = to dark zero
-			else if (deltaLight == 0.5f || deltaLight == -0.5f) ToHalfZero (true);			// if gain light = to light zero
+			if (deltaDark > deltaLight) ToHalfZero (false);		    						// if gain dark/lose light = to dark zero
+			else if (deltaDark <= deltaLight) ToHalfZero (true);							// if gain light/lose dark = to light zero
 		}
        
 		// first

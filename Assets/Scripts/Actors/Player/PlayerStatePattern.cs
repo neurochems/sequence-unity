@@ -13,7 +13,8 @@ public class PlayerStatePattern : MonoBehaviour {
 
 	public float evolC, darkEvolC, lightEvolC;								// evol values at start of collision
 
-	public bool circle = true, triangle, square;							// shape flags
+	public int shape;														// shape indicator
+	[HideInInspector] public bool circle = true, triangle, square;			// shape flags
 
 	private bool updateStateIndicator;										// update state indicator flag
 	[HideInInspector] public IParticleState currentState;					// current player state
@@ -51,7 +52,8 @@ public class PlayerStatePattern : MonoBehaviour {
 
 	private OrthoSmoothFollow osf;																			// orthosmoothfollow
 
-	private int fromState, toState, shape;																	// transition properties
+	// evolution 
+	private int fromState, toState, fromShape, toShape;														// transition properties
 	private bool fromLight, toLight;																		// transition properties
 
 	private bool setShell, setNucleus;																		// set part flags
@@ -83,9 +85,6 @@ public class PlayerStatePattern : MonoBehaviour {
 
 	void Awake()
 	{
-		//evol = 0f;															// initialize evol
-		//darkEvol = 0f;														// initialize dark evol
-		//lightEvol = 0f;														// initialize light evol
 
 		deltaDark = 0f;														// initialize delta dark evol
 		deltaLight = 0f;													// initialize delta light evol
@@ -101,7 +100,6 @@ public class PlayerStatePattern : MonoBehaviour {
 		eighthState = new EighthPlayerState (this);							// initialize eighth state
 		ninthState = new NinthPlayerState (this);							// initialize ninth state
 		tenthState = new TenthPlayerState (this);							// initialize tenth state
-		// new state
 
 	}
 
@@ -161,31 +159,31 @@ public class PlayerStatePattern : MonoBehaviour {
 		}
 			
 		// set parts timers
-		if (setShell) {														// if set shell
-			setShellTimer += Time.deltaTime;									// start timer
-			if (setShellTimer >= 1.0f) {										// if timer is 1 sec
-				psm.Shell (fromState, toState, fromLight, toLight, shape);			// change shell
-				setShell = false;													// reset set shell flag
-				setShellTimer = 0f;													// reset set shell timer
+		if (setShell) {																		// if set shell
+			setShellTimer += Time.deltaTime;													// start timer
+			if (setShellTimer >= 1.0f) {														// if timer is 1 sec
+				psm.Shell (fromState, toState, fromLight, toLight, fromShape, toShape);				// change shell
+				setShell = false;																	// reset set shell flag
+				setShellTimer = 0f;																	// reset set shell timer
 			}
 		}
-		if (setNucleus) {													// if set nucleus
-			setNucleusTimer += Time.deltaTime;									// start timer
-			if (setNucleusTimer >= 2.0f) {										// if timer is 2 sec
-				pnm.Nucleus (fromState, toState, fromLight, toLight, shape);		// change nucleus
-				setNucleus = false;													// reset set nucleus flag
-				setNucleusTimer = 0f;												// reset set nucleus timer
+		if (setNucleus) {																	// if set nucleus
+			setNucleusTimer += Time.deltaTime;													// start timer
+			if (setNucleusTimer >= 2.0f) {														// if timer is 2 sec
+				pnm.Nucleus (fromState, toState, fromLight, toLight, fromShape, toShape);			// change nucleus
+				setNucleus = false;																	// reset set nucleus flag
+				setNucleusTimer = 0f;																// reset set nucleus timer
 			}
 		}
 
 		// tenth state collision radius increase
 		if (radiusUp) {
-			radiusUpTimer += Time.deltaTime;														// start timer
-			sc[0].radius += 0.000383f;														// update collision radius	
-			sc[1].radius += 0.000383f;														// update collision radius	
-			if (radiusUpTimer >= 60.0f) {																				// when timer >= 2 sec
-				radiusUp = false;																						// reset change colour flag
-				radiusUpTimer = 0f;																						// reset timer
+			radiusUpTimer += Time.deltaTime;												// start timer
+			sc[0].radius += 0.000383f;															// update collision radius	
+			sc[1].radius += 0.000383f;															// update collision radius	
+			if (radiusUpTimer >= 60.0f) {														// when timer >= 2 sec
+				radiusUp = false;																	// reset change colour flag
+				radiusUpTimer = 0f;																	// reset timer
 			}
 		}
 
@@ -195,6 +193,7 @@ public class PlayerStatePattern : MonoBehaviour {
 			changeParticles = false;																						// reset change colour flag
 			changeParticlesTimer = 0f;																						// reset timer
 		}
+
 		// change colour timer
 		if (changeWorld) changeWorldTimer += Time.deltaTime;														// start timer
 		if (changeWorldTimer >= 2.5f) {																				// when timer >= 2 sec
@@ -293,51 +292,43 @@ public class PlayerStatePattern : MonoBehaviour {
 		lightEvol -= changeAmount;											// subtract light evol level
 	}
 
-	// BEHAVIOURS \\
-
-	public void SpawnZero (int num)
-	{
-		//GetComponent<SpawnParticle> ().SpawnPhoton (num);
-	}
-
-	public void SpawnFirst (int num)
-	{
-		//GetComponent<SpawnParticle> ().SpawnElectron (num);
-	}
-
 	// STATE TRANSTITIONS \\
 
-	public void TransitionTo (int f, int t, bool fl, bool tl, int s)
+	public void TransitionTo (int f, int t, bool fl, bool tl, int fs, int ts)
 	{
 		Debug.Log ("player transition to");
 
+		// early updates
 		fromState = f;																// store from state
 		toState = t;																// store to state
 		fromLight = fl;																// store from light
 		toLight = tl;																// store to light
-		shape = s;																	// store shape
+		fromShape = fs;																// store shape
+		toShape = ts;																// store shape
 
 		updateStateIndicator = true;												// update state int next frame
 
 		// set shape
-		if (shape == 0) {															// if shape is circle
+		shape = toShape;															// set shape indicator
+		if (toShape == 0) {															// if shape is circle
 			circle = true;																// set circle flag
 			triangle = false;															// reset triangle flag
 			square = false;																// reset square flag
 		}
-		else if (shape == 1) {														// if shape is circle
+		else if (toShape == 1) {														// if shape is circle
 			circle = false;																// reset circle flag
 			triangle = true;															// set triangle flag
 			square = false;																// reset square flag
 		}
-		else if (shape == 2) {														// if shape is circle
+		else if (toShape == 2) {														// if shape is circle
 			circle = false;																// reset circle flag
 			triangle = false;															// reset triangle flag
 			square = true;																// set square flag
 		}
 
-		SetZoomCamera();															// check/set camera zoom
+		// trigger animations
 		SetParts();																	// set player parts
+		SetZoomCamera();															// check/set camera zoom
 
 		// physics / audio / text changes
 		if (toState == 0) { 														// to zero
@@ -376,65 +367,65 @@ public class PlayerStatePattern : MonoBehaviour {
 		}
 		else if (toState == 5) {													// to fifth
 			rb.mass = 4.0f;																// set mass
-			if (shape == 0) {															// if circle
+			if (toShape == 0) {															// if circle
 				sc[0].radius = 1.02f;														// update collision radius
 				sc[1].radius = 0.97f;														// update collision radius
 			}
-			else if (shape == 1 || shape == 2) {										// if triangle or square
+			else if (toShape == 1 || toShape == 2) {									// if triangle or square
 				sc[0].radius = 0.52f;														// update collision radius
 				sc[1].radius = 0.47f;														// update collision radius
 			}
 			musicSnapshots[6].TransitionTo(5.0f);										// AUDIO: transition to fifth state music snapshot
-			if (shape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);			// AUDIO: transition to dark circle effects snapshot
-			if (shape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
-			if (shape == 1) effectsSnapshots[3].TransitionTo(5.0f);						// AUDIO: transition to triangle effects snapshot
-			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot
+			if (toShape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);		// AUDIO: transition to dark circle effects snapshot
+			if (toShape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);		// AUDIO: transition to light circle effects snapshot
+			if (toShape == 1) effectsSnapshots[3].TransitionTo(5.0f);					// AUDIO: transition to triangle effects snapshot
+			if (toShape == 2) effectsSnapshots[4].TransitionTo(5.0f);					// AUDIO: transition to square effects snapshot
 		}
 		else if (toState == 6) {													// to sixth
 			rb.mass = 4.5f;																// set mass
-			if (shape == 0) {															// if circle
+			if (toShape == 0) {															// if circle
 				sc[0].radius = 1.02f;														// update collision radius
 				sc[1].radius = 0.97f;														// update collision radius
 			}
-			else if (shape == 1 || shape == 2) {										// if triangle or square
+			else if (toShape == 1 || toShape == 2) {									// if triangle or square
 				sc[0].radius = 0.52f;														// update collision radius
 				sc[1].radius = 0.47f;														// update collision radius
 			}
 			musicSnapshots[7].TransitionTo(5.0f);										// AUDIO: transition to sixth state music snapshot
-			if (shape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);			// AUDIO: transition to dark circle effects snapshot
-			if (shape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
-			if (shape == 1) effectsSnapshots[3].TransitionTo(5.0f);						// AUDIO: transition to triangle effects snapshot
-			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot	
+			if (toShape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);		// AUDIO: transition to dark circle effects snapshot
+			if (toShape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);		// AUDIO: transition to light circle effects snapshot
+			if (toShape == 1) effectsSnapshots[3].TransitionTo(5.0f);					// AUDIO: transition to triangle effects snapshot
+			if (toShape == 2) effectsSnapshots[4].TransitionTo(5.0f);					// AUDIO: transition to square effects snapshot	
 		}
 		else if (toState == 7) {													// to seventh
 			rb.mass = 5.5f;																// set mass
 			sc[0].radius = 1.53f;														// update collision radius
 			sc[1].radius = 1.48f;														// update collision radius
 			musicSnapshots[8].TransitionTo(5.0f);										// AUDIO: transition to seventh state music snapshot
-			if (shape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);			// AUDIO: transition to dark circle effects snapshot
-			if (shape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
-			if (shape == 1) effectsSnapshots[3].TransitionTo(5.0f);						// AUDIO: transition to triangle effects snapshot
-			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot
+			if (toShape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);		// AUDIO: transition to dark circle effects snapshot
+			if (toShape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);		// AUDIO: transition to light circle effects snapshot
+			if (toShape == 1) effectsSnapshots[3].TransitionTo(5.0f);					// AUDIO: transition to triangle effects snapshot
+			if (toShape == 2) effectsSnapshots[4].TransitionTo(5.0f);					// AUDIO: transition to square effects snapshot
 		}
 		else if (toState == 8) {													// to eighth
 			rb.mass = 7.0f;																// set mass
 			sc[0].radius = 1.53f;														// update collision radius
 			sc[1].radius = 1.48f;														// update collision radius
 			musicSnapshots[9].TransitionTo(5.0f);										// AUDIO: transition to seventh state music snapshot
-			if (shape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);			// AUDIO: transition to dark circle effects snapshot
-			if (shape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
-			if (shape == 1) effectsSnapshots[3].TransitionTo(5.0f);						// AUDIO: transition to triangle effects snapshot
-			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot
+			if (toShape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);		// AUDIO: transition to dark circle effects snapshot
+			if (toShape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);		// AUDIO: transition to light circle effects snapshot
+			if (toShape == 1) effectsSnapshots[3].TransitionTo(5.0f);					// AUDIO: transition to triangle effects snapshot
+			if (toShape == 2) effectsSnapshots[4].TransitionTo(5.0f);					// AUDIO: transition to square effects snapshot
 		}
 		else if (toState == 9) {													// to ninth
 			rb.mass = 8.5f;																// set mass
 			sc[0].radius = 2.04f;														// update collision radius
 			sc[1].radius = 1.99f;														// update collision radius
 			musicSnapshots[10].TransitionTo(5.0f);										// AUDIO: transition to seventh state music snapshot
-			if (shape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);			// AUDIO: transition to dark circle effects snapshot
-			if (shape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
-			if (shape == 1) effectsSnapshots[3].TransitionTo(5.0f);						// AUDIO: transition to triangle effects snapshot
-			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot
+			if (toShape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);		// AUDIO: transition to dark circle effects snapshot
+			if (toShape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);		// AUDIO: transition to light circle effects snapshot
+			if (toShape == 1) effectsSnapshots[3].TransitionTo(5.0f);					// AUDIO: transition to triangle effects snapshot
+			if (toShape == 2) effectsSnapshots[4].TransitionTo(5.0f);					// AUDIO: transition to square effects snapshot
 		}
 		else if (toState == 10) {													// to tenth
 			camOrbit = true;															// CAMERA: start orbit
@@ -442,18 +433,17 @@ public class PlayerStatePattern : MonoBehaviour {
 			sc[0].radius = 2.04f;														// update collision radius
 			sc[1].radius = 1.99f;														// update collision radius
 			musicSnapshots[11].TransitionTo(5.0f);										// AUDIO: transition to seventh state music snapshot
-			if (shape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);			// AUDIO: transition to dark circle effects snapshot
-			if (shape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);			// AUDIO: transition to light circle effects snapshot
-			if (shape == 1) effectsSnapshots[3].TransitionTo(5.0f);						// AUDIO: transition to triangle effects snapshot
-			if (shape == 2) effectsSnapshots[4].TransitionTo(5.0f);						// AUDIO: transition to square effects snapshot
+			if (toShape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);		// AUDIO: transition to dark circle effects snapshot
+			if (toShape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);		// AUDIO: transition to light circle effects snapshot
+			if (toShape == 1) effectsSnapshots[3].TransitionTo(5.0f);					// AUDIO: transition to triangle effects snapshot
+			if (toShape == 2) effectsSnapshots[4].TransitionTo(5.0f);					// AUDIO: transition to square effects snapshot
 			pc.enabled = false;															// disable player controller on player
 			wc.enabled = true;															// enable player controller on world
 		}
 
+		// late updates
 		isLight = toLight;															// update light value
-
 		lastStateChange = Time.time;												// reset time since last state change
-
 		darkEvolStart = darkEvol;													// store dark evol at start of state
 		lightEvolStart = lightEvol;													// store light evol at start of state 
 	}
@@ -509,7 +499,7 @@ public class PlayerStatePattern : MonoBehaviour {
 	// set player parts
 	private void SetParts()
 	{
-		pcm.Core (fromState, toState, fromLight, toLight, shape);					// change circle
+		pcm.Core (fromState, toState, fromLight, toLight, fromShape, toShape);		// change circle
 		setShell = true;															// start set shell timer
 		setNucleus = true;															// start set nucleus timer
 	}

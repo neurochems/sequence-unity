@@ -6,14 +6,14 @@ public class ParticleStatePattern : MonoBehaviour {
 	public float evol;														// evolution level
 	public int state;														// state indicator for inspector
 	public new bool isLight;												// is light flag
-	public int currentShape;												// current shape
 	public float darkEvol, lightEvol;										// dark & light evolution level
 	public float darkEvolStart, lightEvolStart;								// last dark & light evolution level (for delta calc)
 	public float deltaDark, deltaLight;										// delta dark & light evolution level
 
 	public float evolC, darkEvolC, lightEvolC;								// evol values at start of collision
 
-	public bool circle = true, triangle, square;							// shape flags
+	public int shape;														// shape indicator
+	[HideInInspector] public bool circle = true, triangle, square;			// shape flags
 
 	private bool updateStateIndicator;										// update state indicator flag
 	[HideInInspector] public IParticleState currentState;					// other object state
@@ -50,9 +50,9 @@ public class ParticleStatePattern : MonoBehaviour {
 	//private ParticlePhysicsManager ppm;										// particle physics manager
 	[HideInInspector] public SphereCollider[] sc;							// sphere colliders
 
-	private int fromState, toState, shape;									// transition properties
+	private int fromState, toState, fromShape, toShape;						// transition properties
 	private bool fromLight, toLight;										// transition properties
-	//private bool toLightworld;													// transition properties: to light world
+	//private bool toLightworld;												// transition properties: to light world
 
 	private bool setShell, setNucleus;										// set part flags
 	private bool cwShell, cwNucleus;										// set change world part flags
@@ -136,20 +136,20 @@ public class ParticleStatePattern : MonoBehaviour {
 		}
 
 		// set part world change timers
-		if (cwShell) {														// if set shell
-			cwShellTimer += Time.deltaTime;									// start timer
-			if (cwShellTimer >= 0.1f) {										// if timer is 0.1 sec
-				psm.ToOtherWorld (toLightworld, fromState, toState, toLight);		// change shell
-				cwShell = false;													// reset set shell flag
-				cwShellTimer = 0f;													// reset set shell timer
+		if (cwShell) {																					// if set shell
+			cwShellTimer += Time.deltaTime;																	// start timer
+			if (cwShellTimer >= 0.1f) {																		// if timer is 0.1 sec
+				psm.ToOtherWorld (toLightworld, fromState, toState, toLight, fromShape, toShape);				// change shell
+				cwShell = false;																				// reset set shell flag
+				cwShellTimer = 0f;																				// reset set shell timer
 			}
 		}
-		if (cwNucleus) {													// if set nucleus
-			setNucleusTimer += Time.deltaTime;									// start timer
-			if (setNucleusTimer >= 0.2f) {										// if timer is 0.2 sec
-				pnm.ToOtherWorld (toLightworld, fromState, toState, toLight);		// change nucleus
-				cwNucleus = false;													// reset set nucleus flag
-				cwNucleusTimer = 0f;												// reset set nucleus timer
+		if (cwNucleus) {																				// if set nucleus
+			setNucleusTimer += Time.deltaTime;																// start timer
+			if (setNucleusTimer >= 0.2f) {																	// if timer is 0.2 sec
+				pnm.ToOtherWorld (toLightworld, fromState, toState, toLight, fromShape, toShape);				// change nucleus
+				cwNucleus = false;																				// reset set nucleus flag
+				cwNucleusTimer = 0f;																			// reset set nucleus timer
 			}
 		}
 
@@ -171,30 +171,30 @@ public class ParticleStatePattern : MonoBehaviour {
 		}
 
 		// set parts timers
-		if (setShell) {														// if set shell
-			setShellTimer += Time.deltaTime;									// start timer
-			if (setShellTimer >= 0.75f) {										// if timer is 0.75 sec
-				psm.Shell (fromState, toState, fromLight, toLight, shape);			// change shell
-				setShell = false;													// reset set shell flag
-				setShellTimer = 0f;													// reset set shell timer
+		if (setShell) {																			// if set shell
+			setShellTimer += Time.deltaTime;														// start timer
+			if (setShellTimer >= 0.75f) {															// if timer is 0.75 sec
+				psm.Shell (fromState, toState, fromLight, toLight, fromShape, toShape);					// change shell
+				setShell = false;																		// reset set shell flag
+				setShellTimer = 0f;																		// reset set shell timer
 			}
 		}
-		if (setNucleus) {													// if set nucleus
-			setNucleusTimer += Time.deltaTime;									// start timer
-			if (setNucleusTimer >= 1.5f) {										// if timer is 1.5 sec
-				pnm.Nucleus (fromState, toState, fromLight, toLight, shape);		// change nucleus
-				setNucleus = false;													// reset set nucleus flag
-				setNucleusTimer = 0f;												// reset set nucleus timer
+		if (setNucleus) {																		// if set nucleus
+			setNucleusTimer += Time.deltaTime;														// start timer
+			if (setNucleusTimer >= 1.5f) {															// if timer is 1.5 sec
+				pnm.Nucleus (fromState, toState, fromLight, toLight, fromShape, toShape);				// change nucleus
+				setNucleus = false;																		// reset set nucleus flag
+				setNucleusTimer = 0f;																	// reset set nucleus timer
 			}
 		}
 
 		// tenth state deactivation timer
-		if (psp.state == 10) {												// if player is state 10
-			activeTimer += Time.deltaTime;										// start timer
-			TransitionTo(state, 10, isLight, false, currentShape);				// transition to hidden
-			if (activeTimer >= 4.0f) {											// if timer is 4 sec
-				gameObject.SetActive (false);										// deactivate
-				activeTimer = 0f;													// reset active timer
+		if (psp.state == 10) {																	// if player is state 10
+			activeTimer += Time.deltaTime;															// start timer
+			TransitionTo(state, 10, isLight, false, toShape, toShape);								// transition to hidden
+			if (activeTimer >= 4.0f) {																// if timer is 4 sec
+				gameObject.SetActive (false);															// deactivate
+				activeTimer = 0f;																		// reset active timer
 			}
 		}
 
@@ -272,121 +272,129 @@ public class ParticleStatePattern : MonoBehaviour {
 
 	// STATE TRANSTITIONS \\
 
-	public void TransitionTo(int f, int t, bool fl, bool tl, int s)
+	///<summary>
+	///<para>== TransitionTo ==</para>
+	///<para>trigger animations of changes between states</para>
+	///<para>f = from state</para>
+	///<para>t = to state</para>
+	///<para>fl = from light</para>
+	///<para>tl = to light</para>
+	///<para>fs = from shape [0=circ, 1=tri, 2=sq]</para>
+	///<para>ts = to shape</para>
+	///</summary>
+	public void TransitionTo(int f, int t, bool fl, bool tl, int fs, int ts)
 	{
 
+		// early updates
 		fromState = f;																// store from state
 		toState = t;																// store to state
 		fromLight = fl;																// store from light
 		toLight = tl;																// store to light
-		shape = s;																	// store shape
+		fromShape = fs;																// store from shape
+		toShape = ts;																// store to shape
 
 		updateStateIndicator = true;												// update state indicator
 
-		if (shape == 0) {															// if shape is circle
+		// set shape
+		shape = toShape;															// set shape indicator
+		if (toShape == 0) {															// if shape is circle
 			circle = true;																// set circle flag
 			triangle = false;															// reset triangle flag
 			square = false;																// reset square flag
 		}
-		else if (shape == 1) {														// if shape is circle
+		else if (toShape == 1) {													// if shape is circle
 			circle = false;																// reset circle flag
 			triangle = true;															// set triangle flag
 			square = false;																// reset square flag
 		}
-		else if (shape == 2) {														// if shape is circle
+		else if (toShape == 2) {													// if shape is circle
 			circle = false;																// reset circle flag
 			triangle = false;															// reset triangle flag
 			square = true;																// set square flag
 		}
 
+		// trigger animations
+		SetParts();																	// set player parts
+
+		// physics changes
 		if (toState == 0)	{ 														// to zero
-			SetParts();																	// set player parts
 			rb.mass = 1.0f;																// set mass
 			gameObject.tag = "Zero";													// set tag
 			sc[0].radius = 0.205f;														// update collision radius
 			sc[1].radius = 0.195f;														// update collision radius
-			//Debug.Log(psp.gameObject.name + " nucleus init to dark zero - TransitionTo(0)");
 		}
 		else if (toState == 1) {													// to first
-			SetParts();																	// set player parts
 			rb.mass = 2.0f;																// set mass
 			gameObject.tag = "First";													// set tag
 			sc[0].radius = 0.52f;														// update collision radius
 			sc[1].radius = 0.48f;														// update collision radius
 		}
 		else if (toState == 2) {													// to second
-			SetParts();																	// set player parts
 			rb.mass = 2.5f;																// set mass
 			gameObject.tag = "Second";													// set tag
 			sc[0].radius = 0.52f;														// update collision radius
 			sc[1].radius = 0.48f;														// update collision radius
 		}
 		else if (toState == 3) {													// to third
-			SetParts();																	// set player parts
 			rb.mass = 3.0f;																// set mass
 			gameObject.tag = "Third";													// set tag
 			sc[0].radius = 1.02f;														// update collision radius
 			sc[1].radius = 0.97f;														// update collision radius
 		}
 		else if (toState == 4) {													// to fourth
-			SetParts();																	// set player parts
 			rb.mass = 3.5f;																// set mass
 			gameObject.tag = "Fourth";													// set tag
 			sc[0].radius = 1.02f;														// update collision radius
 			sc[1].radius = 0.97f;														// update collision radius
 		}
 		else if (toState == 5) {													// to fifth
-			SetParts();																	// set player parts
 			rb.mass = 4.0f;																// set mass
 			gameObject.tag = "Fifth";													// set tag
 			sc[0].radius = 1.02f;														// update collision radius
 			sc[1].radius = 0.97f;														// update collision radius
 		}
 		else if (toState == 6) {													// to sixth
-			SetParts();																	// set player parts
 			rb.mass = 4.5f;																// set mass
 			gameObject.tag = "Sixth";													// set tag
 			sc[0].radius = 1.02f;														// update collision radius
 			sc[1].radius = 0.97f;														// update collision radius
 		}
 		else if (toState == 7) {													// to seventh
-			SetParts();																	// set player parts
 			rb.mass = 5.5f;																// set mass
 			gameObject.tag = "Seventh";													// set tag
 			sc[0].radius = 1.53f;														// update collision radius
 			sc[1].radius = 1.47f;														// update collision radius
 		}
 		else if (toState == 8) {													// to eighth
-			SetParts();																	// set player parts
 			rb.mass = 7.0f;																// set mass
 			gameObject.tag = "Eighth";													// set tag
 			sc[0].radius = 1.53f;														// update collision radius
 			sc[1].radius = 1.47f;														// update collision radius
 		}
 		else if (toState == 9) {													// to ninth
-			SetParts();																	// set player parts
 			rb.mass = 8.5f;																// set mass
 			gameObject.tag = "Ninth";													// set tag
 			sc[0].radius = 2.03f;														// update collision radius
 			sc[1].radius = 1.98f;														// update collision radius
 		}
 
+		// late updates
 		isLight = toLight;															// set light flag
-		currentShape = shape;														// set current shape
-
 		darkEvolStart = darkEvol;													// store dark evol at start of state
 		lightEvolStart = lightEvol;													// store light evol at start of state
 	}
 
-	public void ChangeWorld(bool toLW, int f, int t, bool tl) 
+	public void ChangeWorld(bool toLW, int f, int t, bool tl, int fs, int ts)
 	{
 		if (toLW) toLightworld = true;												// set to light world flag
 		if (!toLW) toDarkworld = true;												// set to dark world flag
 		fromState = f;																// store from state
 		toState = t;																// store to state
 		toLight = tl;																// store to light
+		fromShape = fs;																// store from shape
+		toShape = ts;																// store to shape
 
-		pcm.ToOtherWorld (toLW, f, t, tl);											// change core
+		pcm.ToOtherWorld (toLW, f, t, tl, fs, ts);									// change core
 		cwShell = true;																// start shell change timer
 		cwNucleus = true;															// start nucleus change timer
 
@@ -408,7 +416,7 @@ public class ParticleStatePattern : MonoBehaviour {
 	// set particle parts (normal state transitions)
 	private void SetParts()
 	{
-		pcm.Core (fromState, toState, fromLight, toLight, shape);					// change circle
+		pcm.Core (fromState, toState, fromLight, toLight, fromShape, toShape);		// change core
 		setShell = true;															// start set shell timer
 		setNucleus = true;															// start set nucleus timer
 	}

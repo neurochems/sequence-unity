@@ -7,6 +7,7 @@ public class FifthPlayerState : IParticleState
 	private readonly PlayerStatePattern psp;											// reference to pattern/monobehaviour class
 
 	public bool isLight = true;															// 'is light' flag
+	private int shape;																	// shape indicator
 	public bool circle, triangle, square;												// shape flags flag
 	public float evol, deltaDark, deltaLight;											// evol tracking refs
 	private bool checkEvol;																// check evol flag
@@ -44,6 +45,7 @@ public class FifthPlayerState : IParticleState
 	public void OnTriggerEnter(Collider other)
 	{
 		// state class doesn't know what shape it is until it contacts another
+		shape = psp.shape;																		// set shape indicator
 		circle = psp.circle;																	// set current circle flag
 		triangle = psp.triangle;																// set current triangle flag
 		square = psp.square;																	// set current square flag
@@ -89,9 +91,15 @@ public class FifthPlayerState : IParticleState
 					canCollide = false;																			// reset has collided trigger
 					psp.sc[0].enabled = false;																	// disable trigger collider
 					psp.stunned = true;																			// set stunned flag
-					if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);								// subtract other dark
-					if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);							// subtract other light
-					checkEvol = true;																			// set check evol flag
+					if (pspOther.evolC > 0f) {																// other > 0
+						if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);							// sub other dark
+						if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);						// sub other light
+					}
+					else if (pspOther.evolC < 0f) {															// other < 0
+						if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC * -1);					// sub other negated dark
+						if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC * -1);					// sub other negated light
+					}
+					checkEvol = true;																		// set check evol flag
 				}
 			}
 		}
@@ -99,68 +107,68 @@ public class FifthPlayerState : IParticleState
 
 	public void ToZero(bool toLight)
 	{
-		psp.TransitionTo(5, 0, isLight, toLight, 0);								// trigger transition effects
+		psp.TransitionTo(5, 0, isLight, toLight, shape, 0);							// trigger transition effects
 		//ParticleStateEvents.toZero += psp.TransitionToZero;							// flag transition in delegate
 		psp.currentState = psp.zeroState;											// set to new state
 	}
 
 	public void ToFirst(bool toLight)
 	{
-		psp.TransitionTo(5, 1, isLight, toLight, 0);								// trigger transition effects
+		psp.TransitionTo(5, 1, isLight, toLight, shape, 0);							// trigger transition effects
 		//ParticleStateEvents.toFirst += psp.TransitionToFirst;							// flag transition in delegate
 		psp.currentState = psp.firstState;											// set to new state
 	}
 
 	public void ToSecond(bool toLight)
 	{
-		psp.TransitionTo(5, 2, isLight, toLight, 0);								// trigger transition effects
+		psp.TransitionTo(5, 2, isLight, toLight, shape, 0);							// trigger transition effects
 		//ParticleStateEvents.toSecond += psp.TransitionToSecond;						// flag transition in delegate
 		psp.currentState = psp.secondState;											// set to new state
 	}
 
 	public void ToThird(bool toLight)
 	{
-		psp.TransitionTo(5, 3, isLight, toLight, 0);								// trigger transition effects
+		psp.TransitionTo(5, 3, isLight, toLight, shape, 0);							// trigger transition effects
 		//ParticleStateEvents.toThird += psp.TransitionToThird;							// flag transition in delegate
 		psp.currentState = psp.thirdState;											// set to new state
 	}
 
 	public void ToFourth(bool toLight)
 	{
-		psp.TransitionTo(5, 4, isLight, toLight, 0);								// trigger transition effects
+		psp.TransitionTo(5, 4, isLight, toLight, shape, 0);							// trigger transition effects
 		//ParticleStateEvents.toFourth += psp.TransitionToFourth;						// flag transition in delegate
 		psp.currentState = psp.fourthState;											// set to new state
 	}
 
-	public void ToFifth(bool toLight, int shape)
+	public void ToFifth(bool toLight, int toShape)
 	{
-		psp.TransitionTo(5, 5, isLight, toLight, 0);								// trigger transition effects
+		psp.TransitionTo(5, 5, isLight, toLight, shape, toShape);					// trigger transition effects
 	}
 
-	public void ToSixth(bool toLight, int shape)
+	public void ToSixth(bool toLight, int toShape)
 	{
-		psp.TransitionTo(5, 6, isLight, toLight, shape);							// trigger transition effects
+		psp.TransitionTo(5, 6, isLight, toLight, shape, toShape);					// trigger transition effects
 		//ParticleStateEvents.toSixth += psp.TransitionToSixth;							// flag transition in delegate
 		psp.currentState = psp.sixthState;											// set to new state
 	}
 
-	public void ToSeventh(bool toLight, int shape)
+	public void ToSeventh(bool toLight, int toShape)
 	{
-		psp.TransitionTo(5, 7, isLight, toLight, shape);							// trigger transition effects
+		psp.TransitionTo(5, 7, isLight, toLight, shape, toShape);					// trigger transition effects
 		//ParticleStateEvents.toSixth += psp.TransitionToSixth;							// flag transition in delegate
 		psp.currentState = psp.seventhState;										// set to new state
 	}
 
-	public void ToEighth(bool toLight, int shape)
+	public void ToEighth(bool toLight, int toShape)
 	{
-		psp.TransitionTo(5, 8, isLight, toLight, shape);							// trigger transition effects
+		psp.TransitionTo(5, 8, isLight, toLight, shape, toShape);					// trigger transition effects
 		//ParticleStateEvents.toSixth += psp.TransitionToSixth;							// flag transition in delegate
 		psp.currentState = psp.eighthState;											// set to new state
 	}
 
-	public void ToNinth(bool toLight, int shape)
+	public void ToNinth(bool toLight, int toShape)
 	{
-		psp.TransitionTo(5, 9, isLight, toLight, shape);							// trigger transition effects
+		psp.TransitionTo(5, 9, isLight, toLight, shape, toShape);					// trigger transition effects
 		//ParticleStateEvents.toSeventh += psp.TransitionToSeventh;						// flag transition in delegate
 		psp.currentState = psp.ninthState;											// set to new state
 	}
