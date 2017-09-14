@@ -32,7 +32,7 @@ public class ZeroParticleState : IParticleState
 			checkEvol = false;															// reset check evol flag
 		}
 
-		if (psp.psp.isInit && !init) {														// if init
+		if (psp.psp.isInit && init) {														// if init
 			Init();                                                         				// call init
 			init = false;																	// reset is init flag
 		}

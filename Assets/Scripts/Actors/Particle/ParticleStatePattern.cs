@@ -181,7 +181,7 @@ public class ParticleStatePattern : MonoBehaviour {
 		}
 		if (setNucleus) {																		// if set nucleus
 			setNucleusTimer += Time.deltaTime;														// start timer
-			if (setNucleusTimer >= 1.5f) {															// if timer is 1.5 sec
+			if (setNucleusTimer >= 1.0f) {															// if timer is 1.0 sec
 				pnm.Nucleus (fromState, toState, fromLight, toLight, fromShape, toShape);				// change nucleus
 				setNucleus = false;																		// reset set nucleus flag
 				setNucleusTimer = 0f;																	// reset set nucleus timer
@@ -314,7 +314,9 @@ public class ParticleStatePattern : MonoBehaviour {
 		}
 
 		// trigger animations
-		SetParts();																	// set player parts
+		pcm.Core (fromState, toState, fromLight, toLight, fromShape, toShape);		// change core
+		setShell = true;															// start set shell timer
+		setNucleus = true;															// start set nucleus timer
 
 		// physics changes
 		if (toState == 0)	{ 														// to zero
@@ -338,26 +340,26 @@ public class ParticleStatePattern : MonoBehaviour {
 		else if (toState == 3) {													// to third
 			rb.mass = 3.0f;																// set mass
 			gameObject.tag = "Third";													// set tag
-			sc[0].radius = 1.02f;														// update collision radius
-			sc[1].radius = 0.97f;														// update collision radius
+			sc[0].radius = 1.06f;														// update collision radius
+			sc[1].radius = 1.04f;														// update collision radius
 		}
 		else if (toState == 4) {													// to fourth
 			rb.mass = 3.5f;																// set mass
 			gameObject.tag = "Fourth";													// set tag
-			sc[0].radius = 1.02f;														// update collision radius
-			sc[1].radius = 0.97f;														// update collision radius
+			sc[0].radius = 1.06f;														// update collision radius
+			sc[1].radius = 1.04f;														// update collision radius
 		}
 		else if (toState == 5) {													// to fifth
 			rb.mass = 4.0f;																// set mass
 			gameObject.tag = "Fifth";													// set tag
-			sc[0].radius = 1.02f;														// update collision radius
-			sc[1].radius = 0.97f;														// update collision radius
+			sc[0].radius = 1.06f;														// update collision radius
+			sc[1].radius = 1.04f;														// update collision radius
 		}
 		else if (toState == 6) {													// to sixth
 			rb.mass = 4.5f;																// set mass
 			gameObject.tag = "Sixth";													// set tag
-			sc[0].radius = 1.02f;														// update collision radius
-			sc[1].radius = 0.97f;														// update collision radius
+			sc[0].radius = 1.06f;														// update collision radius
+			sc[1].radius = 1.04f;														// update collision radius
 		}
 		else if (toState == 7) {													// to seventh
 			rb.mass = 5.5f;																// set mass
@@ -409,6 +411,10 @@ public class ParticleStatePattern : MonoBehaviour {
 		else if (toState == 8) gameObject.tag = "Eighth";							// if eighth, set tag
 		else if (toState == 9) gameObject.tag = "Ninth";							// if ninth, set tag
 
+		isLight = toLight;															// set light flag
+		darkEvolStart = darkEvol;													// store dark evol at start of state
+		lightEvolStart = lightEvol;													// store light evol at start of state
+
 		updateStateIndicator = true;												// update state indicator
 
 	}
@@ -416,9 +422,7 @@ public class ParticleStatePattern : MonoBehaviour {
 	// set particle parts (normal state transitions)
 	private void SetParts()
 	{
-		pcm.Core (fromState, toState, fromLight, toLight, fromShape, toShape);		// change core
-		setShell = true;															// start set shell timer
-		setNucleus = true;															// start set nucleus timer
+		
 	}
 
 }

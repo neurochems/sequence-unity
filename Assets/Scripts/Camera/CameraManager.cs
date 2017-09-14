@@ -15,7 +15,7 @@ public class CameraManager : MonoBehaviour {
 	{
 		// reset scale timer
 		if (resetZoom) resetZoomTimer += Time.deltaTime;												// start timer
-		if (resetZoomTimer >= 2.5f) {																	// when timer >= 2 sec
+		if (resetZoomTimer >= 2.75f) {																	// when timer >= 2 sec
 			Debug.Log ("reset camera zoom");
 			anim.ResetTrigger ("zoomin");																	// reset scale down trigger
 			anim.SetTrigger ("zoomout");																	// set scale up trigger

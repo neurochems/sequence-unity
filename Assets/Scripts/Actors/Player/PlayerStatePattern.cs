@@ -327,8 +327,11 @@ public class PlayerStatePattern : MonoBehaviour {
 		}
 
 		// trigger animations
-		SetParts();																	// set player parts
-		SetZoomCamera();															// check/set camera zoom
+		pcm.Core (fromState, toState, fromLight, toLight, fromShape, toShape);		// change core
+		setShell = true;															// start set shell timer
+		setNucleus = true;															// start set nucleus timer
+
+		if (toState == 0 | (toState % 2 == 1)) SetZoomCamera ();					// if zero or odd state, check/set camera zoom
 
 		// physics / audio / text changes
 		if (toState == 0) { 														// to zero
@@ -355,21 +358,21 @@ public class PlayerStatePattern : MonoBehaviour {
 		}
 		else if (toState == 3) {													// to third
 			rb.mass = 3.0f;																// set mass
-			sc[0].radius = 1.02f;														// update collision radius
-			sc[1].radius = 0.97f;														// update collision radius
+			sc[0].radius = 1.06f;														// update collision radius
+			sc[1].radius = 1.04f;														// update collision radius
 			musicSnapshots[4].TransitionTo(5.0f);										// AUDIO: transition to third state music snapshot	
 		}
 		else if (toState == 4) {													// to fourth
 			rb.mass = 3.5f;																// set mass
-			sc[0].radius = 1.02f;														// update collision radius
-			sc[1].radius = 0.97f;														// update collision radius
+			sc[0].radius = 1.06f;														// update collision radius
+			sc[1].radius = 1.04f;														// update collision radius
 			musicSnapshots[5].TransitionTo(5.0f);										// AUDIO: transition to fourth state music snapshot	
 		}
 		else if (toState == 5) {													// to fifth
 			rb.mass = 4.0f;																// set mass
 			if (toShape == 0) {															// if circle
-				sc[0].radius = 1.02f;														// update collision radius
-				sc[1].radius = 0.97f;														// update collision radius
+				sc[0].radius = 1.06f;														// update collision radius
+				sc[1].radius = 1.04f;														// update collision radius
 			}
 			else if (toShape == 1 || toShape == 2) {									// if triangle or square
 				sc[0].radius = 0.52f;														// update collision radius
@@ -384,8 +387,8 @@ public class PlayerStatePattern : MonoBehaviour {
 		else if (toState == 6) {													// to sixth
 			rb.mass = 4.5f;																// set mass
 			if (toShape == 0) {															// if circle
-				sc[0].radius = 1.02f;														// update collision radius
-				sc[1].radius = 0.97f;														// update collision radius
+				sc[0].radius = 1.06f;														// update collision radius
+				sc[1].radius = 1.04f;														// update collision radius
 			}
 			else if (toShape == 1 || toShape == 2) {									// if triangle or square
 				sc[0].radius = 0.52f;														// update collision radius
@@ -494,14 +497,6 @@ public class PlayerStatePattern : MonoBehaviour {
 			toDarkworld = false;														// reset to dark world trigger
 		}
 
-	}
-
-	// set player parts
-	private void SetParts()
-	{
-		pcm.Core (fromState, toState, fromLight, toLight, fromShape, toShape);		// change circle
-		setShell = true;															// start set shell timer
-		setNucleus = true;															// start set nucleus timer
 	}
 
 }

@@ -47,7 +47,6 @@ public class ParticleShellManager : MonoBehaviour {
 	public void ToOtherWorld (bool lw, int f, int t, bool l, int fs, int ts)
 	{
 		toState = t;																								// set to state
-		toLight = l;																								// set to light
 		if (lw) {																									// if to light world
 			// from changes
 			if (f == 3 || f == 4 || f == 5 || f == 6) 																	// from third/fourth/fifth/sixth
@@ -58,8 +57,10 @@ public class ParticleShellManager : MonoBehaviour {
 				ScaleTo (true, "ninth", "hidden");																			// scale to hidden
 
 			// to changes
+
+			toLight = false;																							// always to black going to light world
 			changeColour = true;																						// start change colour timer
-			if (!l && (t == 3 || t == 4)) resetScale = true;															// start rescale timer
+			if (!l && (t == 3 || t == 4)) resetScale = false;															// start rescale timer
 			else if (t >= 5) resetScale = true;																			// start rescale timer
 		}
 		else if (!lw) {																								// if to dark world
@@ -72,6 +73,7 @@ public class ParticleShellManager : MonoBehaviour {
 				ScaleTo (true, "ninth", "hidden");																			// scale to hidden
 
 			// to changes
+			toLight = true;																							// always to white going to dark world
 			changeColour = true;																						// start change colour timer
 			resetScale = true;																							// start rescale timer
 		}
@@ -195,7 +197,7 @@ public class ParticleShellManager : MonoBehaviour {
 
 
 		// from dark third
-			// to dark
+			// to dark circle
 		if (f == 3 && t == 0 && !fl && !tl) ScaleTo (true, "third", "hidden");													// scale to hidden
 		else if (f == 3 && t == 1 && !fl && !tl) ScaleTo (true, "third", "hidden");												// scale to hidden
 		else if (f == 3 && t == 2 && !fl && !tl) ScaleTo (true, "third", "hidden");												// scale to hidden
@@ -219,7 +221,7 @@ public class ParticleShellManager : MonoBehaviour {
 			ScaleTo (true, "third", "hidden");																					// scale to hidden
 			resetScale = true;																									// set reset scale flag
 		}
-			// to light
+			// to light circle
 		if (f == 3 && t == 0 && !fl && tl) ScaleTo (true, "third", "hidden");													// scale to hidden
 		else if (f == 3 && t == 1 && !fl && tl) ScaleTo (true, "third", "hidden");												// scale to hidden
 		else if (f == 3 && t == 2 && !fl && tl) ScaleTo (true, "third", "hidden");												// scale to hidden
@@ -245,9 +247,13 @@ public class ParticleShellManager : MonoBehaviour {
 			ScaleTo (true, "third", "hidden");																					// scale to hidden
 			resetScale = true;																									// set reset scale flag
 		}
+			// to light triangle
+		if (f == 3 && t == 5 && !fl && tl && ts == 1) ScaleTo (true, "third", "hidden");										// scale to hidden	
+			// to dark square
+		if (f == 3 && t == 5 && !fl && tl && ts == 2) ScaleTo (true, "third", "hidden");										// scale to hidden	
 
 		// from light third
-			// to dark
+			// to dark circle
 		if (f == 3 && t == 3 && fl && !tl) ScaleTo (false, "hidden", "third");													// scale to third
 		else if (f == 3 && t == 4 && fl && !tl) ScaleTo (false, "hidden", "third");												// scale to third
 		else if (f == 3 && t == 5 && fl && !tl) resetScale = true;																// set reset scale flag
@@ -255,13 +261,14 @@ public class ParticleShellManager : MonoBehaviour {
 		else if (f == 3 && t == 7 && fl && !tl) resetScale = true;																// set reset scale flag
 		else if (f == 3 && t == 8 && fl && !tl) resetScale = true;																// set reset scale flag
 		else if (f == 3 && t == 9 && fl && !tl) resetScale = true;																// set reset scale flag
-			// to light
+			// to light circle
 		if (f == 3 && t == 5 && fl && tl) resetScale = true;																	// set reset scale flag
 		else if (f == 3 && t == 6 && fl && tl) resetScale = true;																// set reset scale flag
 		else if (f == 3 && t == 7 && fl && tl) resetScale = true;																// set reset scale flag
 		else if (f == 3 && t == 8 && fl && tl) resetScale = true;																// set reset scale flag
 		else if (f == 3 && t == 9 && fl && tl) resetScale = true;																// set reset scale flag
-
+			// to light triangle/square
+				// no shell change
 
 	///// fourth \\\\\
 
@@ -323,14 +330,24 @@ public class ParticleShellManager : MonoBehaviour {
 		else if (f == 4 && t == 4 && fl && !tl && ts == 0) resetScale = true;													// set reset scale flag
 		else if (f == 4 && t == 5 && fl && !tl && ts == 0) resetScale = true;													// set reset scale flag
 		else if (f == 4 && t == 6 && fl && !tl && ts == 0) resetScale = true;													// set reset scale flag
+		else if (f == 4 && t == 7 && fl && !tl && ts == 0) resetScale = true;													// set reset scale flag
+		else if (f == 4 && t == 8 && fl && !tl && ts == 0) resetScale = true;													// set reset scale flag
+		else if (f == 4 && t == 9 && fl && !tl && ts == 0) resetScale = true;													// set reset scale flag
 			// to light circle
 		if (f == 4 && t == 5 && fl && tl && ts == 0) resetScale = true;															// set reset scale flag
 		else if (f == 4 && t == 6 && fl && tl && ts == 0) resetScale = true;													// set reset scale flag
+		else if (f == 4 && t == 7 && fl && tl && ts == 0) resetScale = true;													// set reset scale flag
+		else if (f == 4 && t == 8 && fl && tl && ts == 0) resetScale = true;													// set reset scale flag
+		else if (f == 4 && t == 9 && fl && tl && ts == 0) resetScale = true;													// set reset scale flag
+			// to light triangle/square
+				// no shell change
 			// to dark triangle
+		// no shell change to sixth
 		//if (f == 4 && t == 7 && fl && !tl && ts == 1) resetScale = true;															// set reset scale flag
 		//else if (f == 4 && t == 8 && fl && !tl && ts == 1) resetScale = true;														// set reset scale flag
 		//else if (f == 4 && t == 9 && fl && !tl && ts == 1) resetScale = true;														// set reset scale flag
 			// to dark square
+		// no shell change to sixth
 		//if (f == 4 && t == 7 && fl && !tl && ts == 2) resetScale = true;															// set reset scale flag
 		//else if (f == 4 && t == 8 && fl && !tl && ts == 2) resetScale = true;														// set reset scale flag
 		//else if (f == 4 && t == 9 && fl && !tl && ts == 2) resetScale = true;														// set reset scale flag

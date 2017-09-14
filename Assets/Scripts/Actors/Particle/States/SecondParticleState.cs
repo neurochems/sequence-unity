@@ -80,7 +80,7 @@ public class SecondParticleState : IParticleState
 				|| other.gameObject.CompareTag ("First")) { 								// collide with first
 				ParticleStatePattern pspOther 
 					= other.gameObject.GetComponent<ParticleStatePattern>();					// ref other ParticleStatePattern
-				if (pspOther.inLightworld == psp.inLightworld) {								// if player and particle in same world
+				if (!pspOther.stunned && pspOther.inLightworld == psp.inLightworld) {				// if player and particle in same world
 					canCollide = false;																// reset has collided trigger
 					psp.sc[0].enabled = false;														// disable trigger collider
 					if (pspOther.evolC == 0f) {														// if other = 0

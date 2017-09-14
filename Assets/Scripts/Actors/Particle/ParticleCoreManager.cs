@@ -6,7 +6,7 @@ public class ParticleCoreManager : MonoBehaviour {
 	private Animator anim;																							// animator on core ref
 	private MeshRenderer rend;																						// mesh renderer (for colour changes)
 	public Mesh sphere, triangle, square;																			// shape meshes
-	//private ParticleStatePattern psp;																				// psp ref
+	private ParticleStatePattern psp;																				// psp ref
 
 	private int toState, fromShape, toShape;																		// to state indicator, from shape/to shape index
 	private bool toLight, colour;																					// to light, colour indicator
@@ -18,13 +18,22 @@ public class ParticleCoreManager : MonoBehaviour {
     void Start () {
 		anim = GetComponent<Animator>();																			// init animator ref
 		rend = GetComponent<MeshRenderer>();																		// init mesh renderer ref
-		//psp = GetComponentInParent<ParticleStatePattern> ();        												// init psp ref
+		psp = GetComponentInParent<ParticleStatePattern> ();        												// init psp ref
 
         //lightShader = Shader.Find("light_nucleus");																// init light nucleus shader
         //darkShader = Shader.Find("dark_nucleus");																	// init dark nucleus shader
     }
 
 	void Update() {
+
+		// !inLightworld WORLD CHANGES \\  	- swapping nuclei colours for particles remaining in dark world, no state changes
+			// to light world
+		/*if (!psp.inLightworld && psp.changeParticles) {																			// if change particles and light world
+			//Debug.Log (psp.gameObject.name + ": change nucleus to opposite world");
+			toState = psp.state;																									// set toState to current state
+			if (psp.isLight) ToOtherWorld (psp.lightworld, toState, toState, true, fromShape, toShape);							// if light: to hidden, change to white
+			else if (!psp.isLight) ToOtherWorld (psp.lightworld, toState, toState, false, fromShape, toShape);						// if dark: to hidden, change to black
+		}*/
 
 		// change colour timer
 		if (changeColour) changeColourTimer += Time.deltaTime;														// start timer
@@ -72,7 +81,6 @@ public class ParticleCoreManager : MonoBehaviour {
 	{
 		toState = t;																								// set to state
 		toShape = ts;																								// set to shape
-		toLight = l;																								// set to light
 
 		if (lw) {																									// if to light world
 			// from changes
@@ -88,9 +96,9 @@ public class ParticleCoreManager : MonoBehaviour {
 			else if ((ts == 2) && (fs != 2)) changeShape = true;													// change to square
 
 			// to changes
+			toLight = false;																						// always to black switching to light world
 			changeColour = true; 																					// start change timer
-			if (!l && (t == 3 || t == 4)) resetScale = false;														// don't trigger rescale timer
-			else resetScale = true;																					// trigger rescale timer
+			if (l && ((t != 3) || (t != 4))) resetScale = true;														// don't trigger rescale timer
 																	
 		}
 
@@ -108,6 +116,7 @@ public class ParticleCoreManager : MonoBehaviour {
 			else if ((ts == 2) && (fs != 2)) changeShape = true;													// change to square
 
 			// to changes
+			toLight = true;																						// always to white switching to dark world
 			changeColour = true; 																					// start change timer
 			if (!l && (t == 3 || t == 4)) resetScale = false;														// don't trigger rescale timer
 			else resetScale = true;																					// trigger rescale timer
@@ -126,8 +135,10 @@ public class ParticleCoreManager : MonoBehaviour {
 
 
 		// to zero (init)
-		if (f == 0 && t == 0 && fl && tl) ScaleTo (false, "hidden", "zero");										// scale to first
-		else if (f == 0 && t == 0 && !fl && !tl) ScaleTo (false, "hidden", "zero");									// scale to first
+		if (f == 0 && t == 0 && !fl && !tl) ScaleTo (false, "hidden", "zero");										// scale to zero
+		else if (f == 0 && t == 0 && !fl && tl) ScaleTo (false, "hidden", "zero");									// scale to zero
+		else if (f == 0 && t == 0 && fl && !tl) ScaleTo (false, "hidden", "zero");									// scale to zero
+		else if (f == 0 && t == 0 && fl && tl) ScaleTo (false, "hidden", "zero");									// scale to zero
 
 		// from dark zero (0.5)
 			// to dark
@@ -272,11 +283,13 @@ public class ParticleCoreManager : MonoBehaviour {
 			// to light triangle
 		if (f == 3 && t == 5 && !fl && tl && ts == 1) {
 			SetShape(1);																							// change to triangle
+			changeColour = true;																					// set change colour flag
 			resetScale = true;																						// set reset scale flag
 		}
 			// to light square
 		if (f == 3 && t == 5 && !fl && tl && ts == 2) {
 			SetShape(2);																							// change to square
+			changeColour = true;																					// set change colour flag
 			resetScale = true;																						// set reset scale flag
 		}
 
@@ -302,13 +315,13 @@ public class ParticleCoreManager : MonoBehaviour {
 		else if (f == 3 && t == 9 && fl && tl && ts == 0) ScaleTo (false, "third", "ninth");							// scale to ninth
 			// to light triangle
 		if (f == 3 && t == 5 && fl && tl && ts == 1) {
-			ScaleTo (false, "third", "ninth");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
 			// to light square
 		if (f == 3 && t == 5 && fl && tl && ts == 2) {
-			ScaleTo (false, "third", "ninth");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
@@ -360,27 +373,27 @@ public class ParticleCoreManager : MonoBehaviour {
 		else if (f == 4 && t == 8 && fl && tl && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
 		else if (f == 4 && t == 9 && fl && tl && ts == 0) ScaleTo (false, "third", "ninth");							// scale to ninth
 			// to light triangle
-		if (f == 4 && t == 5 && fl && !tl && ts == 1) {
+		if (f == 4 && t == 5 && fl && tl && ts == 1) {
 			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
-		else if (f == 4 && t == 6 && fl && !tl && ts == 1) {
+		else if (f == 4 && t == 6 && fl && tl && ts == 1) {
 			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
-		else if (f == 4 && t == 7 && fl && !tl && ts == 1) {
+		else if (f == 4 && t == 7 && fl && tl && ts == 1) {
 			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
-		else if (f == 4 && t == 8 && fl && !tl && ts == 1) {
+		else if (f == 4 && t == 8 && fl && tl && ts == 1) {
 			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
-		else if (f == 4 && t == 9 && fl && !tl && ts == 1) {
+		else if (f == 4 && t == 9 && fl && tl && ts == 1) {
 			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag

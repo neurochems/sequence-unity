@@ -205,7 +205,7 @@ public class ThirdPlayerState : IParticleState
 
 		// fourth
 			// to/in either world
-		if (((evol >= 3f) && (evol > 5f)) || ((evol <= -3f) && (evol > -5f))) {							    // to fourth
+		if (((evol >= 3f) && (evol < 5f)) || ((evol <= -3f) && (evol > -5f))) {							    // to fourth
 			if (deltaDark > deltaLight) ToFourth(false);														// if gain more dark than light = to dark fourth
 			else if (deltaDark <= deltaLight) ToFourth(true);													// if gain more light than dark = to light fourth
 		}

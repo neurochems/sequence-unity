@@ -38,7 +38,8 @@ public class ParticleNucleusManager : MonoBehaviour {
 		if (!psp.inLightworld && psp.changeParticles) {																			// if change particles and light world
 			//Debug.Log (psp.gameObject.name + ": change nucleus to opposite world");
 			toState = psp.state;																									// set toState to current state
-			ToOtherWorld (psp.lightworld, toState, toState, psp.isLight, fromShape, toShape);										// to hidden, change to white
+			if (psp.isLight) ToOtherWorld (psp.lightworld, toState, toState, true, fromShape, toShape);							// if light: to hidden, change to white
+			else if (!psp.isLight) ToOtherWorld (psp.lightworld, toState, toState, false, fromShape, toShape);						// if dark: to hidden, change to black
 		}
 
 
@@ -124,9 +125,9 @@ public class ParticleNucleusManager : MonoBehaviour {
 				ScaleTo (true, "ninth", "hidden");																					// scale to hidden
 
 			// shape changes
-			if ((ts == 0) && (fs != 0)) changeShape = true;															// change to circle
-			else if ((ts == 1) && (fs != 1)) changeShape = true;													// change to triangle
-			else if ((ts == 2) && (fs != 2)) changeShape = true;													// change to square
+			if ((ts == 0) && (fs != 0)) changeShape = true;																		// change to circle
+			else if ((ts == 1) && (fs != 1)) changeShape = true;																// change to triangle
+			else if ((ts == 2) && (fs != 2)) changeShape = true;																// change to square
 
 			// to changes
 			changeColour = true; 																								// start change timer
@@ -2499,6 +2500,10 @@ public class ParticleNucleusManager : MonoBehaviour {
 		// in dark world
 		if (!l && (!psp.inLightworld || !psp.toLightworld)) {
 			if (toState != 0 && (toState % 2 == 0)) rend.material.shader = lightShader;											// if even # state, change to white shader
+			else {																												// else, odd # state
+				anim.SetBool("black", false);																						// reset previously active state
+				anim.SetBool("white", true);																						// set active state
+			}
 		} 
 		else if (l && (!psp.inLightworld || !psp.toLightworld)) {
 			if (toState != 0 && (toState % 2 == 0)) rend.material.shader = darkShader;											// if even # state, change to black shader
@@ -2511,6 +2516,10 @@ public class ParticleNucleusManager : MonoBehaviour {
 		// in light world
 		if (!l && (psp.inLightworld || psp.toLightworld)) {
 			if (toState != 0 && (toState % 2 == 0)) rend.material.shader = darkShader;											// if even # state, change to black shader
+			else {																												// else, odd # state
+				anim.SetBool("white", false);																						// reset previously active state
+				anim.SetBool("black", true);																						// set active state
+			}
 		}
 		else if (l && (psp.inLightworld || psp.toLightworld)) {
 			if (toState != 0 && (toState % 2 == 0)) rend.material.shader = lightShader;											// if even # state, change to white shader

@@ -273,27 +273,27 @@ public class PlayerCoreManager : MonoBehaviour {
 		else if (f == 4 && t == 1 && fl && tl && ts == 0) ScaleTo (true, "third", "first");							// scale to first
 		else if (f == 4 && t == 2 && fl && tl && ts == 0) ScaleTo (true, "third", "first");							// scale to first
 			// to light triangle
-		if (f == 4 && t == 5 && fl && !tl && ts == 1) {
+		if (f == 4 && t == 5 && fl && tl && ts == 1) {
 			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
-		else if (f == 4 && t == 6 && fl && !tl && ts == 1) {
+		else if (f == 4 && t == 6 && fl && tl && ts == 1) {
 			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
-		else if (f == 4 && t == 7 && fl && !tl && ts == 1) {
+		else if (f == 4 && t == 7 && fl && tl && ts == 1) {
 			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
-		else if (f == 4 && t == 8 && fl && !tl && ts == 1) {
+		else if (f == 4 && t == 8 && fl && tl && ts == 1) {
 			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
-		else if (f == 4 && t == 9 && fl && !tl && ts == 1) {
+		else if (f == 4 && t == 9 && fl && tl && ts == 1) {
 			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag

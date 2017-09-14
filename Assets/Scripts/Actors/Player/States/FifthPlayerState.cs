@@ -73,7 +73,7 @@ public class FifthPlayerState : IParticleState
 						if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC);                      // add light of other
 					}
 					else if (pspOther.evolC < 0f) {															// if other < 0
-						Debug.Log ("player fourth + other<0: add evol");
+						Debug.Log ("player fifth + other<0: add evol");
 						if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC * -1);					// add positive dark of other
 						if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC * -1);					// add positive light of other
 					}

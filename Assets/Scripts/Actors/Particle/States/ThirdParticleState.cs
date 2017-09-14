@@ -382,7 +382,7 @@ public class ThirdParticleState : IParticleState
 
 		// fourth
 			// in dark world
-		if ((evol <= -3f && evol > -5f) && !lightworld) {									// to dark world fourth / from dark world
+		if ((evol <= -3f && evol > -5f) && !inLightworld) {									// to dark world fourth / from dark world
 			if (deltaDark > deltaLight) ToFourth(false);										// if gain more dark than light = to dark world dark fourth
 			else if (deltaDark <= deltaLight) ToFourth(true);									// if gain more light than dark = to dark world light fourth
 		}
