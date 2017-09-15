@@ -500,41 +500,41 @@ public class ParticleNucleusManager : MonoBehaviour {
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 2 && t == 2 && fl && !tl) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 2 && t == 3 && fl && !tl) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 2 && t == 4 && fl && !tl) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 2 && t == 5 && fl && !tl) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 2 && t == 6 && fl && !tl) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 2 && t == 7 && fl && !tl) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 2 && t == 8 && fl && !tl) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 2 && t == 9 && fl && !tl) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
@@ -548,20 +548,20 @@ public class ParticleNucleusManager : MonoBehaviour {
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 2 && t == 3 && fl && tl) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 2 && t == 5 && fl && tl) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 2 && t == 7 && fl && tl) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 2 && t == 8 && fl && tl) ScaleTo (false, "zero", "first");												// scale to first
 		else if (f == 2 && t == 9 && fl && tl) {
-			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			ScaleTo (true, "zero", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 		}
 		
@@ -661,15 +661,9 @@ public class ParticleNucleusManager : MonoBehaviour {
 			resetScale = true;																									// set reset scale flag
 		}
 			// to light triangle
-		if (f == 3 && t == 5 && fl && tl && ts == 1) {
-			changeShape = true;																									// set change shape flag
-			resetScale = true;																									// set reset scale flag
-		}
-		// to light square
-		if (f == 3 && t == 5 && fl && tl && ts == 2) {
-			changeShape = true;																									// set change shape flag
-			resetScale = true;																									// set reset scale flag
-		}
+		if (f == 3 && t == 5 && fl && tl && ts == 1) changeShape = true;														// set change shape flag
+			// to light square
+		if (f == 3 && t == 5 && fl && tl && ts == 2) changeShape = true;														// set change shape flag
 
 
 	///// fourth \\\\\

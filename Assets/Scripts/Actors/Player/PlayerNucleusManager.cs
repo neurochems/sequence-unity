@@ -8,7 +8,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 	private MeshRenderer rend;																									// mesh renderer (for colour changes)
 	private PlayerStatePattern psp;																								// psp ref
 
-	private float zeroPos, firstPos, thirdPos, seventhPos, ninthPos;															// y positions
+	//private float zeroPos, firstPos, thirdPos, seventhPos, ninthPos, sixthZ;													// vector positions
 
 	private int toState, fromShape, toShape;																					// to state indicator, from shape/to shape index
 	private bool toLight, colour; 																								// to light indicator, colour indicator
@@ -25,11 +25,14 @@ public class PlayerNucleusManager : MonoBehaviour {
 		lightShader = Shader.Find("Unlit/light_nucleus");																		// init light nucleus shader
 		darkShader = Shader.Find("Unlit/dark_nucleus");																			// init dark nucleus shader
 
-		zeroPos = 0.175f;																										// set zero y position
+		/*zeroPos = 0.175f;																										// set zero y position
 		firstPos = 0.5f;																										// set first/second/fifth/sixth y position
 		thirdPos = 1.0f;																										// set third/fourth y position
 		seventhPos = 1.5f;																										// set seventh/eighth y position
 		ninthPos = 2.0f;																										// set ninth y position
+
+		sixthZ = 0.275f;																										// set sixth triangle z pos
+		*/
 	}
 
 	void Update() {
@@ -77,7 +80,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 		fromShape = fs;																											// set from shape
 		toShape = ts;																											// set to shape
 
-		// ADJUST NUCLEUS HEIGHT FOR VISIBILITY
+		/* ADJUST NUCLEUS HEIGHT FOR VISIBILITY
 		if (toState == 0)	 																									// to zero
 			transform.localPosition = new Vector3 (0f, zeroPos, 0f);																// adjust position
 		else if (toState == 1 || toState == 2)																					// to first/second
@@ -85,17 +88,17 @@ public class PlayerNucleusManager : MonoBehaviour {
 		else if (toState == 3 || toState == 4)																					// to third/fourth
 			transform.localPosition = new Vector3 (0f, thirdPos, 0f);																// adjust position
 		else if (toState == 5 || toState == 6) {																				// to fifth/sixth
-			if (toShape == 1) transform.localPosition = new Vector3 (0f, firstPos, 0.075f);											// adjust position
+			if (toShape == 1) transform.localPosition = new Vector3 (0f, firstPos, sixthZ);											// adjust position
 			else transform.localPosition = new Vector3 (0f, firstPos, 0f);															// adjust position
 		}
 		else if (toState == 7 || toState == 8) {																				// to seventh/eighth
-			if (toShape == 1) transform.localPosition = new Vector3 (0f, seventhPos, 0.075f);										// adjust position
+			if (toShape == 1) transform.localPosition = new Vector3 (0f, seventhPos, sixthZ);										// adjust position
 			else transform.localPosition = new Vector3 (0f, seventhPos, 0f);														// adjust position
 		}
 		else if (toState == 9) {																								// to ninth
-			if (toShape == 1) transform.localPosition = new Vector3 (0f, ninthPos, 0.075f);											// adjust position
+			if (toShape == 1) transform.localPosition = new Vector3 (0f, ninthPos, sixthZ);											// adjust position
 			else transform.localPosition = new Vector3 (0f, ninthPos, 0f);															// adjust position
-		}
+		}*/
 
 
 		///////////////////// EVOLUTIONS \\\\\\\\\\\\\\\\\\\\\\
@@ -2312,8 +2315,13 @@ public class PlayerNucleusManager : MonoBehaviour {
 	///</summary>
 	private void SetShape(int ts)
 	{
+		if (fromShape == 1) anim.SetBool ("triangle", false);																	// reset triangle bool
+
 		if (ts == 0) GetComponent<MeshFilter>().mesh = sphere;																	// change mesh to sphere
-		else if (ts == 1) GetComponent<MeshFilter>().mesh = triangle;															// change mesh to triangle
+		else if (ts == 1) {
+			GetComponent<MeshFilter>().mesh = triangle;																			// change mesh to triangle
+			anim.SetBool ("triangle", true);																					// set triangle bool
+		}
 		else if (ts == 2) GetComponent<MeshFilter>().mesh = square;																// change mesh to square
 	}
 

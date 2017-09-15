@@ -10,8 +10,8 @@ public class ThirdPlayerState : IParticleState
 	public float evol, deltaDark, deltaLight;											// evol tracking refs
 	private bool checkEvol;																// check evol flag
 
-	private bool canCollide = false;													// can collide flag (init false to begin stunned)
-	private float collisionTimer;														// reset collision timer
+	private bool canCollide = false, takeHit = false;									// can collide flag (init false to begin stunned), take hit flag
+	private float collisionTimer, takeHitTimer;											// reset collision timer, take hit timer
 
 	public ThirdPlayerState (PlayerStatePattern playerStatePattern)						// constructor
 	{
@@ -22,8 +22,8 @@ public class ThirdPlayerState : IParticleState
 	{
 		// check evol
 		if (checkEvol) {
-			Evol();																		// check evol logic
 			Debug.Log("player third: check evol");
+			Evol();																		// check evol logic
 			checkEvol = false;															// reset check evol flag
 		}
 
@@ -34,6 +34,13 @@ public class ThirdPlayerState : IParticleState
 			psp.sc[0].enabled = true;														// enable trigger collider
 			psp.stunned = false;															// reset stunned flag
 			collisionTimer = 0f;															// reset collision timer
+		}
+		// take hit flag timer
+		if (!takeHit) takeHitTimer += Time.deltaTime;									// start timer
+		if (takeHitTimer >= 0.2f) {														// if timer is up
+			psp.stunned = true;															// set stunned flag
+			takeHit = false;															// reset take hit trigger
+			takeHitTimer = 0f;															// reset take hit timer
 		}
 	}
 
@@ -46,10 +53,10 @@ public class ThirdPlayerState : IParticleState
 				|| other.gameObject.CompareTag ("Third")) {									// collide with third
 				ParticleStatePattern pspOther 
 					= other.gameObject.GetComponent<ParticleStatePattern>();					// ref other ParticleStatePattern
-				if (psp.lightworld == pspOther.inLightworld) {									// if player and particle in same world
+				if (!pspOther.stunned && psp.lightworld == pspOther.inLightworld) {				// if player and not stunned particle in same world
 					canCollide = false;																// reset has collided trigger
 					psp.sc[0].enabled = false;														// disable trigger collider
-					psp.stunned = true;																// set stunned flag
+					takeHit = true;																	// set stunned flag
 					if (pspOther.evolC == 0f) {														// if other = 0
 						Debug.Log ("player third + other=0: add evol");
 						psp.AddLight (0.5f);															// add 0.5 light
@@ -75,10 +82,10 @@ public class ThirdPlayerState : IParticleState
 			{
 				ParticleStatePattern pspOther 
 					= other.gameObject.GetComponent<ParticleStatePattern>();					// ref other ParticleStatePattern
-				if (psp.lightworld == pspOther.inLightworld) {									// if player and particle in same world
+				if (!pspOther.stunned && psp.lightworld == pspOther.inLightworld) {				// if player and not stunned particle in same world
 					canCollide = false;																// reset has collided trigger
 					psp.sc[0].enabled = false;														// disable trigger collider
-					psp.stunned = true;                                                             // set stunned flag
+					takeHit = true;																	// set stunned flag
 					if (pspOther.evolC > 0f) {														// other > 0
 						if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);					// sub other dark
 						if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);				// sub other light
@@ -212,7 +219,7 @@ public class ThirdPlayerState : IParticleState
        
 		// fifth
 			// to/in either world
-		if (((evol <= -5f) && (evol > -8f)) || ((evol <= -5f) && (evol > -8f))) {				    		// to fifth
+		if (((evol >= 5f) && (evol < 8f)) || ((evol <= -5f) && (evol > -8f))) {				    			// to fifth
 			if (deltaDark > deltaLight) ToFifth(false, 0);														// if lose more light than dark = to dark circle fifth
 			else if (deltaDark <= deltaLight) ToFifth(true, 0);													// if lose more dark than light = to light circle fifth
 		}

@@ -10,7 +10,7 @@ public class ParticleCoreManager : MonoBehaviour {
 
 	private int toState, fromShape, toShape;																		// to state indicator, from shape/to shape index
 	private bool toLight, colour;																					// to light, colour indicator
-	private bool resetScale = false, changeColour = true, changeShape = false;										// timer trigger for changing shape, resetting scale after world switch
+	private bool resetScale = false, changeColour = false, changeShape = false;										// timer trigger for changing shape, resetting scale after world switch
 	private float resetScaleTimer, changeColourTimer, changeShapeTimer;												// change shape timer, reset scale timer
 
     private Shader lightShader, darkShader;         // light/dark shaders
@@ -79,10 +79,11 @@ public class ParticleCoreManager : MonoBehaviour {
     ///</summary>
 	public void ToOtherWorld (bool lw, int f, int t, bool l, int fs, int ts) 
 	{
+		Debug.Log(transform.parent.name + " to other world: " + lw);
+
 		toState = t;																								// set to state
 		toShape = ts;																								// set to shape
 
-		if (lw) {																									// if to light world
 			// from changes
 			if (f == 0) ScaleTo (true, "zero", "hidden");                                                      		// scale from zero
 			else if (f == 1 || f == 2 || f == 5 || f == 6) ScaleTo (true, "first", "hidden");    			    	// scale from first
@@ -96,31 +97,11 @@ public class ParticleCoreManager : MonoBehaviour {
 			else if ((ts == 2) && (fs != 2)) changeShape = true;													// change to square
 
 			// to changes
-			toLight = false;																						// always to black switching to light world
+			
+			if (lw) toLight = false;																				// always to black switching to light world
+			if (!lw) toLight = true;																				// always to white switching to dark world
 			changeColour = true; 																					// start change timer
-			if (l && ((t != 3) || (t != 4))) resetScale = true;														// don't trigger rescale timer
-																	
-		}
-
-		else if (!lw) {																								// if to dark world
-			// from changes
-			if (f == 0) ScaleTo (true, "zero", "hidden");															// scale from zero
-			else if (f == 1 || f == 2 || f == 5 || f == 6) ScaleTo (true, "first", "hidden");        				// scale from first
-			else if (f == 3 || f == 4) ScaleTo (true, "third", "hidden");											// scale from third
-			else if (f == 7 || f == 8) ScaleTo (true, "seventh", "hidden");											// scale from seventh
-			else if (f == 9) ScaleTo (true, "ninth", "hidden");														// scale from ninth
-
-			// shape changes
-			if ((ts == 0) && (fs != 0)) changeShape = true;															// change to circle
-			else if ((ts == 1) && (fs != 1)) changeShape = true;													// change to triangle
-			else if ((ts == 2) && (fs != 2)) changeShape = true;													// change to square
-
-			// to changes
-			toLight = true;																						// always to white switching to dark world
-			changeColour = true; 																					// start change timer
-			if (!l && (t == 3 || t == 4)) resetScale = false;														// don't trigger rescale timer
-			else resetScale = true;																					// trigger rescale timer
-		}
+			if (l && ((t != 3) || (t != 4))) resetScale = true;														// if any but dark third or fourth, trigger rescale timer
 	}
 
 	public void Core (int f, int t, bool fl, bool tl, int fs, int ts) 
@@ -174,7 +155,10 @@ public class ParticleCoreManager : MonoBehaviour {
 		else if (f == 0 && t == 8 && fl && !tl) ScaleTo (false, "zero", "seventh");									// scale to seventh
 		else if (f == 0 && t == 9 && fl && !tl) ScaleTo (false, "zero", "ninth");									// scale to ninth
 			// to light
-		if (f == 0 && t == 1 && fl && tl) ScaleTo (false, "zero", "first");											// scale to first
+		if (f == 0 && t == 1 && fl && tl) {
+			if (psp.psp.isInit) ScaleTo (false, "hidden", "first");													// scale to first
+			else ScaleTo (false, "zero", "first");																	// scale to first
+		}
 		else if (f == 0 && t == 2 && fl && tl) ScaleTo (false, "zero", "first");									// scale to first
 		else if (f == 0 && t == 3 && fl && tl) ScaleTo (false, "zero", "third");									// scale to third
 		else if (f == 0 && t == 4 && fl && tl) ScaleTo (false, "zero", "third");									// scale to third
@@ -283,13 +267,11 @@ public class ParticleCoreManager : MonoBehaviour {
 			// to light triangle
 		if (f == 3 && t == 5 && !fl && tl && ts == 1) {
 			SetShape(1);																							// change to triangle
-			changeColour = true;																					// set change colour flag
 			resetScale = true;																						// set reset scale flag
 		}
 			// to light square
 		if (f == 3 && t == 5 && !fl && tl && ts == 2) {
 			SetShape(2);																							// change to square
-			changeColour = true;																					// set change colour flag
 			resetScale = true;																						// set reset scale flag
 		}
 

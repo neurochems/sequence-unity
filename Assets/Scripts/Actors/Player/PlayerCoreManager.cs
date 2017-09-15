@@ -424,20 +424,20 @@ public class PlayerCoreManager : MonoBehaviour {
 
 		// from light triangle fifth
 			// to dark triangle
-		if (f == 5 && t == 7 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "first", "seventh");							// scale to seventh
-		else if (f == 5 && t == 8 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 5 && t == 9 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "first", "ninth");						// scale to ninth
-			// to dark triangle
-		if (f == 5 && t == 7 && !fl && tl && fs == 1 && ts == 1) ScaleTo (false, "first", "seventh");							// scale to seventh
-		else if (f == 5 && t == 8 && !fl && tl && fs == 1 && ts == 1) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 5 && t == 9 && !fl && tl && fs == 1 && ts == 1) ScaleTo (false, "first", "ninth");						// scale to ninth
+		if (f == 5 && t == 7 && fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "first", "seventh");							// scale to seventh
+		else if (f == 5 && t == 8 && fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "first", "seventh");						// scale to seventh
+		else if (f == 5 && t == 9 && fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "first", "ninth");						// scale to ninth
+			// to light triangle
+		if (f == 5 && t == 7 && fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "first", "seventh");							// scale to seventh
+		else if (f == 5 && t == 8 && fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "first", "seventh");						// scale to seventh
+		else if (f == 5 && t == 9 && fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "first", "ninth");						// scale to ninth
 
 		// from light square fifth
 			// to dark square
 		if (f == 5 && t == 7 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");							// scale to seventh
 		else if (f == 5 && t == 8 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");						// scale to seventh
 		else if (f == 5 && t == 9 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "first", "ninth");						// scale to ninth
-			// to dark square
+			// to light square
 		if (f == 5 && t == 7 && fl && tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");							// scale to seventh
 		else if (f == 5 && t == 8 && fl && tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");						// scale to seventh
 		else if (f == 5 && t == 9 && fl && tl && fs == 2 && ts == 2) ScaleTo (false, "first", "ninth");							// scale to ninth
@@ -549,13 +549,13 @@ public class PlayerCoreManager : MonoBehaviour {
 
 		// from dark square sixth
 			// to dark square
-		if (f == 6 && t == 7 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");							// scale to seventh
-		else if (f == 6 && t == 8 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 6 && t == 9 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "first", "ninth");						// scale to ninth
+		if (f == 6 && t == 7 && !fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");							// scale to seventh
+		else if (f == 6 && t == 8 && !fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");						// scale to seventh
+		else if (f == 6 && t == 9 && !fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "first", "ninth");						// scale to ninth
 			// to light square
-		if (f == 6 && t == 7 && fl && tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");							// scale to seventh
-		else if (f == 6 && t == 8 && fl && tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 6 && t == 9 && fl && tl && fs == 2 && ts == 2) ScaleTo (false, "first", "ninth");							// scale to ninth
+		if (f == 6 && t == 7 && !fl && tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");							// scale to seventh
+		else if (f == 6 && t == 8 && !fl && tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");						// scale to seventh
+		else if (f == 6 && t == 9 && !fl && tl && fs == 2 && ts == 2) ScaleTo (false, "first", "ninth");						// scale to ninth
 
 
 	///// seventh + eighth \\\\\

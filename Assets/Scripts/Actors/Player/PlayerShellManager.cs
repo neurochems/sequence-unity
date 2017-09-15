@@ -432,8 +432,8 @@ public class PlayerShellManager : MonoBehaviour {
 		else if (f == 6 && t == 7 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "seventh");								// scale to seventh
 		else if (f == 6 && t == 8 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "seventh");								// scale to seventh
 			// to dark square
-		if (f == 6 && t == 7 && fl && !tl && ts == 2) resetScale = true;														// set reset scale flag
-		else if (f == 6 && t == 8 && fl && !tl && ts == 2) resetScale = true;													// set reset scale flag
+		if (f == 6 && t == 7 && !fl && !tl && ts == 2) resetScale = true;														// set reset scale flag
+		else if (f == 6 && t == 8 && !fl && !tl && ts == 2) resetScale = true;													// set reset scale flag
 		//else if (f == 6 && t == 9 && fl && !tl && ts == 2) resetScale = true;														// set reset scale flag
 
 

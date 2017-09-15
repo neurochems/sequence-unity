@@ -336,8 +336,8 @@ public class PlayerStatePattern : MonoBehaviour {
 		// physics / audio / text changes
 		if (toState == 0) { 														// to zero
 			rb.mass = 1.0f;																// set mass
-			sc[0].radius = 0.205f;														// update collision radius	
-			sc[1].radius = 0.195f;														// update collision radius
+			sc[0].radius = 0.208f;														// update collision radius	
+			sc[1].radius = 0.205f;														// update collision radius
 			if (!toLightworld) effectsSnapshots[0].TransitionTo(5.0f);					// AUDIO: transition to default/dark world effects snapshot
 			if (toLightworld) effectsSnapshots[5].TransitionTo(5.0f);					// AUDIO: transition to light world effects snapshot
 			if (evol == 0f) musicSnapshots[0].TransitionTo(5.0f);						// AUDIO: transition to zero state music snapshot
@@ -345,38 +345,50 @@ public class PlayerStatePattern : MonoBehaviour {
 		}
 		else if (toState == 1) {													// to first
 			rb.mass = 2.0f;																// set mass
-			sc[0].radius = 0.52f;														// update collision radius
-			sc[1].radius = 0.47f;														// update collision radius
+			sc[0].radius = 0.54f;														// update collision radius
+			sc[1].radius = 0.52f;														// update collision radius
 			//sc[1].center = new Vector3(0f, 0f, 0f);										// level circle collider on world	
 			musicSnapshots[2].TransitionTo(5.0f);										// AUDIO: transition to first state music snapshot
 		}
 		else if (toState == 2) {													// to second
 			rb.mass = 2.5f;																// set mass
-			sc[0].radius = 0.52f;														// update collision radius
-			sc[1].radius = 0.47f;														// update collision radius
+			sc[0].radius = 0.54f;														// update collision radius
+			sc[1].radius = 0.52f;														// update collision radius
 			musicSnapshots[3].TransitionTo(5.0f);										// AUDIO: transition to second state music snapshot
 		}
 		else if (toState == 3) {													// to third
 			rb.mass = 3.0f;																// set mass
-			sc[0].radius = 1.06f;														// update collision radius
-			sc[1].radius = 1.04f;														// update collision radius
+			if (toLight) {
+				sc[0].radius = 1.06f;														// update collision radius
+				sc[1].radius = 1.04f;														// update collision radius
+			}
+			else if (!toLight) {
+				sc[0].radius = 1.54f;														// update collision radius
+				sc[1].radius = 0.52f;														// update collision radius
+			}
 			musicSnapshots[4].TransitionTo(5.0f);										// AUDIO: transition to third state music snapshot	
 		}
 		else if (toState == 4) {													// to fourth
 			rb.mass = 3.5f;																// set mass
-			sc[0].radius = 1.06f;														// update collision radius
-			sc[1].radius = 1.04f;														// update collision radius
+			if (toLight) {
+				sc[0].radius = 1.06f;														// update collision radius
+				sc[1].radius = 1.04f;														// update collision radius
+			}
+			else if (!toLight) {
+				sc[0].radius = 1.54f;														// update collision radius
+				sc[1].radius = 0.52f;														// update collision radius
+			}
 			musicSnapshots[5].TransitionTo(5.0f);										// AUDIO: transition to fourth state music snapshot	
 		}
 		else if (toState == 5) {													// to fifth
 			rb.mass = 4.0f;																// set mass
 			if (toShape == 0) {															// if circle
-				sc[0].radius = 1.06f;														// update collision radius
-				sc[1].radius = 1.04f;														// update collision radius
+				sc[0].radius = 1.54f;														// update collision radius
+				sc[1].radius = 0.52f;														// update collision radius
 			}
 			else if (toShape == 1 || toShape == 2) {									// if triangle or square
-				sc[0].radius = 0.52f;														// update collision radius
-				sc[1].radius = 0.47f;														// update collision radius
+				sc[0].radius = 0.54f;														// update collision radius
+				sc[1].radius = 0.52f;														// update collision radius
 			}
 			musicSnapshots[6].TransitionTo(5.0f);										// AUDIO: transition to fifth state music snapshot
 			if (toShape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);		// AUDIO: transition to dark circle effects snapshot
@@ -387,12 +399,12 @@ public class PlayerStatePattern : MonoBehaviour {
 		else if (toState == 6) {													// to sixth
 			rb.mass = 4.5f;																// set mass
 			if (toShape == 0) {															// if circle
-				sc[0].radius = 1.06f;														// update collision radius
-				sc[1].radius = 1.04f;														// update collision radius
+				sc[0].radius = 1.54f;														// update collision radius
+				sc[1].radius = 0.52f;														// update collision radius
 			}
 			else if (toShape == 1 || toShape == 2) {									// if triangle or square
-				sc[0].radius = 0.52f;														// update collision radius
-				sc[1].radius = 0.47f;														// update collision radius
+				sc[0].radius = 0.54f;														// update collision radius
+				sc[1].radius = 0.52f;														// update collision radius
 			}
 			musicSnapshots[7].TransitionTo(5.0f);										// AUDIO: transition to sixth state music snapshot
 			if (toShape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);		// AUDIO: transition to dark circle effects snapshot
@@ -402,8 +414,18 @@ public class PlayerStatePattern : MonoBehaviour {
 		}
 		else if (toState == 7) {													// to seventh
 			rb.mass = 5.5f;																// set mass
-			sc[0].radius = 1.53f;														// update collision radius
-			sc[1].radius = 1.48f;														// update collision radius
+			if (toShape == 0) {															// if circle
+				sc[0].radius = 4.75f;														// update collision radius
+				sc[1].radius = 1.54f;														// update collision radius
+			} 
+			else if (!toLight && (toShape == 1 || toShape == 2)) {						// if triangle or square
+				sc[0].radius = 4.75f;														// update collision radius
+				sc[1].radius = 2.25f;														// update collision radius
+			}
+			else if (toLight && (toShape == 1 || toShape == 2)) {						// if triangle or square
+				sc[0].radius = 3.25f;														// update collision radius
+				sc[1].radius = 2.25f;														// update collision radius
+			}
 			musicSnapshots[8].TransitionTo(5.0f);										// AUDIO: transition to seventh state music snapshot
 			if (toShape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);		// AUDIO: transition to dark circle effects snapshot
 			if (toShape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);		// AUDIO: transition to light circle effects snapshot
@@ -412,8 +434,18 @@ public class PlayerStatePattern : MonoBehaviour {
 		}
 		else if (toState == 8) {													// to eighth
 			rb.mass = 7.0f;																// set mass
-			sc[0].radius = 1.53f;														// update collision radius
-			sc[1].radius = 1.48f;														// update collision radius
+			if (toShape == 0) {															// if circle
+				sc[0].radius = 4.75f;														// update collision radius
+				sc[1].radius = 1.54f;														// update collision radius
+			} 
+			else if (!toLight && (toShape == 1 || toShape == 2)) {						// if triangle or square
+				sc[0].radius = 4.75f;														// update collision radius
+				sc[1].radius = 2.25f;														// update collision radius
+			}
+			else if (toLight && (toShape == 1 || toShape == 2)) {						// if triangle or square
+				sc[0].radius = 3.25f;														// update collision radius
+				sc[1].radius = 2.25f;														// update collision radius
+			}
 			musicSnapshots[9].TransitionTo(5.0f);										// AUDIO: transition to seventh state music snapshot
 			if (toShape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);		// AUDIO: transition to dark circle effects snapshot
 			if (toShape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);		// AUDIO: transition to light circle effects snapshot
@@ -422,8 +454,20 @@ public class PlayerStatePattern : MonoBehaviour {
 		}
 		else if (toState == 9) {													// to ninth
 			rb.mass = 8.5f;																// set mass
-			sc[0].radius = 2.04f;														// update collision radius
-			sc[1].radius = 1.99f;														// update collision radius
+			if (toShape == 0) {															// if circle
+				sc[0].radius = 4.75f;														// update collision radius
+				sc[1].radius = 1.54f;														// update collision radius
+			} 
+			else if (!toLight && (toShape == 1 || toShape == 2)) {						// if triangle or square
+				sc[0].radius = 4.75f;														// update collision radius
+				sc[1].radius = 2.25f;														// update collision radius
+			}
+			else if (toLight && (toShape == 1 || toShape == 2)) {						// if triangle or square
+				sc[0].radius = 3.25f;														// update collision radius
+				sc[1].radius = 2.25f;														// update collision radius
+			}
+			sc[0].radius = 2.06f;														// update collision radius
+			sc[1].radius = 1.04f;														// update collision radius
 			musicSnapshots[10].TransitionTo(5.0f);										// AUDIO: transition to seventh state music snapshot
 			if (toShape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);		// AUDIO: transition to dark circle effects snapshot
 			if (toShape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);		// AUDIO: transition to light circle effects snapshot
@@ -433,8 +477,8 @@ public class PlayerStatePattern : MonoBehaviour {
 		else if (toState == 10) {													// to tenth
 			camOrbit = true;															// CAMERA: start orbit
 			rb.mass = 10.0f;															// set mass
-			sc[0].radius = 2.04f;														// update collision radius
-			sc[1].radius = 1.99f;														// update collision radius
+			sc[0].radius = 2.06f;														// update collision radius
+			sc[1].radius = 1.04f;														// update collision radius
 			musicSnapshots[11].TransitionTo(5.0f);										// AUDIO: transition to seventh state music snapshot
 			if (toShape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);		// AUDIO: transition to dark circle effects snapshot
 			if (toShape == 0 && isLight) effectsSnapshots[2].TransitionTo(5.0f);		// AUDIO: transition to light circle effects snapshot

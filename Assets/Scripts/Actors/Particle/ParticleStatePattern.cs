@@ -198,9 +198,9 @@ public class ParticleStatePattern : MonoBehaviour {
 			}
 		}
 
-		// roll die
+		// roll a d20
 		if (roll) {
-			die = Random.Range(1,6);														// roll die
+			die = Random.Range(1,20);														// roll die
 			roll = false;																	// reset flag
 		}
 
@@ -322,62 +322,116 @@ public class ParticleStatePattern : MonoBehaviour {
 		if (toState == 0)	{ 														// to zero
 			rb.mass = 1.0f;																// set mass
 			gameObject.tag = "Zero";													// set tag
-			sc[0].radius = 0.205f;														// update collision radius
-			sc[1].radius = 0.195f;														// update collision radius
+			sc[0].radius = 0.208f;														// update collision radius
+			sc[1].radius = 0.205f;														// update collision radius
 		}
 		else if (toState == 1) {													// to first
 			rb.mass = 2.0f;																// set mass
 			gameObject.tag = "First";													// set tag
-			sc[0].radius = 0.52f;														// update collision radius
-			sc[1].radius = 0.48f;														// update collision radius
+			sc[0].radius = 0.54f;														// update collision radius
+			sc[1].radius = 0.52f;														// update collision radius
 		}
 		else if (toState == 2) {													// to second
 			rb.mass = 2.5f;																// set mass
 			gameObject.tag = "Second";													// set tag
-			sc[0].radius = 0.52f;														// update collision radius
-			sc[1].radius = 0.48f;														// update collision radius
+			sc[0].radius = 0.54f;														// update collision radius
+			sc[1].radius = 0.52f;														// update collision radius
 		}
 		else if (toState == 3) {													// to third
 			rb.mass = 3.0f;																// set mass
 			gameObject.tag = "Third";													// set tag
-			sc[0].radius = 1.06f;														// update collision radius
-			sc[1].radius = 1.04f;														// update collision radius
+			if (toLight) {
+				sc[0].radius = 1.06f;														// update collision radius
+				sc[1].radius = 1.04f;														// update collision radius
+			}
+			else if (!toLight) {
+				sc[0].radius = 1.54f;														// update collision radius
+				sc[1].radius = 0.52f;														// update collision radius
+			}
 		}
 		else if (toState == 4) {													// to fourth
 			rb.mass = 3.5f;																// set mass
 			gameObject.tag = "Fourth";													// set tag
-			sc[0].radius = 1.06f;														// update collision radius
-			sc[1].radius = 1.04f;														// update collision radius
+			if (toLight) {
+				sc[0].radius = 1.06f;														// update collision radius
+				sc[1].radius = 1.04f;														// update collision radius
+			}
+			else if (!toLight) {
+				sc[0].radius = 1.54f;														// update collision radius
+				sc[1].radius = 0.52f;														// update collision radius
+			}
 		}
 		else if (toState == 5) {													// to fifth
 			rb.mass = 4.0f;																// set mass
 			gameObject.tag = "Fifth";													// set tag
-			sc[0].radius = 1.06f;														// update collision radius
-			sc[1].radius = 1.04f;														// update collision radius
+			if (toShape == 0) {															// if circle
+				sc[0].radius = 1.54f;														// update collision radius
+				sc[1].radius = 0.52f;														// update collision radius
+			}
+			else if (toShape == 1 || toShape == 2) {									// if triangle or square
+				sc[0].radius = 0.54f;														// update collision radius
+				sc[1].radius = 0.52f;														// update collision radius
+			}
 		}
 		else if (toState == 6) {													// to sixth
 			rb.mass = 4.5f;																// set mass
 			gameObject.tag = "Sixth";													// set tag
-			sc[0].radius = 1.06f;														// update collision radius
-			sc[1].radius = 1.04f;														// update collision radius
+			if (toShape == 0) {															// if circle
+				sc[0].radius = 1.54f;														// update collision radius
+				sc[1].radius = 0.52f;														// update collision radius
+			}
+			else if (toShape == 1 || toShape == 2) {									// if triangle or square
+				sc[0].radius = 0.54f;														// update collision radius
+				sc[1].radius = 0.52f;														// update collision radius
+			}
 		}
 		else if (toState == 7) {													// to seventh
 			rb.mass = 5.5f;																// set mass
 			gameObject.tag = "Seventh";													// set tag
-			sc[0].radius = 1.53f;														// update collision radius
-			sc[1].radius = 1.47f;														// update collision radius
+			if (toShape == 0) {															// if circle
+				sc[0].radius = 5.2f;														// update collision radius
+				sc[1].radius = 1.54f;														// update collision radius
+			} 
+			else if (!toLight && (toShape == 1 || toShape == 2)) {						// if triangle or square
+				sc[0].radius = 5.2f;														// update collision radius
+				sc[1].radius = 1.54f;														// update collision radius
+			}
+			else if (toLight && (toShape == 1 || toShape == 2)) {						// if triangle or square
+				sc[0].radius = 3.25f;														// update collision radius
+				sc[1].radius = 2.25f;														// update collision radius
+			}
 		}
 		else if (toState == 8) {													// to eighth
 			rb.mass = 7.0f;																// set mass
 			gameObject.tag = "Eighth";													// set tag
-			sc[0].radius = 1.53f;														// update collision radius
-			sc[1].radius = 1.47f;														// update collision radius
+			if (toShape == 0) {															// if circle
+				sc[0].radius = 5.2f;														// update collision radius
+				sc[1].radius = 1.54f;														// update collision radius
+			} 
+			else if (!toLight && (toShape == 1 || toShape == 2)) {						// if triangle or square
+				sc[0].radius = 5.2f;														// update collision radius
+				sc[1].radius = 1.54f;														// update collision radius
+			}
+			else if (toLight && (toShape == 1 || toShape == 2)) {						// if triangle or square
+				sc[0].radius = 3.25f;														// update collision radius
+				sc[1].radius = 2.25f;														// update collision radius
+			}
 		}
 		else if (toState == 9) {													// to ninth
 			rb.mass = 8.5f;																// set mass
 			gameObject.tag = "Ninth";													// set tag
-			sc[0].radius = 2.03f;														// update collision radius
-			sc[1].radius = 1.98f;														// update collision radius
+			if (toShape == 0) {															// if circle
+				sc[0].radius = 5.2f;														// update collision radius
+				sc[1].radius = 1.54f;														// update collision radius
+			} 
+			else if (!toLight && (toShape == 1 || toShape == 2)) {						// if triangle or square
+				sc[0].radius = 2.06f;														// update collision radius
+				sc[1].radius = 1.04f;														// update collision radius
+			}
+			else if (toLight && (toShape == 1 || toShape == 2)) {						// if triangle or square
+				sc[0].radius = 1.06f;														// update collision radius
+				sc[1].radius = 1.04f;														// update collision radius
+			}
 		}
 
 		// late updates
@@ -417,12 +471,6 @@ public class ParticleStatePattern : MonoBehaviour {
 
 		updateStateIndicator = true;												// update state indicator
 
-	}
-
-	// set particle parts (normal state transitions)
-	private void SetParts()
-	{
-		
 	}
 
 }

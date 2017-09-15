@@ -198,52 +198,52 @@ public class ParticleShellManager : MonoBehaviour {
 
 		// from dark third
 			// to dark circle
-		if (f == 3 && t == 0 && !fl && !tl) ScaleTo (true, "third", "hidden");													// scale to hidden
-		else if (f == 3 && t == 1 && !fl && !tl) ScaleTo (true, "third", "hidden");												// scale to hidden
-		else if (f == 3 && t == 2 && !fl && !tl) ScaleTo (true, "third", "hidden");												// scale to hidden
-		else if (f == 3 && t == 5 && !fl && !tl) {
+		if (f == 3 && t == 0 && !fl && !tl && ts == 0) ScaleTo (true, "third", "hidden");										// scale to hidden
+		else if (f == 3 && t == 1 && !fl && !tl && ts == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 3 && t == 2 && !fl && !tl && ts == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 3 && t == 5 && !fl && !tl && ts == 0) {
 			ScaleTo (true, "third", "hidden");																					// scale to hidden
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 3 && t == 6 && !fl && !tl) {
+		else if (f == 3 && t == 6 && !fl && !tl && ts == 0) {
 			ScaleTo (true, "third", "hidden");																					// scale to hidden
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 3 && t == 7 && !fl && !tl) {
+		else if (f == 3 && t == 7 && !fl && !tl && ts == 0) {
 			ScaleTo (true, "third", "hidden");																					// scale to hidden
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 3 && t == 8 && !fl && !tl) {
+		else if (f == 3 && t == 8 && !fl && !tl && ts == 0) {
 			ScaleTo (true, "third", "hidden");																					// scale to hidden
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 3 && t == 9 && !fl && !tl) {
+		else if (f == 3 && t == 9 && !fl && !tl && ts == 0) {
 			ScaleTo (true, "third", "hidden");																					// scale to hidden
 			resetScale = true;																									// set reset scale flag
 		}
 			// to light circle
-		if (f == 3 && t == 0 && !fl && tl) ScaleTo (true, "third", "hidden");													// scale to hidden
-		else if (f == 3 && t == 1 && !fl && tl) ScaleTo (true, "third", "hidden");												// scale to hidden
-		else if (f == 3 && t == 2 && !fl && tl) ScaleTo (true, "third", "hidden");												// scale to hidden
-		else if (f == 3 && t == 3 && !fl && tl) ScaleTo (true, "third", "hidden");												// scale to hidden
-		else if (f == 3 && t == 4 && !fl && tl) ScaleTo (true, "third", "hidden");												// scale to hidden
-		else if (f == 3 && t == 5 && !fl && tl) {
+		if (f == 3 && t == 0 && !fl && tl && ts == 0) ScaleTo (true, "third", "hidden");										// scale to hidden
+		else if (f == 3 && t == 1 && !fl && tl && ts == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 3 && t == 2 && !fl && tl && ts == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 3 && t == 3 && !fl && tl && ts == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 3 && t == 4 && !fl && tl && ts == 0) ScaleTo (true, "third", "hidden");									// scale to hidden
+		else if (f == 3 && t == 5 && !fl && tl && ts == 0) {
 			ScaleTo (true, "third", "hidden");																					// scale to hidden
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 3 && t == 6 && !fl && tl) {
+		else if (f == 3 && t == 6 && !fl && tl && ts == 0) {
 			ScaleTo (true, "third", "hidden");																					// scale to hidden
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 3 && t == 7 && !fl && tl) {
+		else if (f == 3 && t == 7 && !fl && tl && ts == 0) {
 			ScaleTo (true, "third", "hidden");																					// scale to hidden
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 3 && t == 8 && !fl && tl) {
+		else if (f == 3 && t == 8 && !fl && tl && ts == 0) {
 			ScaleTo (true, "third", "hidden");																					// scale to hidden
 			resetScale = true;																									// set reset scale flag
 		}
-		else if (f == 3 && t == 9 && !fl && tl) {
+		else if (f == 3 && t == 9 && !fl && tl && ts == 0) {
 			ScaleTo (true, "third", "hidden");																					// scale to hidden
 			resetScale = true;																									// set reset scale flag
 		}
@@ -254,19 +254,19 @@ public class ParticleShellManager : MonoBehaviour {
 
 		// from light third
 			// to dark circle
-		if (f == 3 && t == 3 && fl && !tl) ScaleTo (false, "hidden", "third");													// scale to third
-		else if (f == 3 && t == 4 && fl && !tl) ScaleTo (false, "hidden", "third");												// scale to third
-		else if (f == 3 && t == 5 && fl && !tl) resetScale = true;																// set reset scale flag
-		else if (f == 3 && t == 6 && fl && !tl) resetScale = true;																// set reset scale flag
-		else if (f == 3 && t == 7 && fl && !tl) resetScale = true;																// set reset scale flag
-		else if (f == 3 && t == 8 && fl && !tl) resetScale = true;																// set reset scale flag
-		else if (f == 3 && t == 9 && fl && !tl) resetScale = true;																// set reset scale flag
+		if (f == 3 && t == 3 && fl && !tl && ts == 0) ScaleTo (false, "hidden", "third");										// scale to third
+		else if (f == 3 && t == 4 && fl && !tl && ts == 0) ScaleTo (false, "hidden", "third");									// scale to third
+		else if (f == 3 && t == 5 && fl && !tl && ts == 0) resetScale = true;													// set reset scale flag
+		else if (f == 3 && t == 6 && fl && !tl && ts == 0) resetScale = true;													// set reset scale flag
+		else if (f == 3 && t == 7 && fl && !tl && ts == 0) resetScale = true;													// set reset scale flag
+		else if (f == 3 && t == 8 && fl && !tl && ts == 0) resetScale = true;													// set reset scale flag
+		else if (f == 3 && t == 9 && fl && !tl && ts == 0) resetScale = true;													// set reset scale flag
 			// to light circle
-		if (f == 3 && t == 5 && fl && tl) resetScale = true;																	// set reset scale flag
-		else if (f == 3 && t == 6 && fl && tl) resetScale = true;																// set reset scale flag
-		else if (f == 3 && t == 7 && fl && tl) resetScale = true;																// set reset scale flag
-		else if (f == 3 && t == 8 && fl && tl) resetScale = true;																// set reset scale flag
-		else if (f == 3 && t == 9 && fl && tl) resetScale = true;																// set reset scale flag
+		if (f == 3 && t == 5 && fl && tl && ts == 0) resetScale = true;															// set reset scale flag
+		else if (f == 3 && t == 6 && fl && tl && ts == 0) resetScale = true;													// set reset scale flag
+		else if (f == 3 && t == 7 && fl && tl && ts == 0) resetScale = true;													// set reset scale flag
+		else if (f == 3 && t == 8 && fl && tl && ts == 0) resetScale = true;													// set reset scale flag
+		else if (f == 3 && t == 9 && fl && tl && ts == 0) resetScale = true;													// set reset scale flag
 			// to light triangle/square
 				// no shell change
 
@@ -420,7 +420,7 @@ public class ParticleShellManager : MonoBehaviour {
 		else if (f == 5 && t == 6 && fl && tl && ts == 0) ScaleTo (false, "hidden", "third");									// scale to third
 		else if (f == 5 && t == 7 && fl && tl && ts == 0) ScaleTo (false, "hidden", "seventh");									// scale to seventh
 			// to dark square
-		if (f == 5 && t == 7 && fl && !tl && ts == 2) resetScale = true;															// set reset scale flag
+		if (f == 5 && t == 7 && fl && !tl && ts == 2) resetScale = true;														// set reset scale flag
 		//else if (f == 5 && t == 8 && fl && !tl && ts == 2) resetScale = true;														// set reset scale flag
 		//else if (f == 5 && t == 9 && fl && !tl && ts == 2) resetScale = true;														// set reset scale flag
 
