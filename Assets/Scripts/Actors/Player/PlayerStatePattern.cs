@@ -331,7 +331,15 @@ public class PlayerStatePattern : MonoBehaviour {
 		setShell = true;															// start set shell timer
 		setNucleus = true;															// start set nucleus timer
 
-		if (toState == 0 | (toState % 2 == 1)) SetZoomCamera ();					// if zero or odd state, check/set camera zoom
+		// trigger world change
+		if (toLightworld || toDarkworld) {											// if changing worlds
+			changeWorld = true;															// switch properties
+			resetScale = true;															// zoom camera out to appropriate state
+		} 
+
+		// trigger camera change
+		if (toState == 0 || (toState % 2 == 1) || toState == 10)
+			cam.ZoomCamera (fromState, toState);										// else within a world, zoom between states
 
 		// physics / audio / text changes
 		if (toState == 0) { 														// to zero
@@ -387,8 +395,8 @@ public class PlayerStatePattern : MonoBehaviour {
 				sc[1].radius = 0.52f;														// update collision radius
 			}
 			else if (toShape == 1 || toShape == 2) {									// if triangle or square
-				sc[0].radius = 0.54f;														// update collision radius
-				sc[1].radius = 0.52f;														// update collision radius
+				sc[0].radius = 1.05f;														// update collision radius
+				sc[1].radius = 1.0f;														// update collision radius
 			}
 			musicSnapshots[6].TransitionTo(5.0f);										// AUDIO: transition to fifth state music snapshot
 			if (toShape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);		// AUDIO: transition to dark circle effects snapshot
@@ -403,8 +411,8 @@ public class PlayerStatePattern : MonoBehaviour {
 				sc[1].radius = 0.52f;														// update collision radius
 			}
 			else if (toShape == 1 || toShape == 2) {									// if triangle or square
-				sc[0].radius = 0.54f;														// update collision radius
-				sc[1].radius = 0.52f;														// update collision radius
+				sc[0].radius = 1.05f;														// update collision radius
+				sc[1].radius = 1.0f;														// update collision radius
 			}
 			musicSnapshots[7].TransitionTo(5.0f);										// AUDIO: transition to sixth state music snapshot
 			if (toShape == 0 && !isLight) effectsSnapshots[1].TransitionTo(5.0f);		// AUDIO: transition to dark circle effects snapshot
@@ -495,26 +503,11 @@ public class PlayerStatePattern : MonoBehaviour {
 		lightEvolStart = lightEvol;													// store light evol at start of state 
 	}
 
-	// camera - PUT IN SEPARATE SCRIPT
-	private void SetZoomCamera () 
-	{
-		if (toLightworld || toDarkworld) {											// if changing worlds
-			cam.ToOtherWorld(fromState, toState);										// zoom sequence to other world
-			changeWorld = true;															// switch properties
-			resetScale = true;															// zoom camera out to appropriate state
-		} 
-		else {
-			cam.ZoomCamera (fromState, toState);									// else within a world, zoom between states
-		}
-	}
-
 	private void ChangeWorld () 
 	{
 		if (toLightworld) {															// if switching to light world from dark world
 			lightworld = true;
 			changeParticles = true;														// set change particle property trigger
-
-			//osf.enabled = false;														// disable orthosmoothfollow
 
 			rendWorld.material.SetColor("_Color", Color.white);							// change world to white
 			rendCore.material.SetColor("_Color", Color.black);							// change core to black
@@ -523,21 +516,19 @@ public class PlayerStatePattern : MonoBehaviour {
 
 			effectsSnapshots[5].TransitionTo(5.0f);										// AUDIO: transition to light world effects snapshot
 
-			//changeParticles = false;													// reset change particle property trigger
 			toLightworld = false;														// reset to light world trigger
 		}
 		else if (toDarkworld) {														// if switching to dark world from light world
 			lightworld = false;
 			changeParticles = true;
 
-			//osf.enabled = true;														// enable orthosmoothfollow
-
 			rendWorld.material.SetColor("_Color", Color.black);							// change world to white
-			//pcm.SetLight (true);														// set core to white
 			rendCore.material.SetColor("_Color", Color.white);							// change core to white
 			rendShell.material.SetColor("_Color", Color.white);							// change shell to black
 			rendNucleus.material.SetColor("_Color", Color.black);						// change nucleus to black
-			
+
+			// audio change here
+
 			toDarkworld = false;														// reset to dark world trigger
 		}
 

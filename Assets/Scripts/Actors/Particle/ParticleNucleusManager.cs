@@ -10,7 +10,7 @@ public class ParticleNucleusManager : MonoBehaviour {
 
 	private float zeroPos, firstPos, thirdPos, seventhPos, ninthPos;															// y positions
 
-	private int toState, fromShape, toShape;																					// to state, from shape, to shape indicator
+	private int fromState, toState, fromShape, toShape;																					// to state, from shape, to shape indicator
 	private bool toLight, colour, shader; 																						// to light, colour + shader indicator
 	private bool changeColour = false, changeShape = false, resetScale = false;													// timer trigger for resetting scale after world switch
 	private float changeColourTimer, changeShapeTimer, resetScaleTimer;															// reset scale timer
@@ -24,11 +24,11 @@ public class ParticleNucleusManager : MonoBehaviour {
 		lightShader = Shader.Find("Unlit/light_nucleus");																		// init light nucleus shader
 		darkShader = Shader.Find("Unlit/dark_nucleus");																			// init dark nucleus shader
 
-		zeroPos =  0.175f;																										// set zero y position
-		firstPos =  0.5f;																										// set first/second/fifth/sixth y position
-		thirdPos =  1.0f;																										// set third/fourth y position
-		seventhPos =  1.5f;																										// set seventh/eighth y position
-		ninthPos =  2.0f;																										// set ninth y position
+		zeroPos = 0.15f;																										// set zero y position
+		firstPos = 0.50f;																										// set first/second/fifth/sixth y position
+		thirdPos = 1.0f;																										// set third/fourth y position
+		seventhPos = 1.5f;																										// set seventh/eighth y position
+		ninthPos = 2.0f;																										// set ninth y position
 	}
 
 	void Update() {
@@ -61,7 +61,24 @@ public class ParticleNucleusManager : MonoBehaviour {
 		// reset scale timer
 		if (resetScale) resetScaleTimer += Time.deltaTime;																		// start timer
 		if (resetScaleTimer >= 2.75f) {																							// when timer >= 2.75 sec
-			//anim.ResetTrigger("colour");	
+
+			// ADJUST NUCLEUS HEIGHT FOR VISIBILITY for devolutions
+			if (toState < fromState) {
+				if (toState == 0)	 																									// to zero
+					transform.localPosition = new Vector3 (0f, zeroPos, 0f);																// adjust position
+				else if (toState == 1 || toState == 2)																					// to first/second
+					transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
+				else if (toState == 3 || toState == 4)																					// to third/fourth
+					transform.localPosition = new Vector3 (0f, thirdPos, 0f);																// adjust position
+				else if (toState == 5 || toState == 6)																					// to fifth/sixth
+					transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
+				else if (toState == 7 || toState == 8)																					// to seventh/eighth
+					transform.localPosition = new Vector3 (0f, seventhPos, 0f);																// adjust position
+				else if (toState == 9)																									// to ninth
+					transform.localPosition = new Vector3 (0f, ninthPos, 0f);																// adjust position
+			}
+
+			// reset scale
 			if (toState == 0) 																										// if to zero
 				ScaleTo (false, "hidden", "zero");																					// grow to zero
 			if (!toLight && (toState == 1 || toState == 2 || toState == 5 || toState == 6)) 										// if to dark first/fourth/fifth/sixth
@@ -81,30 +98,36 @@ public class ParticleNucleusManager : MonoBehaviour {
 		}
 	}
 
+	///<summary>
+	///<para>set nucleus world</para>
+	///<para>lw = to light world = T, to dark world = F</para>
+	///<para>f = from state</para>
+	///<para>t = to state</para>
+	///<para>tl = to light</para>
+	///<para>fs = from shape</para>
+	///<para>ts = to shape</para>
+	///</summary>
 	public void ToOtherWorld (bool lw, int f, int t, bool tl, int fs, int ts) 
 	{
+		fromState = f;																											// set to state
 		toState = t;																											// set to state
 		toLight = tl;																											// set to light
 		toShape = ts;																											// set to light
 
-		// ADJUST NUCLEUS HEIGHT FOR VISIBILITY
-		if (toState == 0)	 																									// to zero
-			transform.localPosition = new Vector3 (0f, zeroPos, 0f);																// adjust position
-		else if (toState == 1 || toState == 2)																					// to first/second
-			transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
-		else if (toState == 3 || toState == 4)																					// to third/fourth
-			transform.localPosition = new Vector3 (0f, thirdPos, 0f);																// adjust position
-		else if (toState == 5 || toState == 6) {																				// to fifth/sixth
-			if (toShape == 1) transform.localPosition = new Vector3 (0f, firstPos, 0.075f);											// adjust position
-			else transform.localPosition = new Vector3 (0f, firstPos, 0f);															// adjust position
-		}
-		else if (toState == 7 || toState == 8) {																				// to seventh/eighth
-			if (toShape == 1) transform.localPosition = new Vector3 (0f, seventhPos, 0.075f);											// adjust position
-			else transform.localPosition = new Vector3 (0f, seventhPos, 0f);														// adjust position
-		}
-		else if (toState == 9) {																								// to ninth
-			if (toShape == 1) transform.localPosition = new Vector3 (0f, ninthPos, 0.075f);											// adjust position
-			else transform.localPosition = new Vector3 (0f, ninthPos, 0f);															// adjust position
+		// ADJUST NUCLEUS HEIGHT FOR VISIBILITY on evolutions
+		if (t > f) {
+			if (toState == 0)	 																									// to zero
+				transform.localPosition = new Vector3 (0f, zeroPos, 0f);																// adjust position
+			else if (toState == 1 || toState == 2)																					// to first/second
+				transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
+			else if (toState == 3 || toState == 4)																					// to third/fourth
+				transform.localPosition = new Vector3 (0f, thirdPos, 0f);																// adjust position
+			else if (toState == 5 || toState == 6)																					// to fifth/sixth
+				transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
+			else if (toState == 7 || toState == 8)																					// to seventh/eighth
+				transform.localPosition = new Vector3 (0f, seventhPos, 0f);																// adjust position
+			else if (toState == 9)																									// to ninth
+				transform.localPosition = new Vector3 (0f, ninthPos, 0f);																// adjust position
 		}
 
 		if (lw) {																												// to light world
@@ -182,24 +205,20 @@ public class ParticleNucleusManager : MonoBehaviour {
 		fromShape = fs;																											// set from shape
 		toShape = ts;																											// set to shape
 
-		// ADJUST NUCLEUS HEIGHT FOR VISIBILITY
-		if (toState == 0)	 																									// to zero
-			transform.localPosition = new Vector3 (0f, zeroPos, 0f);																// adjust position
-		else if (toState == 1 || toState == 2)																					// to first/second
-			transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
-		else if (toState == 3 || toState == 4)																					// to third/fourth
-			transform.localPosition = new Vector3 (0f, thirdPos, 0f);																// adjust position
-		else if (toState == 5 || toState == 6) {																				// to fifth/sixth
-			if (toShape == 1) transform.localPosition = new Vector3 (0f, firstPos, 0.075f);											// adjust position
-			else transform.localPosition = new Vector3 (0f, firstPos, 0f);															// adjust position
-		}
-		else if (toState == 7 || toState == 8) {																				// to seventh/eighth
-			if (toShape == 1) transform.localPosition = new Vector3 (0f, seventhPos, 0.075f);										// adjust position
-			else transform.localPosition = new Vector3 (0f, seventhPos, 0f);														// adjust position
-		}
-		else if (toState == 9) {																								// to ninth
-			if (toShape == 1) transform.localPosition = new Vector3 (0f, ninthPos, 0.075f);											// adjust position
-			else transform.localPosition = new Vector3 (0f, ninthPos, 0f);															// adjust position
+		// ADJUST NUCLEUS HEIGHT FOR VISIBILITY on evolutions
+		if (t > f) {
+			if (toState == 0)	 																									// to zero
+				transform.localPosition = new Vector3 (0f, zeroPos, 0f);																// adjust position
+			else if (toState == 1 || toState == 2)																					// to first/second
+				transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
+			else if (toState == 3 || toState == 4)																					// to third/fourth
+				transform.localPosition = new Vector3 (0f, thirdPos, 0f);																// adjust position
+			else if (toState == 5 || toState == 6)																					// to fifth/sixth
+				transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
+			else if (toState == 7 || toState == 8)																					// to seventh/eighth
+				transform.localPosition = new Vector3 (0f, seventhPos, 0f);																// adjust position
+			else if (toState == 9)																									// to ninth
+				transform.localPosition = new Vector3 (0f, ninthPos, 0f);																// adjust position
 		}
 
 
@@ -2457,32 +2476,6 @@ public class ParticleNucleusManager : MonoBehaviour {
 	}
 
 	///<summary>
-	///<para>set nucleus light/colour for world switches</para>
-	///<para>white = dark, black = light</para>
-	///<para>true, true = black shader</para>
-	///<para>false, true = solid white</para>
-	///<para>true, false = white shader</para>
-	///<para>false, false = solid black</para>
-	///</summary>
-	private void SetLight (bool l, bool toLW)
-	{
-		if (l && toLW) {												// if to light world and light (as in second, fourth, etc)
-			rend.material.shader = darkShader;								// change to black shader
-		} 
-		else if (!l && toLW) {											// if to light world and dark (as in dark zero, first, etc)
-			anim.SetBool("black", false);									// reset previously active state
-			anim.SetBool("white", true);									// set active state
-		}
-		else if (l && !toLW) {											// if to dark world and light (as in second, fourth, etc)
-			rend.material.shader = lightShader;								// change to white shader
-		}
-		else if (!l && !toLW) {											// if to dark world and dark (as in dark zero, first, etc)
-			anim.SetBool("white", false);									// reset previously active state
-			anim.SetBool("black", true);									// set active state
-		}
-	}
-
-	///<summary>
 	///<para>set nucleus light/colour for normal state-to-state evolution</para>
 	///<para>true (in dark world) = white shader</para>
 	///<para>false (in dark world) = solid black</para>
@@ -2491,35 +2484,87 @@ public class ParticleNucleusManager : MonoBehaviour {
 	///</summary>
 	private void SetLight (bool l)
 	{
-		// in dark world
-		if (!l && (!psp.inLightworld || !psp.toLightworld)) {
-			if (toState != 0 && (toState % 2 == 0)) rend.material.shader = lightShader;											// if even # state, change to white shader
-			else {																												// else, odd # state
-				anim.SetBool("black", false);																						// reset previously active state
-				anim.SetBool("white", true);																						// set active state
+		// in/to dark world
+			// to dark
+		if (!l && (!psp.inLightworld || psp.toDarkworld)) {
+			// while dark world
+			if (!psp.psp.lightworld) {
+				if (toState != 0 && (toState % 2 == 0))
+					rend.material.shader = lightShader;																			// if even # state (not zero), change to white shader
+				else if ((toState == 6) && (toShape != 0)) {																	// else if, sixth	 state triangle/square
+					rend.material.shader = Shader.Find ("Unlit/Color");																// reset shader
+					anim.SetBool ("white", false);																					// reset white
+					anim.SetBool ("black", true);																					// set black
+				}
+				else {																											// else, odd # states
+					rend.material.shader = Shader.Find ("Unlit/Color");																// reset shader
+					anim.SetBool ("white", false);																					// reset white
+					anim.SetBool ("black", true);																					// set black
+				}
 			}
-		} 
-		else if (l && (!psp.inLightworld || !psp.toLightworld)) {
-			if (toState != 0 && (toState % 2 == 0)) rend.material.shader = darkShader;											// if even # state, change to black shader
-			else {																												// else, odd # state
-				anim.SetBool("white", false);																						// reset previously active state
-				anim.SetBool("black", true);																						// set active state
+			// while light world
+			else if (psp.psp.lightworld) {
+				rend.material.shader = Shader.Find ("Unlit/Color");																// reset shader
+				anim.SetBool ("black", false);																					// reset black
+				anim.SetBool ("white", true);																					// set white
+			}
+		}
+			// to light
+		else if (l && (!psp.inLightworld || psp.toDarkworld)) {
+			// while dark world
+			if (!psp.psp.lightworld) {
+				if (toState != 0 && (toState % 2 == 0)) rend.material.shader = darkShader;										// if even # state, change to black shader
+				else if ((toState == 8) && (toShape != 0)) {																	// else if, eighth state triangle/square
+					rend.material.shader = Shader.Find ("Unlit/Color");																// reset shader
+					anim.SetBool ("white", false);																					// reset white
+					anim.SetBool ("black", true);																					// set black
+				}
+			}
+			// while light world
+			else if (psp.psp.lightworld) {	
+				rend.material.shader = Shader.Find("Unlit/Color");																// reset shader
+				anim.SetBool("black", false);																					// reset black
+				anim.SetBool("white", true);																					// set white (keep hidden)
 			}
 		}
 
-		// in light world
+		// in/to light world
+			// to dark
 		if (!l && (psp.inLightworld || psp.toLightworld)) {
-			if (toState != 0 && (toState % 2 == 0)) rend.material.shader = darkShader;											// if even # state, change to black shader
-			else {																												// else, odd # state
-				anim.SetBool("white", false);																						// reset previously active state
-				anim.SetBool("black", true);																						// set active state
+			// while dark world
+			if (!psp.psp.lightworld) {
+				rend.material.shader = Shader.Find ("Unlit/Color");																// reset shader
+				anim.SetBool ("white", false);																					// reset white
+				anim.SetBool ("black", true);																					// set black
+			}
+			// while light world
+			else if (psp.psp.lightworld) {
+				if (toState != 0 && (toState % 2 == 0))
+					rend.material.shader = darkShader;																			// if even # state, change to black shader
+				else {																											// else, odd # state
+					rend.material.shader = Shader.Find ("Unlit/Color");																// reset shader
+					anim.SetBool ("white", false);																					// reset white
+					anim.SetBool ("black", true);																					// set black
+				}
 			}
 		}
+			// to light
 		else if (l && (psp.inLightworld || psp.toLightworld)) {
-			if (toState != 0 && (toState % 2 == 0)) rend.material.shader = lightShader;											// if even # state, change to white shader
-			else {
-				anim.SetBool("black", false);																					// reset previously active state
-				anim.SetBool("white", true);																					// set active state
+			// while dark world
+			if (!psp.psp.lightworld) {
+				rend.material.shader = Shader.Find ("Unlit/Color");																// reset shader
+				anim.SetBool ("white", false);																					// reset black
+				anim.SetBool ("black", true);																					// set white
+			}
+			// while light world
+			else if (psp.psp.lightworld) {
+				if (toState != 0 && (toState % 2 == 0))
+					rend.material.shader = lightShader;																			// if even # state, change to white shader
+				else {																											// else, odd # state
+					rend.material.shader = Shader.Find ("Unlit/Color");																// reset shader
+					anim.SetBool ("black", false);																					// reset previously active state
+					anim.SetBool ("white", true);																					// set active state
+				}
 			}
 		}
 	}

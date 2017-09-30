@@ -44,7 +44,7 @@ public class ZeroPlayerState : IParticleState
 			collisionTimer = 0f;															// reset collision timer
 		}
 		// take hit flag timer
-		if (!takeHit) takeHitTimer += Time.deltaTime;									// start timer
+		if (takeHit) takeHitTimer += Time.deltaTime;									// start timer
 		if (takeHitTimer >= 0.2f) {														// if timer is up
 			psp.stunned = true;															// set stunned flag
 			takeHit = false;															// reset take hit trigger

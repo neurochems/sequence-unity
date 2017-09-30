@@ -278,11 +278,6 @@ public class PlayerCoreManager : MonoBehaviour {
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
-		else if (f == 4 && t == 6 && fl && tl && ts == 1) {
-			ScaleTo (true, "third", "hidden");																		// scale to hidden
-			changeShape = true;																						// set change shape flag
-			resetScale = true;																						// set reset scale flag
-		}
 		else if (f == 4 && t == 7 && fl && tl && ts == 1) {
 			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
@@ -304,11 +299,6 @@ public class PlayerCoreManager : MonoBehaviour {
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
-		else if (f == 4 && t == 6 && fl && tl && ts == 2) {
-			ScaleTo (true, "third", "hidden");																		// scale to hidden
-			changeShape = true;																						// set change shape flag
-			resetScale = true;																						// set reset scale flag
-		}
 		else if (f == 4 && t == 7 && fl && tl && ts == 2) {
 			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
@@ -324,7 +314,48 @@ public class PlayerCoreManager : MonoBehaviour {
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
-
+			// to dark triangle
+		if (f == 4 && t == 6 && fl && !tl && ts == 1) {
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
+			changeShape = true;																						// set change shape flag
+			resetScale = true;																						// set reset scale flag
+		}
+		else if (f == 4 && t == 7 && fl && !tl && ts == 1) {
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
+			changeShape = true;																						// set change shape flag
+			resetScale = true;																						// set reset scale flag
+		}
+		else if (f == 4 && t == 8 && fl && !tl && ts == 1) {
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
+			changeShape = true;																						// set change shape flag
+			resetScale = true;																						// set reset scale flag
+		}
+		else if (f == 4 && t == 9 && fl && !tl && ts == 1) {
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
+			changeShape = true;																						// set change shape flag
+			resetScale = true;																						// set reset scale flag
+		}
+			// to dark square
+		if (f == 4 && t == 6 && fl && !tl && ts == 2) {
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
+			changeShape = true;																						// set change shape flag
+			resetScale = true;																						// set reset scale flag
+		}
+		else if (f == 4 && t == 7 && fl && !tl && ts == 2) {
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
+			changeShape = true;																						// set change shape flag
+			resetScale = true;																						// set reset scale flag
+		}
+		else if (f == 4 && t == 8 && fl && !tl && ts == 2) {
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
+			changeShape = true;																						// set change shape flag
+			resetScale = true;																						// set reset scale flag
+		}
+		else if (f == 4 && t == 9 && fl && !tl && ts == 2) {
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
+			changeShape = true;																						// set change shape flag
+			resetScale = true;																						// set reset scale flag
+		}
 
 	///// fifth \\\\\
 

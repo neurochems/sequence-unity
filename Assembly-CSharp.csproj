@@ -80,7 +80,6 @@
      <Compile Include="Assets\Scripts\Actors\Player\States\ThirdPlayerState.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\States\ZeroPlayerState.cs" />
      <Compile Include="Assets\Scripts\Actors\Player\UIManager.cs" />
-     <Compile Include="Assets\Scripts\Actors\SpawnParticle.cs" />
      <Compile Include="Assets\Scripts\Audio\EffectsBlender.cs" />
      <Compile Include="Assets\Scripts\Camera\CameraManager.cs" />
      <Compile Include="Assets\Scripts\Camera\Orbit.cs" />

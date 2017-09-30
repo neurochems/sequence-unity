@@ -8,9 +8,9 @@ public class PlayerNucleusManager : MonoBehaviour {
 	private MeshRenderer rend;																									// mesh renderer (for colour changes)
 	private PlayerStatePattern psp;																								// psp ref
 
-	//private float zeroPos, firstPos, thirdPos, seventhPos, ninthPos, sixthZ;													// vector positions
+	private float zeroPos, firstPos, thirdPos, seventhPos, ninthPos, tenthPos;													// vector y positions
 
-	private int toState, fromShape, toShape;																					// to state indicator, from shape/to shape index
+	private int fromState, toState, fromShape, toShape;																			// from/to state indicator, to/from shape/to shape index
 	private bool toLight, colour; 																								// to light indicator, colour indicator
 	private bool changeColour = false, changeShape = false, resetScale = false;													// timer trigger for changing shape, resetting scale after world switch
 	private float changeColourTimer, changeShapeTimer, resetScaleTimer;															// change shape timer, reset scale timer
@@ -25,14 +25,13 @@ public class PlayerNucleusManager : MonoBehaviour {
 		lightShader = Shader.Find("Unlit/light_nucleus");																		// init light nucleus shader
 		darkShader = Shader.Find("Unlit/dark_nucleus");																			// init dark nucleus shader
 
-		/*zeroPos = 0.175f;																										// set zero y position
-		firstPos = 0.5f;																										// set first/second/fifth/sixth y position
+		zeroPos = 0.15f;																										// set zero y position
+		firstPos = 0.50f;																										// set first/second/fifth/sixth y position
 		thirdPos = 1.0f;																										// set third/fourth y position
 		seventhPos = 1.5f;																										// set seventh/eighth y position
 		ninthPos = 2.0f;																										// set ninth y position
+		tenthPos = 50.0f;																										// set ninth y position
 
-		sixthZ = 0.275f;																										// set sixth triangle z pos
-		*/
 	}
 
 	void Update() {
@@ -53,6 +52,26 @@ public class PlayerNucleusManager : MonoBehaviour {
 		// reset scale timer
 		if (resetScale) resetScaleTimer += Time.deltaTime;																		// start timer
 		if (resetScaleTimer >= 2.75f) {																							// when timer >= 4 sec
+
+			// ADJUST NUCLEUS HEIGHT FOR VISIBILITY for devolutions
+			if (toState < fromState) {
+				if (toState == 0)	 																									// to zero
+					transform.localPosition = new Vector3 (0f, zeroPos, 0f);																// adjust position
+				else if (toState == 1 || toState == 2)																					// to first/second
+					transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
+				else if (toState == 3 || toState == 4)																					// to third/fourth
+					transform.localPosition = new Vector3 (0f, thirdPos, 0f);																// adjust position
+				else if (toState == 5 || toState == 6)																					// to fifth/sixth
+					transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
+				else if (toState == 7 || toState == 8)																					// to seventh/eighth
+					transform.localPosition = new Vector3 (0f, seventhPos, 0f);																// adjust position
+				else if (toState == 9)																									// to ninth
+					transform.localPosition = new Vector3 (0f, ninthPos, 0f);																// adjust position
+				else if (toState == 10)																									// to tenth
+					transform.localPosition = new Vector3 (0f, tenthPos, 0f);																// adjust position
+			}
+
+			// reset scale
 			if (toState == 0) 																										// if to zero
 				ScaleTo (false, "hidden", "zero");																						// grow to zero
 			if (!toLight && (toState == 1 || toState == 2 ||toState == 4 ||  toState == 5 || toState == 6))	 						// if to dark first/second/fifth/sixth
@@ -67,6 +86,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 				ScaleTo (false, "hidden", "first");																						// grow to first
 			if (toState == 9) 																										// if to ninth,
 				ScaleTo (false, "hidden", "ninth");																						// grow to ninth
+
 			resetScale = false;																										// reset reset scale flag
 			resetScaleTimer = 0f;																									// reset timer
 		}
@@ -75,31 +95,30 @@ public class PlayerNucleusManager : MonoBehaviour {
 	public void Nucleus (int f, int t, bool fl, bool tl, int fs, int ts) 
 	{
 		// set up
+		fromState = f;																											// set to state
 		toState = t;																											// set to state
 		toLight = tl;																											// set to light
 		fromShape = fs;																											// set from shape
 		toShape = ts;																											// set to shape
 
-		/* ADJUST NUCLEUS HEIGHT FOR VISIBILITY
-		if (toState == 0)	 																									// to zero
-			transform.localPosition = new Vector3 (0f, zeroPos, 0f);																// adjust position
-		else if (toState == 1 || toState == 2)																					// to first/second
-			transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
-		else if (toState == 3 || toState == 4)																					// to third/fourth
-			transform.localPosition = new Vector3 (0f, thirdPos, 0f);																// adjust position
-		else if (toState == 5 || toState == 6) {																				// to fifth/sixth
-			if (toShape == 1) transform.localPosition = new Vector3 (0f, firstPos, sixthZ);											// adjust position
-			else transform.localPosition = new Vector3 (0f, firstPos, 0f);															// adjust position
+		// ADJUST NUCLEUS HEIGHT FOR VISIBILITY on evolutions
+		if ((t > f) || (t == 0 && f == 0)) {
+			if (toState == 0)	 																									// to zero
+				transform.localPosition = new Vector3 (0f, zeroPos, 0f);																// adjust position
+			else if (toState == 1 || toState == 2)																					// to first/second
+				transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
+			else if (toState == 3 || toState == 4)																					// to third/fourth
+				transform.localPosition = new Vector3 (0f, thirdPos, 0f);																// adjust position
+			else if (toState == 5 || toState == 6)																					// to fifth/sixth
+				transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
+			else if (toState == 7 || toState == 8)																					// to seventh/eighth
+				transform.localPosition = new Vector3 (0f, seventhPos, 0f);																// adjust position
+			else if (toState == 9)																									// to ninth
+				transform.localPosition = new Vector3 (0f, ninthPos, 0f);																// adjust position
+			else if (toState == 10)																									// to tenth
+				transform.localPosition = new Vector3 (0f, tenthPos, 0f);																// adjust position
 		}
-		else if (toState == 7 || toState == 8) {																				// to seventh/eighth
-			if (toShape == 1) transform.localPosition = new Vector3 (0f, seventhPos, sixthZ);										// adjust position
-			else transform.localPosition = new Vector3 (0f, seventhPos, 0f);														// adjust position
-		}
-		else if (toState == 9) {																								// to ninth
-			if (toShape == 1) transform.localPosition = new Vector3 (0f, ninthPos, sixthZ);											// adjust position
-			else transform.localPosition = new Vector3 (0f, ninthPos, 0f);															// adjust position
-		}*/
-
+		
 
 		///////////////////// EVOLUTIONS \\\\\\\\\\\\\\\\\\\\\\
 

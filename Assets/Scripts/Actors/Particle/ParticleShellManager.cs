@@ -48,8 +48,9 @@ public class ParticleShellManager : MonoBehaviour {
 	{
 		toState = t;																								// set to state
 		if (lw) {																									// if to light world
-			// from changes
-			if (f == 3 || f == 4 || f == 5 || f == 6) 																	// from third/fourth/fifth/sixth
+			if (!psp.isLight && (f == 3 || f == 4))																		// from dark third/fourth
+				ScaleTo (true, "third", "hidden");																			// scale to hidden
+			else if (f == 5 || f == 6) 																					// from fifth/sixth
 				ScaleTo (true, "third", "hidden");																			// scale to hidden
 			else if (f == 7 || f == 8) 																					// from seventh/eighth
 				ScaleTo (true, "seventh", "hidden");																		// scale to hidden
@@ -60,12 +61,14 @@ public class ParticleShellManager : MonoBehaviour {
 
 			toLight = false;																							// always to black going to light world
 			changeColour = true;																						// start change colour timer
-			if (!l && (t == 3 || t == 4)) resetScale = false;															// start rescale timer
-			else if (t >= 5) resetScale = true;																			// start rescale timer
+			if (!l && (t == 3 || t == 4)) resetScale = true;															// if dark third/fourth, start rescale timer
+			else if (t >= 5) resetScale = true;																			// if fifth+, start rescale timer
 		}
 		else if (!lw) {																								// if to dark world
 			// from changes
-			if (f == 3 || f == 4 || f == 5 || f == 6) 																	// from third/fourth/fifth/sixth
+			if (!psp.isLight && (f == 3 || f == 4))																		// from dark third/fourth
+				ScaleTo (true, "third", "hidden");																			// scale to hidden
+			else if (f == 5 || f == 6) 																					// from fifth/sixth
 				ScaleTo (true, "third", "hidden");																			// scale to hidden
 			else if (f == 7 || f == 8) 																					// from seventh/eighth
 				ScaleTo (true, "seventh", "hidden");																		// scale to hidden
@@ -73,9 +76,10 @@ public class ParticleShellManager : MonoBehaviour {
 				ScaleTo (true, "ninth", "hidden");																			// scale to hidden
 
 			// to changes
-			toLight = true;																							// always to white going to dark world
+			toLight = true;																								// always to white going to dark world
 			changeColour = true;																						// start change colour timer
-			resetScale = true;																							// start rescale timer
+			if (!l && (t == 3 || t == 4)) resetScale = true;															// if dark third/fourth, start rescale timer
+			else if (t >= 5) resetScale = true;																			// if fifth+, start rescale timer
 		}
 	}
 
