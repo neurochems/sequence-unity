@@ -1,14 +1,11 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Actors\Player\PlayerStatePattern.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Actors\Player\UIManager.cs">
     <Files>
-      <File FileName="Assets\Scripts\Actors\Player\PlayerStatePattern.cs" Line="505" Column="2" />
-      <File FileName="Assets\Scripts\Actors\Player\PlayerNucleusManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Actors\Player\States\SixthPlayerState.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Actors\Player\PlayerCoreManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Actors\Player\States\FourthPlayerState.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Actors\Particle\States\FourthParticleState.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Camera\CameraManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Actors\Player\UIManager.cs" Line="150" Column="65" />
+      <File FileName="Assets\Scripts\Actors\Particle\ParticlePhysicsManager.cs" Line="50" Column="29" />
+      <File FileName="Assets\Scripts\Actors\Player\PlayerStatePattern.cs" Line="683" Column="6" />
+      <File FileName="Assets\Scripts\Actors\Particle\States\FourthParticleState.cs" Line="69" Column="42" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

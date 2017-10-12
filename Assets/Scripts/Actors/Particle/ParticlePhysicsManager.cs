@@ -9,11 +9,13 @@ public class ParticlePhysicsManager : MonoBehaviour {
 	private Transform particleTransform;
 
 	// movement/physics variables
+	public bool chill;
 	public float moveSpeed = 7;
 	public float maxSpeed = 10;
 	public float xMin, xMax, zMin, zMax;
 	private Vector3 moveDir;
 
+	private PlayerController pc;
 	private Rigidbody rb;
 	private bool boost = true;
 	private float boostTimer = 0f;
@@ -26,6 +28,8 @@ public class ParticlePhysicsManager : MonoBehaviour {
 		GetComponent<Rigidbody>().useGravity = false;
 		particleTransform = transform;
 
+		pc = GameObject.Find("Player").GetComponent<PlayerController>();
+
 		rb = GetComponent<Rigidbody> ();
 
 		xMin = Random.Range (-1.0f, 1.0f);												// randomize movement headings
@@ -36,6 +40,21 @@ public class ParticlePhysicsManager : MonoBehaviour {
 	
 	void FixedUpdate () {
 		attractor.Attract(particleTransform);
+
+		chill = pc.chill;
+
+		if (chill) {
+			moveSpeed = 1.0f;
+			maxSpeed = 2.0f;
+		}
+		else if (gameObject.tag == "World") {
+			moveSpeed = 20.0f;
+			maxSpeed = 200.0f;
+		}
+		else {
+			moveSpeed = 2.0f;
+			maxSpeed = 4.0f;
+		}
 
 		if (boost) {
 			moveDir = new Vector3 (Random.Range(xMin, xMax), 0.0f, Random.Range(zMin, zMax)).normalized;		// create move direction

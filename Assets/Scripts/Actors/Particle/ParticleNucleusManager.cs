@@ -10,12 +10,12 @@ public class ParticleNucleusManager : MonoBehaviour {
 
 	private float zeroPos, firstPos, thirdPos, seventhPos, ninthPos;															// y positions
 
-	private int fromState, toState, fromShape, toShape;																					// to state, from shape, to shape indicator
-	private bool toLight, colour, shader; 																						// to light, colour + shader indicator
-	private bool changeColour = false, changeShape = false, resetScale = false;													// timer trigger for resetting scale after world switch
-	private float changeColourTimer, changeShapeTimer, resetScaleTimer;															// reset scale timer
+	private int fromState, toState, fromShape, toShape;																			// from/to state, from/to shape indicator
+	private bool toLW, toLight, colour, shader; 																				// to world, to light, colour + shader indicator
+	private bool changeWorld = false, changeColour = false, changeShape = false, resetScale = false;							// timer triggers
+	private float changeWorldTimer, changeWorldDelay, changeColourTimer, changeShapeTimer, resetScaleTimer;						// reset timers
 
-	private Shader lightShader, darkShader;																						// light/dark shaders
+	private Shader lightShader, darkShader, colourShader;																		// light/dark/colour shaders
 
 	void Start () {
 		anim = GetComponent<Animator>();																						// init animator ref
@@ -23,6 +23,7 @@ public class ParticleNucleusManager : MonoBehaviour {
 		psp = GetComponentInParent<ParticleStatePattern> ();																	// init psp ref
 		lightShader = Shader.Find("Unlit/light_nucleus");																		// init light nucleus shader
 		darkShader = Shader.Find("Unlit/dark_nucleus");																			// init dark nucleus shader
+		colourShader = Shader.Find("Unlit/Color");																				// init unlit color shader
 
 		zeroPos = 0.15f;																										// set zero y position
 		firstPos = 0.50f;																										// set first/second/fifth/sixth y position
@@ -34,67 +35,83 @@ public class ParticleNucleusManager : MonoBehaviour {
 	void Update() {
 
 		// !inLightworld WORLD CHANGES \\  	- swapping nuclei colours for particles remaining in dark world, no state changes
-			// to light world
-		if (!psp.inLightworld && psp.changeParticles) {																			// if change particles and light world
-			//Debug.Log (psp.gameObject.name + ": change nucleus to opposite world");
-			toState = psp.state;																									// set toState to current state
-			if (psp.isLight) ToOtherWorld (psp.lightworld, toState, toState, true, fromShape, toShape);							// if light: to hidden, change to white
-			else if (!psp.isLight) ToOtherWorld (psp.lightworld, toState, toState, false, fromShape, toShape);						// if dark: to hidden, change to black
+		// to light world
+		if (psp.changeParticles && !changeWorld) {																								// if change particles and light world
+			changeWorldDelay = Random.Range (0.5f, 5.0f);																			// set delay to change nucleus
+			//changeWorld = true;
+			// nucleus becomes visible in states with hidden nucleus after world switch
 		}
 
+		// change world delay timer
+		if (changeWorld) {
+			changeWorldTimer += Time.deltaTime;																	// start timer
+			if (changeWorldTimer >= changeWorldDelay) {																					// when timer >= delay value
+				//if (psp.isLight) ToOtherWorld (psp.lightworld, psp.state, psp.state, false, fromShape, toShape);							// to other world
+				ToOtherWorld (psp.lightworld, psp.state, psp.state, psp.isLight, fromShape, toShape);									// to other world
+				Debug.Log ("change particle");
+				changeWorld = false;																									// reset reset scale flag
+				changeWorldTimer = 0f;																									// reset timer
+			}
+		}
 
 		// change colour timer
-		if (changeColour) changeColourTimer += Time.deltaTime;																	// start timer
-		if (changeColourTimer >= 2.0f) {																						// when timer >= 4 sec
-			SetLight(toLight);																										// set colour
-			changeColour = false;																									// reset reset scale flag
-			changeColourTimer = 0f;																									// reset timer
+		if (changeColour) {
+			changeColourTimer += Time.deltaTime;																	// start timer
+			if (changeColourTimer >= 2.0f) {																						// when timer >= 4 sec
+				SetLight(toLight);																										// set colour
+				changeColour = false;																									// reset reset scale flag
+				changeColourTimer = 0f;																									// reset timer
+			}
 		}
 
 		// change shape timer
-		if (changeShape) changeShapeTimer += Time.deltaTime;																	// start timer
-		if (changeShapeTimer >= 2.0f) {																							// when timer >= 2 sec
-			SetShape(toShape);																										// set shape
-			changeShape = false;																									// reset reset scale flag
-			changeShapeTimer = 0f;																									// reset timer
+		if (changeShape) {
+			changeShapeTimer += Time.deltaTime;																	// start timer
+			if (changeShapeTimer >= 2.0f) {																							// when timer >= 2 sec
+				SetShape(toShape);																										// set shape
+				changeShape = false;																									// reset reset scale flag
+				changeShapeTimer = 0f;																									// reset timer
+			}
 		}
 		// reset scale timer
-		if (resetScale) resetScaleTimer += Time.deltaTime;																		// start timer
-		if (resetScaleTimer >= 2.75f) {																							// when timer >= 2.75 sec
+		if (resetScale) {
+			resetScaleTimer += Time.deltaTime;																		// start timer
+			if (resetScaleTimer >= 2.75f) {																							// when timer >= 2.75 sec
 
-			// ADJUST NUCLEUS HEIGHT FOR VISIBILITY for devolutions
-			if (toState < fromState) {
-				if (toState == 0)	 																									// to zero
-					transform.localPosition = new Vector3 (0f, zeroPos, 0f);																// adjust position
-				else if (toState == 1 || toState == 2)																					// to first/second
-					transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
-				else if (toState == 3 || toState == 4)																					// to third/fourth
-					transform.localPosition = new Vector3 (0f, thirdPos, 0f);																// adjust position
-				else if (toState == 5 || toState == 6)																					// to fifth/sixth
-					transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
-				else if (toState == 7 || toState == 8)																					// to seventh/eighth
-					transform.localPosition = new Vector3 (0f, seventhPos, 0f);																// adjust position
-				else if (toState == 9)																									// to ninth
-					transform.localPosition = new Vector3 (0f, ninthPos, 0f);																// adjust position
+				// ADJUST NUCLEUS HEIGHT FOR VISIBILITY for devolutions
+				if (toState < fromState) {
+					if (toState == 0)	 																									// to zero
+						transform.localPosition = new Vector3 (0f, zeroPos, 0f);																// adjust position
+					else if (toState == 1 || toState == 2)																					// to first/second
+						transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
+					else if (toState == 3 || toState == 4)																					// to third/fourth
+						transform.localPosition = new Vector3 (0f, thirdPos, 0f);																// adjust position
+					else if (toState == 5 || toState == 6)																					// to fifth/sixth
+						transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
+					else if (toState == 7 || toState == 8)																					// to seventh/eighth
+						transform.localPosition = new Vector3 (0f, seventhPos, 0f);																// adjust position
+					else if (toState == 9)																									// to ninth
+						transform.localPosition = new Vector3 (0f, ninthPos, 0f);																// adjust position
+				}
+
+				// reset scale
+				if (toState == 0) 																										// if to zero
+					ScaleTo (false, "hidden", "zero");																						// grow to zero
+				if (!toLight && (toState == 1 || toState == 2 || toState == 5 || toState == 6)) 										// if to dark first/fourth/fifth/sixth
+					ScaleTo (false, "hidden", "first");																						// grow to first
+				if (toShape == 0 && toLight && (toState == 2 || toState == 4 || toState == 6)) 											// if to light circle second/fourth/sixth
+					ScaleTo (false, "hidden", "zero");																						// grow to zero
+				if (!toLight && toState == 4)																							// if to dark fourth
+					ScaleTo (false, "hidden", "zero");																						// grow to zero
+				if (!toLight && (toState == 7 || toState == 8)) 																		// if to dark seventh/eighth
+					ScaleTo (false, "hidden", "seventh");																					// grow to seventh
+				if (toShape == 0 && toLight && toState == 8) 																			// if to light circle eighth 
+					ScaleTo (false, "hidden", "first");																						// grow to first
+				if (toState == 9) 																										// if to ninth
+					ScaleTo (false, "hidden", "ninth");																						// grow to ninth
+				resetScale = false;																										// reset reset scale flag
+				resetScaleTimer = 0f;																									// reset timer
 			}
-
-			// reset scale
-			if (toState == 0) 																										// if to zero
-				ScaleTo (false, "hidden", "zero");																					// grow to zero
-			if (!toLight && (toState == 1 || toState == 2 || toState == 5 || toState == 6)) 										// if to dark first/fourth/fifth/sixth
-				ScaleTo (false, "hidden", "first");																						// grow to first
-			if (toShape == 0 && toLight && (toState == 2 || toState == 4 || toState == 6)) 											// if to light circle second/fourth/sixth
-				ScaleTo (false, "hidden", "zero");																						// grow to zero
-			if (!toLight && toState == 4)
-				ScaleTo (false, "hidden", "zero");																						// grow to zero
-			if (!toLight && (toState == 7 || toState == 8)) 																		// if to dark seventh/eighth
-				ScaleTo (false, "hidden", "seventh");																					// grow to seventh
-			if (toShape == 0 && toLight && toState == 8) 																				// if to light circle eighth 
-				ScaleTo (false, "hidden", "first");																						// grow to first
-			if (toState == 9) 																										// if to ninth
-				ScaleTo (false, "hidden", "ninth");																						// grow to ninth
-			resetScale = false;																										// reset reset scale flag
-			resetScaleTimer = 0f;																									// reset timer
 		}
 	}
 
@@ -109,83 +126,55 @@ public class ParticleNucleusManager : MonoBehaviour {
 	///</summary>
 	public void ToOtherWorld (bool lw, int f, int t, bool tl, int fs, int ts) 
 	{
+		//Debug.Log ("nucleus change world");
+
+		toLW = lw;																												// set to world
 		fromState = f;																											// set to state
 		toState = t;																											// set to state
 		toLight = tl;																											// set to light
 		toShape = ts;																											// set to light
 
-		// ADJUST NUCLEUS HEIGHT FOR VISIBILITY on evolutions
-		if (t > f) {
-			if (toState == 0)	 																									// to zero
-				transform.localPosition = new Vector3 (0f, zeroPos, 0f);																// adjust position
-			else if (toState == 1 || toState == 2)																					// to first/second
-				transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
-			else if (toState == 3 || toState == 4)																					// to third/fourth
-				transform.localPosition = new Vector3 (0f, thirdPos, 0f);																// adjust position
-			else if (toState == 5 || toState == 6)																					// to fifth/sixth
-				transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
-			else if (toState == 7 || toState == 8)																					// to seventh/eighth
-				transform.localPosition = new Vector3 (0f, seventhPos, 0f);																// adjust position
-			else if (toState == 9)																									// to ninth
-				transform.localPosition = new Vector3 (0f, ninthPos, 0f);																// adjust position
-		}
+		// adjust height
+		if (toState == 0)	 																								// to zero
+			transform.localPosition = new Vector3 (0f, zeroPos, 0f);															// adjust position
+		else if (toState == 1 || toState == 2)																				// to first/second
+			transform.localPosition = new Vector3 (0f, firstPos, 0f);															// adjust position
+		else if (toState == 3 || toState == 4)																				// to third/fourth
+			transform.localPosition = new Vector3 (0f, thirdPos, 0f);															// adjust position
+		else if (toState == 5 || toState == 6)																				// to fifth/sixth
+			transform.localPosition = new Vector3 (0f, firstPos, 0f);															// adjust position
+		else if (toState == 7 || toState == 8)																				// to seventh/eighth
+			transform.localPosition = new Vector3 (0f, seventhPos, 0f);															// adjust position
+		else if (toState == 9)																								// to ninth
+			transform.localPosition = new Vector3 (0f, ninthPos, 0f);															// adjust position
 
-		if (lw) {																												// to light world
-			// from changes
-			if (!psp.isLight && f == 0) 																						// from dark zero
-				ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			else if (!psp.isLight && (f == 1 || f == 2 || f == 5 || f == 6)) 													// from dark first/second/fifth/sixth
-				ScaleTo (true, "first", "hidden");																					// scale to hidden
-			else if (psp.isLight && (f == 2 || f == 6)) 																		// from light second/sixth
-				ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			else if (f == 4) 																									// from fourth
-				ScaleTo (true, "zero", "hidden");																					// scale to hidden
-			else if (!psp.isLight && (f == 7 || f == 8)) 																		// from dark seventh/eighth
-				ScaleTo (true, "seventh", "hidden");																				// scale to hidden
-			else if (psp.isLight && f == 8) 																					// from light eighth
-				ScaleTo (true, "first", "hidden");																					// scale to hidden
-			else if (!psp.isLight && f == 9) 																					// from dark ninth
-				ScaleTo (true, "ninth", "hidden");																					// scale to hidden
+		// from changes
+		if (!psp.isLight && f == 0) 																							// from dark zero
+			ScaleTo (true, "zero", "hidden");																						// scale to hidden
+		else if (!psp.isLight && (f == 1 || f == 2 || f == 5 || f == 6)) 														// from dark first/second/fifth/sixth
+			ScaleTo (true, "first", "hidden");																						// scale to hidden
+		else if (psp.isLight && (f == 2 || f == 6)) 																			// from light second/sixth
+			ScaleTo (true, "zero", "hidden");																						// scale to hidden
+		else if (f == 4) 																										// from fourth
+			ScaleTo (true, "zero", "hidden");																						// scale to hidden
+		else if (!psp.isLight && (f == 7 || f == 8))	 																		// from dark seventh/eighth
+			ScaleTo (true, "seventh", "hidden");																					// scale to hidden
+		else if (psp.isLight && f == 8) 																						// from light eighth
+			ScaleTo (true, "first", "hidden");																						// scale to hidden
+		else if (!psp.isLight && f == 9) 																						// from dark ninth
+			ScaleTo (true, "ninth", "hidden");																						// scale to hidden
 
-			// shape changes
-			if ((ts == 0) && (fs != 0)) changeShape = true;																		// change to circle
-			else if ((ts == 1) && (fs != 1)) changeShape = true;																// change to triangle
-			else if ((ts == 2) && (fs != 2)) changeShape = true;																// change to square
+		// shape changes
+		if ((ts == 0) && (fs != 0)) changeShape = true;																			// change to circle
+		else if ((ts == 1) && (fs != 1)) changeShape = true;																	// change to triangle
+		else if ((ts == 2) && (fs != 2)) changeShape = true;																	// change to square
 
-			// to changes
-			changeColour = true; 																								// start change timer
+		// to changes
+		changeColour = true; 																									// start change timer
 
-			if (tl && (t == 2 || t == 4 || t == 6 || t == 8)) resetScale = true;												// to light even states: set reset scale flag
-			if (!tl && (t != 3)) resetScale = true;																				// to dark not third, set reset scale flag
-		}
-		else if (!lw) {																											// to dark world
-			// from changes
-			if (!psp.isLight && f == 0) 																							// from dark zero
-				ScaleTo (true, "zero", "hidden");																						// scale to hidden
-			else if (!psp.isLight && (f == 1 || f == 2 || f == 5 || f == 6)) 														// from dark first/second/fifth/sixth
-				ScaleTo (true, "first", "hidden");																						// scale to hidden
-			else if (psp.isLight && (f == 2 || f == 6)) 																			// from light second/sixth
-				ScaleTo (true, "zero", "hidden");																						// scale to hidden
-			else if (f == 4) 																										// from fourth
-				ScaleTo (true, "zero", "hidden");																						// scale to hidden
-			else if (!psp.isLight && (f == 7 || f == 8))																			// from dark seventh/eighth
-				ScaleTo (true, "seventh", "hidden");																					// scale to hidden
-			else if (psp.isLight && f == 8) 																						// from light eighth
-				ScaleTo (true, "first", "hidden");																						// scale to hidden
-			else if (!psp.isLight && f == 9) 																						// from dark ninth
-				ScaleTo (true, "ninth", "hidden");																						// scale to hidden
+		if (tl && (t == 2 || t == 4 || t == 6 || t == 8)) resetScale = true;													// to light even states: set reset scale flag
+		if (!tl && (t != 3)) resetScale = true;																					// to dark not third, set reset scale flag
 
-			// shape changes
-			if ((ts == 0) && (fs != 0)) changeShape = true;															// change to circle
-			else if ((ts == 1) && (fs != 1)) changeShape = true;													// change to triangle
-			else if ((ts == 2) && (fs != 2)) changeShape = true;													// change to square
-
-			// to changes
-			changeColour = true; 																									// start change timer
-
-			if (tl && (t == 2 || t == 4 || t == 6 || t == 8)) resetScale = true;													// to light even states, set reset scale flag
-			if (!tl && (t != 3)) resetScale = true;																					// to dark not third, set reset scale flag
-		}
 	}
 
 	///<summary>
@@ -206,20 +195,18 @@ public class ParticleNucleusManager : MonoBehaviour {
 		toShape = ts;																											// set to shape
 
 		// ADJUST NUCLEUS HEIGHT FOR VISIBILITY on evolutions
-		if (t > f) {
-			if (toState == 0)	 																									// to zero
-				transform.localPosition = new Vector3 (0f, zeroPos, 0f);																// adjust position
-			else if (toState == 1 || toState == 2)																					// to first/second
-				transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
-			else if (toState == 3 || toState == 4)																					// to third/fourth
-				transform.localPosition = new Vector3 (0f, thirdPos, 0f);																// adjust position
-			else if (toState == 5 || toState == 6)																					// to fifth/sixth
-				transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
-			else if (toState == 7 || toState == 8)																					// to seventh/eighth
-				transform.localPosition = new Vector3 (0f, seventhPos, 0f);																// adjust position
-			else if (toState == 9)																									// to ninth
-				transform.localPosition = new Vector3 (0f, ninthPos, 0f);																// adjust position
-		}
+		if (toState == 0)	 																									// to zero
+			transform.localPosition = new Vector3 (0f, zeroPos, 0f);																// adjust position
+		else if (toState == 1 || toState == 2)																					// to first/second
+			transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
+		else if (toState == 3 || toState == 4)																					// to third/fourth
+			transform.localPosition = new Vector3 (0f, thirdPos, 0f);																// adjust position
+		else if (toState == 5 || toState == 6)																					// to fifth/sixth
+			transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
+		else if (toState == 7 || toState == 8)																					// to seventh/eighth
+			transform.localPosition = new Vector3 (0f, seventhPos, 0f);																// adjust position
+		else if (toState == 9)																									// to ninth
+			transform.localPosition = new Vector3 (0f, ninthPos, 0f);																// adjust position
 
 
 		///////////////////// EVOLUTIONS \\\\\\\\\\\\\\\\\\\\\\
@@ -385,7 +372,7 @@ public class ParticleNucleusManager : MonoBehaviour {
 
 		// from light first
 			// to dark
-		if (f == 1 && t == 0 && fl && !tl) ScaleTo (true, "first", "zero");														// scale to zero
+		if (f == 1 && t == 0 && fl && !tl) ScaleTo (false, "hidden", "zero");													// scale to zero
 		else if (f == 1 && t == 2 && fl && !tl) {			
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
@@ -2476,97 +2463,92 @@ public class ParticleNucleusManager : MonoBehaviour {
 	}
 
 	///<summary>
-	///<para>set nucleus light/colour for normal state-to-state evolution</para>
-	///<para>true (in dark world) = white shader</para>
-	///<para>false (in dark world) = solid black</para>
-	///<para>true (in light world) = black shader</para>
-	///<para>false (in light world) = solid white</para>
+	///<para>set nucleus light/colour</para>
 	///</summary>
 	private void SetLight (bool l)
 	{
 		// in/to dark world
-			// to dark
-		if (!l && (!psp.inLightworld || psp.toDarkworld)) {
+		if (!psp.inLightworld || psp.toDarkworld) {
 			// while dark world
-			if (!psp.psp.lightworld) {
-				if (toState != 0 && (toState % 2 == 0))
-					rend.material.shader = lightShader;																			// if even # state (not zero), change to white shader
-				else if ((toState == 6) && (toShape != 0)) {																	// else if, sixth	 state triangle/square
-					rend.material.shader = Shader.Find ("Unlit/Color");																// reset shader
-					anim.SetBool ("white", false);																					// reset white
-					anim.SetBool ("black", true);																					// set black
+			if (!psp.lightworld) {
+				// to dark
+				if (!l) {
+					if (toState != 0 && (toState % 2 == 0))																			// if even # state (not zero)
+						rend.material.shader = lightShader;																				// change to white shader
+					else if ((toState == 6 || toState == 8) && (toShape != 0)) {													// else if, sixth/eighth state triangle/square
+						rend.material.shader = colourShader;																			// reset shader
+						anim.SetBool ("white", false);																					// reset white
+						anim.SetBool ("black", true);																					// set black
+					}
+					else {																											// else, odd # states
+						rend.material.shader = colourShader;																			// reset shader
+						anim.SetBool ("white", false);																					// reset white
+						anim.SetBool ("black", true);																					// set black
+					}
 				}
-				else {																											// else, odd # states
-					rend.material.shader = Shader.Find ("Unlit/Color");																// reset shader
-					anim.SetBool ("white", false);																					// reset white
-					anim.SetBool ("black", true);																					// set black
+				// to light
+				else if (l) {
+					if (toState != 0 && (toState % 2 == 0))
+						rend.material.shader = darkShader;																			// if even # state, change to black shader
+					else if ((toState == 8) && (toShape != 0)) {																	// else if, eighth state triangle/square
+						rend.material.shader = colourShader;																			// reset shader
+						anim.SetBool ("white", false);																					// reset white
+						anim.SetBool ("black", true);																					// set black
+					}
 				}
 			}
 			// while light world
-			else if (psp.psp.lightworld) {
-				rend.material.shader = Shader.Find ("Unlit/Color");																// reset shader
-				anim.SetBool ("black", false);																					// reset black
-				anim.SetBool ("white", true);																					// set white
-			}
-		}
-			// to light
-		else if (l && (!psp.inLightworld || psp.toDarkworld)) {
-			// while dark world
-			if (!psp.psp.lightworld) {
-				if (toState != 0 && (toState % 2 == 0)) rend.material.shader = darkShader;										// if even # state, change to black shader
-				else if ((toState == 8) && (toShape != 0)) {																	// else if, eighth state triangle/square
-					rend.material.shader = Shader.Find ("Unlit/Color");																// reset shader
+			else if (psp.lightworld) {
+				if (psp.toDarkworld){
+					rend.material.shader = colourShader;																			// reset shader
 					anim.SetBool ("white", false);																					// reset white
 					anim.SetBool ("black", true);																					// set black
 				}
-			}
-			// while light world
-			else if (psp.psp.lightworld) {	
-				rend.material.shader = Shader.Find("Unlit/Color");																// reset shader
-				anim.SetBool("black", false);																					// reset black
-				anim.SetBool("white", true);																					// set white (keep hidden)
+				else {
+					rend.material.shader = colourShader;																			// reset shader
+					anim.SetBool ("black", false);																					// reset black
+					anim.SetBool ("white", true);																					// set white
+				}
 			}
 		}
 
 		// in/to light world
-			// to dark
-		if (!l && (psp.inLightworld || psp.toLightworld)) {
+		else if (psp.inLightworld || psp.toLightworld) {
 			// while dark world
-			if (!psp.psp.lightworld) {
-				rend.material.shader = Shader.Find ("Unlit/Color");																// reset shader
-				anim.SetBool ("white", false);																					// reset white
-				anim.SetBool ("black", true);																					// set black
+			if (!psp.lightworld) {
+				// to dark
+				if (!l) {
+					rend.material.shader = colourShader;																			// reset shader
+					anim.SetBool ("black", false);																					// reset black
+					anim.SetBool ("white", true);																					// set white
+				}
+				// to light
+				else if (l) {
+					rend.material.shader = colourShader;																			// reset shader
+					anim.SetBool ("black", false);																					// reset black
+					anim.SetBool ("white", true);																					// set white
+				}
 			}
 			// while light world
-			else if (psp.psp.lightworld) {
-				if (toState != 0 && (toState % 2 == 0))
-					rend.material.shader = darkShader;																			// if even # state, change to black shader
-				else {																											// else, odd # state
-					rend.material.shader = Shader.Find ("Unlit/Color");																// reset shader
-					anim.SetBool ("white", false);																					// reset white
-					anim.SetBool ("black", true);																					// set black
+			else if (psp.lightworld) {
+				// to dark
+				if (!l) {
+					if (toState != 0 && (toState % 2 == 0))
+						rend.material.shader = darkShader;																			// if even # state, change to black shader
+					else {																											// else, odd # state
+						rend.material.shader = colourShader;																			// reset shader
+						anim.SetBool ("black", false);																					// reset black
+						anim.SetBool ("white", true);																					// set white
+					}
+				}
+				// to light
+				if (l) {
+					if (toState != 0 && (toState % 2 == 0))
+						rend.material.shader = lightShader;																			// if even # state, change to white shader
 				}
 			}
 		}
-			// to light
-		else if (l && (psp.inLightworld || psp.toLightworld)) {
-			// while dark world
-			if (!psp.psp.lightworld) {
-				rend.material.shader = Shader.Find ("Unlit/Color");																// reset shader
-				anim.SetBool ("white", false);																					// reset black
-				anim.SetBool ("black", true);																					// set white
-			}
-			// while light world
-			else if (psp.psp.lightworld) {
-				if (toState != 0 && (toState % 2 == 0))
-					rend.material.shader = lightShader;																			// if even # state, change to white shader
-				else {																											// else, odd # state
-					rend.material.shader = Shader.Find ("Unlit/Color");																// reset shader
-					anim.SetBool ("black", false);																					// reset previously active state
-					anim.SetBool ("white", true);																					// set active state
-				}
-			}
-		}
+
 	}
 
 	///<summary>

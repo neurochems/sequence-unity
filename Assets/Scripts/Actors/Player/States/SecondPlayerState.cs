@@ -209,49 +209,49 @@ public class SecondPlayerState : IParticleState
        
 		// third
 			// to/in either world
-		if (((evol >= 2f) && (evol < 3f)) || ((evol >= -2f) && (evol < -3f))) {								// to third
+		if (((evol >= 2f) && (evol < 3f)) || ((evol <= -2f) && (evol > -3f))) {								// to third
 			if (deltaDark > deltaLight) ToThird(false);															// if gain more dark than light = to dark third
 			else if (deltaDark <= deltaLight) ToThird(true);													// if gain more light than dark = to light third
 		} 
        
 		// fourth
 			// to/in either world
-		if (((evol >= 3f) && (evol < 5f)) || ((evol >= -3f) && (evol < -5f))) {								// to fourth
+		if (((evol >= 3f) && (evol < 5f)) || ((evol <= -3f) && (evol > -5f))) {								// to fourth
 			if (deltaDark > deltaLight) ToFourth(false);														// if gain more dark than light = to dark fourth
 			else if (deltaDark <= deltaLight) ToFourth(true);													// if gain more light than dark = to light fourth
 		}
         
 		// fifth
 			// to/in light world
-		if ((evol >= -5f) && (evol < -8f)) {															    // to fifth
+		if ((evol <= -5f) && (evol > -8f)) {															    // to fifth
 			if (deltaDark > deltaLight) ToFifth(false, 0);														// if lose more light than dark = to dark circle fifth
 			else if (deltaDark <= deltaLight) ToFifth(true, 0);													// if lose more dark than light = to light circle fifth
 		}
         
 		// sixth
 			// to/in light world
-		if ((evol >= -8f) && (evol < -13f)) {																// to sixth
+		if ((evol <= -8f) && (evol > -13f)) {																// to sixth
 			if (deltaDark > deltaLight) ToSixth(false, 0);														// if lose more light than dark = to dark circle sixth
 			else if (deltaDark <= deltaLight) ToSixth(true, 0);													// if lose more dark than light = to light circle sixth
 		}
         
 		// seventh
 			// to/in light world
-		if ((evol >= -13f) && (evol < -21f)) {															    // to seventh
+		if ((evol <= -13f) && (evol > -21f)) {															    // to seventh
 			if (deltaDark > deltaLight) ToSeventh(false, 0);													// if lose more light than dark = to dark circle seventh
 			else if (deltaDark <= deltaLight) ToSeventh(true, 0);												// if lose more dark than light = to light circle seventh
 		}
         
 		// eighth
 			// to/in light world
-		if ((evol >= -21f) && (evol < -34f)) {																// to eighth
+		if ((evol <= -21f) && (evol > -34f)) {																// to eighth
 			if (deltaDark > deltaLight) ToEighth(false, 0);														// if lose more light than dark = to dark circle eighth
 			else if (deltaDark <= deltaLight) ToEighth(true, 0);												// if lose more dark than light = to light circle eighth
 		}
 
 		// ninth
 			// to/in light world
-		if ((evol >= -34f) && (evol < -55f)) {																// to ninth
+		if ((evol <= -34f) && (evol > -55f)) {																// to ninth
 			if (deltaDark > deltaLight) ToNinth(false, 0);														// if lose more light than dark = to dark circle ninth
 			else if (deltaDark <= deltaLight) ToNinth(true, 0);													// if lose more dark than light = to light circle ninth
 		}

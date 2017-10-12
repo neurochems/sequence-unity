@@ -18,24 +18,28 @@ public class PlayerCoreManager : MonoBehaviour {
 
 	void Update() {
 		// change shape timer
-		if (changeShape) changeShapeTimer += Time.deltaTime;														// start timer
-		if (changeShapeTimer >= 2.0f) {																				// when timer >= 4 sec
-			Debug.Log("set shape: " + toShape);
-			SetShape(toShape);																							// set shape
-			changeShape = false;																						// reset reset scale flag
-			changeShapeTimer = 0f;																						// reset timer
+		if (changeShape) {
+			changeShapeTimer += Time.deltaTime;														// start timer
+			if (changeShapeTimer >= 2.0f) {																				// when timer >= 4 sec
+				Debug.Log("set shape: " + toShape);
+				SetShape(toShape);																							// set shape
+				changeShape = false;																						// reset reset scale flag
+				changeShapeTimer = 0f;																						// reset timer
+			}
 		}
 		// reset scale timer
-		if (resetScale) resetScaleTimer += Time.deltaTime;															// start timer
-		if (resetScaleTimer >= 2.25f) {																				// when timer >= 4 sec
-			//anim.ResetTrigger("colour");	
-			if (toState == 0) ScaleTo (false, "hidden", "zero");														// if to zero, grow to zero
-			if (toState == 1 || toState == 2 || toState == 5 || toState == 6) ScaleTo (false, "hidden", "first");		// if to first/second/fifth/sixth, grow to first
-			if (toState == 3 || toState == 4) ScaleTo (false, "hidden", "third");										// if to third/fourth, grow to third
-			if (toState == 7 || toState == 8) ScaleTo (false, "hidden", "seventh");										// if to seventh/eighth, grow to seventh
-			if (toState == 9) ScaleTo (false, "hidden", "ninth");														// if to ninth, grow to ninth
-			resetScale = false;																							// reset reset scale flag
-			resetScaleTimer = 0f;																						// reset timer
+		if (resetScale) {
+			resetScaleTimer += Time.deltaTime;															// start timer
+			if (resetScaleTimer >= 2.25f) {																				// when timer >= 4 sec
+				//anim.ResetTrigger("colour");	
+				if (toState == 0) ScaleTo (false, "hidden", "zero");														// if to zero, grow to zero
+				if (toState == 1 || toState == 2 || toState == 5 || toState == 6) ScaleTo (false, "hidden", "first");		// if to first/second/fifth/sixth, grow to first
+				if (toState == 3 || toState == 4) ScaleTo (false, "hidden", "third");										// if to third/fourth, grow to third
+				if (toState == 7 || toState == 8) ScaleTo (false, "hidden", "seventh");										// if to seventh/eighth, grow to seventh
+				if (toState == 9) ScaleTo (false, "hidden", "ninth");														// if to ninth, grow to ninth
+				resetScale = false;																							// reset reset scale flag
+				resetScaleTimer = 0f;																						// reset timer
+			}
 		}
 	}
 
@@ -56,8 +60,8 @@ public class PlayerCoreManager : MonoBehaviour {
 			// to dark
 		if (f == 0 && t == 1 && !fl && !tl) ScaleTo (false, "zero", "first");										// scale to first
 		else if (f == 0 && t == 2 && !fl && !tl) ScaleTo (false, "zero", "first");									// scale to first
-		else if (f == 0 && t == 3 && !fl && !tl) ScaleTo (false, "zero", "third");									// scale to third
-		else if (f == 0 && t == 4 && !fl && !tl) ScaleTo (false, "zero", "third");									// scale to third
+		else if (f == 0 && t == 3 && !fl && !tl) ScaleTo (true, "zero", "hidden");									// scale to hidden
+		else if (f == 0 && t == 4 && !fl && !tl) ScaleTo (true, "zero", "hidden");									// scale to hidden
 		else if (f == 0 && t == 5 && !fl && !tl) ScaleTo (false, "zero", "first");									// scale to first
 		else if (f == 0 && t == 6 && !fl && !tl) ScaleTo (false, "zero", "first");									// scale to first
 		else if (f == 0 && t == 7 && !fl && !tl) ScaleTo (false, "zero", "seventh");								// scale to seventh
@@ -78,8 +82,8 @@ public class PlayerCoreManager : MonoBehaviour {
 			// to dark
 		if (f == 0 && t == 1 && fl && !tl) ScaleTo (false, "zero", "first");										// scale to first
 		else if (f == 0 && t == 2 && fl && !tl) ScaleTo (false, "zero", "first");									// scale to first
-		else if (f == 0 && t == 3 && fl && !tl) ScaleTo (false, "zero", "third");									// scale to third
-		else if (f == 0 && t == 4 && fl && !tl) ScaleTo (false, "zero", "third");									// scale to third
+		else if (f == 0 && t == 3 && fl && !tl) ScaleTo (true, "zero", "hidden");									// scale to third
+		else if (f == 0 && t == 4 && fl && !tl) ScaleTo (true, "zero", "hidden");									// scale to third
 		else if (f == 0 && t == 5 && fl && !tl) ScaleTo (false, "zero", "first");									// scale to first
 		else if (f == 0 && t == 6 && fl && !tl) ScaleTo (false, "zero", "first");									// scale to first
 		else if (f == 0 && t == 7 && fl && !tl) ScaleTo (false, "zero", "seventh");									// scale to seventh

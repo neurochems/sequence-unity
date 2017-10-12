@@ -36,37 +36,43 @@ public class ParticleCoreManager : MonoBehaviour {
 		}*/
 
 		// change colour timer
-		if (changeColour) changeColourTimer += Time.deltaTime;														// start timer
-		if (changeColourTimer >= 2.0f) {																			// when timer >= 4 sec
-			SetLight(toLight);																							// set colour
-			changeColour = false;																						// reset reset scale flag
-			changeColourTimer = 0f;																						// reset timer
+		if (changeColour) {
+			changeColourTimer += Time.deltaTime;														// start timer
+			if (changeColourTimer >= 2.0f) {																			// when timer >= 4 sec
+				SetLight(toLight);																							// set colour
+				changeColour = false;																						// reset reset scale flag
+				changeColourTimer = 0f;																						// reset timer
+			}
 		}
 
 		// change shape timer
-		if (changeShape) changeShapeTimer += Time.deltaTime;														// start timer
-		if (changeShapeTimer >= 2.0f) {																				// when timer >= 4 sec
-			Debug.Log(transform.parent.name + " core set shape: " + toShape);
-			SetShape(toShape);																							// set shape
-			changeShape = false;																						// reset reset scale flag
-			changeShapeTimer = 0f;																						// reset timer
+		if (changeShape) {
+			changeShapeTimer += Time.deltaTime;														// start timer
+			if (changeShapeTimer >= 2.0f) {																				// when timer >= 4 sec
+				Debug.Log(transform.parent.name + " core set shape: " + toShape);
+				SetShape(toShape);																							// set shape
+				changeShape = false;																						// reset reset scale flag
+				changeShapeTimer = 0f;																						// reset timer
+			}
 		}
 
 		// reset scale timer
-		if (resetScale) resetScaleTimer += Time.deltaTime;															// start timer
-		if (resetScaleTimer >= 2.25f) {																				// when timer >= 4 sec
-			if (toState == 0) 																						// if to zero
-				ScaleTo (false, "hidden", "zero");																		// grow to zero
-			if (toState == 1 || toState == 2 || toState == 5 || toState == 6) 										// if to first/second/fifth/sixth, 
-				ScaleTo (false, "hidden", "first");																		// grow to first
-			if (toState == 3 || toState == 4) 																		// if to third/fourth
-				ScaleTo (false, "hidden", "third");																		// grow to third
-			if (toState == 7 || toState == 8) 																		// if to seventh/eighth
-				ScaleTo (false, "hidden", "seventh");																	// grow to seventh
-			if (toState == 9) 																						// if to ninth
-				ScaleTo (false, "hidden", "ninth");																		// grow to ninth
-			resetScale = false;																						// reset reset scale flag
-			resetScaleTimer = 0f;																					// reset timer
+		if (resetScale) {
+			resetScaleTimer += Time.deltaTime;															// start timer
+			if (resetScaleTimer >= 2.25f) {																				// when timer >= 4 sec
+				if (toState == 0) 																						// if to zero
+					ScaleTo (false, "hidden", "zero");																		// grow to zero
+				if (toState == 1 || toState == 2 || toState == 5 || toState == 6) 										// if to first/second/fifth/sixth, 
+					ScaleTo (false, "hidden", "first");																		// grow to first
+				if (toState == 3 || toState == 4) 																		// if to third/fourth
+					ScaleTo (false, "hidden", "third");																		// grow to third
+				if (toState == 7 || toState == 8) 																		// if to seventh/eighth
+					ScaleTo (false, "hidden", "seventh");																	// grow to seventh
+				if (toState == 9) 																						// if to ninth
+					ScaleTo (false, "hidden", "ninth");																		// grow to ninth
+				resetScale = false;																						// reset reset scale flag
+				resetScaleTimer = 0f;																					// reset timer
+			}
 		}
 	}
 
@@ -84,24 +90,27 @@ public class ParticleCoreManager : MonoBehaviour {
 		toState = t;																								// set to state
 		toShape = ts;																								// set to shape
 
-			// from changes
-			if (f == 0) ScaleTo (true, "zero", "hidden");                                                      		// scale from zero
-			else if (f == 1 || f == 2 || f == 5 || f == 6) ScaleTo (true, "first", "hidden");    			    	// scale from first
-			else if (f == 3 || f == 4) ScaleTo (true, "third", "hidden");            			                    // scale from third
-			else if (f == 7 || f == 8) ScaleTo (true, "seventh", "hidden");											// scale from seventh
-			else if (f == 9) ScaleTo (true, "ninth", "hidden");														// scale from ninth
+		// from changes
+		if (f == 0) ScaleTo (true, "zero", "hidden");                                                      		// scale from zero
+		else if (f == 1 || f == 2 || f == 5 || f == 6) ScaleTo (true, "first", "hidden");    			    	// scale from first
+		else if (f == 3 || f == 4) ScaleTo (true, "third", "hidden");            			                    // scale from third
+		else if (f == 7 || f == 8) ScaleTo (true, "seventh", "hidden");											// scale from seventh
+		else if (f == 9) ScaleTo (true, "ninth", "hidden");														// scale from ninth
 
-			// shape changes
-			if ((ts == 0) && (fs != 0)) changeShape = true;															// change to circle
-			else if ((ts == 1) && (fs != 1)) changeShape = true;													// change to triangle
-			else if ((ts == 2) && (fs != 2)) changeShape = true;													// change to square
+		// shape changes
+		if ((ts == 0) && (fs != 0)) changeShape = true;															// change to circle
+		else if ((ts == 1) && (fs != 1)) changeShape = true;													// change to triangle
+		else if ((ts == 2) && (fs != 2)) changeShape = true;													// change to square
 
-			// to changes
-			
-			if (lw) toLight = false;																				// always to black switching to light world
-			if (!lw) toLight = true;																				// always to white switching to dark world
-			changeColour = true; 																					// start change timer
-			if (l && ((t != 3) || (t != 4))) resetScale = true;														// if any but dark third or fourth, trigger rescale timer
+		// to changes
+		
+		if (lw) toLight = false;																				// always to black switching to light world
+		if (!lw) toLight = true;																				// always to white switching to dark world
+		changeColour = true; 																					// start change timer
+		if ((t == 3) || (t == 4)) {
+			if (!l) resetScale = false;																			// if dark third or fourth, don't trigger rescale timer
+		}
+		else resetScale = true;																					// if any but dark third or fourth, trigger rescale timer
 	}
 
 	public void Core (int f, int t, bool fl, bool tl, int fs, int ts) 

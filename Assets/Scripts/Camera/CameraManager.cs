@@ -14,14 +14,16 @@ public class CameraManager : MonoBehaviour {
 	void Update() 
 	{
 		// reset scale timer
-		if (resetZoom) resetZoomTimer += Time.deltaTime;												// start timer
-		if (resetZoomTimer >= 2.75f) {																	// when timer >= 2 sec
-			Debug.Log ("reset camera zoom");
-			anim.ResetTrigger ("zoomin");																	// reset scale down trigger
-			anim.SetTrigger ("zoomout");																	// set scale up trigger
-			anim.SetBool ("switchworld", false);															// reset switchworld
-			resetZoom = false;																				// reset reset scale flag
-			resetZoomTimer = 0f;																			// reset timer
+		if (resetZoom) {
+			resetZoomTimer += Time.deltaTime;												// start timer
+			if (resetZoomTimer >= 2.75f) {																	// when timer >= 2 sec
+				Debug.Log ("reset camera zoom");
+				anim.ResetTrigger ("zoomin");																	// reset scale down trigger
+				anim.SetTrigger ("zoomout");																	// set scale up trigger
+				anim.SetBool ("switchworld", false);															// reset switchworld
+				resetZoom = false;																				// reset reset scale flag
+				resetZoomTimer = 0f;																			// reset timer
+			}
 		}
 	}
 
@@ -30,7 +32,7 @@ public class CameraManager : MonoBehaviour {
 		psp = GetComponentInParent<PlayerStatePattern>();												// init psp ref
 	}
 
-	public void ToOtherWorld (int f, int t)
+	/*public void ToOtherWorld (int f, int t)
 	{
 		fromState = f;																					// store from state
 		toState = t;																					// store to state
@@ -165,11 +167,10 @@ public class CameraManager : MonoBehaviour {
 		else if (f == 9 && t == 8) SwitchWorld ("ninth", "seventh");									// zoom in
 		else if (f == 9 && t == 9) SwitchWorld ("ninth", "ninth");										// zoom in
 
-	}
+	}*/
 
 	public void ZoomCamera (int f, int t)
 	{
-
 
 	///// zero \\\\\
 
@@ -289,7 +290,7 @@ public class CameraManager : MonoBehaviour {
 	
 	}
 
-	public void SwitchWorld (string resetState, string setState) {
+	/*public void SwitchWorld (string resetState, string setState) {
 
 			anim.SetBool ("switchworld", true);															// set switchworld
 
@@ -300,7 +301,7 @@ public class CameraManager : MonoBehaviour {
 			anim.SetTrigger ("zoomin");																	// set scale down trigger
 
 			resetZoom = true;																			// set reset zoom flag
-	}
+	}*/
 
 	public void Zoom (bool devol, string resetState, string setState) {
 

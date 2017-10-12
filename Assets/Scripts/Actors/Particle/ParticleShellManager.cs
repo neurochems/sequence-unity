@@ -7,7 +7,7 @@ public class ParticleShellManager : MonoBehaviour {
 	private MeshRenderer rend;																						// mesh renderer (for colour changes)
 	private ParticleStatePattern psp;																				// psp ref
 
-	private int toState;																							// to state indicator
+	private int toState, fromShape, toShape;																							// to state indicator
 	private bool toLight, colour;																							// colour indicator
 	private bool resetScale = false, changeColour = false, changeShape = false;										// timer trigger for changing shape, resetting scale after world switch;				// timer trigger for resetting scale after world switch
 	private float resetScaleTimer, changeColourTimer;																// reset scale, change colour timer
@@ -20,67 +20,64 @@ public class ParticleShellManager : MonoBehaviour {
 
 	void Update() {
 
+		if (psp.changeParticles) {																								// if change particles and light world
+			//Debug.Log (psp.gameObject.name + ": change shell to opposite world");
+			toState = psp.state;																									// set toState to current state
+			//ToOtherWorld (psp.lightworld, toState, toState, psp.isLight, fromShape, toShape);										// to other world
+		}
+
 		// change colour timer
-		if (changeColour) changeColourTimer += Time.deltaTime;														// start timer
-		if (changeColourTimer >= 2.0f) {																			// when timer >= 4 sec
-			SetLight(toLight);																							// set colour
-			changeColour = false;																						// reset reset scale flag
-			changeColourTimer = 0f;																						// reset timer
+		if (changeColour) {
+			changeColourTimer += Time.deltaTime;														// start timer
+			if (changeColourTimer >= 2.0f) {																			// when timer >= 4 sec
+				SetLight(toLight);																							// set colour
+				changeColour = false;																						// reset reset scale flag
+				changeColourTimer = 0f;																						// reset timer
+			}
 		}
 
 		// reset scale timer
-		if (resetScale) resetScaleTimer += Time.deltaTime;															// start timer
-		if (resetScaleTimer >= 3.25f) {																				// when timer >= 3.25 sec
-			//anim.ResetTrigger("colour");
-			if (toState == 3 || toState == 4 || toState == 5 || toState == 6) 											// to third/fourth/fifth/sixth
-				ScaleTo (false, "hidden", "third");																			// scale to third
-			if (toState == 7 || toState == 8) 																			// to seventh/eighth
-				ScaleTo (false, "hidden", "seventh");																		// scale to seventh
-			if (toState == 9) 																							// to ninth
-				ScaleTo (false, "hidden", "ninth");																			// scale to ninth
-			resetScale = false;																							// reset reset scale flag
-			resetScaleTimer = 0f;																						// reset timer
+		if (resetScale) {
+			resetScaleTimer += Time.deltaTime;															// start timer
+			if (resetScaleTimer >= 3.25f) {																				// when timer >= 3.25 sec
+				//anim.ResetTrigger("colour");
+				if (toState == 3 || toState == 4 || toState == 5 || toState == 6) 											// to third/fourth/fifth/sixth
+					ScaleTo (false, "hidden", "third");																			// scale to third
+				if (toState == 7 || toState == 8) 																			// to seventh/eighth
+					ScaleTo (false, "hidden", "seventh");																		// scale to seventh
+				if (toState == 9) 																							// to ninth
+					ScaleTo (false, "hidden", "ninth");																			// scale to ninth
+				resetScale = false;																							// reset reset scale flag
+				resetScaleTimer = 0f;																						// reset timer
+			}
 		}
 
 	}
 
 	public void ToOtherWorld (bool lw, int f, int t, bool l, int fs, int ts)
 	{
+		Debug.Log (psp.gameObject.name + ": change shell to other world");
+
 		toState = t;																								// set to state
-		if (lw) {																									// if to light world
-			if (!psp.isLight && (f == 3 || f == 4))																		// from dark third/fourth
-				ScaleTo (true, "third", "hidden");																			// scale to hidden
-			else if (f == 5 || f == 6) 																					// from fifth/sixth
-				ScaleTo (true, "third", "hidden");																			// scale to hidden
-			else if (f == 7 || f == 8) 																					// from seventh/eighth
-				ScaleTo (true, "seventh", "hidden");																		// scale to hidden
-			else if (f == 9) 																							// from ninth
-				ScaleTo (true, "ninth", "hidden");																			// scale to hidden
 
-			// to changes
+		// from changes
+		if (!psp.isLight && (f == 3 || f == 4))																		// from dark third/fourth
+			ScaleTo (true, "third", "hidden");																			// scale to hidden
+		else if (f == 5 || f == 6) 																					// from fifth/sixth
+			ScaleTo (true, "third", "hidden");																			// scale to hidden
+		else if (f == 7 || f == 8) 																					// from seventh/eighth
+			ScaleTo (true, "seventh", "hidden");																		// scale to hidden
+		else if (f == 9) 																							// from ninth
+			ScaleTo (true, "ninth", "hidden");																			// scale to hidden
 
-			toLight = false;																							// always to black going to light world
-			changeColour = true;																						// start change colour timer
-			if (!l && (t == 3 || t == 4)) resetScale = true;															// if dark third/fourth, start rescale timer
-			else if (t >= 5) resetScale = true;																			// if fifth+, start rescale timer
-		}
-		else if (!lw) {																								// if to dark world
-			// from changes
-			if (!psp.isLight && (f == 3 || f == 4))																		// from dark third/fourth
-				ScaleTo (true, "third", "hidden");																			// scale to hidden
-			else if (f == 5 || f == 6) 																					// from fifth/sixth
-				ScaleTo (true, "third", "hidden");																			// scale to hidden
-			else if (f == 7 || f == 8) 																					// from seventh/eighth
-				ScaleTo (true, "seventh", "hidden");																		// scale to hidden
-			else if (f == 9) 																							// from ninth
-				ScaleTo (true, "ninth", "hidden");																			// scale to hidden
+		// to changes
 
-			// to changes
-			toLight = true;																								// always to white going to dark world
-			changeColour = true;																						// start change colour timer
-			if (!l && (t == 3 || t == 4)) resetScale = true;															// if dark third/fourth, start rescale timer
-			else if (t >= 5) resetScale = true;																			// if fifth+, start rescale timer
-		}
+		if (lw) toLight = false;																					// always to black going to light world
+		else if (!lw) toLight = true;																				// always to white going to dark world
+		changeColour = true;																						// start change colour timer
+
+		if (!l && (t == 3 || t == 4)) resetScale = true;															// if dark third/fourth, start rescale timer
+		else if (t >= 5 && ts == 0) resetScale = true;																// if fifth+ circle, start rescale timer
 	}
 
 	public void Shell (int f, int t, bool fl, bool tl, int fs, int ts) 
@@ -944,13 +941,63 @@ public class ParticleShellManager : MonoBehaviour {
 	///</summary>
 	private void SetLight (bool l)
 	{
-		if (l) {
-			anim.SetBool("black", false);																			// reset previously active state
-			anim.SetBool("white", true);																			// set active state
+		// in/to dark world
+		if (!psp.inLightworld || psp.toDarkworld) {
+			// to white
+			if (l) {
+				// while dark world (visible)
+				if (!psp.psp.lightworld) {
+					anim.SetBool ("black", false);																			// reset black
+					anim.SetBool ("white", true);																			// set white
+				}
+				// while light world (hidden in the white)
+				else if (psp.psp.lightworld) {
+					anim.SetBool ("black", false);																			// reset black
+					anim.SetBool ("white", true);																			// set white
+				}
+			}
+			// to black
+			else if (!l) {
+				// while dark world (visible)
+				if (!psp.psp.lightworld) {
+					anim.SetBool ("black", false);																			// reset black
+					anim.SetBool ("white", true);																			// set white
+				} 
+				// while light world (hidden in the white)
+				else if (psp.psp.lightworld) {
+					anim.SetBool ("black", false);																			// reset black
+					anim.SetBool ("white", true);																			// set white
+				}
+			}
 		}
-		else if (!l) {
-			anim.SetBool("white", false);																			// reset previously active state
-			anim.SetBool("black", true);																			// set active state
+		// in/to light world
+		if (psp.inLightworld || psp.toLightworld) {
+			// to white
+			if (l) {
+				// while dark world (hidden in the black)
+				if (!psp.psp.lightworld) {
+					anim.SetBool ("white", false);																			// reset white
+					anim.SetBool ("black", true);																			// set black
+				}
+				// while light world (visible)
+				else if (psp.psp.lightworld) {
+					anim.SetBool ("white", false);																			// reset white
+					anim.SetBool ("black", true);																			// set black
+				}
+			}
+			// to black
+			else if (!l) {
+				// while dark world (hidden in the black)
+				if (!psp.psp.lightworld) {
+					anim.SetBool ("white", false);																			// reset white
+					anim.SetBool ("black", true);																			// set black
+				} 
+				// while light world (visible)
+				else if (psp.psp.lightworld) {
+					anim.SetBool ("white", false);																			// reset white
+					anim.SetBool ("black", true);																			// set black
+				}
+			}
 		}
 	}
 

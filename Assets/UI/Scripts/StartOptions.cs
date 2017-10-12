@@ -12,27 +12,29 @@ public class StartOptions : MonoBehaviour {
 	//public bool changeMusicOnStart;										//Choose whether to continue playing menu music or start a new music clip
 
 
-	public bool inMainMenu = true;					//If true, pause button disabled in main menu (Cancel in input manager, default escape key)
+	public bool inMainMenu = true;										//If true, pause button disabled in main menu (Cancel in input manager, default escape key)
 	public Animator animColorFade; 										//Reference to animator which will fade to and from black when starting game.
 	public Animator animStartFade; 										//Reference to animator which will fade to and from black when starting game.
 	public Animator animMenuAlpha;										//Reference to animator that will fade out alpha of MenuPanel canvas group
 	public AnimationClip fadeColorAnimationClip;						//Animation clip fading to color (black default) when changing scenes
-	public AnimationClip startFadeColorAnimationClip;						//Animation clip fading to color (black default) when changing scenes
+	public AnimationClip startFadeColorAnimationClip;					//Animation clip fading to color (black default) when changing scenes
 	public AnimationClip fadeAlphaAnimationClip;						//Animation clip fading out UI elements alpha
 
 
 	private PlayMusic playMusic;										//Reference to PlayMusic script
-	private float fadeIn = 2.5f;									//Very short fade time (10 milliseconds) to start playing music immediately without a click/glitch
+	//private float fadeIn = 2.5f;										//Very short fade time (10 milliseconds) to start playing music immediately without a click/glitch
 	private ShowPanels showPanels;										//Reference to ShowPanels script on UI GameObject, to show and hide panels
 
 	
 	void Awake()
 	{
+		inMainMenu = true;
 		//Get a reference to ShowPanels attached to UI object
 		showPanels = GetComponent<ShowPanels> ();
 
 		// begin fade in
 		animStartFade.SetTrigger("fade");
+		//animStartFade.SetBool("visible", true);
 
 		//Get a reference to PlayMusic attached to UI object
 		playMusic = GetComponent<PlayMusic> ();
@@ -98,9 +100,9 @@ public class StartOptions : MonoBehaviour {
 
 	public void StartGameInScene()
 	{
+
 		//Pause button now works if escape is pressed since we are no longer in Main menu.
 		inMainMenu = false;
-
 		//If changeMusicOnStart is true, fade out volume of music group of AudioMixer by calling FadeDown function of PlayMusic, using length of fadeColorAnimationClip as time. 
 		//To change fade time, change length of animation "FadeToColor"
 		/*	if (changeMusicOnStart) 
@@ -109,9 +111,11 @@ public class StartOptions : MonoBehaviour {
 			Invoke ("PlayNewMusic", fadeAlphaAnimationClip.length);
 		}*/
 		//Set trigger for animator to start animation fading out Menu UI
-		animMenuAlpha.SetTrigger ("fade");
-		animColorFade.SetTrigger ("fade");
-		Invoke("HideDelayed", fadeAlphaAnimationClip.length);
+		animMenuAlpha.SetTrigger ("fade");												// fade menu to black
+		animMenuAlpha.SetBool ("visible", false);										// fade menu to black
+		animColorFade.SetTrigger ("fade");												// fade menu tint to black
+		animColorFade.SetBool ("visible", false);										// fade menu tint to black
+		Invoke("HideDelayed", fadeAlphaAnimationClip.length);							// hide menu after fade out
 		Debug.Log ("Game started in same scene! Put your game starting stuff here.");
 	}
 

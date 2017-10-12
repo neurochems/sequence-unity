@@ -306,7 +306,7 @@ public class SixthPlayerState : IParticleState
 
 		// ninth
 			// to/in light world
-		if ((evol >= -34f) && (evol < -55f)) {																// to light world ninth
+		if ((evol <= -34f) && (evol > -55f)) {																// to light world ninth
 			if (deltaDark > deltaLight) ToNinth(false, 0);														// if lose more light than dark = to dark circle ninth
 			else if (deltaDark <= deltaLight) ToNinth(true, 0);													// if lose more dark than light = to light circle ninth
 		}

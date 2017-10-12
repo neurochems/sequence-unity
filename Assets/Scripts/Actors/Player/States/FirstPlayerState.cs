@@ -65,12 +65,12 @@ public class FirstPlayerState : IParticleState
 					else if (pspOther.evolC > 0f) {															// if other > 0
 						//Debug.Log ("player first + 0/1>0: add evol");
 						if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC);							// add dark of other
-						if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC);            		    // add light of other
+						if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC);						// add light of other
 						Debug.Log ("player first + 0/1>0: add " + pspOther.lightEvolC + " light");
 					}
 					else if (pspOther.evolC < 0f) {															// if other < 0
 						Debug.Log ("player first + 0/1<0: add evol");
-						if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC * -1);						// add positive dark of other
+						if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC * -1);					// add positive dark of other
 						if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC * -1);					// add positive light of other
 					}
 					checkEvol = true;																		// set check evol flag

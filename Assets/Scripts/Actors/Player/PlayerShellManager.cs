@@ -16,17 +16,19 @@ public class PlayerShellManager : MonoBehaviour {
 
 	void Update() {
 		// reset scale timer
-		if (resetScale) resetScaleTimer += Time.deltaTime;																		// start timer
-		if (resetScaleTimer >= 3.25f) {																							// when timer >= 4 sec
-			//anim.ResetTrigger("colour");	
-			if (toState == 3 || toState == 4 || toState == 5 || toState == 6) 													// if to third/fourth/fifth/sixth
-				ScaleTo (false, "hidden", "third");																					// grow to first
-			if (toState == 7 || toState == 8) 																					// if to seventh/eighth
-				ScaleTo (false, "hidden", "seventh");																				// grow to seventh
-			if (toState == 9) 																									// if to ninth
-				ScaleTo (false, "hidden", "ninth");																					// grow to ninth
-			resetScale = false;																									// reset reset scale flag
-			resetScaleTimer = 0f;																								// reset timer
+		if (resetScale) {
+			resetScaleTimer += Time.deltaTime;																					// start timer
+			if (resetScaleTimer >= 3.25f) {																							// when timer >= 4 sec
+				//anim.ResetTrigger("colour");	
+				if (toState == 3 || toState == 4 || toState == 5 || toState == 6) 													// if to third/fourth/fifth/sixth
+					ScaleTo (false, "hidden", "third");																					// grow to first
+				if (toState == 7 || toState == 8) 																					// if to seventh/eighth
+						ScaleTo (false, "hidden", "seventh");																				// grow to seventh
+				if (toState == 9) 																									// if to ninth
+					ScaleTo (false, "hidden", "ninth");																					// grow to ninth
+				resetScale = false;																									// reset reset scale flag
+				resetScaleTimer = 0f;																								// reset timer
+			}
 		}
 	}
 

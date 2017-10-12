@@ -7,6 +7,8 @@ public class FauxGravityAttractor : MonoBehaviour {
 
 	public float gravity = -10;
 
+	private PlayerStatePattern psp;														// player state pattern
+
 	//private Rigidbody rb;
 
 	//private float photonRadius = 100.2f;
@@ -14,7 +16,14 @@ public class FauxGravityAttractor : MonoBehaviour {
 	//private float shellRadius = 102.4f;
 
 	void Start() {
+		psp = GameObject.Find ("Player").GetComponent<PlayerStatePattern> ();			// get psp
 		//rb = GetComponent<Rigidbody>();
+	}
+
+	void Update() 
+	{
+		if (psp.state == 10)
+			gravity = -9.8f;
 	}
 
 	public void Attract(Transform body) {

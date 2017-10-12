@@ -315,7 +315,7 @@ public class SeventhPlayerState : IParticleState
 			else if (square && (deltaDark <= deltaLight)) ToNinth (true, 2);									// if square & gain more light than dark = to light square ninth
 		} 
 			// to/in light world
-		else if ((evol >= -34f) && (evol < -55f)) {															// to light world ninth
+		else if ((evol <= -34f) && (evol > -55f)) {															// to light world ninth
 			if (deltaDark > deltaLight) ToNinth(false, 0);														// if lose more light than dark = to dark circle ninth
 			else if (deltaDark <= deltaLight) ToNinth(true, 0);													// if lose more dark than light = to light circle ninth
 		}

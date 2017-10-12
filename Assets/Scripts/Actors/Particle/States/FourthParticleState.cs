@@ -66,7 +66,7 @@ public class FourthParticleState : IParticleState
 							if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC * -1);				// add other negated light
 						}
 					} 
-					else if (pspOther.state != 4 && (psp.evolC <= pspOther.evolC)) {					// else player is higher
+					else if (psp.evolC <= pspOther.evolC) {					// else player is higher
 						if (pspOther.evolC > 0f) {															// other > 0
 							if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);						// sub other dark
 							if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);					// sub other light

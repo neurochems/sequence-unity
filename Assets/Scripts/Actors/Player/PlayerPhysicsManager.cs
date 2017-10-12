@@ -13,13 +13,11 @@ public class PlayerPhysicsManager : MonoBehaviour {
 	[HideInInspector] public bool bump;
 	public int bumpStrength = 100;
 
-
 	void Start () {
 		rb = GetComponent<Rigidbody> ();
 		rb.constraints = RigidbodyConstraints.FreezeRotation;
 		rb.useGravity = false;
 		playerTransform = transform;
-
 	}
 	
 	void FixedUpdate () {
@@ -35,4 +33,5 @@ public class PlayerPhysicsManager : MonoBehaviour {
 	public void Bump(bool toggle) {
 		bump = toggle;
 	}
+
 }

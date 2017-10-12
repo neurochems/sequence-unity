@@ -4,23 +4,65 @@ using System.Collections;
 public class Orbit : MonoBehaviour {
 
 	public Transform player;
+	public Transform core;
 	private PlayerStatePattern psp;
+	private UIManager uim;
 
-	public float turnSpeed = 4.0f;
+	public float turnSpeed;
+	public float maxTurnSpeed;
+	public float accelRate;
+	public float resetRate;
 
-	private Vector3 offset;
+	public Vector3 offset;
+	private Vector3 defaultEuler;
+	private Vector3 velocity = Vector3.zero;																			// velocity of camera
+	public bool resetStop = false;
 
-	void Start () {
+	void Start () 
+	{
 		offset = new Vector3(player.position.x, player.position.y + 8.0f, player.position.z + 7.0f);
 		psp = GetComponentInParent<PlayerStatePattern> ();
+		uim = GetComponentInParent<UIManager> ();
+	}
+
+	void Update() 
+	{
+		if (psp.camOrbit && resetStop) {
+			offset = new Vector3(player.position.x, player.position.y + 8.0f, player.position.z + 7.0f);
+			resetStop = false;
+		}
+
+		if (psp.camOrbit && !resetStop) {
+			turnSpeed += Mathf.Pow(Time.deltaTime, 3.0f) * accelRate;
+			if (turnSpeed > maxTurnSpeed) turnSpeed = maxTurnSpeed;				// clamp
+		}
+
+		if (!psp.camOrbit && !resetStop) {
+			turnSpeed -= Mathf.Pow(Time.deltaTime, 3.0f) * accelRate;
+			if (turnSpeed <= 0f) {
+				turnSpeed = 0f;								// clamp
+				resetStop = true;
+			}
+		}
+
+		//if (!uim.uI.GetComponent<StartOptions> ().inMainMenu) resetCamera = true;
 	}
 
 	void LateUpdate()
 	{
-		if (psp.camOrbit) {
+		if (psp.camOrbit && resetStop) {
 			offset = Quaternion.AngleAxis (turnSpeed, Vector3.up) * offset;
-			transform.position = player.position + offset; 
-			transform.LookAt (player.position);
+			transform.position = core.position + offset; 
+			transform.LookAt (player.position, Vector3.up);
+		}
+
+		if (!psp.camOrbit && !resetStop) {
+
+			// smoothdamp position back to zero
+			transform.position = Vector3.SmoothDamp (transform.position, core.position, ref velocity, 0.01f);				// perform smoothdamp on camera position
+			// rotate camera back overhead player
+			transform.rotation = Quaternion.RotateTowards(transform.rotation, core.rotation, resetRate);
+
 		}
 	}
 }

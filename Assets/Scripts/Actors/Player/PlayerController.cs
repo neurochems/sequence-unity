@@ -6,10 +6,11 @@ using System.Collections.Generic;
 public class PlayerController : MonoBehaviour {
 
 	public bool godMode = false;
+	public bool chill;
 
-	public float accelSpeed = 10;
-	public float floatSpeed = 10;
-	public float weight = 50;
+	public float accelSpeed = 10f;
+	public float floatSpeed = 10f;
+	public float weight = 50f;
 
 	public Vector3 moveDir;
 	public Vector3 force;
@@ -27,8 +28,8 @@ public class PlayerController : MonoBehaviour {
 		psp = GetComponent<PlayerStatePattern> ();
 
 		if (godMode) {
-			accelSpeed = 20;
-			floatSpeed = 15;
+			accelSpeed = 20f;
+			floatSpeed = 15f;
 		}
 
 		// init moveDir
@@ -38,7 +39,7 @@ public class PlayerController : MonoBehaviour {
 
 	void FixedUpdate() {
 		// input
-		if (!uim.uI.GetComponent<StartOptions>().inMainMenu) {
+		if (!uim.ui.GetComponent<StartOptions>().inMainMenu) {
 			// how fast moveDir increases
 			moveDir.x += (Input.GetAxisRaw ("Horizontal") / weight);
 			moveDir.z += (Input.GetAxisRaw ("Vertical") / weight);
@@ -61,8 +62,24 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void Update() {
-		if (Input.GetButtonDown ("Restart"))
+
+		if (chill) {
+			accelSpeed = 2.5f;
+			floatSpeed = 1f;
+		}
+		else {
+			accelSpeed = 5f;
+			floatSpeed = 2f;
+		}
+
+		if (Input.GetButtonDown ("Restart")) {
+			uim.ui.gameObject.tag = "Destroy";
 			SceneManager.LoadScene("Sequence1");									// restart scene		
+		}
+	}
+
+	public void Chill(bool toggle) {
+		chill = toggle;
 	}
 		
 }
