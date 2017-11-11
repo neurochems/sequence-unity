@@ -55,7 +55,7 @@ public class FirstPlayerState : IParticleState
 				|| other.gameObject.CompareTag ("First")) {											// collide with first	
 				ParticleStatePattern pspOther 
 					= other.gameObject.GetComponent<ParticleStatePattern>();							// ref other ParticleStatePattern
-				if (!pspOther.stunned && psp.lightworld == pspOther.inLightworld) {						// if player and not stunned particle in same world
+				if (!pspOther.stunned && !pspOther.inLightworld) {										// if player and not stunned dark world particle
 					canCollide = false;																		// reset has collided trigger
 					psp.sc[0].enabled = false;																// disable trigger collider
 					takeHit = true;																			// set stunned flag
@@ -66,10 +66,8 @@ public class FirstPlayerState : IParticleState
 						//Debug.Log ("player first + 0/1>0: add evol");
 						if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC);							// add dark of other
 						if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC);						// add light of other
-						Debug.Log ("player first + 0/1>0: add " + pspOther.lightEvolC + " light");
 					}
 					else if (pspOther.evolC < 0f) {															// if other < 0
-						Debug.Log ("player first + 0/1<0: add evol");
 						if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC * -1);					// add positive dark of other
 						if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC * -1);					// add positive light of other
 					}
@@ -87,11 +85,10 @@ public class FirstPlayerState : IParticleState
 			{	
 				ParticleStatePattern pspOther 
 					= other.gameObject.GetComponent<ParticleStatePattern>();							// ref other ParticleStatePattern
-				if (!pspOther.stunned && psp.lightworld == pspOther.inLightworld) {						// if player and not stunned particle in same world
+				if (!pspOther.stunned && !pspOther.inLightworld) {										// if player and not stunned dark world particle
 					canCollide = false;																		// reset has collided trigger
 					psp.sc[0].enabled = false;																// disable trigger collider
 					takeHit = true;																			// set stunned flag
-					Debug.Log ("player first +else: sub evol");
 					if (pspOther.evolC > 0f) {																// other > 0
 						if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);							// sub other dark
 						if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);						// sub other light

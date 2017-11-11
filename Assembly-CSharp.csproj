@@ -84,6 +84,7 @@
      <Compile Include="Assets\Scripts\Camera\CameraManager.cs" />
      <Compile Include="Assets\Scripts\Camera\Orbit.cs" />
      <Compile Include="Assets\Scripts\Camera\OrthoSmoothFollow.cs" />
+     <Compile Include="Assets\Scripts\Environment\ColorControlPostEffect.cs" />
      <Compile Include="Assets\Scripts\Environment\FauxGravityAttractor.cs" />
      <Compile Include="Assets\Scripts\Environment\FreeFloat.cs" />
      <Compile Include="Assets\Scripts\Environment\WorldManager.cs" />
@@ -141,6 +142,7 @@
      <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonLit.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ColorCorrectionSelective.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\Bokeh34.shader" />
+     <None Include="Assets\Environment\Shaders\ColorControlPostEffect.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\CameraMotionBlurDX11.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\SeparableBlurPlus.shader" />
      <None Include="Assets\Standard Assets\Effects\Projectors\Shaders\ProjectorLight.shader" />

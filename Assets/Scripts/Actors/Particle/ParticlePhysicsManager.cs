@@ -47,13 +47,14 @@ public class ParticlePhysicsManager : MonoBehaviour {
 			moveSpeed = 1.0f;
 			maxSpeed = 2.0f;
 		}
-		else if (gameObject.tag == "World") {
-			moveSpeed = 20.0f;
-			maxSpeed = 200.0f;
-		}
 		else {
 			moveSpeed = 2.0f;
 			maxSpeed = 4.0f;
+		}
+
+		if (gameObject.tag == "World") {
+			moveSpeed = 35.0f;
+			maxSpeed = 350.0f;
 		}
 
 		if (boost) {
@@ -72,7 +73,7 @@ public class ParticlePhysicsManager : MonoBehaviour {
 		}
 
 		if (bump) {																								// bump away at collision
-			rb.AddRelativeForce (Vector3.Lerp(rb.velocity, (rb.velocity * -bumpStrength), 1.0f));				// lerp force of velocity * a factor in the opposite direction
+			//rb.AddRelativeForce (Vector3.Lerp(rb.velocity, (rb.velocity * -bumpStrength), 1.0f));				// lerp force of velocity * a factor in the opposite direction
 			//Debug.Log ("particle collision bump");
 			bump = false;																						// reset collision trigger
 		}

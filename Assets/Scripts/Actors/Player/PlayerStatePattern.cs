@@ -53,6 +53,8 @@ public class PlayerStatePattern : MonoBehaviour {
 	private Camera c;																						// camera
 	private OrthoSmoothFollow osf;																			// orthosmoothfollow
 
+	private Material skybox ;																				// skybox
+
 	// evolution 
 	private int fromState, toState, fromShape, toShape;														// transition properties
 	private bool fromLight, toLight;																		// transition properties
@@ -64,27 +66,31 @@ public class PlayerStatePattern : MonoBehaviour {
 	[HideInInspector] public bool resetScale = false;														// timer trigger for resetting scale after world switch (public for camera manager access)
 	private float changeWorldTimer, resetScaleTimer, changeParticlesTimer, radiusUpTimer;					// change shape timer, reset scale timer, change particles timer, tenth state collider radius up timer
 
+	// camera
+	private float prevFCP = 180.0f, firstFCP = 180.0f, secondFCP = 500.0f, thirdFCP = 1000.0f, fourthFCP = 2000.0f;		// far clip planes for lerping
+	public float clipPlaneLerpTime = 5.0f;																				// clip plane lerp time
 	//[HideInInspector] 
-	public bool camOrbit;																	// tenth state camera orbit flag
+	public bool camOrbit;																					// tenth state camera orbit flag
 
 	// timers & flags
-	public bool isInit = true;												// is init flag
-	private float initTimer = 0f;											// init timer
-	private int die;														// roll for collision conflicts
-	public bool stunned;													// stunned?
-	public float stunDuration = 5f;											// duration of post-hit invulnerability
-	private float stunTimer = 0f;											// stun timer
-	[HideInInspector] public float shrinkTimer = 0f;						// shell deactivation timer
+	public bool isInit = true;																				// is init flag
+	private float initTimer = 0f;																			// init timer
+	private int die;																						// roll for collision conflicts
+	public bool stunned;																					// stunned?
+	public float stunDuration = 5f;																			// duration of post-hit invulnerability
+	private float stunTimer = 0f;																			// stun timer
+	[HideInInspector] public float shrinkTimer = 0f;														// shell deactivation timer
+
 	// UI
-	private StartOptions so;												// start options ref
-	[HideInInspector] public float lastStateChange = 0.0f;					// since last state change
-	[HideInInspector] public float sincePlaytimeBegin = 0.0f;				// since game start
-	public bool timeCheck = true;											// check time flag
-	private bool musicStart = true;											// game start flag
+	private StartOptions so;																				// start options ref
+	[HideInInspector] public float lastStateChange = 0.0f;													// since last state change
+	[HideInInspector] public float sincePlaytimeBegin = 0.0f;												// since game start
+	public bool timeCheck = true;																			// check time flag
+	private bool musicStart = true;																			// game start flag
 
 	// audio
-	public AudioMixerSnapshot[] musicSnapshots;								// ref to music mixer snapshots
-	public AudioMixerSnapshot[] effectsSnapshots;							// ref to main mixer effects snapshots
+	public AudioMixerSnapshot[] musicSnapshots;																// ref to music mixer snapshots
+	public AudioMixerSnapshot[] effectsSnapshots;															// ref to main mixer effects snapshots
 
 	void Awake()
 	{
@@ -103,6 +109,13 @@ public class PlayerStatePattern : MonoBehaviour {
 		eighthState = new EighthPlayerState (this);							// initialize eighth state
 		ninthState = new NinthPlayerState (this);							// initialize ninth state
 		tenthState = new TenthPlayerState (this);							// initialize tenth state
+
+		// set new UI to be destroyed if old exists
+		//uim = GetComponent<UIManager> ();									// init ui manager ref
+		/*if (GameObject.FindGameObjectWithTag ("DontDestroy") != null) {
+			uim.ui = GameObject.FindGameObjectWithTag ("DontDestroy");
+			GameObject.FindGameObjectWithTag ("UI").gameObject.tag = "Destroy";
+		}*/
 
 	}
 
@@ -139,10 +152,18 @@ public class PlayerStatePattern : MonoBehaviour {
 
 		osf = GetComponentInChildren<OrthoSmoothFollow> ();					// get orthosmoothfollow
 
-		uim = GetComponent<UIManager> ();									// init ui manager ref
-		Destroy(GameObject.FindGameObjectWithTag("Destroy"));				// destroy old UI
-
 		so = GameObject.Find("UI Canvas").GetComponent<StartOptions> ();	// init start options
+
+		uim = GetComponent<UIManager> ();									// init ui manager ref
+		Destroy(GameObject.FindGameObjectWithTag("Destroy"));				// destroy new UI
+
+		skybox = RenderSettings.skybox;										// set skybox
+		skybox.EnableKeyword ("Frequency");
+		if (skybox.HasProperty("Frequency")) {
+			Debug.Log ("skybox has frequency");
+		}
+		//float skyboxFrequencyRange = Random.Range (0.5f, 30.0f);
+		skybox.SetFloat ("Frequency", Random.Range (0.5f, 30.0f));			// set skybox frequency
 
 		currentState = zeroState;											// start at zero state
 		state = 0;															// start at zero state
@@ -179,7 +200,6 @@ public class PlayerStatePattern : MonoBehaviour {
 			}
 			if (timeCheck) {																	// if checking time
 				sincePlaytimeBegin = Time.time;														// check time
-				Debug.Log("since play time begin: " + sincePlaytimeBegin);
 				timeCheck = false;																	// time has been checked
 			}
 		}
@@ -251,12 +271,17 @@ public class PlayerStatePattern : MonoBehaviour {
 		}
 
 		// change colour timer
-		if (changeWorld) {
+		if (toLightworld) {
 			changeWorldTimer += Time.deltaTime;												// start timer
-			if (changeWorldTimer >= 2.5f) {														// when timer >= 2 sec
-				Debug.Log ("player changing world");
-				ChangeWorld();																	// change world
-				changeWorld = false;															// reset change colour flag
+			if (changeWorldTimer >= 5.0f) {														// when timer >= 2 sec
+				toLightworld = false;															// reset change colour flag
+				changeWorldTimer = 0f;															// reset timer
+			}
+		}
+		if (toDarkworld) {
+			changeWorldTimer += Time.deltaTime;												// start timer
+			if (changeWorldTimer >= 5.0f) {														// when timer >= 2 sec
+				toDarkworld = false;															// reset change colour flag
 				changeWorldTimer = 0f;															// reset timer
 			}
 		}
@@ -378,10 +403,8 @@ public class PlayerStatePattern : MonoBehaviour {
 		setNucleus = true;															// start set nucleus timer
 
 		// trigger world change
-		if (toLightworld || toDarkworld) {											// if changing worlds
-			changeWorld = true;															// switch properties
-			//resetScale = true;															// zoom camera out to appropriate state
-		} 
+		if (toLightworld) lightworld = true;
+		else if (toDarkworld) lightworld = false;
 
 		// trigger camera change
 		//if (toState == 0 || (toState % 2 == 1) || toState == 10)
@@ -395,13 +418,15 @@ public class PlayerStatePattern : MonoBehaviour {
 			sc[1].radius = 0.205f;														// update collision radius
 
 			// camera
-			c.nearClipPlane = -50f;														// set near clipping plane
+			c.farClipPlane = Mathf.Lerp(prevFCP, firstFCP, clipPlaneLerpTime);			// set far clipping plane
+			prevFCP = firstFCP;															// set previous FCP
 
 			// audio
 				// music
-			if (evol == 0f) musicSnapshots[0].TransitionTo(2.0f);						// AUDIO: transition to zero state music snapshot
+			if (evol == 0f) 
+				musicSnapshots[0].TransitionTo(2.0f);									// AUDIO: transition to zero state music snapshot
 			else if ((evol == 0.5f) || evol == -0.5f)
-				musicSnapshots [1].TransitionTo (2.0f);									// AUDIO: transition to half zero state music snapshot
+				musicSnapshots [1].TransitionTo (5.0f);									// AUDIO: transition to half zero state music snapshot
 				// effects
 			if (toDarkworld) effectsSnapshots[0].TransitionTo(0.0f);					// AUDIO: transition to default/dark world effects snapshot
 			else if (toLightworld && !isLight) effectsSnapshots[5].TransitionTo(2.0f);	// AUDIO: transition to light world effects snapshot
@@ -414,11 +439,12 @@ public class PlayerStatePattern : MonoBehaviour {
 			sc[1].radius = 0.52f;														// update collision radius
 
 			// camera
-			c.nearClipPlane = -50f;														// set near clipping plane
+			c.farClipPlane = Mathf.Lerp(prevFCP, firstFCP, clipPlaneLerpTime);			// set far clipping plane
+			prevFCP = firstFCP;															// set previous FCP
 
 			// audio
 				// music
-			musicSnapshots[2].TransitionTo(2.0f);										// AUDIO: transition to first state music snapshot
+			musicSnapshots[2].TransitionTo(5.0f);										// AUDIO: transition to first state music snapshot
 				// effects
 			if (toDarkworld) effectsSnapshots[0].TransitionTo(2.0f);					// AUDIO: transition to default/dark world effects snapshot
 			else if (toLightworld && !isLight) effectsSnapshots[5].TransitionTo(2.0f);	// AUDIO: transition to light world effects snapshot
@@ -431,11 +457,12 @@ public class PlayerStatePattern : MonoBehaviour {
 			sc[1].radius = 0.52f;														// update collision radius
 
 			// camera
-			c.nearClipPlane = -50f;														// set near clipping plane
+			c.farClipPlane = Mathf.Lerp(prevFCP, firstFCP, clipPlaneLerpTime);			// set far clipping plane
+			prevFCP = firstFCP;															// set previous FCP
 
 			// audio
 				// music
-			musicSnapshots[3].TransitionTo(2.0f);										// AUDIO: transition to second state music snapshot
+			musicSnapshots[3].TransitionTo(5.0f);										// AUDIO: transition to second state music snapshot
 				// effects
 			if (toDarkworld) effectsSnapshots[0].TransitionTo(2.0f);					// AUDIO: transition to default/dark world effects snapshot
 			else if (toLightworld && !isLight) effectsSnapshots[5].TransitionTo(2.0f);	// AUDIO: transition to light world effects snapshot
@@ -454,11 +481,12 @@ public class PlayerStatePattern : MonoBehaviour {
 			}
 
 			// camera
-			c.nearClipPlane = -500f;													// set near clipping plane
+			c.farClipPlane = Mathf.Lerp(prevFCP, secondFCP, clipPlaneLerpTime);			// set far clipping plane
+			prevFCP = secondFCP;														// set previous FCP
 
 			// audio
 				// music
-			musicSnapshots[4].TransitionTo(2.0f);										// AUDIO: transition to third state music snapshot	
+			musicSnapshots[4].TransitionTo(5.0f);										// AUDIO: transition to third state music snapshot	
 				// effects
 			if (toDarkworld) effectsSnapshots[0].TransitionTo(2.0f);					// AUDIO: transition to default/dark world effects snapshot
 			else if (toLightworld && !isLight) effectsSnapshots[5].TransitionTo(2.0f);	// AUDIO: transition to light world effects snapshot
@@ -477,11 +505,12 @@ public class PlayerStatePattern : MonoBehaviour {
 			}
 
 			// camera
-			c.nearClipPlane = -500f;													// set near clipping plane
+			c.farClipPlane = Mathf.Lerp(prevFCP, secondFCP, clipPlaneLerpTime);			// set far clipping plane
+			prevFCP = secondFCP;														// set previous FCP
 
 			// audio
 				// music
-			musicSnapshots[5].TransitionTo(2.0f);										// AUDIO: transition to fourth state music snapshot	
+			musicSnapshots[5].TransitionTo(5.0f);										// AUDIO: transition to fourth state music snapshot	
 				// effects
 			if (toDarkworld) effectsSnapshots[0].TransitionTo(2.0f);					// AUDIO: transition to default/dark world effects snapshot
 			else if (toLightworld && !isLight) effectsSnapshots[5].TransitionTo(2.0f);	// AUDIO: transition to light world effects snapshot
@@ -500,11 +529,12 @@ public class PlayerStatePattern : MonoBehaviour {
 			}
 
 			// camera
-			c.nearClipPlane = -500f;													// set near clipping plane
+			c.farClipPlane = Mathf.Lerp(prevFCP, secondFCP, clipPlaneLerpTime);			// set far clipping plane
+			prevFCP = secondFCP;														// set previous FCP
 
 			// audio
 				// music
-			musicSnapshots[6].TransitionTo(2.0f);										// AUDIO: transition to fifth state music snapshot
+			musicSnapshots[6].TransitionTo(5.0f);										// AUDIO: transition to fifth state music snapshot
 				// effects
 			if (shape == 0 && !isLight) {
 				if (toDarkworld || !lightworld) 
@@ -534,11 +564,12 @@ public class PlayerStatePattern : MonoBehaviour {
 			}
 
 			// camera
-			c.nearClipPlane = -500f;													// set near clipping plane
+			c.farClipPlane = Mathf.Lerp(prevFCP, secondFCP, clipPlaneLerpTime);			// set far clipping plane
+			prevFCP = secondFCP;														// set previous FCP
 
 			// audio
 				// music
-			musicSnapshots[7].TransitionTo(2.0f);										// AUDIO: transition to sixth state music snapshot
+			musicSnapshots[7].TransitionTo(5.0f);										// AUDIO: transition to sixth state music snapshot
 				// effects
 			if (shape == 0 && !isLight) {
 				if (toDarkworld || !lightworld) 
@@ -573,11 +604,12 @@ public class PlayerStatePattern : MonoBehaviour {
 			}
 
 			// camera
-			c.nearClipPlane = -1000f;													// set near clipping plane
+			c.farClipPlane = Mathf.Lerp(prevFCP, thirdFCP, clipPlaneLerpTime);			// set far clipping plane
+			prevFCP = thirdFCP;															// set previous FCP
 
 			// audio
 				// music
-			musicSnapshots[8].TransitionTo(2.0f);										// AUDIO: transition to seventh state music snapshot
+			musicSnapshots[8].TransitionTo(5.0f);										// AUDIO: transition to seventh state music snapshot
 				// effects
 			if (shape == 0 && !isLight) {
 				if (toDarkworld || !lightworld) 
@@ -612,11 +644,12 @@ public class PlayerStatePattern : MonoBehaviour {
 			}
 
 			// camera
-			c.nearClipPlane = -1000f;													// set near clipping plane
+			c.farClipPlane = Mathf.Lerp(prevFCP, thirdFCP, clipPlaneLerpTime);			// set far clipping plane
+			prevFCP = thirdFCP;															// set previous FCP
 
 			// audio
 				// music
-			musicSnapshots[9].TransitionTo(2.0f);										// AUDIO: transition to eighth state music snapshot
+			musicSnapshots[9].TransitionTo(5.0f);										// AUDIO: transition to eighth state music snapshot
 				// effects
 			if (shape == 0 && !isLight) {
 				if (toDarkworld || !lightworld) 
@@ -651,11 +684,12 @@ public class PlayerStatePattern : MonoBehaviour {
 			}
 
 			// camera
-			c.nearClipPlane = -2000f;													// set near clipping plane
+			c.farClipPlane = Mathf.Lerp(prevFCP, thirdFCP, clipPlaneLerpTime);			// set far clipping plane
+			prevFCP = thirdFCP;															// set previous FCP
 
 			// audio
 				// music
-			musicSnapshots[10].TransitionTo(2.0f);										// AUDIO: transition to ninth state music snapshot
+			musicSnapshots[10].TransitionTo(5.0f);										// AUDIO: transition to ninth state music snapshot
 				// effects
 			if (shape == 0 && !isLight) {
 				if (toDarkworld || !lightworld) 
@@ -680,8 +714,9 @@ public class PlayerStatePattern : MonoBehaviour {
 			// physics
 			rb.mass = 10.0f;															// set mass
 			// camera
-			//camOrbit = true;															// start orbit
-			c.nearClipPlane = -5000f;													// set near clipping plane
+			camOrbit = true;															// start orbit
+			c.farClipPlane = Mathf.Lerp(prevFCP, fourthFCP, clipPlaneLerpTime);			// set far clipping plane
+			prevFCP = fourthFCP;														// set previous FCP
 			// audio
 				// music
 			musicSnapshots[11].TransitionTo(30.0f);										// AUDIO: transition to tenth state music snapshot
@@ -697,33 +732,6 @@ public class PlayerStatePattern : MonoBehaviour {
 		lastStateChange = Time.time;												// reset time since last state change
 		darkEvolStart = darkEvol;													// store dark evol at start of state
 		lightEvolStart = lightEvol;													// store light evol at start of state 
-	}
-
-	private void ChangeWorld () 
-	{
-		if (toLightworld) {															// if switching to light world from dark world
-			lightworld = true;
-			changeParticles = true;														// set change particle property trigger
-
-			rendWorld.material.SetColor("_Color", Color.white);							// change world to white
-			rendCore.material.SetColor("_Color", Color.black);							// change core to black
-			rendShell.material.SetColor("_Color", Color.black);							// change shell to black
-			rendNucleus.material.SetColor("_Color", Color.white);						// change nucleus to white
-
-			toLightworld = false;														// reset to light world trigger
-		}
-		else if (toDarkworld) {														// if switching to dark world from light world
-			lightworld = false;
-			changeParticles = true;
-
-			rendWorld.material.SetColor("_Color", Color.black);							// change world to white
-			rendCore.material.SetColor("_Color", Color.white);							// change core to white
-			rendShell.material.SetColor("_Color", Color.white);							// change shell to black
-			rendNucleus.material.SetColor("_Color", Color.black);						// change nucleus to black
-
-			toDarkworld = false;														// reset to dark world trigger
-		}
-
 	}
 
 }

@@ -8,23 +8,29 @@ public class PlayerController : MonoBehaviour {
 	public bool godMode = false;
 	public bool chill;
 
+	public AnimationCurve accelCurve;
+	float accelTime = 0;
+
 	public float accelSpeed = 10f;
 	public float floatSpeed = 10f;
 	public float weight = 50f;
+	public float decelFactor = 0.003f;
 
 	public Vector3 moveDir;
-	public Vector3 force;
+	public Vector3 vectorAccel;
 	public float velocity;
 
 	private Rigidbody rb;
 
 	private PlayerStatePattern psp;
 	private UIManager uim;
+	private StartOptions so;
 
 	void Start() {
 		// init components
 		rb = GetComponent<Rigidbody> ();
 		uim = GameObject.Find("Player").GetComponent<UIManager> ();
+		so = GameObject.Find("Player").GetComponent<UIManager> ().ui.GetComponent<StartOptions>();
 		psp = GetComponent<PlayerStatePattern> ();
 
 		if (godMode) {
@@ -38,8 +44,10 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
+
 		// input
-		if (!uim.ui.GetComponent<StartOptions>().inMainMenu) {
+
+		if (!so.inMainMenu) {
 			// how fast moveDir increases
 			moveDir.x += (Input.GetAxisRaw ("Horizontal") / weight);
 			moveDir.z += (Input.GetAxisRaw ("Vertical") / weight);
@@ -50,13 +58,24 @@ public class PlayerController : MonoBehaviour {
 
 		// movement
 
-		force = (moveDir * accelSpeed);			// calculate force for inspector visibility / move direction * sprint threshold (larget to account for mass)
-		rb.AddRelativeForce (force * rb.mass);		// apply force as a factor of mass
+		if(Input.GetAxisRaw("Horizontal")!=0 || Input.GetAxisRaw("Vertical")!=0){
+			accelTime += Time.fixedDeltaTime;
+		}else{
+			accelTime -= Time.fixedDeltaTime * 0.003f;
+		}
 
-		velocity = rb.velocity.magnitude;			// velocity for inspector visibility
+		accelSpeed = accelCurve.Evaluate (accelTime);
+
+		// physics
+
+		vectorAccel = (moveDir * accelSpeed);				// calculate force for inspector visibility / move direction * sprint threshold (larget to account for mass)
+
+		velocity = rb.velocity.magnitude;					// velocity for inspector visibility
+
+		rb.AddRelativeForce (rb.mass * vectorAccel);								// apply force = mass * accel
 
 		// float speed clamp
-		if (rb.velocity.magnitude > floatSpeed) {									// if > float speed	
+		if (rb.velocity.magnitude > floatSpeed) {									// if < float speed	
 			rb.velocity = Vector3.ClampMagnitude (rb.velocity, floatSpeed);				// clamp to float speed
 		}
 	}
@@ -64,12 +83,12 @@ public class PlayerController : MonoBehaviour {
 	void Update() {
 
 		if (chill) {
-			accelSpeed = 2.5f;
-			floatSpeed = 1f;
+			accelSpeed = 5.0f;
+			floatSpeed = 2.0f;
 		}
 		else {
-			accelSpeed = 5f;
-			floatSpeed = 2f;
+			accelSpeed = 6.0f;
+			floatSpeed = 4.0f;
 		}
 
 		if (Input.GetButtonDown ("Restart")) {

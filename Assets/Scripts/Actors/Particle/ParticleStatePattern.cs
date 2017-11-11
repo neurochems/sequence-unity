@@ -117,8 +117,8 @@ public class ParticleStatePattern : MonoBehaviour {
 		// calculate evol
 		evol = lightEvol + darkEvol;										// update total evol value
 		// cap evol
-		if (evol > 54) evol = 54;											// cap evol positive
-		if (evol < -54f) evol = -54f;										// cap evol negative
+		if (evol > 55) evol = 55;											// cap evol positive
+		if (evol < -55f) evol = -55f;										// cap evol negative
 
 		// calculate delta
 		deltaDark = darkEvol - darkEvolStart;								// calculate deltaDark
@@ -201,11 +201,14 @@ public class ParticleStatePattern : MonoBehaviour {
 				setNucleusTimer = 0f;																	// reset set nucleus timer
 			}
 		}
+
 		// tenth state deactivation timer
 		if (psp.state == 10) {																	// if player is state 10
 			activeTimer += Time.deltaTime;															// start timer
-			TransitionTo(state, 10, isLight, false, toShape, toShape);								// transition to hidden
 			if (activeTimer >= 10.0f) {																// if timer is 10 sec
+				TransitionTo(state, 10, isLight, false, toShape, toShape);								// transition to hidden
+			}
+			if (activeTimer >= 20.0f) {																// if timer is 20 sec
 				gameObject.SetActive (false);															// deactivate
 				activeTimer = 0f;																		// reset active timer
 			}
@@ -440,13 +443,19 @@ public class ParticleStatePattern : MonoBehaviour {
 				sc[1].radius = 2.05f;														// update collision radius
 			} 
 			else if (!toLight && (toShape == 1 || toShape == 2)) {						// if triangle or square
-				sc[0].radius = 7.25f;														// update collision radius
+				sc[0].radius = 4.75f;														// update collision radius
 				sc[1].radius = 2.65f;														// update collision radius
 			}
 			else if (toLight && (toShape == 1 || toShape == 2)) {						// if triangle or square
-				sc[0].radius = 2.65f;														// update collision radius
-				sc[1].radius = 2.65f;														// update collision radius
+				sc[0].radius = 3.65f;														// update collision radius
+				sc[1].radius = 2.25f;														// update collision radius
 			}
+		}
+		else if (toState == 10)	{ 														// to zero
+			rb.mass = .0f;																// set mass
+			gameObject.tag = "Tenth";													// set tag
+			sc[0].radius = 0.01f;														// update collision radius
+			sc[1].radius = 0.01f;														// update collision radius
 		}
 
 		// late updates

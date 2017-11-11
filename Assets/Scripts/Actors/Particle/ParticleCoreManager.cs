@@ -28,12 +28,12 @@ public class ParticleCoreManager : MonoBehaviour {
 
 		// !inLightworld WORLD CHANGES \\  	- swapping nuclei colours for particles remaining in dark world, no state changes
 			// to light world
-		/*if (!psp.inLightworld && psp.changeParticles) {																			// if change particles and light world
+		if (!psp.inLightworld && psp.changeParticles) {																			// if change particles and light world
 			//Debug.Log (psp.gameObject.name + ": change nucleus to opposite world");
 			toState = psp.state;																									// set toState to current state
 			if (psp.isLight) ToOtherWorld (psp.lightworld, toState, toState, true, fromShape, toShape);							// if light: to hidden, change to white
 			else if (!psp.isLight) ToOtherWorld (psp.lightworld, toState, toState, false, fromShape, toShape);						// if dark: to hidden, change to black
-		}*/
+		}
 
 		// change colour timer
 		if (changeColour) {
@@ -1056,7 +1056,7 @@ public class ParticleCoreManager : MonoBehaviour {
 		else if (f == 9 && t == 8 && fl && tl && fs == 2 && ts == 2) ScaleTo (true, "ninth", "seventh");						// scale to seventh
 
 
-	///// player tenth \\\\\
+	///// tenth \\\\\
 
 		// from zero/half zero
 		if (f == 0 && t == 10) ScaleTo (true, "zero", "hidden");													// scale to hidden

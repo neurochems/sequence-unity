@@ -66,8 +66,7 @@ public class NinthPlayerState : IParticleState
 				|| other.gameObject.CompareTag("Eighth")) {											// collide with eighth
 				ParticleStatePattern pspOther 
 				= other.gameObject.GetComponent<ParticleStatePattern>();								// ref other ParticleStatePattern
-				if (!pspOther.stunned && psp.lightworld == pspOther.inLightworld) {						// if player and not stunned particle in same world
-					//if (psp.chillMode || (psp.evolC > pspOther.evolC)) {									// if particle evol is lower
+				if (!pspOther.stunned && !pspOther.inLightworld) {										// if player and not stunned dark world particle
 					if (pspOther.evolC == 0f) {																// if other = 0
 						psp.AddLight (0.5f);																	// add 0.5 light
 					}
@@ -79,22 +78,6 @@ public class NinthPlayerState : IParticleState
 						if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC * -1);					// add positive dark of other
 						if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC * -1);					// add positive light of other
 					}
-					//}
-					/*if (!psp.chillMode && (psp.evolC <= pspOther.evolC)) {							// if particle evol is higher
-						if (pspOther.evolC == 0f) {														// if other = 0
-							Debug.Log ("player sixth + other=0: add evol");
-							psp.AddLight (0.5f);															// add 0.5 light
-						}
-						else if (pspOther.evolC > 0f) {													// if other > 0
-							Debug.Log ("player sixth + other>0: add evol");
-							if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC);					// add dark of other
-							if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC);                // add light of other
-						}
-						else if (pspOther.evolC < 0f) {													// if other < 0
-							if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC * -1);				// add positive dark of other
-							if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC * -1);			// add positive light of other
-						}
-					}*/
 					canCollide = false;																		// reset has collided trigger
 					psp.sc[0].enabled = false;																// disable trigger collider
 					takeHit = true;																			// set stunned flag
@@ -105,7 +88,7 @@ public class NinthPlayerState : IParticleState
 			{	
 				ParticleStatePattern pspOther 
 				= other.gameObject.GetComponent<ParticleStatePattern>();								// ref other ParticleStatePattern
-				if (!pspOther.stunned && psp.lightworld == pspOther.inLightworld) {						// if player and not stunned particle in same world
+				if (!pspOther.stunned && !pspOther.inLightworld) {										// if player and not stunned dark world particle
 					canCollide = false;																		// reset has collided trigger
 					psp.sc[0].enabled = false;																// disable trigger collider
 					takeHit = true;																			// set stunned flag

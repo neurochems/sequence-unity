@@ -23,7 +23,7 @@ public class ParticleShellManager : MonoBehaviour {
 		if (psp.changeParticles) {																								// if change particles and light world
 			//Debug.Log (psp.gameObject.name + ": change shell to opposite world");
 			toState = psp.state;																									// set toState to current state
-			//ToOtherWorld (psp.lightworld, toState, toState, psp.isLight, fromShape, toShape);										// to other world
+			ToOtherWorld (psp.lightworld, toState, toState, psp.isLight, fromShape, toShape);										// to other world
 		}
 
 		// change colour timer
@@ -932,7 +932,28 @@ public class ParticleShellManager : MonoBehaviour {
 		if (f == 9 && t == 7 && fl && !tl && ts == 2) ScaleTo (true, "ninth", "seventh");										// scale to seventh
 		else if (f == 9 && t == 8 && fl && !tl && ts == 2) ScaleTo (true, "ninth", "seventh");									// scale to seventh
 
+
+	///// tenth \\\\\
+
+
+		// from third
+		if (f == 3 && t == 10 && !fl) ScaleTo (true, "third", "hidden");														// scale to hidden
+		// from fourth
+		else if (f == 4 && t == 10 && !fl) ScaleTo (true, "third", "hidden");													// scale to hidden
+		// from fifth
+		else if (f == 5 && t == 10 && fs == 0) ScaleTo (true, "first", "hidden");												// scale to hidden
+		// from sixth
+		else if (f == 6 && t == 10 && fs == 0) ScaleTo (true, "first", "hidden");												// scale to hidden
+		// from seventh	
+		else if (f == 7 && t == 10) ScaleTo (true, "seventh", "hidden");														// scale to hidden
+		// from eighth
+		else if (f == 8 && t == 10) ScaleTo (true, "seventh", "hidden");														// scale to hidden
+		// from ninth
+		else if (f == 9 && t == 10) ScaleTo (true, "ninth", "hidden");															// scale to hidden
+
 	}
+
+
 
 	///<summary>
 	///<para>set core as light</para>

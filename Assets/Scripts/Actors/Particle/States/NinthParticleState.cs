@@ -270,6 +270,11 @@ public class NinthParticleState : IParticleState
 		psp.TransitionTo(9, 9, isLight, toLight, shape, toShape);						// trigger transition effects
 	}
 
+	public void ToTenth(bool toLight, int toShape)
+	{
+		psp.TransitionTo(9, 10, isLight, toLight, shape, toShape);						// trigger transition effects
+	}
+
 	public void Evol()
 	{
 		evol = psp.evol;																	// local evol check			
@@ -521,6 +526,12 @@ public class NinthParticleState : IParticleState
 		else if ((evol >= 34f && evol < 55f) && inLightworld) {								// to dark world ninth / from light world
 			if (deltaDark > deltaLight) ToOtherWorld(false, 9, false, 0);						// if lose more light than dark = to dark world dark ninth
 			else if (deltaDark <= deltaLight) ToOtherWorld(false, 9, true, 0);					// if lose more dark than light = to dark world light ninth
+		}
+
+		// tenth
+			// in dark world
+		if ((evol >= 55f) || (evol <= -55f)) {												// to tenth
+			ToTenth(true, 0);																	// transition to tenth
 		}
 	}
 }

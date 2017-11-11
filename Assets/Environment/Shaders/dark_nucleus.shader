@@ -2,8 +2,8 @@
 {
 	Properties
 	{
-		frequency ("Frequency", float) = 1.0
-		colour1 ("Main Colour", Color) = (1,0,0,0)
+		f ("Frequency", float) = 20.0
+		c1 ("Main Colour", Color) = (1,1,1,1)
 		//colour2 ("Secondary Colour", Color) = (0,0,0,1)
 	}
 	SubShader
@@ -34,21 +34,18 @@
 				return o;
 			}
 
-			float depth : DEPTH;
+			//float depth : DEPTH;
 
-			float frequency;
-			float4 colour1;
+			float f;
+			float4 c1 : COLOR;
 			//float4 colour2;
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-				float4 c = sin(colour1);
-  				float thing1 = asin((_Time.z * colour1) / (i.uv.x%i.uv.y) % frequency);
-  				//float thing1 = cos((_Time.z * c) / (i.uv.x%i.uv.y) % frequency);
-  				//float thing1 = cos((_Time.z * c) / (i.uv.x%i.uv.y) % frequency);
-  				float thing2 = cos((_Time.z * c) / (i.uv.x%i.uv.y));
-  				//return thing1*colour1*frequency;
-  				return _Time.x * (thing1*(colour1)*frequency*thing2);
+				float4 c = c1 / f;
+  				float t1 = asin((_Time.z * c) / (i.uv.x*i.uv.y) % f);
+  				float t2 = tan((_Time.z * c) / (i.uv.x/i.uv.y));
+  				return (t1*(c1)*f*t2);
 			}
 			ENDCG
 		}

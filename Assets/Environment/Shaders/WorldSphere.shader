@@ -2,11 +2,19 @@
 {
 	Properties
 	{
-		frequency ("Frequency", float) = 20.0
-		colour ("Main Colour", Color) = (1,1,1,1)
+		f ("Frequency", float) = 20.0
+		c ("Main Colour", Color) = (0,0,0,1)
+		trans ("Transparency", Range(0.0, 1.0)) = 0.25
 	}
 	SubShader
 	{
+
+		Tags {"Queue"="Transparent" "RenderType"="Transparent"}
+		LOD 100
+		ZWrite Off
+		//Cull Front
+		Blend SrcAlpha OneMinusSrcAlpha
+
 		Pass
 		{
 			CGPROGRAM
@@ -33,16 +41,20 @@
 				return o;
 			}
 
-			float frequency;
-			float4 colour;
+			float f;
+			float4 c;
+			float trans;
 
 			fixed4 frag (v2f i) : SV_Target
 			{
 				// make stripes
 				//float stripe = floor(fmod((i.uv.x+i.uv.y) * (_Time.w + frequency), 2.0));
-				float thing = asin((_Time.z * colour) / (i.uv.x%i.uv.y) % frequency);
+				//float t = asin((_Time.z * c) / (i.uv.x%i.uv.y) % f);
+				//fixed4 t2 = t*c*f;
+				fixed4 col = c;
+				col.a = trans;
 				// apply stripe
-				return thing*colour*frequency;
+				return col;
 				//return stripe*colour;
 			}
 			ENDCG

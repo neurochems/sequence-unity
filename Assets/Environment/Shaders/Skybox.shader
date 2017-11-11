@@ -2,19 +2,20 @@
 {
 	Properties
 	{
-		//colourmap ("Colour Map", 2D) = "black" {}
-
-		frequency ("Frequency", float) = 20.0
-		colour1 ("Main Colour", Color) = (1,1,1,1)
-		colour2 ("Secondary Colour", Color) = (1,1,1,1)
-		colour3 ("Tertiary Colour", Color) = (1,1,1,1)
+		f ("Frequency", float) = 20.0
+		_Fog ("Fog Value", Vector) = (0,0,0,0)
+		c1 ("Main Colour", Color) = (1,1,1,1)
+		c2 ("Secondary Colour", Color) = (1,1,1,1)
+		c3 ("Tertiary Colour", Color) = (1,1,1,1)
 	}
 	SubShader
 	{
+		Tags {"Queue"="Background"}
+		ZWrite Off
+		CULL Back
+
 		Pass
 		{
-			//CULL FRONT
-
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
@@ -22,13 +23,13 @@
 			struct appdata
 			{
 				float4 vertex : POSITION;
-				float2 uv : TEXCOORD0;
+				float3 uv : TEXCOORD0;
 			};
 
 			struct v2f
 			{
-				float4 vertex : POSITION;
-				float2 uv : TEXCOORD1;
+				float4 vertex : SV_POSITION;
+				float3 uv : TEXCOORD0;
 			};
 			
 			v2f vert (appdata v)
@@ -39,23 +40,21 @@
 				return o;
 			}
 
-			//uniform sampler2D colour_map;
-			//float4 col : COLOR;
-			float depth : DEPTH;
+			float f;
+			float4 c1 : COLOR;
+			float4 c2 : COLOR;
+			float4 c3 : COLOR;
 
-			float frequency;
-			float4 colour1;
-			float4 colour2;
-			float4 colour3;
+			float4 _Fog;
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-  				float4 c = sin(colour1 % colour2 % colour3);
-  				//float thing1 = asin((_Time.z * colour1) / (i.uv.x%i.uv.y) % frequency);
-  				float thing1 = asin((_Time.z * c) / (i.uv.x%i.uv.y) % frequency);
-  				float thing2 = tan((_Time.z * c) / (i.uv.x%i.uv.y));
-  				//return thing1*colour1*frequency;
-  				return _Time.x * (thing1*(colour1+colour2-colour3)*frequency*thing2);
+  				float4 c = (c1 + c2 + c3) / f;
+  				float t1 = asin((_Time.z * c) / (i.uv*i.uv) % f);
+  				float t2 = tan((_Time.z * c) / (i.uv.x/i.uv.y));
+  				float d = abs((i.uv.x/i.uv.y));
+  				float col = lerp((t1*(c1+c2-c3)+(f*t2)), 0, smoothstep(_Fog.x, _Fog.y, d));
+  				return col;
 			}
 			ENDCG
 		}

@@ -15,16 +15,13 @@ public class PlayerNucleusManager : MonoBehaviour {
 	private bool changeColour = false, changeShape = false, resetScale = false;													// timer trigger for changing shape, resetting scale after world switch
 	private float changeColourTimer, changeShapeTimer, resetScaleTimer;															// change shape timer, reset scale timer
 
-	private Shader lightShader, darkShader, colourShader;																						// light/dark shaders
+	public Material lightShader, darkShader, colourShader;																						// light/dark shaders
 
 	void Start () {
 		anim = GetComponent<Animator>();																						// init animator ref
 		rend = GetComponent<MeshRenderer>();																					// init mesh renderer ref
 		psp = GameObject.Find ("Player")
 			.gameObject.GetComponent<PlayerStatePattern> ();																	// init psp ref
-		lightShader = Shader.Find("Unlit/light_nucleus");																		// init light nucleus shader
-		darkShader = Shader.Find("Unlit/dark_nucleus");																			// init dark nucleus shader
-		colourShader = Shader.Find("Unlit/Color");																				// init unlit color shader
 
 		zeroPos = 0.15f;																										// set zero y position
 		firstPos = 0.50f;																										// set first/second/fifth/sixth y position
@@ -117,7 +114,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 			else if (toState == 3 || toState == 4)																					// to third/fourth
 				transform.localPosition = new Vector3 (0f, thirdPos, 0f);																// adjust position
 			else if (toState == 5 || toState == 6)																					// to fifth/sixth
-				transform.localPosition = new Vector3 (0f, firstPos, 0f);																// adjust position
+				transform.localPosition = new Vector3 (0f, thirdPos, 0f);																// adjust position
 			else if (toState == 7 || toState == 8)																					// to seventh/eighth
 				transform.localPosition = new Vector3 (0f, seventhPos, 0f);																// adjust position
 			else if (toState == 9)																									// to ninth
@@ -2360,34 +2357,34 @@ public class PlayerNucleusManager : MonoBehaviour {
 		// to/in dark world
 			// to dark
 		if (!l && !psp.lightworld) {
-			if (toState != 0 && (toState % 2 == 0))	rend.material.shader = lightShader;											// if even # state, change to white shader
+			if (toState != 0 && (toState % 2 == 0))	rend.material = lightShader;												// if even # state, change to white shader
 			else { 																												// else, odd # state
-				rend.material.shader = colourShader;																				// reset shader
+				rend.material = colourShader;																						// reset shader
 				rend.material.SetColor("_Color", Color.black);																		// change to black
 			}
 		}
 			// to light
 		else if (l && !psp.lightworld) {
-			if (toState != 0 && (toState % 2 == 0))	rend.material.shader = darkShader;											// if even # state, change to black shader
+			if (toState != 0 && (toState % 2 == 0))	rend.material = darkShader;													// if even # state, change to black shader
 			else { 																												// else, odd # state
-				rend.material.shader = colourShader;																				// reset shader
+				rend.material = colourShader;																						// reset shader
 				rend.material.SetColor("_Color", Color.black);																		// change to black
 			}
 		}
 		// to/in light world
 			// to dark
 		if (!l && psp.lightworld) {
-			if (toState != 0 && (toState % 2 == 0))	rend.material.shader = darkShader;											// if even # state, change to black shader
+			if (toState != 0 && (toState % 2 == 0))	rend.material = darkShader;													// if even # state, change to black shader
 			else { 																												// else, odd # state
-				rend.material.shader = colourShader;																				// reset shader
+				rend.material = colourShader;																						// reset shader
 				rend.material.SetColor("_Color", Color.white);																		// change to white
 			}
 		}
 			// to light
 		else if (l && psp.lightworld) {
-			if (toState != 0 && (toState % 2 == 0)) rend.material.shader = lightShader;											// if even # state, change to white shader
+			if (toState != 0 && (toState % 2 == 0)) rend.material = lightShader;												// if even # state, change to white shader
 			else { 																												// else, odd # state
-				rend.material.shader = colourShader;																				// reset shader
+				rend.material = colourShader;																						// reset shader
 				rend.material.SetColor("_Color", Color.white);																		// change to white
 			}
 		}
