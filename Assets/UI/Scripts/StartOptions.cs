@@ -9,7 +9,9 @@ using UnityEngine.UI;
 
 public class StartOptions : MonoBehaviour {
 
-	public bool inMainMenu = true;										//If true, pause button disabled in main menu (Cancel in input manager, default escape key)
+	public bool inMainMenu = true;										// If true, pause button disabled in main menu (Cancel in input manager, default escape key)
+	public bool disableInput = true;									// disable input until fade in is complete
+
 	public Animator animColorFade; 										//Reference to animator which will fade to and from black when starting game.
 	public Animator animStartFade; 										//Reference to animator which will fade to and from black when starting game.
 	public Animator animMenuAlpha;										//Reference to animator that will fade out alpha of MenuPanel canvas group
@@ -19,14 +21,19 @@ public class StartOptions : MonoBehaviour {
 
 	private ShowPanels showPanels;										//Reference to ShowPanels script on UI GameObject, to show and hide panels
 
-	public bool disableInput = true;									// disable input until fade in is complete
 	private GameObject pb;												// play button ref
 	private Button pbButton;											// play button Button ref
-	private float disableInputTimer = 0.0f;								// disable input timer
+	private float disableInputTimer = 0.0f, resetInMenuTimer = 0.0f;	// disable input, reset in menu timers
 	
 	void Awake()
 	{
+		Time.timeScale = 1.0f;
+
 		inMainMenu = true;
+	}
+
+	void Start() 
+	{
 		//Get a reference to ShowPanels attached to UI object
 		showPanels = GetComponent<ShowPanels> ();
 
@@ -34,15 +41,19 @@ public class StartOptions : MonoBehaviour {
 		animStartFade.SetTrigger("fade");
 		//animStartFade.SetBool("visible", true);
 
-	}
-
-	void Start() 
-	{
 		pb = GameObject.Find("Play Button");
-		pbButton = GameObject.Find("Play Button").GetComponent<Button>();
+		pbButton = pb.GetComponent<Button>();
 	}
 
 	void Update() {
+
+		if (inMainMenu) {																		// if in main menu
+			resetInMenuTimer += Time.deltaTime;														// start timer
+			if (resetInMenuTimer >= 65.0f) {														// if 60 sec
+				gameObject.tag = "Destroy";																// mark UI for destroy on reload
+				SceneManager.LoadScene("Sequence1");													// restart scene
+			}
+		}
 
 		// disable input until fade in (4 sec+0.2s buffer) is complete
 		if (inMainMenu && disableInput) {														// if main menu and during fade in
@@ -54,6 +65,10 @@ public class StartOptions : MonoBehaviour {
 				disableInput = false;																	// reset is init flag
 				disableInputTimer = 0f;																	// reset timer
 			}
+		}
+
+		if (Input.GetMouseButtonDown(0)) {
+			EventSystem.current.SetSelectedGameObject(pb, null);									// give focus to play button
 		}
 
 	}
@@ -77,7 +92,7 @@ public class StartOptions : MonoBehaviour {
 		animMenuAlpha.SetTrigger ("fade");												// fade menu to black
 		animMenuAlpha.SetBool ("visible", false);										// fade menu to black
 		animColorFade.SetTrigger ("fade");												// fade menu tint to black
-		animColorFade.SetBool ("visible", false);										// fade menu tint to black
+		//animColorFade.SetBool ("visible", false);										// fade menu tint to black
 		Invoke("HideDelayed", fadeAlphaAnimationClip.length);							// hide menu after fade out
 		Debug.Log ("Game started in same scene! Put your game starting stuff here.");
 	}

@@ -6,7 +6,6 @@ public class Orbit : MonoBehaviour {
 	public Transform player;
 	public Transform core;
 	private PlayerStatePattern psp;
-	private UIManager uim;
 
 	public float turnSpeed;
 	public float maxTurnSpeed;
@@ -22,7 +21,6 @@ public class Orbit : MonoBehaviour {
 	{
 		offset = new Vector3(player.position.x, player.position.y + 8.0f, player.position.z + 7.0f);
 		psp = GetComponentInParent<PlayerStatePattern> ();
-		uim = GetComponentInParent<UIManager> ();
 	}
 
 	void Update() 
@@ -45,7 +43,6 @@ public class Orbit : MonoBehaviour {
 			resetStop = false;
 		}
 
-		//if (!uim.uI.GetComponent<StartOptions> ().inMainMenu) resetCamera = true;
 	}
 
 	void LateUpdate()

@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour {
 
 	private Rigidbody rb;
 
-	private PlayerStatePattern psp;
+	//private PlayerStatePattern psp;
 	private UIManager uim;
 	private StartOptions so;
 
@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour {
 		rb = GetComponent<Rigidbody> ();
 		uim = GameObject.Find("Player").GetComponent<UIManager> ();
 		so = GameObject.Find("Player").GetComponent<UIManager> ().ui.GetComponent<StartOptions>();
-		psp = GetComponent<PlayerStatePattern> ();
+		//psp = GetComponent<PlayerStatePattern> ();
 
 		if (godMode) {
 			accelSpeed = 20f;
@@ -83,17 +83,19 @@ public class PlayerController : MonoBehaviour {
 	void Update() {
 
 		if (chill) {
-			accelSpeed = 5.0f;
-			floatSpeed = 2.0f;
+			accelSpeed = 1.5f;
+			floatSpeed = 1.0f;
+			weight = 10.0f;
 		}
 		else {
 			accelSpeed = 6.0f;
 			floatSpeed = 4.0f;
+			weight = 10.0f;
 		}
 
 		if (Input.GetButtonDown ("Restart")) {
 			uim.ui.gameObject.tag = "Destroy";
-			SceneManager.LoadScene("Sequence1");									// restart scene		
+			SceneManager.LoadScene("Sequence1");									// restart scene
 		}
 	}
 

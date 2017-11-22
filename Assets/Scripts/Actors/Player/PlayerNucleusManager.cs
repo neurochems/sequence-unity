@@ -6,7 +6,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 	private Animator anim;																										// animator on core ref
 	public Mesh sphere, triangle, square;																						// shape meshes
 	private MeshRenderer rend;																									// mesh renderer (for colour changes)
-	private PlayerStatePattern psp;																								// psp ref
+	//private PlayerStatePattern psp;																								// psp ref
 
 	private float zeroPos, firstPos, thirdPos, seventhPos, ninthPos, tenthPos;													// vector y positions
 
@@ -20,8 +20,8 @@ public class PlayerNucleusManager : MonoBehaviour {
 	void Start () {
 		anim = GetComponent<Animator>();																						// init animator ref
 		rend = GetComponent<MeshRenderer>();																					// init mesh renderer ref
-		psp = GameObject.Find ("Player")
-			.gameObject.GetComponent<PlayerStatePattern> ();																	// init psp ref
+		//psp = GameObject.Find ("Player")
+			//.gameObject.GetComponent<PlayerStatePattern> ();																	// init psp ref
 
 		zeroPos = 0.15f;																										// set zero y position
 		firstPos = 0.50f;																										// set first/second/fifth/sixth y position
@@ -81,11 +81,11 @@ public class PlayerNucleusManager : MonoBehaviour {
 					ScaleTo (false, "hidden", "first");																						// grow to first
 				if (!toLight && (toState == 4))																	 						// if to dark fourth
 					ScaleTo (false, "hidden", "zero");																						// grow to zero
-				if (toShape == 0 && toLight && (toState == 2 || toState == 4 || toState == 6))	 										// if to light circle second/fourth/sixth
+				if (toShape == 0 && toLight && (toState == 2 || toState == 4))					 										// if to light circle second/fourth
 					ScaleTo (false, "hidden", "zero");																						// grow to zero
 				if (!toLight && (toState == 7 || toState == 8)) 																		// if to dark seventh/eighth
 					ScaleTo (false, "hidden", "seventh");																					// grow to seventh
-				if (toShape == 0 && toLight && toState == 8) 																				// if to light circle eighth
+				if (toShape == 0 && toLight && (toState == 6 || toState == 8)) 															// if to light circle sixth/eighth
 					ScaleTo (false, "hidden", "first");																						// grow to first
 				if (toState == 9) 																										// if to ninth,
 					ScaleTo (false, "hidden", "ninth");																						// grow to ninth
@@ -1057,7 +1057,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
-		} 
+		}
 		else if (f == 6 && t == 3 && !fl && !tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
@@ -1132,31 +1132,31 @@ public class PlayerNucleusManager : MonoBehaviour {
 		// from light circle sixth
 			// to dark circle
 		if (f == 6 && t == 0 && fl && !tl && fs == 0 && ts == 0) {
-			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 6 && t == 1 && fl && !tl && fs == 0 && ts == 0) {
-			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 6 && t == 2 && fl && !tl && fs == 0 && ts == 0) {
-			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 6 && t == 3 && fl && !tl && fs == 0 && ts == 0) {
-			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 6 && t == 4 && fl && !tl && fs == 0 && ts == 0) {
-			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 6 && t == 5 && fl && !tl && fs == 0 && ts == 0) {
-			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
@@ -1182,27 +1182,34 @@ public class PlayerNucleusManager : MonoBehaviour {
 		}
 			// to light circle
 		if (f == 6 && t == 0 && fl && tl && fs == 0 && ts == 0) {
-			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 6 && t == 1 && fl && tl && fs == 0 && ts == 0) {
-			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
+			changeColour = true;																								// set change colour flag
+		}
+		else if (f == 6 && t == 2 && fl && tl && fs == 0 && ts == 0) {
+			ScaleTo (true, "first", "zero");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 6 && t == 3 && fl && tl && fs == 0 && ts == 0) {
-			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 		}
-			// fourth = no change
+		else if (f == 6 && t == 4 && fl && tl && fs == 0 && ts == 0) {
+			ScaleTo (true, "first", "zero");																					// scale to hidden
+			changeColour = true;																								// set change colour flag
+		}
 		else if (f == 6 && t == 5 && fl && tl && fs == 0 && ts == 0) {
-			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 6 && t == 7 && fl && tl && fs == 0 && ts == 0) {
-			ScaleTo (true, "zero", "hidden");																					// scale to hidden
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 6 && t == 8 && fl && tl && fs == 0 && ts == 0) ScaleTo (false, "first", "seventh");									// scale to seventh
+		else if (f == 6 && t == 8 && fl && tl && fs == 0 && ts == 0) ScaleTo (false, "first", "first");							// scale to first
 		else if (f == 6 && t == 9 && fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
@@ -1598,32 +1605,32 @@ public class PlayerNucleusManager : MonoBehaviour {
 		else if (f == 7 && t == 8 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "hidden", "seventh");								// scale to seventh
 			// ninth = no change
 			// to light triangle
-		else if (f == 7 && t == 8 && !fl && tl && fs == 1 && ts == 1) ScaleTo (false, "first", "seventh");									// scale to seventh
+		else if (f == 7 && t == 8 && !fl && tl && fs == 1 && ts == 1) ScaleTo (false, "hidden", "seventh");									// scale to seventh
 			// ninth = no change
 
 		// from light triangle seventh
 			// to dark triangle
 		if (f == 7 && t == 6 && fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "hidden", "first");										// scale to first
-		else if (f == 7 && t == 8 && fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "first", "seventh");									// scale to seventh
+		else if (f == 7 && t == 8 && fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "hidden", "seventh");									// scale to seventh
 			// to light triangle
-		if (f == 7 && t == 8 && fl && tl && fs == 1 && ts == 1) ScaleTo (false, "first", "seventh");										// scale to seventh
+		if (f == 7 && t == 8 && fl && tl && fs == 1 && ts == 1) ScaleTo (false, "hidden", "seventh");										// scale to seventh
 
 		// from dark square seventh
 			// to dark square
 		if (f == 7 && t == 6 && !fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "hidden", "first");										// scale to first
-		else if (f == 7 && t == 8 && !fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");									// scale to seventh
+		else if (f == 7 && t == 8 && !fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "hidden", "seventh");									// scale to seventh
 			// ninth = no change
 			// to light square
-		if (f == 7 && t == 8 && !fl && tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");										// scale to seventh
+		if (f == 7 && t == 8 && !fl && tl && fs == 2 && ts == 2) ScaleTo (false, "hidden", "seventh");										// scale to seventh
 			// ninth = no change
 
 		// from light square seventh
 			// to dark square
 		if (f == 7 && t == 6 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "hidden", "first");										// scale to first
-		else if (f == 7 && t == 8 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");									// scale to seventh
+		else if (f == 7 && t == 8 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "hidden", "seventh");									// scale to seventh
 			// ninth = no change
 			// to light square
-		if (f == 7 && t == 8 && fl && tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");										// scale to seventh
+		if (f == 7 && t == 8 && fl && tl && fs == 2 && ts == 2) ScaleTo (false, "hidden", "seventh");										// scale to seventh
 			// ninth = no change
 
 
@@ -1751,12 +1758,12 @@ public class PlayerNucleusManager : MonoBehaviour {
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 8 && t == 8 && fl && !tl && fs == 0 && ts == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
 		else if (f == 8 && t == 9 && fl && !tl && fs == 0 && ts == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
@@ -1769,13 +1776,13 @@ public class PlayerNucleusManager : MonoBehaviour {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 8 && t == 2 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "first", "zero");										// scale to zero
+		else if (f == 8 && t == 2 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "first", "zero");							// scale to zero
 		else if (f == 8 && t == 3 && fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 8 && t == 4 && fl && tl && fs == 0 && ts == 0) {
-			ScaleTo (true, "first", "hidden");																				// scale to hidden
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 			resetScale = true;																									// set reset scale flag
 		}
@@ -1783,13 +1790,13 @@ public class PlayerNucleusManager : MonoBehaviour {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 		}
-		else if (f == 8 && t == 6 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "first", "zero");										// scale to zero
+		else if (f == 8 && t == 6 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "first", "zero");							// scale to zero
 		else if (f == 8 && t == 7 && fl && tl && fs == 0 && ts == 0) {
 			ScaleTo (true, "first", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 		}
 		else if (f == 8 && t == 9 && fl && tl && fs == 0 && ts == 0) {
-			ScaleTo (true, "seventh", "hidden");																				// scale to hidden
+			ScaleTo (true, "first", "hidden");																					// scale to hidden
 			changeColour = true;																								// set change colour flag
 		}
 
@@ -2356,7 +2363,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 	{
 		// to/in dark world
 			// to dark
-		if (!l && !psp.lightworld) {
+		if (!l) {
 			if (toState != 0 && (toState % 2 == 0))	rend.material = lightShader;												// if even # state, change to white shader
 			else { 																												// else, odd # state
 				rend.material = colourShader;																						// reset shader
@@ -2364,14 +2371,14 @@ public class PlayerNucleusManager : MonoBehaviour {
 			}
 		}
 			// to light
-		else if (l && !psp.lightworld) {
+		else if (l) {
 			if (toState != 0 && (toState % 2 == 0))	rend.material = darkShader;													// if even # state, change to black shader
 			else { 																												// else, odd # state
 				rend.material = colourShader;																						// reset shader
 				rend.material.SetColor("_Color", Color.black);																		// change to black
 			}
 		}
-		// to/in light world
+		/*// to/in light world
 			// to dark
 		if (!l && psp.lightworld) {
 			if (toState != 0 && (toState % 2 == 0))	rend.material = darkShader;													// if even # state, change to black shader
@@ -2387,7 +2394,7 @@ public class PlayerNucleusManager : MonoBehaviour {
 				rend.material = colourShader;																						// reset shader
 				rend.material.SetColor("_Color", Color.white);																		// change to white
 			}
-		}
+		}*/
 	}
 
 	///<summary>
@@ -2397,16 +2404,12 @@ public class PlayerNucleusManager : MonoBehaviour {
 	///</summary>
 	private void ScaleTo (bool devol, string resetState, string setState)
 	{
-		if (devol) {
-			anim.ResetTrigger ("scaleup");											// reset last stage
-			anim.SetTrigger ("scaledown");											// enable scaledown
-		}
-		else {
-			anim.ResetTrigger ("scaledown");										// reset last stage
-			anim.SetTrigger ("scaleup");											// enable scaleup
-
-		}
+		anim.ResetTrigger ("scaleup");												// reset last stage
+		anim.ResetTrigger ("scaledown");											// reset last stage
 		anim.SetBool(resetState, false);											// reset previously active state
+
+		if (devol) anim.SetTrigger ("scaledown");									// enable scaledown
+		else if (!devol) anim.SetTrigger ("scaleup");								// enable scaleup
 		anim.SetBool(setState, true);												// set active state
 	}
 }

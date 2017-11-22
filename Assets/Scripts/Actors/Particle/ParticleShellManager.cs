@@ -4,27 +4,27 @@ using System.Collections;
 public class ParticleShellManager : MonoBehaviour {
 
 	private Animator anim;																							// animator on core ref
-	private MeshRenderer rend;																						// mesh renderer (for colour changes)
-	private ParticleStatePattern psp;																				// psp ref
+	//private MeshRenderer rend;																						// mesh renderer (for colour changes)
+	//private ParticleStatePattern psp;																				// psp ref
 
-	private int toState, fromShape, toShape;																							// to state indicator
-	private bool toLight, colour;																							// colour indicator
-	private bool resetScale = false, changeColour = false, changeShape = false;										// timer trigger for changing shape, resetting scale after world switch;				// timer trigger for resetting scale after world switch
+	private int toState, fromShape, toShape;																		// to state indicator
+	private bool toLight;																							// colour indicator
+	private bool resetScale = false, changeColour = false;															// timer trigger for changing shape, resetting scale after world switch;				// timer trigger for resetting scale after world switch
 	private float resetScaleTimer, changeColourTimer;																// reset scale, change colour timer
 
 	void Awake () {
 		anim = GetComponent<Animator>();																			// init animator ref
-		rend = GetComponent<MeshRenderer>();																		// init mesh renderer ref
-		psp = GetComponentInParent<ParticleStatePattern> ();														// init psp ref
+		//rend = GetComponent<MeshRenderer>();																		// init mesh renderer ref
+		//psp = GetComponentInParent<ParticleStatePattern> ();														// init psp ref
 	}
 
 	void Update() {
 
-		if (psp.changeParticles) {																								// if change particles and light world
+		/*if (psp.changeParticles) {																								// if change particles and light world
 			//Debug.Log (psp.gameObject.name + ": change shell to opposite world");
 			toState = psp.state;																									// set toState to current state
 			ToOtherWorld (psp.lightworld, toState, toState, psp.isLight, fromShape, toShape);										// to other world
-		}
+		}*/
 
 		// change colour timer
 		if (changeColour) {
@@ -54,14 +54,12 @@ public class ParticleShellManager : MonoBehaviour {
 
 	}
 
-	public void ToOtherWorld (bool lw, int f, int t, bool l, int fs, int ts)
+	public void ToOtherWorld (bool lw, int f, int t, bool fl, bool l, int fs, int ts)
 	{
-		Debug.Log (psp.gameObject.name + ": change shell to other world");
-
 		toState = t;																								// set to state
 
 		// from changes
-		if (!psp.isLight && (f == 3 || f == 4))																		// from dark third/fourth
+		if (!fl && (f == 3 || f == 4))																	// from dark third/fourth
 			ScaleTo (true, "third", "hidden");																			// scale to hidden
 		else if (f == 5 || f == 6) 																					// from fifth/sixth
 			ScaleTo (true, "third", "hidden");																			// scale to hidden
@@ -74,6 +72,7 @@ public class ParticleShellManager : MonoBehaviour {
 
 		if (lw) toLight = false;																					// always to black going to light world
 		else if (!lw) toLight = true;																				// always to white going to dark world
+
 		changeColour = true;																						// start change colour timer
 
 		if (!l && (t == 3 || t == 4)) resetScale = true;															// if dark third/fourth, start rescale timer
@@ -953,8 +952,6 @@ public class ParticleShellManager : MonoBehaviour {
 
 	}
 
-
-
 	///<summary>
 	///<para>set core as light</para>
 	///<para>true = white</para>
@@ -962,7 +959,16 @@ public class ParticleShellManager : MonoBehaviour {
 	///</summary>
 	private void SetLight (bool l)
 	{
-		// in/to dark world
+		if (l) {
+			anim.SetBool("black", false);																			// reset previously active state
+			anim.SetBool("white", true);																			// set active state
+		}
+		else if (!l) {
+			anim.SetBool("white", false);																			// reset previously active state
+			anim.SetBool("black", true);																			// set active state
+		}
+
+/*		// in/to dark world
 		if (!psp.inLightworld || psp.toDarkworld) {
 			// to white
 			if (l) {
@@ -1015,11 +1021,11 @@ public class ParticleShellManager : MonoBehaviour {
 				} 
 				// while light world (visible)
 				else if (psp.psp.lightworld) {
-					anim.SetBool ("white", false);																			// reset white
-					anim.SetBool ("black", true);																			// set black
+					anim.SetBool ("white", false);																			// set white
+					anim.SetBool ("black", true);																			// reset black
 				}
 			}
-		}
+		}*/
 	}
 
 	///<summary>
@@ -1029,16 +1035,13 @@ public class ParticleShellManager : MonoBehaviour {
 	///</summary>
 	private void ScaleTo (bool devol, string resetState, string setState)
 	{
-		if (devol) {
-			anim.ResetTrigger ("scaleup");																			// reset last stage
-			anim.SetTrigger ("scaledown");																			// enable scaledown
-		}
-		else {
-			anim.ResetTrigger ("scaledown");																		// reset last stage
-			anim.SetTrigger ("scaleup");																			// enable scaleup
 
-		}
-		anim.SetBool(resetState, false);																			// reset previously active state
-		anim.SetBool(setState, true);																				// set active state
+		anim.ResetTrigger ("scaleup");																			// reset last stage
+		anim.ResetTrigger ("scaledown");																		// reset last stage
+		anim.SetBool(resetState, false);																		// reset previously active state
+
+		if (devol) anim.SetTrigger ("scaledown");																// enable scaledown
+		else if (!devol) anim.SetTrigger ("scaleup");															// enable scaleup
+		anim.SetBool(setState, true);																			// set active state
 	}
 }

@@ -1,11 +1,10 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Environment\Shaders\dark_nucleus.shader">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\UI\Scripts\StartOptions.cs">
     <Files>
-      <File FileName="Assets\Scripts\Actors\Particle\ParticleNucleusManager.cs" Line="2474" Column="81" />
-      <File FileName="Assets\Scripts\Actors\Player\PlayerNucleusManager.cs" Line="2385" Column="76" />
-      <File FileName="Assets\Environment\Shaders\light_nucleus.shader" Line="5" Column="31" />
-      <File FileName="Assets\Environment\Shaders\dark_nucleus.shader" Line="5" Column="32" />
+      <File FileName="Assets\Scripts\Actors\Particle\States\SecondParticleState.cs" Line="65" Column="63" />
+      <File FileName="Assets\Scripts\Actors\Player\UIManager.cs" Line="550" Column="4" />
+      <File FileName="Assets\UI\Scripts\StartOptions.cs" Line="59" Column="44" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

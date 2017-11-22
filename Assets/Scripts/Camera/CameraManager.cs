@@ -4,7 +4,7 @@ using System.Collections;
 public class CameraManager : MonoBehaviour {
 
 	private Animator anim;																				// animator on camera ref
-	private PlayerStatePattern psp;																		// psp ref
+	//private PlayerStatePattern psp;																		// psp ref
 
 	private int fromState, toState;																		// from state/to state
 
@@ -29,7 +29,7 @@ public class CameraManager : MonoBehaviour {
 
 	void Start () {
 		anim = GetComponent<Animator>();																// init animator ref
-		psp = GetComponentInParent<PlayerStatePattern>();												// init psp ref
+		//psp = GetComponentInParent<PlayerStatePattern>();												// init psp ref
 	}
 
 	public void ZoomCamera (int f, int t)
@@ -155,17 +155,13 @@ public class CameraManager : MonoBehaviour {
 
 	public void Zoom (bool devol, string resetState, string setState) {
 
-			if (devol) {																				// if devol true
-				anim.ResetTrigger ("zoomout");																// reset scale up trigger
-				anim.SetTrigger ("zoomin");																	// set scale down trigger
-			}																								
-			else {																						// else
-				anim.ResetTrigger ("zoomin");																// reset scale down trigger
-				anim.SetTrigger ("zoomout");																// set scale up trigger
-			}																											
+		anim.ResetTrigger ("zoomout");																// reset scale up trigger
+		anim.ResetTrigger ("zoomin");																// reset scale down trigger
+		anim.SetBool (resetState, false);															// reset previously active state
 
-			anim.SetBool (resetState, false);															// reset previously active state
-			anim.SetBool (setState, true);																// set new active state
+		if (devol) anim.SetTrigger ("zoomin");														// set scale down trigger
+		else if (!devol) anim.SetTrigger ("zoomout");												// set scale up trigger
+		anim.SetBool (setState, true);																// set new active state
 
 	}
 

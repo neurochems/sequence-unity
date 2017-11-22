@@ -7,15 +7,12 @@ public class FourthParticleState : IParticleState
 	private readonly ParticleStatePattern psp;											// reference to pattern/monobehaviour class
 
 	public bool isLight = true;															// 'is light' flag
-	private bool lightworld, inLightworld;												// is light world ref, in light world ref
+	private bool inLightworld;															// in light world ref
 	public float evol, deltaDark, deltaLight;											// evol tracking refs
 	private bool checkEvol;																// check evol flag
 
 	private bool canCollide = false, takeHit = false;									// can collide flag (init false to begin stunned), take hit flag (delay flagging stunned to prevent collision logic conflicts)
 	private float collisionTimer, takeHitTimer;											// reset collision timer, take hit timer
-
-	public int die;																		// collision conflict resolution
-	private bool rolling = false;														// is rolling flag
 
 	public FourthParticleState (ParticleStatePattern statePatternParticle)				// constructor
 	{
@@ -52,33 +49,40 @@ public class FourthParticleState : IParticleState
 	public void OnTriggerEnter(Collider other)
 	{
 		if (canCollide) {																// if collision allowed and player is not stunned
-			if (other.gameObject.CompareTag ("Player") && psp.psp.canCollide) {				// colide with collidable player
+
+			if (other.gameObject.CompareTag ("Player") && !psp.inLightworld) {				// colide with player and not in light world
+
 				PlayerStatePattern pspOther 
 					= other.gameObject.GetComponent<PlayerStatePattern>();							// ref other ParticleStatePattern
-				if (!pspOther.stunned && (pspOther.lightworld == psp.inLightworld)) {				// if particle and not stunned player in same world
-					if (pspOther.state != 4 && psp.evolC > pspOther.evolC) {							// if player evol is lower
-						if (pspOther.evolC > 0f) {															// other > 0
+
+				if (!pspOther.stunned) {															// if not stunned player
+
+					canCollide = false;																// reset can collide trigger	
+					psp.sc[0].enabled = false;														// disable trigger collider
+					takeHit = true;																	// set take hit flag
+
+					if ((pspOther.state != 4) && (psp.evolC > Mathf.Abs (pspOther.evolC))) {			// if abs player evol is lower
+						if (pspOther.evolC == 0f) psp.AddLight (0.5f);										// if other = 0, add 0.5 light
+						else if (pspOther.evolC > 0f) {														// other > 0
 							if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC);						// add other dark
 							if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC);					// add other light
 						}
 						else if (pspOther.evolC < 0f) {														// other < 0
-							if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC * -1);				// add other negated dark
-							if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC * -1);				// add other negated light
+							if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC);						// add other inverse dark
+							if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC);					// add other inverse light
 						}
-					} 
-					else if (psp.evolC <= pspOther.evolC) {					// else player is higher
+					}
+					else if ((pspOther.state == 4) || (psp.evolC <= Mathf.Abs (pspOther.evolC))) {		// else player abs is higher
 						if (pspOther.evolC > 0f) {															// other > 0
 							if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);						// sub other dark
 							if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);					// sub other light
 						}
 						else if (pspOther.evolC < 0f) {														// other < 0
-							if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC * -1);				// sub other negated dark
-							if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC * -1);				// sub other negated light
+							if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);						// sub other inverse dark
+							if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);					// sub other inverse light
 						}
 					}
-					canCollide = false;																// reset can collide trigger	
-					psp.sc[0].enabled = false;														// disable trigger collider
-					takeHit = true;																	// set take hit flag
+
 					checkEvol = true;																// check evol flag
 				}
 				pspOther = null;																// clear pspOther
@@ -87,11 +91,16 @@ public class FourthParticleState : IParticleState
 				|| other.gameObject.CompareTag ("First")									// collide with first
 				|| other.gameObject.CompareTag ("Second")									// collide with second
 				|| other.gameObject.CompareTag ("Third")) {									// collide with third
+
 				ParticleStatePattern pspOther 
 					= other.gameObject.GetComponent<ParticleStatePattern>();					// ref other ParticleStatePattern
+
 				if (!pspOther.stunned && (pspOther.inLightworld == psp.inLightworld)) {			// if particle and not stunned particle in same world
+
 					psp.sc[0].enabled = false;														// disable trigger collider
 					canCollide = false;																// reset has collided trigger	
+					takeHit = true;																	// set take hit flag
+
 					if (pspOther.evolC == 0f) {														// if other = 0
 						psp.AddLight (0.5f);															// add 0.5 light
 					}
@@ -100,42 +109,49 @@ public class FourthParticleState : IParticleState
 						if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC);				// add light of other
 					}
 					else if (pspOther.evolC < 0f) {													// if other < 0
-						if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC * -1);			// add negated dark of other
-						if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC * -1);			// add negated light of other
+						if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC * -1);			// add inverse dark of other
+						if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC * -1);			// add inverse light of other
 					}
-					takeHit = true;																	// set take hit flag
+
 					checkEvol = true;																// check evol flag
 				}
 				pspOther = null;																// clear pspOther
 			}
 			else if (other.gameObject.CompareTag ("Fourth")) {								// collide with fourth
+
 				ParticleStatePattern pspOther 
 				= other.gameObject.GetComponent<ParticleStatePattern>();						// ref other ParticleStatePattern
+
 				if (!pspOther.stunned && (pspOther.inLightworld == psp.inLightworld)) {			// if particle and not stunned particle in same world
+
 					canCollide = false;																// reset has collided trigger
 					psp.sc[0].enabled = false;														// disable trigger collider
-					if (psp.evolC > pspOther.evolC) {													// if evol > other
-						if (pspOther.evolC > 0f) {															// other > 0
-							if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC);						// add other dark
-							if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC);					// add other light
-						}
-						else if (pspOther.evolC < 0f) {														// other < 0
-							if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC * -1);				// add other negated dark
-							if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC * -1);				// add other negated light
-						}
-					}
-					else if (psp.evolC == pspOther.evolC) RollDie (pspOther);							// if evol = other, roll die
-					if (psp.evolC < pspOther.evolC) {													// if evol < other
-						if (pspOther.evolC > 0f) {															// other > 0
-							if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);						// sub other dark
-							if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);					// sub other light
-						}
-						else if (pspOther.evolC < 0f) {														// other < 0
-							if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC * -1);				// sub other negated dark
-							if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC * -1);				// sub other negated light
-						}
-					}
 					takeHit = true;																	// set take hit flag
+
+					if (psp.evolC > pspOther.evolC) {												// if evol > other
+						if (pspOther.evolC > 0f) {														// other > 0
+							if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC);					// add other dark
+							if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC);				// add other light
+						}
+						else if (pspOther.evolC < 0f) {													// other < 0
+							if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC * -1);			// add other inverse dark
+							if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC * -1);			// add other inverse light
+						}
+					}
+
+					else if (psp.evolC == pspOther.evolC) RollDie (pspOther);						// if evol = other, roll die
+
+					else if (psp.evolC < pspOther.evolC) {											// if evol < other
+						if (pspOther.evolC > 0f) {														// other > 0
+							if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);					// sub other dark
+							if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);				// sub other light
+						}
+						else if (pspOther.evolC < 0f) {													// other < 0
+							if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC * -1);			// sub other inverse dark
+							if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC * -1);			// sub other inverse light
+						}
+					}
+
 					checkEvol = true;																// check evol flag
 				}
 				pspOther = null;																// clear pspOther
@@ -146,20 +162,25 @@ public class FourthParticleState : IParticleState
 				|| other.gameObject.CompareTag("Eighth")								    // collide with eighth
 				|| other.gameObject.CompareTag("Ninth"))								    // collide with ninth
 			{
+
 				ParticleStatePattern pspOther 
 				= other.gameObject.GetComponent<ParticleStatePattern>();						// ref other ParticleStatePattern
+
 				if (!pspOther.stunned && (pspOther.inLightworld == psp.inLightworld)) {			// if particle and not stunned particle in same world
+
 					canCollide = false;																// reset has collided trigger
 					psp.sc[0].enabled = false;														// disable trigger collider
+					takeHit = true;																	// set take hit flag
+
 					if (pspOther.evolC > 0f) {														// other > 0
 						if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);					// sub other dark
 						if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);				// sub other light
 					}
 					else if (pspOther.evolC < 0f) {													// other < 0
-						if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC * -1);			// sub other negated dark
-						if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC * -1);			// sub other negated light
+						if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC * -1);			// sub other inverse dark
+						if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC * -1);			// sub other inverse light
 					}
-					takeHit = true;																	// set take hit flag
+
 					checkEvol = true;																// check evol flag
 				}
 				pspOther = null;																// clear pspOther
@@ -169,27 +190,29 @@ public class FourthParticleState : IParticleState
 
 	private void RollDie(ParticleStatePattern pspOther) {
 		if (psp.die > pspOther.die) {														// if this die > other die
-			//Debug.Log ("die roll: this > other");
+
 			if (pspOther.evolC > 0f) {															// other > 0
 				if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC);						// add other dark
 				if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC);					// add other light
 			}
 			else if (pspOther.evolC < 0f) {														// other < 0
-				if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC * -1);				// add other negated dark
-				if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC * -1);				// add other negated light
+				if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC * -1);				// add other inverse dark
+				if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC * -1);				// add other inverse light
 			}
+
 			psp.roll = true;																	// re-roll die
 		}
 		else if (psp.die < pspOther.die) {													// if this die < other die
-			//Debug.Log ("die roll: this < other");
+
 			if (pspOther.evolC > 0f) {															// other > 0
 				if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);						// sub other dark
 				if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);					// sub other light
 			}
 			else if (pspOther.evolC < 0f) {														// other < 0
-				if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC * -1);				// sub other negated dark
-				if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC * -1);				// sub other negated light
+				if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC * -1);				// sub other inverse dark
+				if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC * -1);				// sub other inverse light
 			}
+
 			psp.roll = true;																	// re-roll die
 		}
 		else if (psp.die == pspOther.die) {													// if die are same
@@ -286,7 +309,6 @@ public class FourthParticleState : IParticleState
 	public void Evol()
 	{
 		evol = psp.evol;																	// local evol check			
-		lightworld = psp.lightworld;														// local lightworld check
 		inLightworld = psp.inLightworld;													// local inlightworld check
 		isLight = psp.isLight;																// update light value
 		deltaDark = psp.deltaDark;															// local dark check
@@ -408,7 +430,8 @@ public class FourthParticleState : IParticleState
 
 		// fifth
 			// in dark world
-		if ((evol >= 5f && evol < 8f) && !inLightworld)  {									// to dark world fifth / from dark world
+		if (((evol >= 5f && evol < 8f) && !inLightworld) 									// to dark world fifth / from dark world
+			|| ((evol <= -5f && evol > -8f) && inLightworld)) {								// to light world fifth / from light world
 			if (!isLight && (deltaDark > deltaLight)) ToFifth(false, 0);						// if dark & gain more dark than light = to dark circle fifth
 			else if (!isLight && (deltaDark <= deltaLight)) ToFifth(true, 0);					// if dark & gain more light than dark = to light circle fifth
 			else if (isLight && (deltaDark > deltaLight)) ToFifth(true, 1);						// if light & gain more dark than light = to triangle fifth
@@ -416,23 +439,23 @@ public class FourthParticleState : IParticleState
 		}
 			// to light world
 		else if ((evol <= -5f && evol > -8f) && !inLightworld) {							// to light world fifth / from dark world
-			if (deltaDark > deltaLight) ToOtherWorld(true, 5, false, 0);						// if lose more light than dark = to light world dark circle fifth
-			else if (deltaDark <= deltaLight) ToOtherWorld(true, 5, true, 0);					// if lose more dark than light = to light world light circle fifth
-		}
-			// in light world
-		else if ((evol <= -5f && evol > -8f) && inLightworld) {								// to light world fifth / from light world
-			if (deltaDark > deltaLight) ToFifth(false, 0);										// if lose more light than dark = to light world dark circle fifth
-			else if (deltaDark <= deltaLight) ToFifth(true, 0);									// if lose more dark than light = to light world light circle fifth
+			if (!isLight && (deltaDark > deltaLight)) ToOtherWorld(true, 5, false, 0);			// if lose more light than dark = to light world dark circle fifth
+			else if (!isLight && (deltaDark <= deltaLight)) ToOtherWorld(true, 5, true, 0);		// if lose more light than dark = to light world light circle fifth
+			else if (isLight && (deltaDark > deltaLight)) ToOtherWorld(true, 5, true, 1);		// if lose more light than dark = to light world light triangle fifth
+			else if (isLight && (deltaDark <= deltaLight)) ToOtherWorld(true, 5, true, 2);		// if lose more light than dark = to light world light square fifth
 		}
 			// to dark world
 		else if ((evol >= 5f && evol < 8f) && inLightworld) {								// to dark world fifth / from light world
-			if (deltaDark > deltaLight) ToOtherWorld(false, 5, false, 0);						// if lose more light than dark = to dark world dark fifth
-			else if (deltaDark <= deltaLight) ToOtherWorld(false, 5, true, 0);					// if lose more dark than light = to dark world light fifth
+			if (!isLight && (deltaDark > deltaLight)) ToOtherWorld(false, 5, false, 0);			// if lose more light than dark = to dark world dark circle fifth
+			else if (!isLight && (deltaDark <= deltaLight)) ToOtherWorld(false, 5, true, 0);	// if lose more light than dark = to dark world light circle fifth
+			else if (isLight && (deltaDark > deltaLight)) ToOtherWorld(false, 5, true, 1);		// if lose more light than dark = to dark world light triangle fifth
+			else if (isLight && (deltaDark <= deltaLight)) ToOtherWorld(false, 5, true, 2);		// if lose more light than dark = to dark world light square fifth
 		}
 
 		// sixth
-			// in dark world
-		if ((evol >= 8f && evol < 13f) && !inLightworld)  {									// to dark world sixth / from dark world
+			// in world
+		if (((evol >= 8f && evol < 13f) && !inLightworld) 									// to dark world sixth / from dark world
+			|| ((evol <= -8f && evol > -13f) && inLightworld)) {							// to light world sixth / from light world
 			if (!isLight && (deltaDark > deltaLight)) ToSixth(false, 0);						// if dark & gain more dark than light = to dark circle sixth
 			else if (!isLight && (deltaDark <= deltaLight)) ToSixth(true, 0);					// if dark & gain more light than dark = to light circle sixth
 			else if (isLight && (deltaDark > deltaLight)) ToSixth(false, 1);					// if light & gain more dark than light = to triangle sixth
@@ -440,13 +463,10 @@ public class FourthParticleState : IParticleState
 		}
 			// to light world
 		else if ((evol <= -8f && evol > -13f) && !inLightworld) {							// to light world sixth / from dark world
-			if (deltaDark > deltaLight) ToOtherWorld(true, 6, false, 0);						// if lose more light than dark = to light world dark circle sixth
-			else if (deltaDark <= deltaLight) ToOtherWorld(true, 6, true, 0);					// if lose more dark than light = to light world light circle sixth
-		}
-			// in light world
-		else if ((evol <= -8f && evol > -13f) && inLightworld) {							// to light world sixth / from light world
-			if (deltaDark > deltaLight) ToSixth(false, 0);										// if lose more light than dark = to light world dark circle sixth
-			else if (deltaDark <= deltaLight) ToSixth(true, 0);									// if lose more dark than light = to light world light circle sixth
+			if (!isLight && (deltaDark > deltaLight)) ToOtherWorld(true, 6, false, 0);			// if lose more light than dark = to light world dark circle sixth
+			else if (!isLight && (deltaDark <= deltaLight)) ToOtherWorld(true, 6, true, 0);		// if lose more light than dark = to light world light circle sixth
+			else if (isLight && (deltaDark > deltaLight)) ToOtherWorld(true, 6, true, 1);		// if lose more light than dark = to light world light triangle sixth
+			else if (isLight && (deltaDark <= deltaLight)) ToOtherWorld(true, 6, true, 2);		// if lose more light than dark = to light world light square sixth
 		}
 			// to dark world
 		else if ((evol >= 8f && evol < 13f) && inLightworld) {								// to dark world sixth / from light world

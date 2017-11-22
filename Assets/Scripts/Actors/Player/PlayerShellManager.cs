@@ -883,16 +883,12 @@ public class PlayerShellManager : MonoBehaviour {
 	///</summary>
 	private void ScaleTo (bool devol, string resetState, string setState)
 	{
-		if (devol) {
-			anim.ResetTrigger ("scaleup");											// reset last stage
-			anim.SetTrigger ("scaledown");											// enable scaledown
-		}
-		else {
-			anim.ResetTrigger ("scaledown");										// reset last stage
-			anim.SetTrigger ("scaleup");											// enable scaleup
-
-		}
+		anim.ResetTrigger ("scaleup");												// reset last stage
+		anim.ResetTrigger ("scaledown");											// reset last stage
 		anim.SetBool(resetState, false);											// reset previously active state
+
+		if (devol) anim.SetTrigger ("scaledown");									// enable scaledown
+		else if (!devol) anim.SetTrigger ("scaleup");								// enable scaleup
 		anim.SetBool(setState, true);												// set active state
 	}
 

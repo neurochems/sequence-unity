@@ -39,7 +39,7 @@ public class NinthPlayerState : IParticleState
 		}
 		// take hit flag timer
 		if (takeHit) takeHitTimer += Time.deltaTime;									// start timer
-		if (takeHitTimer >= 0.2f) {														// if timer is up
+		if (takeHitTimer >= 0.4f) {														// if timer is up
 			psp.stunned = true;																// set stunned flag
 			takeHit = false;																// reset take hit trigger
 			takeHitTimer = 0f;																// reset take hit timer
@@ -55,6 +55,7 @@ public class NinthPlayerState : IParticleState
 		square = psp.square;																	// set current square flag
 
 		if (canCollide) {																		// if collision allowed and other in dark world
+
 			if (other.gameObject.CompareTag ("Zero")												// collide with zero
 				|| other.gameObject.CompareTag ("First")											// collide with first
 				|| other.gameObject.CompareTag ("Second")											// collide with second
@@ -63,10 +64,18 @@ public class NinthPlayerState : IParticleState
 				|| other.gameObject.CompareTag ("Fifth")											// collide with fifth
 				|| other.gameObject.CompareTag ("Sixth")											// collide with sixth
 				|| other.gameObject.CompareTag ("Seventh") 											// collide with seventh
-				|| other.gameObject.CompareTag("Eighth")) {											// collide with eighth
+				|| other.gameObject.CompareTag("Eighth") 											// collide with eighth
+				|| other.gameObject.CompareTag("Ninth")) {											// collide with ninth
+
 				ParticleStatePattern pspOther 
 				= other.gameObject.GetComponent<ParticleStatePattern>();								// ref other ParticleStatePattern
+
 				if (!pspOther.stunned && !pspOther.inLightworld) {										// if player and not stunned dark world particle
+				
+					canCollide = false;																		// reset has collided trigger
+					psp.sc[0].enabled = false;																// disable trigger collider
+					takeHit = true;																			// set stunned flag
+
 					if (pspOther.evolC == 0f) {																// if other = 0
 						psp.AddLight (0.5f);																	// add 0.5 light
 					}
@@ -74,35 +83,27 @@ public class NinthPlayerState : IParticleState
 						if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC);							// add dark of other
 						if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC);                      // add light of other
 					}
-					else if (pspOther.evolC < 0f) {															// if other < 0
-						if (pspOther.darkEvolC != 0f) psp.AddDark (pspOther.darkEvolC * -1);					// add positive dark of other
-						if (pspOther.lightEvolC != 0f) psp.AddLight (pspOther.lightEvolC * -1);					// add positive light of other
-					}
-					canCollide = false;																		// reset has collided trigger
-					psp.sc[0].enabled = false;																// disable trigger collider
-					takeHit = true;																			// set stunned flag
+
 					checkEvol = true;																		// set check evol flag
 				}
 			} 
-			else if (other.gameObject.CompareTag("Ninth"))										// collide with ninth
-			{	
+			/*{	
+
 				ParticleStatePattern pspOther 
 				= other.gameObject.GetComponent<ParticleStatePattern>();								// ref other ParticleStatePattern
+
 				if (!pspOther.stunned && !pspOther.inLightworld) {										// if player and not stunned dark world particle
+
 					canCollide = false;																		// reset has collided trigger
 					psp.sc[0].enabled = false;																// disable trigger collider
 					takeHit = true;																			// set stunned flag
-					if (pspOther.evolC > 0f) {																// other > 0
-						if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);							// sub other dark
-						if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);						// sub other light
-					}
-					else if (pspOther.evolC < 0f) {															// other < 0
-						if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC * -1);					// sub other negated dark
-						if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC * -1);					// sub other negated light
-					}
+
+					if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);							// sub other dark
+					if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);						// sub other light
+
 					checkEvol = true;																		// set check evol flag
 				}
-			}
+			}*/
 		}
 	}
 
@@ -225,7 +226,7 @@ public class NinthPlayerState : IParticleState
 
 		// fourth
 			// in dark world
-		if ((evol >= 3f) && (evol < 5f)) {																   	// to dark world fourth
+		if (((evol >= 3f) && (evol < 5f)) || ((evol <= -3f) && (evol > -5f))) {								// to dark or light world fourth
 			if (circle && (deltaDark > deltaLight)) ToFourth (false);											// if circle & lose more light than dark = to dark fourth
 			else if (circle && (deltaDark <= deltaLight)) ToFourth (false);										// if circle & lose more dark than light = to dark fourth
 			else if (triangle && (deltaDark > deltaLight)) ToFourth (true);										// if triangle & lose more light than dark = to light fourth
@@ -234,14 +235,14 @@ public class NinthPlayerState : IParticleState
 			else if (square && (deltaDark <= deltaLight)) ToFourth (true);										// if square & lose more dark than light = to light fourth
 		}
 			// to/in light world
-		else if ((evol <= -3f) && (evol > -5f)) {															// to light world fourth
+		/*else if ((evol <= -3f) && (evol > -5f)) {															// to light world fourth
 			if (deltaDark > deltaLight) ToFourth (false);														// if lose more light than dark = to dark fourth
 			else if (deltaDark <= deltaLight) ToFourth (true);													// if lose more dark than light = to light fourth
-		} 
+		}*/ 
 
 		// fifth
 			// in dark world
-		if ((evol >= 5f) && (evol < 8f)) {																    // to dark world fifth
+		if (((evol >= 5f) && (evol < 8f)) || ((evol <= -5f) && (evol > -8f))) {								// to dark or light world fifth
 			if (circle && (deltaDark > deltaLight)) ToFifth (false, 0);											// if circle & lose more light than dark = to dark circle fifth
 			else if (circle && (deltaDark <= deltaLight)) ToFifth (true, 0);									// if circle & lose more dark than light = to light circle fifth
 			else if (triangle && (deltaDark > deltaLight)) ToFifth (true, 1);									// if triangle & lose more light than dark = to triangle fifth
@@ -250,14 +251,14 @@ public class NinthPlayerState : IParticleState
 			else if (square && (deltaDark <= deltaLight)) ToFifth (true, 2);									// if square & lose more dark than light = to square fifth
 		}
 			// to/in light world
-		else if ((evol <= -5f) && (evol > -8f)) {															// to light world fifth
+		/*else if ((evol <= -5f) && (evol > -8f)) {															// to light world fifth
 			if (deltaDark > deltaLight) ToFifth (false, 0);														// if lose more light than dark = to dark circle fifth
 			else if (deltaDark <= deltaLight) ToFifth (true, 0);												// if lose more dark than light = to light circle fifth
-		} 
+		}*/ 
 
 		// sixth
 			// in dark world
-		if ((evol >= 8f) && (evol < 13f)) {															        // to dark world sixth
+		if (((evol >= 8f) && (evol < 13f)) || ((evol <= -8f) && (evol > -13f))) {							// to dark or light world sixth
 			if (circle && (deltaDark > deltaLight)) ToSixth (false, 0);											// if circle & lose more light than dark = to dark circle sixth
 			else if (circle && (deltaDark <= deltaLight)) ToSixth (true, 0);									// if circle & lose more dark than light = to light circle sixth
 			else if (triangle && (deltaDark > deltaLight)) ToSixth (false, 1);									// if triangle & lose more light than dark = to triangle sixth
@@ -266,14 +267,14 @@ public class NinthPlayerState : IParticleState
 			else if (square && (deltaDark <= deltaLight)) ToSixth (false, 2);									// if square & lose more dark than light = to square sixth
 		}
 			// to/in light world
-		else if ((evol <= -8f) && (evol > -13f)) {															// to light world sixth
+		/*else if ((evol <= -8f) && (evol > -13f)) {															// to light world sixth
 			if (deltaDark > deltaLight) ToSixth (false, 0);														// if lose more light than dark = to dark circle sixth
 			else if (deltaDark <= deltaLight) ToSixth (true, 0);												// if lose more dark than light = to light circle sixth
-		} 
+		}*/ 
 
 		// seventh
 			// in dark world
-		if ((evol >= 13f) && (evol < 21f)) {																// to dark world seventh
+		if (((evol >= 13f) && (evol < 21f)) || ((evol <= -13f) && (evol > -21f))) {							// to dark or light world seventh
 			if (circle && (deltaDark > deltaLight)) ToSeventh (false, 0);										// if circle & gain more dark than light = to dark circle seventh
 			else if (circle && (deltaDark <= deltaLight)) ToSeventh (true, 0);									// if circle & gain more light than dark = to light circle seventh
 			else if (triangle && (deltaDark > deltaLight)) ToSeventh (false, 1);								// if triangle & gain more dark than light = to dark triangle seventh
@@ -282,14 +283,14 @@ public class NinthPlayerState : IParticleState
 			else if (square && (deltaDark <= deltaLight)) ToSeventh (true, 2);									// if square & gain more light than dark = to light square seventh
 		}
 			// to/in light world
-		else if ((evol <= -13f) && (evol > -21f)) {															// to light world seventh
+		/*else if ((evol <= -13f) && (evol > -21f)) {															// to light world seventh
 			if (deltaDark > deltaLight) ToSeventh (false, 0);													// if lose more light than dark = to dark circle seventh
 			else if (deltaDark <= deltaLight) ToSeventh (true, 0);												// if lose more dark than light = to light circle seventh
-		}
+		}*/
 
 		// eighth
 			// in dark world
-		if ((evol >= 21f) && (evol < 34f)) {																// to dark world eighth
+		if (((evol >= 21f) && (evol < 34f)) || ((evol <= -21f) && (evol > -34f))) {							// to dark or light world eighth
 			if (circle && (deltaDark > deltaLight)) ToEighth (false, 0);										// if circle & gain more dark than light = to dark circle eighth
 			else if (circle && (deltaDark <= deltaLight)) ToEighth (true, 0);									// if circle & gain more light than dark = to light circle eighth
 			else if (triangle && (deltaDark > deltaLight)) ToEighth (false, 1);									// if triangle & gain more dark than light = to dark triangle eighth
@@ -298,21 +299,21 @@ public class NinthPlayerState : IParticleState
 			else if (square && (deltaDark <= deltaLight)) ToEighth (true, 2);									// if square & gain more light than dark = to light square eighth
 		}
 			// to/in light world
-		else if ((evol <= -21f) && (evol > -34f)) {															// to light world eighth
+		/*else if ((evol <= -21f) && (evol > -34f)) {															// to light world eighth
 			if (deltaDark <= deltaLight) ToEighth (true, 0);													// if lose more dark than light = to light circle eighth
 			else if (deltaDark > deltaLight) ToEighth (false, 0);												// if lose more light than dark = to dark circle eighth
-		}
+		}*/
 
 		// ninth
 			// to light world
-		if ((evol <= -34f) && (evol > -55f)) {																// to light world ninth
+		/*if ((evol <= -34f) && (evol > -55f)) {																// to light world ninth
 			if (deltaDark > deltaLight) ToNinth (false, 0);														// if lose more light than dark = to dark circle ninth
 			else if (deltaDark <= deltaLight) ToNinth (true, 0);												// if lose more dark than light = to light circle ninth
-		}
+		}*/
 
 		// tenth
-			// in dark world
-		if (evol >= 55f) {																					// to tenth
+			// in dark or light world
+		if ((evol >= 55f) || (evol <= -55)) {																					// to tenth
 			if (circle && (deltaDark > deltaLight)) ToTenth (false, 0);											// if circle & gain more dark than light = to dark circle tenth
 			else if (circle && (deltaDark <= deltaLight)) ToTenth (true, 0);									// if circle & gain more light than dark = to light circle tenth
 			else if (triangle && (deltaDark > deltaLight)) ToTenth (false, 1);									// if triangle & gain more dark than light = to dark triangle tenth

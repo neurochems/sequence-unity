@@ -5,7 +5,7 @@ public class ParticleStatePattern : MonoBehaviour {
 
 	public float evol;														// evolution level
 	public int state;														// state indicator for inspector
-	public new bool isLight;												// is light flag
+	public bool isLight;													// is light flag
 	public float darkEvol, lightEvol;										// dark & light evolution level
 	public float darkEvolStart, lightEvolStart;								// last dark & light evolution level (for delta calc)
 	public float deltaDark, deltaLight;										// delta dark & light evolution level
@@ -50,21 +50,21 @@ public class ParticleStatePattern : MonoBehaviour {
 	//private ParticlePhysicsManager ppm;										// particle physics manager
 	[HideInInspector] public SphereCollider[] sc;							// sphere colliders
 
+	// part changes
 	private int fromState, toState, fromShape, toShape;						// transition properties
 	private bool fromLight, toLight;										// transition properties
-	//private bool toLightworld;												// transition properties: to light world
-
 	private bool setShell, setNucleus;										// set part flags
 	private bool cwShell, cwNucleus;										// set change world part flags
 	private float setShellTimer, setNucleusTimer;							// set part timers
 	private float cwShellTimer, cwNucleusTimer;								// set change world part timers
 	private float inLightworldTimer;										// set change world part timers
 
+	// collision
 	public int die;															// collision conflict check
 	public bool roll;														// collision conflict check
 	public bool stunned;													// stunned?
-	public float stunDuration = 3f;											// duration of post-hit invulnerability
-	private float stunTimer = 0f, activeTimer = 0f;							// stun timer, active timer
+	public float stunDuration = 7f;											// duration of post-hit invulnerability
+	private float activeTimer = 0f;							// stun timer, active timer
 
 	void Awake()
 	{
@@ -152,36 +152,40 @@ public class ParticleStatePattern : MonoBehaviour {
 		if (cwShell) {																					// if set shell
 			cwShellTimer += Time.deltaTime;																	// start timer
 			if (cwShellTimer >= 0.1f) {																		// if timer is 0.1 sec
-				psm.ToOtherWorld (toWorld, fromState, toState, toLight, fromShape, toShape);				// change shell
+				psm.ToOtherWorld (toWorld, fromState, toState, fromLight, toLight, fromShape, toShape);			// change shell
 				cwShell = false;																				// reset set shell flag
 				cwShellTimer = 0f;																				// reset set shell timer
 			}
 		}
 		if (cwNucleus) {																				// if set nucleus
-			setNucleusTimer += Time.deltaTime;																// start timer
-			if (setNucleusTimer >= 0.2f) {																	// if timer is 0.2 sec
+			cwNucleusTimer += Time.deltaTime;																// start timer
+			if (cwNucleusTimer >= 0.2f) {																	// if timer is 0.2 sec
 				pnm.ToOtherWorld (toWorld, fromState, toState, toLight, fromShape, toShape);				// change nucleus
 				cwNucleus = false;																				// reset set nucleus flag
 				cwNucleusTimer = 0f;																			// reset set nucleus timer
 			}
 		}
+
 		// world change indicator reset/collider enable/update isLight 
 		if (toLightworld || toDarkworld) {										// if to opposite world
 			inLightworldTimer += Time.deltaTime;									// start timer
-			if (inLightworldTimer >= 2.5f) {										// if timer is 2.5 sec
-				if (toLightworld) {
-					inLightworld = true;												// set in lightworld flag
-					toLightworld = false;												// reset to light world flag
-					sc[0].enabled = true;												// enable trigger collider
-					isLight = toLight;													// set is light indicator
-				}
-				else if (toDarkworld) {
-					inLightworld = false;												// set in lightworld flag
-					toDarkworld = false;												// reset to light world flag
-					sc[0].enabled = true;												// enable trigger collider
-					isLight = toLight;													// set is light indicator
-				}
-				inLightworldTimer = 0f;												// reset timer
+			if ((inLightworldTimer >= 0.5f) && toLightworld) {						// if timer is 0.5 sec and going to light world
+				inLightworld = true;													// set in lightworld flag sooner to avoid player collisions with particles just sent to light world
+			} 
+			else if ((inLightworldTimer >= 2.5f) && toLightworld) {					// if timer is 2.5 sec and going to light world
+				toLightworld = false;													// reset to light world flag
+				sc [0].enabled = true;													// enable trigger collider
+				isLight = toLight;														// set is light indicator
+				inLightworldTimer = 0f;													// reset timer
+			} 
+			else if ((inLightworldTimer >= 0.5f) && toDarkworld) {					// if timer is 0.5 sec and going to dark world
+				inLightworld = false;													// reset in lightworld flag
+			}
+			else if ((inLightworldTimer >= 2.5f) && toDarkworld) {					// if timer is 2.5 sec and going to dark world
+				toDarkworld = false;													// reset to light world flag
+				sc[0].enabled = true;													// enable trigger collider
+				isLight = toLight;														// set is light indicator
+				inLightworldTimer = 0f;													// reset timer
 			}
 		}
 		// part change timers
@@ -206,9 +210,9 @@ public class ParticleStatePattern : MonoBehaviour {
 		if (psp.state == 10) {																	// if player is state 10
 			activeTimer += Time.deltaTime;															// start timer
 			if (activeTimer >= 10.0f) {																// if timer is 10 sec
-				TransitionTo(state, 10, isLight, false, toShape, toShape);								// transition to hidden
+				//TransitionTo(state, 10, isLight, false, toShape, toShape);								// transition to hidden
 			}
-			if (activeTimer >= 20.0f) {																// if timer is 20 sec
+			if (activeTimer >= 30.0f) {																// if timer is 20 sec
 				gameObject.SetActive (false);															// deactivate
 				activeTimer = 0f;																		// reset active timer
 			}
@@ -334,7 +338,7 @@ public class ParticleStatePattern : MonoBehaviour {
 		// trigger animations
 		pcm.Core (fromState, toState, fromLight, toLight, fromShape, toShape);		// change core
 		setShell = true;															// start set shell timer
-		setNucleus = true;															// start set nucleus timer
+		if (evol >= 0) setNucleus = true;											// start set nucleus timer (dark world only)
 
 		// physics changes
 		if (toState == 0)	{ 														// to zero

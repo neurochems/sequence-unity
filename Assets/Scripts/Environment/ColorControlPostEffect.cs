@@ -7,16 +7,16 @@ public class ColorControlPostEffect : ImageEffectBase {
 
 	private PlayerStatePattern psp;
 
-	//public bool lightworld, toDarkworld;
-
 	public float invert = 0;
 	public AnimationCurve invertCurve;
-	private float invertTime = 0f;
-	public float invertFactor = 1f;
+	public float invertTime = 0f;
+	public float invertFactor = 0.5f;
 
 	public float falloff;
 
-	void Start()
+	private bool resetInvert;
+
+	new void Start()
 	{
 		psp = GetComponentInParent<PlayerStatePattern> ();
 		//toDarkworld = GetComponentInParent<PlayerStatePattern> ().toDarkworld;
@@ -26,13 +26,18 @@ public class ColorControlPostEffect : ImageEffectBase {
 	{
 		if (psp.toLightworld) {
 			invertTime += Time.fixedDeltaTime * invertFactor;
-		} 
+		}
 		else if (psp.toDarkworld) {
-			Debug.Log ("reverse invert to dark world");
-			invertTime -= Time.fixedDeltaTime * (invertFactor + 0.25f);
+			invertTime -= Time.fixedDeltaTime * invertFactor;
+			resetInvert = true;
 		}
 
 		invert = invertCurve.Evaluate (invertTime);
+
+		if (!psp.lightworld && !psp.toDarkworld && resetInvert) {
+			invertTime = 0f;
+			resetInvert = false;
+		}
 	}
 
 	void OnRenderImage (RenderTexture source, RenderTexture destination)

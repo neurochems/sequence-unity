@@ -4,11 +4,11 @@ using System.Collections;
 public class ParticleCoreManager : MonoBehaviour {
 
 	private Animator anim;																							// animator on core ref
-	private MeshRenderer rend;																						// mesh renderer (for colour changes)
+	//private MeshRenderer rend;																						// mesh renderer (for colour changes)
 	public Mesh sphere, triangle, square;																			// shape meshes
 	private ParticleStatePattern psp;																				// psp ref
 
-	private int toState, fromShape, toShape;																		// to state indicator, from shape/to shape index
+	private int toState, toShape;																					// to state indicator, from shape/to shape index
 	private bool toLight, colour;																					// to light, colour indicator
 	private bool resetScale = false, changeColour = false, changeShape = false;										// timer trigger for changing shape, resetting scale after world switch
 	private float resetScaleTimer, changeColourTimer, changeShapeTimer;												// change shape timer, reset scale timer
@@ -17,7 +17,7 @@ public class ParticleCoreManager : MonoBehaviour {
 
     void Start () {
 		anim = GetComponent<Animator>();																			// init animator ref
-		rend = GetComponent<MeshRenderer>();																		// init mesh renderer ref
+		//rend = GetComponent<MeshRenderer>();																		// init mesh renderer ref
 		psp = GetComponentInParent<ParticleStatePattern> ();        												// init psp ref
 
         //lightShader = Shader.Find("light_nucleus");																// init light nucleus shader
@@ -28,12 +28,12 @@ public class ParticleCoreManager : MonoBehaviour {
 
 		// !inLightworld WORLD CHANGES \\  	- swapping nuclei colours for particles remaining in dark world, no state changes
 			// to light world
-		if (!psp.inLightworld && psp.changeParticles) {																			// if change particles and light world
+		/*if (!psp.inLightworld && psp.changeParticles) {																			// if change particles and light world
 			//Debug.Log (psp.gameObject.name + ": change nucleus to opposite world");
 			toState = psp.state;																									// set toState to current state
 			if (psp.isLight) ToOtherWorld (psp.lightworld, toState, toState, true, fromShape, toShape);							// if light: to hidden, change to white
 			else if (!psp.isLight) ToOtherWorld (psp.lightworld, toState, toState, false, fromShape, toShape);						// if dark: to hidden, change to black
-		}
+		}*/
 
 		// change colour timer
 		if (changeColour) {
@@ -62,9 +62,9 @@ public class ParticleCoreManager : MonoBehaviour {
 			if (resetScaleTimer >= 2.25f) {																				// when timer >= 4 sec
 				if (toState == 0) 																						// if to zero
 					ScaleTo (false, "hidden", "zero");																		// grow to zero
-				if (toState == 1 || toState == 2 || toState == 5 || toState == 6) 										// if to first/second/fifth/sixth, 
+				if (toState == 1 || toState == 2)								 										// if to first/second
 					ScaleTo (false, "hidden", "first");																		// grow to first
-				if (toState == 3 || toState == 4) 																		// if to third/fourth
+				if (toState == 3 || toState == 4 || toState == 5 || toState == 6)										// if to third/fourth/fifth/sixth
 					ScaleTo (false, "hidden", "third");																		// grow to third
 				if (toState == 7 || toState == 8) 																		// if to seventh/eighth
 					ScaleTo (false, "hidden", "seventh");																	// grow to seventh
@@ -85,15 +85,13 @@ public class ParticleCoreManager : MonoBehaviour {
     ///</summary>
 	public void ToOtherWorld (bool lw, int f, int t, bool l, int fs, int ts) 
 	{
-		Debug.Log(transform.parent.name + " to other world: " + lw);
-
 		toState = t;																								// set to state
 		toShape = ts;																								// set to shape
 
 		// from changes
 		if (f == 0) ScaleTo (true, "zero", "hidden");                                                      		// scale from zero
-		else if (f == 1 || f == 2 || f == 5 || f == 6) ScaleTo (true, "first", "hidden");    			    	// scale from first
-		else if (f == 3 || f == 4) ScaleTo (true, "third", "hidden");            			                    // scale from third
+		else if (f == 1 || f == 2) ScaleTo (true, "first", "hidden");    			    						// scale from first
+		else if (f == 3 || f == 4 || f == 5 || f == 6) ScaleTo (true, "third", "hidden");						// scale from third
 		else if (f == 7 || f == 8) ScaleTo (true, "seventh", "hidden");											// scale from seventh
 		else if (f == 9) ScaleTo (true, "ninth", "hidden");														// scale from ninth
 
@@ -106,7 +104,9 @@ public class ParticleCoreManager : MonoBehaviour {
 		
 		if (lw) toLight = false;																				// always to black switching to light world
 		if (!lw) toLight = true;																				// always to white switching to dark world
+
 		changeColour = true; 																					// start change timer
+
 		if ((t == 3) || (t == 4)) {
 			if (!l) resetScale = false;																			// if dark third or fourth, don't trigger rescale timer
 		}
@@ -117,7 +117,6 @@ public class ParticleCoreManager : MonoBehaviour {
 	{
 		// set up
 		toState = t;																								// set to state
-		fromShape = fs;																								// set from shape
 		toShape = ts;																								// set to shape
 
 
@@ -136,8 +135,8 @@ public class ParticleCoreManager : MonoBehaviour {
 		else if (f == 0 && t == 2 && !fl && !tl) ScaleTo (false, "zero", "first");									// scale to first
 		else if (f == 0 && t == 3 && !fl && !tl) ScaleTo (true, "zero", "hidden");									// scale to hidden
 		else if (f == 0 && t == 4 && !fl && !tl) ScaleTo (true, "zero", "hidden");									// scale to hidden
-		else if (f == 0 && t == 5 && !fl && !tl) ScaleTo (false, "zero", "first");									// scale to first
-		else if (f == 0 && t == 6 && !fl && !tl) ScaleTo (false, "zero", "first");									// scale to first
+		else if (f == 0 && t == 5 && !fl && !tl) ScaleTo (false, "zero", "third");									// scale to third
+		else if (f == 0 && t == 6 && !fl && !tl) ScaleTo (false, "zero", "third");									// scale to third
 		else if (f == 0 && t == 7 && !fl && !tl) ScaleTo (false, "zero", "seventh");								// scale to seventh
 		else if (f == 0 && t == 8 && !fl && !tl) ScaleTo (false, "zero", "seventh");								// scale to seventh
 		else if (f == 0 && t == 9 && !fl && !tl) ScaleTo (false, "zero", "ninth");									// scale to ninth
@@ -146,8 +145,8 @@ public class ParticleCoreManager : MonoBehaviour {
 		else if (f == 0 && t == 2 && !fl && tl) ScaleTo (false, "zero", "first");									// scale to first
 		else if (f == 0 && t == 3 && !fl && tl) ScaleTo (false, "zero", "third");									// scale to third
 		else if (f == 0 && t == 4 && !fl && tl) ScaleTo (false, "zero", "third");									// scale to third
-		else if (f == 0 && t == 5 && !fl && tl) ScaleTo (false, "zero", "first");									// scale to first
-		else if (f == 0 && t == 6 && !fl && tl) ScaleTo (false, "zero", "first");									// scale to first
+		else if (f == 0 && t == 5 && !fl && tl) ScaleTo (false, "zero", "third");									// scale to third
+		else if (f == 0 && t == 6 && !fl && tl) ScaleTo (false, "zero", "third");									// scale to third
 		else if (f == 0 && t == 7 && !fl && tl) ScaleTo (false, "zero", "seventh");									// scale to seventh
 		else if (f == 0 && t == 8 && !fl && tl) ScaleTo (false, "zero", "seventh");									// scale to seventh
 		else if (f == 0 && t == 9 && !fl && tl) ScaleTo (false, "zero", "ninth");									// scale to ninth
@@ -158,8 +157,8 @@ public class ParticleCoreManager : MonoBehaviour {
 		else if (f == 0 && t == 2 && fl && !tl) ScaleTo (false, "zero", "first");									// scale to first
 		else if (f == 0 && t == 3 && fl && !tl) ScaleTo (true, "zero", "hidden");									// scale to hidden
 		else if (f == 0 && t == 4 && fl && !tl) ScaleTo (true, "zero", "hidden");									// scale to hidden
-		else if (f == 0 && t == 5 && fl && !tl) ScaleTo (false, "zero", "first");									// scale to first
-		else if (f == 0 && t == 6 && fl && !tl) ScaleTo (false, "zero", "first");									// scale to first
+		else if (f == 0 && t == 5 && fl && !tl) ScaleTo (false, "zero", "third");									// scale to third
+		else if (f == 0 && t == 6 && fl && !tl) ScaleTo (false, "zero", "third");									// scale to third
 		else if (f == 0 && t == 7 && fl && !tl) ScaleTo (false, "zero", "seventh");									// scale to seventh
 		else if (f == 0 && t == 8 && fl && !tl) ScaleTo (false, "zero", "seventh");									// scale to seventh
 		else if (f == 0 && t == 9 && fl && !tl) ScaleTo (false, "zero", "ninth");									// scale to ninth
@@ -171,8 +170,8 @@ public class ParticleCoreManager : MonoBehaviour {
 		else if (f == 0 && t == 2 && fl && tl) ScaleTo (false, "zero", "first");									// scale to first
 		else if (f == 0 && t == 3 && fl && tl) ScaleTo (false, "zero", "third");									// scale to third
 		else if (f == 0 && t == 4 && fl && tl) ScaleTo (false, "zero", "third");									// scale to third
-		else if (f == 0 && t == 5 && fl && tl) ScaleTo (false, "zero", "first");									// scale to first
-		else if (f == 0 && t == 6 && fl && tl) ScaleTo (false, "zero", "first");									// scale to first
+		else if (f == 0 && t == 5 && fl && tl) ScaleTo (false, "zero", "third");									// scale to third
+		else if (f == 0 && t == 6 && fl && tl) ScaleTo (false, "zero", "third");									// scale to third
 		else if (f == 0 && t == 7 && fl && tl) ScaleTo (false, "zero", "seventh");									// scale to seventh
 		else if (f == 0 && t == 8 && fl && tl) ScaleTo (false, "zero", "seventh");									// scale to seventh
 		else if (f == 0 && t == 9 && fl && tl) ScaleTo (false, "zero", "ninth");									// scale to ninth
@@ -186,6 +185,8 @@ public class ParticleCoreManager : MonoBehaviour {
 		if (f == 1 && t == 0 && !fl && !tl) ScaleTo (true, "first", "zero");										// scale to zero
 		else if (f == 1 && t == 3 && !fl && !tl) ScaleTo (true, "first", "hidden");									// scale to hidden
 		else if (f == 1 && t == 4 && !fl && !tl) ScaleTo (true, "first", "hidden");									// scale to hidden
+		else if (f == 1 && t == 5 && !fl && !tl) ScaleTo (false, "first", "third");									// scale to third
+		else if (f == 1 && t == 6 && !fl && !tl) ScaleTo (false, "first", "third");									// scale to third
 		else if (f == 1 && t == 7 && !fl && !tl) ScaleTo (false, "first", "seventh");								// scale to seventh
 		else if (f == 1 && t == 8 && !fl && !tl) ScaleTo (false, "first", "seventh");								// scale to seventh
 		else if (f == 1 && t == 9 && !fl && !tl) ScaleTo (false, "first", "ninth");									// scale to ninth
@@ -193,6 +194,8 @@ public class ParticleCoreManager : MonoBehaviour {
 		if (f == 1 && t == 0 && !fl && tl) ScaleTo (true, "first", "zero");											// scale to zero
 		else if (f == 1 && t == 3 && !fl && tl) ScaleTo (false, "first", "third");									// scale to third
 		else if (f == 1 && t == 4 && !fl && tl) ScaleTo (false, "first", "third");									// scale to third
+		else if (f == 1 && t == 5 && !fl && tl) ScaleTo (false, "first", "third");									// scale to third
+		else if (f == 1 && t == 6 && !fl && tl) ScaleTo (false, "first", "third");									// scale to third
 		else if (f == 1 && t == 7 && !fl && tl) ScaleTo (false, "first", "seventh");								// scale to seventh
 		else if (f == 1 && t == 8 && !fl && tl) ScaleTo (false, "first", "seventh");								// scale to seventh
 		else if (f == 1 && t == 9 && !fl && tl) ScaleTo (false, "first", "ninth");									// scale to ninth
@@ -202,6 +205,8 @@ public class ParticleCoreManager : MonoBehaviour {
 		if (f == 1 && t == 0 && fl && !tl) ScaleTo (true, "first", "zero");											// scale to zero
 		else if (f == 1 && t == 3 && fl && !tl) ScaleTo (true, "first", "hidden");									// scale to hidden
 		else if (f == 1 && t == 4 && fl && !tl) ScaleTo (true, "first", "hidden");									// scale to hidden
+		else if (f == 1 && t == 5 && fl && !tl) ScaleTo (false, "first", "third");									// scale to third
+		else if (f == 1 && t == 6 && fl && !tl) ScaleTo (false, "first", "third");									// scale to third
 		else if (f == 1 && t == 7 && fl && !tl) ScaleTo (false, "first", "seventh");								// scale to seventh
 		else if (f == 1 && t == 8 && fl && !tl) ScaleTo (false, "first", "seventh");								// scale to seventh
 		else if (f == 1 && t == 9 && fl && !tl) ScaleTo (false, "first", "ninth");									// scale to ninth
@@ -209,6 +214,8 @@ public class ParticleCoreManager : MonoBehaviour {
 		if (f == 1 && t == 0 && fl && tl) ScaleTo (true, "first", "zero");											// scale to zero
 		else if (f == 1 && t == 3 && fl && tl) ScaleTo (false, "first", "third");									// scale to third
 		else if (f == 1 && t == 4 && fl && tl) ScaleTo (false, "first", "third");									// scale to third
+		else if (f == 1 && t == 5 && fl && tl) ScaleTo (false, "first", "third");									// scale to third
+		else if (f == 1 && t == 6 && fl && tl) ScaleTo (false, "first", "third");									// scale to third
 		else if (f == 1 && t == 7 && fl && tl) ScaleTo (false, "first", "seventh");									// scale to seventh
 		else if (f == 1 && t == 8 && fl && tl) ScaleTo (false, "first", "seventh");									// scale to seventh
 		else if (f == 1 && t == 9 && fl && tl) ScaleTo (false, "first", "ninth");									// scale to ninth
@@ -222,6 +229,8 @@ public class ParticleCoreManager : MonoBehaviour {
 		if (f == 2 && t == 0 && !fl && !tl) ScaleTo (true, "first", "zero");										// scale to zero
 		else if (f == 2 && t == 3 && !fl && !tl) ScaleTo (true, "first", "hidden");									// scale to hidden
 		else if (f == 2 && t == 4 && !fl && !tl) ScaleTo (true, "first", "hidden");									// scale to hidden
+		else if (f == 2 && t == 5 && !fl && !tl) ScaleTo (false, "first", "third");									// scale to third
+		else if (f == 2 && t == 6 && !fl && !tl) ScaleTo (false, "first", "third");									// scale to third
 		else if (f == 2 && t == 7 && !fl && !tl) ScaleTo (false, "first", "seventh");								// scale to seventh
 		else if (f == 2 && t == 8 && !fl && !tl) ScaleTo (false, "first", "seventh");								// scale to seventh
 		else if (f == 2 && t == 9 && !fl && !tl) ScaleTo (false, "first", "ninth");									// scale to ninth
@@ -229,6 +238,8 @@ public class ParticleCoreManager : MonoBehaviour {
 		if (f == 2 && t == 0 && !fl && tl) ScaleTo (true, "first", "zero");											// scale to zero
 		else if (f == 2 && t == 3 && !fl && tl) ScaleTo (false, "first", "third");									// scale to third
 		else if (f == 2 && t == 4 && !fl && tl) ScaleTo (false, "first", "third");									// scale to third
+		else if (f == 2 && t == 5 && !fl && tl) ScaleTo (false, "first", "third");									// scale to third
+		else if (f == 2 && t == 6 && !fl && tl) ScaleTo (false, "first", "third");									// scale to third
 		else if (f == 2 && t == 7 && !fl && tl) ScaleTo (false, "first", "seventh");								// scale to seventh
 		else if (f == 2 && t == 8 && !fl && tl) ScaleTo (false, "first", "seventh");								// scale to seventh
 		else if (f == 2 && t == 9 && !fl && tl) ScaleTo (false, "first", "ninth");									// scale to ninth
@@ -238,6 +249,8 @@ public class ParticleCoreManager : MonoBehaviour {
 		if (f == 2 && t == 0 && fl && !tl) ScaleTo (true, "first", "zero");											// scale to zero
 		else if (f == 2 && t == 3 && fl && !tl) ScaleTo (true, "first", "hidden");									// scale to hidden
 		else if (f == 2 && t == 4 && fl && !tl) ScaleTo (true, "first", "hidden");									// scale to hidden
+		else if (f == 2 && t == 5 && fl && !tl) ScaleTo (false, "first", "third");									// scale to third
+		else if (f == 2 && t == 6 && fl && !tl) ScaleTo (false, "first", "third");									// scale to third
 		else if (f == 2 && t == 7 && fl && !tl) ScaleTo (false, "first", "seventh");								// scale to seventh
 		else if (f == 2 && t == 8 && fl && !tl) ScaleTo (false, "first", "seventh");								// scale to seventh
 		else if (f == 2 && t == 9 && fl && !tl) ScaleTo (false, "first", "ninth");									// scale to ninth
@@ -245,6 +258,8 @@ public class ParticleCoreManager : MonoBehaviour {
 		if (f == 2 && t == 0 && fl && tl) ScaleTo (true, "first", "zero");											// scale to zero
 		else if (f == 2 && t == 3 && fl && tl) ScaleTo (false, "first", "third");									// scale to third
 		else if (f == 2 && t == 4 && fl && tl) ScaleTo (false, "first", "third");									// scale to third
+		else if (f == 2 && t == 5 && fl && tl) ScaleTo (false, "first", "third");									// scale to third
+		else if (f == 2 && t == 6 && fl && tl) ScaleTo (false, "first", "third");									// scale to third
 		else if (f == 2 && t == 7 && fl && tl) ScaleTo (false, "first", "seventh");									// scale to seventh
 		else if (f == 2 && t == 8 && fl && tl) ScaleTo (false, "first", "seventh");									// scale to seventh
 		else if (f == 2 && t == 9 && fl && tl) ScaleTo (false, "first", "ninth");									// scale to ninth
@@ -258,20 +273,20 @@ public class ParticleCoreManager : MonoBehaviour {
 		if (f == 3 && t == 0 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "zero");							// scale to zero
 		else if (f == 3 && t == 1 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "first");						// scale to first
 		else if (f == 3 && t == 2 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "first");						// scale to first
-		else if (f == 3 && t == 5 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "first");						// scale to first
-		else if (f == 3 && t == 6 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "first");						// scale to first
+		else if (f == 3 && t == 5 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "third");						// scale to third
+		else if (f == 3 && t == 6 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "third");						// scale to third
 		else if (f == 3 && t == 7 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "seventh");					// scale to seventh
 		else if (f == 3 && t == 8 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "seventh");					// scale to seventh
 		else if (f == 3 && t == 9 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "ninth");						// scale to ninth
 			// to light circle
-		if (f == 3 && t == 0 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "zero");								// scale to zero
+		if (f == 3 && t == 0 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "zero");							// scale to zero
 		else if (f == 3 && t == 1 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "first");						// scale to first
 		else if (f == 3 && t == 2 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "first");						// scale to first
 		else if (f == 3 && t == 4 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "third");						// scale to third
-		else if (f == 3 && t == 5 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "first");						// scale to first
-		else if (f == 3 && t == 6 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "first");						// scale to first
-		else if (f == 3 && t == 7 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "seventh");						// scale to seventh
-		else if (f == 3 && t == 8 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "seventh");						// scale to seventh
+		else if (f == 3 && t == 5 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "third");						// scale to third
+		else if (f == 3 && t == 6 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "third");						// scale to third
+		else if (f == 3 && t == 7 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "seventh");					// scale to seventh
+		else if (f == 3 && t == 8 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "seventh");					// scale to seventh
 		else if (f == 3 && t == 9 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "ninth");						// scale to ninth
 			// to light triangle
 		if (f == 3 && t == 5 && !fl && tl && ts == 1) {
@@ -287,11 +302,9 @@ public class ParticleCoreManager : MonoBehaviour {
 		// from light third
 			// to dark circle
 		if (f == 3 && t == 0 && fl && !tl && ts == 0) ScaleTo (true, "third", "zero");								// scale to zero
-		else if (f == 3 && t == 1 && fl && !tl && ts == 0) ScaleTo (true, "third", "first");							// scale to first
-		else if (f == 3 && t == 2 && fl && !tl && ts == 0) ScaleTo (true, "third", "first");							// scale to first
+		else if (f == 3 && t == 1 && fl && !tl && ts == 0) ScaleTo (true, "third", "first");						// scale to first
+		else if (f == 3 && t == 2 && fl && !tl && ts == 0) ScaleTo (true, "third", "first");						// scale to first
 		else if (f == 3 && t == 4 && fl && !tl && ts == 0) ScaleTo (true, "third", "hidden");						// scale to hidden
-		else if (f == 3 && t == 5 && fl && !tl && ts == 0) ScaleTo (true, "third", "first");							// scale to first
-		else if (f == 3 && t == 6 && fl && !tl && ts == 0) ScaleTo (true, "third", "first");							// scale to first
 		else if (f == 3 && t == 7 && fl && !tl && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
 		else if (f == 3 && t == 8 && fl && !tl && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
 		else if (f == 3 && t == 9 && fl && !tl && ts == 0) ScaleTo (false, "third", "ninth");						// scale to ninth
@@ -299,11 +312,9 @@ public class ParticleCoreManager : MonoBehaviour {
 		if (f == 3 && t == 0 && fl && tl && ts == 0) ScaleTo (true, "third", "zero");								// scale to zero
 		else if (f == 3 && t == 1 && fl && tl && ts == 0) ScaleTo (true, "third", "first");							// scale to first
 		else if (f == 3 && t == 2 && fl && tl && ts == 0) ScaleTo (true, "third", "first");							// scale to first
-		else if (f == 3 && t == 5 && fl && tl && ts == 0) ScaleTo (true, "third", "first");							// scale to first
-		else if (f == 3 && t == 6 && fl && tl && ts == 0) ScaleTo (true, "third", "first");							// scale to first
 		else if (f == 3 && t == 7 && fl && tl && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
 		else if (f == 3 && t == 8 && fl && tl && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
-		else if (f == 3 && t == 9 && fl && tl && ts == 0) ScaleTo (false, "third", "ninth");							// scale to ninth
+		else if (f == 3 && t == 9 && fl && tl && ts == 0) ScaleTo (false, "third", "ninth");						// scale to ninth
 			// to light triangle
 		if (f == 3 && t == 5 && fl && tl && ts == 1) {
 			ScaleTo (true, "third", "hidden");																		// scale to hidden
@@ -325,32 +336,30 @@ public class ParticleCoreManager : MonoBehaviour {
 		if (f == 4 && t == 0 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "zero");							// scale to zero
 		else if (f == 4 && t == 1 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "first");						// scale to first
 		else if (f == 4 && t == 2 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "first");						// scale to first
-		else if (f == 4 && t == 5 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "first");						// scale to first
-		else if (f == 4 && t == 6 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "first");						// scale to first
+		else if (f == 4 && t == 5 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "third");						// scale to third
+		else if (f == 4 && t == 6 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "third");						// scale to third
 		else if (f == 4 && t == 7 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "seventh");					// scale to seventh
 		else if (f == 4 && t == 8 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "seventh");					// scale to seventh
 		else if (f == 4 && t == 9 && !fl && !tl && ts == 0) ScaleTo (false, "hidden", "ninth");						// scale to ninth
 			// to light circle
-		if (f == 4 && t == 0 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "zero");								// scale to zero
+		if (f == 4 && t == 0 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "zero");							// scale to zero
 		else if (f == 4 && t == 1 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "first");						// scale to first
 		else if (f == 4 && t == 2 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "first");						// scale to first
 		else if (f == 4 && t == 3 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "third");						// scale to third
 		else if (f == 4 && t == 4 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "third");						// scale to third
-		else if (f == 4 && t == 5 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "first");						// scale to first
-		else if (f == 4 && t == 6 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "first");						// scale to first
-		else if (f == 4 && t == 7 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "seventh");						// scale to seventh
-		else if (f == 4 && t == 8 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "seventh");						// scale to seventh
+		else if (f == 4 && t == 5 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "third");						// scale to third
+		else if (f == 4 && t == 6 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "third");						// scale to third
+		else if (f == 4 && t == 7 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "seventh");					// scale to seventh
+		else if (f == 4 && t == 8 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "seventh");					// scale to seventh
 		else if (f == 4 && t == 9 && !fl && tl && ts == 0) ScaleTo (false, "hidden", "ninth");						// scale to ninth
 
 		// from light fourth
 			// to dark circle
 		if (f == 4 && t == 0 && fl && !tl && ts == 0) ScaleTo (true, "third", "zero");								// scale to zero
 		else if (f == 4 && t == 1 && fl && !tl && ts == 0) ScaleTo (true, "third", "zero");							// scale to zero
-		else if (f == 4 && t == 2 && fl && !tl && ts == 0) ScaleTo (true, "third", "first");							// scale to first
+		else if (f == 4 && t == 2 && fl && !tl && ts == 0) ScaleTo (true, "third", "first");						// scale to first
 		else if (f == 4 && t == 3 && fl && !tl && ts == 0) ScaleTo (true, "third", "hidden");						// scale to hidden
 		else if (f == 4 && t == 4 && fl && !tl && ts == 0) ScaleTo (true, "third", "hidden");						// scale to hidden
-		else if (f == 4 && t == 5 && fl && !tl && ts == 0) ScaleTo (true, "third", "first");							// scale to first
-		else if (f == 4 && t == 6 && fl && !tl && ts == 0) ScaleTo (true, "third", "first");							// scale to first
 		else if (f == 4 && t == 7 && fl && !tl && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
 		else if (f == 4 && t == 8 && fl && !tl && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
 		else if (f == 4 && t == 9 && fl && !tl && ts == 0) ScaleTo (false, "third", "ninth");						// scale to ninth
@@ -358,18 +367,11 @@ public class ParticleCoreManager : MonoBehaviour {
 		if (f == 4 && t == 0 && fl && tl && ts == 0) ScaleTo (true, "third", "zero");								// scale to zero
 		else if (f == 4 && t == 1 && fl && tl && ts == 0) ScaleTo (true, "third", "first");							// scale to first
 		else if (f == 4 && t == 2 && fl && tl && ts == 0) ScaleTo (true, "third", "first");							// scale to first
-		else if (f == 4 && t == 5 && fl && tl && ts == 0) ScaleTo (true, "third", "first");							// scale to first
-		else if (f == 4 && t == 6 && fl && tl && ts == 0) ScaleTo (true, "third", "first");							// scale to first
 		else if (f == 4 && t == 7 && fl && tl && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
 		else if (f == 4 && t == 8 && fl && tl && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
-		else if (f == 4 && t == 9 && fl && tl && ts == 0) ScaleTo (false, "third", "ninth");							// scale to ninth
+		else if (f == 4 && t == 9 && fl && tl && ts == 0) ScaleTo (false, "third", "ninth");						// scale to ninth
 			// to light triangle
 		if (f == 4 && t == 5 && fl && tl && ts == 1) {
-			ScaleTo (true, "third", "hidden");																		// scale to hidden
-			changeShape = true;																						// set change shape flag
-			resetScale = true;																						// set reset scale flag
-		}
-		else if (f == 4 && t == 6 && fl && tl && ts == 1) {
 			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
@@ -389,13 +391,29 @@ public class ParticleCoreManager : MonoBehaviour {
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
-			// to light square
-		if (f == 4 && t == 5 && fl && tl && ts == 2) {
+			// to dark triangle	
+		if (f == 4 && t == 6 && fl && !tl && ts == 1) {
 			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
-		else if (f == 4 && t == 6 && fl && tl && ts == 2) {
+		else if (f == 4 && t == 7 && fl && !tl && ts == 1) {
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
+			changeShape = true;																						// set change shape flag
+			resetScale = true;																						// set reset scale flag
+		}
+		else if (f == 4 && t == 8 && fl && !tl && ts == 1) {
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
+			changeShape = true;																						// set change shape flag
+			resetScale = true;																						// set reset scale flag
+		}
+		else if (f == 4 && t == 9 && fl && !tl && ts == 1) {
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
+			changeShape = true;																						// set change shape flag
+			resetScale = true;																						// set reset scale flag
+		}
+			// to light square
+		if (f == 4 && t == 5 && fl && tl && ts == 2) {
 			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
@@ -415,6 +433,27 @@ public class ParticleCoreManager : MonoBehaviour {
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
+			// to dark square
+		if (f == 4 && t == 6 && fl && !tl && ts == 2) {
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
+			changeShape = true;																						// set change shape flag
+			resetScale = true;																						// set reset scale flag
+		}
+		else if (f == 4 && t == 7 && fl && !tl && ts == 2) {
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
+			changeShape = true;																						// set change shape flag
+			resetScale = true;																						// set reset scale flag
+		}
+		else if (f == 4 && t == 8 && fl && !tl && ts == 2) {
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
+			changeShape = true;																						// set change shape flag
+			resetScale = true;																						// set reset scale flag
+		}
+		else if (f == 4 && t == 9 && fl && !tl && ts == 2) {
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
+			changeShape = true;																						// set change shape flag
+			resetScale = true;																						// set reset scale flag
+		}
 
 
 	///// fifth \\\\\
@@ -422,116 +461,120 @@ public class ParticleCoreManager : MonoBehaviour {
 
 		// from dark circle fifth
 			// to dark circle
-		if (f == 5 && t == 0 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "first", "zero");								// scale to zero
-		else if (f == 5 && t == 3 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "first", "hidden");						// scale to hidden
-		else if (f == 5 && t == 4 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "first", "hidden");						// scale to hidden
-		else if (f == 5 && t == 7 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 5 && t == 8 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 5 && t == 9 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "first", "ninth");						// scale to ninth
+		if (f == 5 && t == 0 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "third", "zero");								// scale to zero
+		else if (f == 5 && t == 1 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "third", "first");						// scale to first
+		else if (f == 5 && t == 2 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "third", "first");						// scale to first
+		else if (f == 5 && t == 3 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "third", "hidden");						// scale to hidden
+		else if (f == 5 && t == 4 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "third", "hidden");						// scale to hidden
+		else if (f == 5 && t == 7 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
+		else if (f == 5 && t == 8 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
+		else if (f == 5 && t == 9 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "third", "ninth");						// scale to ninth
 			// to light circle
-		if (f == 5 && t == 0 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "first", "zero");								// scale to zero
-		else if (f == 5 && t == 3 && !fl && tl && fs == 0 && ts == 0) ScaleTo (false, "first", "third");						// scale to third
-		else if (f == 5 && t == 4 && !fl && tl && fs == 0 && ts == 0) ScaleTo (false, "first", "third");						// scale to third
-		else if (f == 5 && t == 7 && !fl && tl && fs == 0 && ts == 0) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 5 && t == 8 && !fl && tl && fs == 0 && ts == 0) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 5 && t == 9 && !fl && tl && fs == 0 && ts == 0) ScaleTo (false, "first", "ninth");						// scale to ninth
+		if (f == 5 && t == 0 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "third", "zero");								// scale to zero
+		else if (f == 5 && t == 1 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "third", "first");						// scale to first
+		else if (f == 5 && t == 2 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "third", "first");						// scale to first
+		else if (f == 5 && t == 7 && !fl && tl && fs == 0 && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
+		else if (f == 5 && t == 8 && !fl && tl && fs == 0 && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
+		else if (f == 5 && t == 9 && !fl && tl && fs == 0 && ts == 0) ScaleTo (false, "third", "ninth");						// scale to ninth
 
 		// from light circle fifth
 			// to dark circle
-		if (f == 5 && t == 0 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "first", "zero");								// scale to zero
-		else if (f == 5 && t == 3 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "first", "hidden");						// scale to hidden
-		else if (f == 5 && t == 4 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "first", "hidden");						// scale to hidden
-		else if (f == 5 && t == 7 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 5 && t == 8 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 5 && t == 9 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "first", "ninth");						// scale to ninth
+		if (f == 5 && t == 0 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "third", "zero");								// scale to zero
+		else if (f == 5 && t == 1 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "third", "first");							// scale to first
+		else if (f == 5 && t == 2 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "third", "first");							// scale to first
+		else if (f == 5 && t == 3 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "third", "hidden");						// scale to hidden
+		else if (f == 5 && t == 4 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "third", "hidden");						// scale to hidden
+		else if (f == 5 && t == 7 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
+		else if (f == 5 && t == 8 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
+		else if (f == 5 && t == 9 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "third", "ninth");						// scale to ninth
 			// to light circle
-		if (f == 5 && t == 0 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "first", "zero");								// scale to zero
-		else if (f == 5 && t == 3 && fl && tl && fs == 0 && ts == 0) ScaleTo (false, "first", "third");							// scale to third
-		else if (f == 5 && t == 4 && fl && tl && fs == 0 && ts == 0) ScaleTo (false, "first", "third");							// scale to third
-		else if (f == 5 && t == 7 && fl && tl && fs == 0 && ts == 0) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 5 && t == 8 && fl && tl && fs == 0 && ts == 0) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 5 && t == 9 && fl && tl && fs == 0 && ts == 0) ScaleTo (false, "first", "ninth");							// scale to ninth
+		if (f == 5 && t == 0 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "third", "zero");								// scale to zero
+		else if (f == 5 && t == 1 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "third", "first");							// scale to first
+		else if (f == 5 && t == 2 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "third", "first");							// scale to first
+		else if (f == 5 && t == 7 && fl && tl && fs == 0 && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
+		else if (f == 5 && t == 8 && fl && tl && fs == 0 && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
+		else if (f == 5 && t == 9 && fl && tl && fs == 0 && ts == 0) ScaleTo (false, "third", "ninth");							// scale to ninth
 
 		// from light triangle/square fifth
 			// to dark circle
 		if (f == 5 && t == 0 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
-			ScaleTo (true, "first", "hidden");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
 		else if (f == 5 && t == 1 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
-			ScaleTo (true, "first", "hidden");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
 		else if (f == 5 && t == 2 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
-			ScaleTo (true, "first", "hidden");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
 		else if (f == 5 && t == 3 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
-			ScaleTo (true, "first", "hidden");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 		}
 		else if (f == 5 && t == 4 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
-			ScaleTo (true, "first", "hidden");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 		}
 		else if (f == 5 && t >= 5 && fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
-			ScaleTo (true, "first", "hidden");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
 			// to light circle
 		if (f == 5 && t == 0 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
-			ScaleTo (true, "first", "hidden");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
 		else if (f == 5 && t == 1 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
-			ScaleTo (true, "first", "hidden");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
 		else if (f == 5 && t == 2 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
-			ScaleTo (true, "first", "hidden");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
 		else if (f == 5 && t == 3 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
-			ScaleTo (true, "first", "hidden");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
 		else if (f == 5 && t == 4 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
-			ScaleTo (true, "first", "hidden");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 		}
 		else if (f == 5 && t >= 5 && fl && tl && (fs == 1 || fs == 2) && ts == 0) {
-			ScaleTo (true, "first", "hidden");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
 
 		// from light triangle fifth
 			// to dark triangle
-		if (f == 5 && t == 7 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "first", "seventh");							// scale to seventh
-		else if (f == 5 && t == 8 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 5 && t == 9 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "first", "ninth");						// scale to ninth
-			// to dark triangle
-		if (f == 5 && t == 7 && !fl && tl && fs == 1 && ts == 1) ScaleTo (false, "first", "seventh");							// scale to seventh
-		else if (f == 5 && t == 8 && !fl && tl && fs == 1 && ts == 1) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 5 && t == 9 && !fl && tl && fs == 1 && ts == 1) ScaleTo (false, "first", "ninth");						// scale to ninth
+		if (f == 5 && t == 7 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "third", "seventh");							// scale to seventh
+		else if (f == 5 && t == 8 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "third", "seventh");						// scale to seventh
+		else if (f == 5 && t == 9 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "third", "ninth");						// scale to ninth
+			// to light triangle
+		if (f == 5 && t == 7 && !fl && tl && fs == 1 && ts == 1) ScaleTo (false, "third", "seventh");							// scale to seventh
+		else if (f == 5 && t == 8 && !fl && tl && fs == 1 && ts == 1) ScaleTo (false, "third", "seventh");						// scale to seventh
+		else if (f == 5 && t == 9 && !fl && tl && fs == 1 && ts == 1) ScaleTo (false, "third", "ninth");						// scale to ninth
 
 		// from light square fifth
 			// to dark square
-		if (f == 5 && t == 7 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");							// scale to seventh
-		else if (f == 5 && t == 8 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 5 && t == 9 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "first", "ninth");						// scale to ninth
-			// to dark square
-		if (f == 5 && t == 7 && fl && tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");							// scale to seventh
-		else if (f == 5 && t == 8 && fl && tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 5 && t == 9 && fl && tl && fs == 2 && ts == 2) ScaleTo (false, "first", "ninth");							// scale to ninth
+		if (f == 5 && t == 7 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "third", "seventh");							// scale to seventh
+		else if (f == 5 && t == 8 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "third", "seventh");						// scale to seventh
+		else if (f == 5 && t == 9 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "third", "ninth");						// scale to ninth
+			// to light square
+		if (f == 5 && t == 7 && fl && tl && fs == 2 && ts == 2) ScaleTo (false, "third", "seventh");							// scale to seventh
+		else if (f == 5 && t == 8 && fl && tl && fs == 2 && ts == 2) ScaleTo (false, "third", "seventh");						// scale to seventh
+		else if (f == 5 && t == 9 && fl && tl && fs == 2 && ts == 2) ScaleTo (false, "third", "ninth");							// scale to ninth
 
 
 	///// sixth \\\\\
@@ -539,114 +582,120 @@ public class ParticleCoreManager : MonoBehaviour {
 
 		// from dark circle sixth
 			// to dark circle
-		if (f == 6 && t == 0 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "first", "zero");								// scale to zero
-		else if (f == 6 && t == 3 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "first", "hidden");						// scale to hidden
-		else if (f == 6 && t == 4 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "first", "hidden");						// scale to hidden
-		else if (f == 6 && t == 7 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 6 && t == 8 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 6 && t == 9 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "first", "ninth");						// scale to ninth
+		if (f == 6 && t == 0 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "third", "zero");								// scale to zero
+		else if (f == 6 && t == 1 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "third", "first");						// scale to first
+		else if (f == 6 && t == 2 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "third", "first");						// scale to first
+		else if (f == 6 && t == 3 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "third", "hidden");						// scale to hidden
+		else if (f == 6 && t == 4 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "third", "hidden");						// scale to hidden
+		else if (f == 6 && t == 7 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
+		else if (f == 6 && t == 8 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
+		else if (f == 6 && t == 9 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "third", "ninth");						// scale to ninth
 			// to light circle
-		if (f == 6 && t == 0 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "first", "zero");								// scale to zero
-		else if (f == 6 && t == 3 && !fl && tl && fs == 0 && ts == 0) ScaleTo (false, "first", "third");						// scale to third
-		else if (f == 6 && t == 7 && !fl && tl && fs == 0 && ts == 0) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 6 && t == 8 && !fl && tl && fs == 0 && ts == 0) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 6 && t == 9 && !fl && tl && fs == 0 && ts == 0) ScaleTo (false, "first", "ninth");						// scale to ninth
+		if (f == 6 && t == 0 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "third", "zero");								// scale to zero
+		else if (f == 6 && t == 1 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "third", "first");							// scale to first
+		else if (f == 6 && t == 2 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "third", "first");							// scale to first
+		else if (f == 6 && t == 7 && !fl && tl && fs == 0 && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
+		else if (f == 6 && t == 8 && !fl && tl && fs == 0 && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
+		else if (f == 6 && t == 9 && !fl && tl && fs == 0 && ts == 0) ScaleTo (false, "third", "ninth");						// scale to ninth
 
 		// from light circle sixth
 			// to dark circle
-		if (f == 6 && t == 0 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "first", "zero");								// scale to zero
-		else if (f == 6 && t == 3 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "first", "hidden");						// scale to hidden
-		else if (f == 6 && t == 4 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "first", "hidden");						// scale to hidden
-		else if (f == 6 && t == 7 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 6 && t == 8 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 6 && t == 9 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "first", "ninth");						// scale to ninth
+		if (f == 6 && t == 0 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "third", "zero");								// scale to zero
+		else if (f == 6 && t == 1 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "third", "first");							// scale to first
+		else if (f == 6 && t == 2 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "third", "first");							// scale to first
+		else if (f == 6 && t == 3 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "third", "hidden");						// scale to hidden
+		else if (f == 6 && t == 4 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "third", "hidden");						// scale to hidden
+		else if (f == 6 && t == 7 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
+		else if (f == 6 && t == 8 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
+		else if (f == 6 && t == 9 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "third", "ninth");						// scale to ninth
 			// to light circle
-		if (f == 6 && t == 0 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "first", "zero");								// scale to zero
-		else if (f == 6 && t == 3 && fl && tl && fs == 0 && ts == 0) ScaleTo (false, "first", "third");							// scale to third
-		else if (f == 6 && t == 7 && fl && tl && fs == 0 && ts == 0) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 6 && t == 8 && fl && tl && fs == 0 && ts == 0) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 6 && t == 9 && fl && tl && fs == 0 && ts == 0) ScaleTo (false, "first", "ninth");							// scale to ninth
+		if (f == 6 && t == 0 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "third", "zero");								// scale to zero
+		else if (f == 6 && t == 1 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "third", "first");							// scale to first
+		else if (f == 6 && t == 2 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "third", "first");							// scale to first
+		else if (f == 6 && t == 7 && fl && tl && fs == 0 && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
+		else if (f == 6 && t == 8 && fl && tl && fs == 0 && ts == 0) ScaleTo (false, "third", "seventh");						// scale to seventh
+		else if (f == 6 && t == 9 && fl && tl && fs == 0 && ts == 0) ScaleTo (false, "third", "ninth");							// scale to ninth
 
 		// from dark triangle/square sixth
 			// to dark circle
 		if (f == 6 && t == 0 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
-			ScaleTo (true, "first", "hidden");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
 		else if (f == 6 && t == 1 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
-			ScaleTo (true, "first", "hidden");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
 		else if (f == 6 && t == 2 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
-			ScaleTo (true, "first", "hidden");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
 		else if (f == 6 && t == 3 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
-			ScaleTo (true, "first", "hidden");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 		}
 		else if (f == 6 && t == 4 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
-			ScaleTo (true, "first", "hidden");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 		}
 		else if (f == 6 && t >= 5 && !fl && !tl && (fs == 1 || fs == 2) && ts == 0) {
-			ScaleTo (true, "first", "hidden");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
 			// to light circle
 		if (f == 6 && t == 0 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
-			ScaleTo (true, "first", "hidden");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
 		else if (f == 6 && t == 1 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
-			ScaleTo (true, "first", "hidden");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
 		else if (f == 6 && t == 2 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
-			ScaleTo (true, "first", "hidden");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
 		else if (f == 6 && t == 3 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
-			ScaleTo (true, "first", "hidden");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
 		else if (f == 6 && t == 4 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
-			ScaleTo (true, "first", "hidden");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 		}
 		else if (f == 5 && t >= 5 && !fl && tl && (fs == 1 || fs == 2) && ts == 0) {
-			ScaleTo (true, "first", "hidden");																		// scale to hidden
+			ScaleTo (true, "third", "hidden");																		// scale to hidden
 			changeShape = true;																						// set change shape flag
 			resetScale = true;																						// set reset scale flag
 		}
 			
 		// from dark triangle sixth
 			// to dark triangle
-		if (f == 6 && t == 7 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "first", "seventh");							// scale to seventh
-		else if (f == 6 && t == 8 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 6 && t == 9 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "first", "ninth");						// scale to ninth
+		if (f == 6 && t == 7 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "third", "seventh");							// scale to seventh
+		else if (f == 6 && t == 8 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "third", "seventh");						// scale to seventh
+		else if (f == 6 && t == 9 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "third", "ninth");						// scale to ninth
 			// to light triangle
-		if (f == 6 && t == 7 && !fl && tl && fs == 1 && ts == 1) ScaleTo (false, "first", "seventh");							// scale to seventh
-		else if (f == 6 && t == 8 && !fl && tl && fs == 1 && ts == 1) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 6 && t == 9 && !fl && tl && fs == 1 && ts == 1) ScaleTo (false, "first", "ninth");						// scale to ninth
+		if (f == 6 && t == 7 && !fl && tl && fs == 1 && ts == 1) ScaleTo (false, "third", "seventh");							// scale to seventh
+		else if (f == 6 && t == 8 && !fl && tl && fs == 1 && ts == 1) ScaleTo (false, "third", "seventh");						// scale to seventh
+		else if (f == 6 && t == 9 && !fl && tl && fs == 1 && ts == 1) ScaleTo (false, "third", "ninth");						// scale to ninth
 
 		// from dark square sixth
 			// to dark square
-		if (f == 6 && t == 7 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");							// scale to seventh
-		else if (f == 6 && t == 8 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 6 && t == 9 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "first", "ninth");						// scale to ninth
+		if (f == 6 && t == 7 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "third", "seventh");							// scale to seventh
+		else if (f == 6 && t == 8 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "third", "seventh");						// scale to seventh
+		else if (f == 6 && t == 9 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "third", "ninth");						// scale to ninth
 			// to light square
-		if (f == 6 && t == 7 && fl && tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");							// scale to seventh
-		else if (f == 6 && t == 8 && fl && tl && fs == 2 && ts == 2) ScaleTo (false, "first", "seventh");						// scale to seventh
-		else if (f == 6 && t == 9 && fl && tl && fs == 2 && ts == 2) ScaleTo (false, "first", "ninth");							// scale to ninth
+		if (f == 6 && t == 7 && fl && tl && fs == 2 && ts == 2) ScaleTo (false, "third", "seventh");							// scale to seventh
+		else if (f == 6 && t == 8 && fl && tl && fs == 2 && ts == 2) ScaleTo (false, "third", "seventh");						// scale to seventh
+		else if (f == 6 && t == 9 && fl && tl && fs == 2 && ts == 2) ScaleTo (false, "third", "ninth");							// scale to ninth
 
 
 	///// seventh + eighth \\\\\
@@ -659,16 +708,16 @@ public class ParticleCoreManager : MonoBehaviour {
 		else if ((f == 7 || f == 8) && t == 2 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "first");			// scale to first
 		else if ((f == 7 || f == 8) && t == 3 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "hidden");			// scale to hidden
 		else if ((f == 7 || f == 8) && t == 4 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "hidden");			// scale to hidden
-		else if ((f == 7 || f == 8) && t == 5 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "first");			// scale to first
-		else if ((f == 7 || f == 8) && t == 6 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "first");			// scale to first
+		else if ((f == 7 || f == 8) && t == 5 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "third");			// scale to third
+		else if ((f == 7 || f == 8) && t == 6 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "third");			// scale to third
 		else if ((f == 7 || f == 8) && t == 9 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "seventh", "ninth");			// scale to ninth
 			// to light circle
 		if ((f == 7 || f == 8) && t == 0 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "zero");					// scale to zero
 		else if ((f == 7 || f == 8) && t == 1 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "first");			// scale to first
 		else if ((f == 7 || f == 8) && t == 2 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "first");			// scale to first
 		else if ((f == 7 || f == 8) && t == 3 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "third");			// scale to third
-		else if ((f == 7 || f == 8) && t == 5 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "first");			// scale to first
-		else if ((f == 7 || f == 8) && t == 6 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "first");			// scale to first
+		else if ((f == 7 || f == 8) && t == 5 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "third");			// scale to third
+		else if ((f == 7 || f == 8) && t == 6 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "third");			// scale to third
 		else if ((f == 7 || f == 8) && t == 9 && !fl && tl && fs == 0 && ts == 0) ScaleTo (false, "seventh", "ninth");			// scale to ninth
 
 		// from light circle seventh/eighth
@@ -678,16 +727,16 @@ public class ParticleCoreManager : MonoBehaviour {
 		else if ((f == 7 || f == 8) && t == 2 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "first");			// scale to first
 		else if ((f == 7 || f == 8) && t == 3 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "hidden");			// scale to hidden
 		else if ((f == 7 || f == 8) && t == 4 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "hidden");			// scale to hidden
-		else if ((f == 7 || f == 8) && t == 5 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "first");			// scale to first
-		else if ((f == 7 || f == 8) && t == 6 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "first");			// scale to first
+		else if ((f == 7 || f == 8) && t == 5 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "third");			// scale to third
+		else if ((f == 7 || f == 8) && t == 6 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "third");			// scale to third
 		else if ((f == 7 || f == 8) && t == 9 && fl && !tl && fs == 0 && ts == 0) ScaleTo (false, "seventh", "ninth");			// scale to ninth
 			// to light circle
 		if ((f == 7 || f == 8) && t == 0 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "zero");					// scale to zero
 		else if ((f == 7 || f == 8) && t == 1 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "first");			// scale to first
 		else if ((f == 7 || f == 8) && t == 2 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "first");			// scale to first
 		else if ((f == 7 || f == 8) && t == 3 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "third");			// scale to third
-		else if ((f == 7 || f == 8) && t == 5 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "first");			// scale to first
-		else if ((f == 7 || f == 8) && t == 6 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "first");			// scale to first
+		else if ((f == 7 || f == 8) && t == 5 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "third");			// scale to third
+		else if ((f == 7 || f == 8) && t == 6 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "seventh", "third");			// scale to third
 		else if ((f == 7 || f == 8) && t == 9 && fl && tl && fs == 0 && ts == 0) ScaleTo (false, "seventh", "ninth");			// scale to ninth
 
 		// from dark triangle/square seventh/eighth
@@ -815,34 +864,34 @@ public class ParticleCoreManager : MonoBehaviour {
 			
 		// from dark triangle seventh/eighth
 			// to dark triangle
-		if ((f == 7 || f == 8) && t == 6 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (true, "seventh", "first");				// scale to first
+		if ((f == 7 || f == 8) && t == 6 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (true, "seventh", "third");				// scale to third
 		else if ((f == 7 || f == 8) && t == 9 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "seventh", "ninth");			// scale to ninth
 			// to light triangle
-		if ((f == 7 || f == 8) && t == 5 && !fl && tl && fs == 1 && ts == 1) ScaleTo (true, "seventh", "first");				// scale to first
+		if ((f == 7 || f == 8) && t == 5 && !fl && tl && fs == 1 && ts == 1) ScaleTo (true, "seventh", "third");				// scale to third
 		else if ((f == 7 || f == 8) && t == 9 && !fl && tl && fs == 1 && ts == 1) ScaleTo (false, "seventh", "ninth");			// scale to ninth
 
 		// from light triangle seventh/eighth
 			// to dark triangle
-		if ((f == 7 || f == 8) && t == 6 && fl && !tl && fs == 1 && ts == 1) ScaleTo (true, "seventh", "first");				// scale to first
+		if ((f == 7 || f == 8) && t == 6 && fl && !tl && fs == 1 && ts == 1) ScaleTo (true, "seventh", "third");				// scale to third
 		else if ((f == 7 || f == 8) && t == 9 && fl && !tl && fs == 1 && ts == 1) ScaleTo (false, "seventh", "ninth");			// scale to ninth
 			// to light triangle
-		if ((f == 7 || f == 8) && t == 5 && fl && tl && fs == 1 && ts == 1) ScaleTo (true, "seventh", "first");					// scale to first
+		if ((f == 7 || f == 8) && t == 5 && fl && tl && fs == 1 && ts == 1) ScaleTo (true, "seventh", "third");					// scale to third
 		else if ((f == 7 || f == 8) && t == 9 && fl && tl && fs == 1 && ts == 1) ScaleTo (false, "seventh", "ninth");			// scale to ninth
 
 		// from dark square seventh/eighth
 			// to dark square
-		if ((f == 7 || f == 8) && t == 6 && !fl && !tl && fs == 2 && ts == 2) ScaleTo (true, "seventh", "first");				// scale to first
+		if ((f == 7 || f == 8) && t == 6 && !fl && !tl && fs == 2 && ts == 2) ScaleTo (true, "seventh", "third");				// scale to third
 		else if ((f == 7 || f == 8) && t == 9 && !fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "seventh", "ninth");			// scale to ninth
 			// to light square
-		if ((f == 7 || f == 8) && t == 5 && !fl && tl && fs == 2 && ts == 2) ScaleTo (true, "seventh", "first");				// scale to first
+		if ((f == 7 || f == 8) && t == 5 && !fl && tl && fs == 2 && ts == 2) ScaleTo (true, "seventh", "third");				// scale to third
 		else if ((f == 7 || f == 8) && t == 9 && !fl && tl && fs == 2 && ts == 2) ScaleTo (false, "seventh", "ninth");			// scale to ninth
 
 		// from light square seventh/eighth
 			// to dark square
-		if ((f == 7 || f == 8) && t == 6 && fl && !tl && fs == 2 && ts == 2) ScaleTo (true, "seventh", "first");				// scale to first
+		if ((f == 7 || f == 8) && t == 6 && fl && !tl && fs == 2 && ts == 2) ScaleTo (true, "seventh", "third");				// scale to third
 		else if ((f == 7 || f == 8) && t == 9 && fl && !tl && fs == 2 && ts == 2) ScaleTo (false, "seventh", "ninth");			// scale to ninth
 			// to light square
-		if ((f == 7 || f == 8) && t == 5 && fl && tl && fs == 2 && ts == 2) ScaleTo (true, "seventh", "first");					// scale to first
+		if ((f == 7 || f == 8) && t == 5 && fl && tl && fs == 2 && ts == 2) ScaleTo (true, "seventh", "third");					// scale to third
 		else if ((f == 7 || f == 8) && t == 9 && fl && tl && fs == 2 && ts == 2) ScaleTo (false, "seventh", "ninth");			// scale to ninth
 
 
@@ -856,8 +905,8 @@ public class ParticleCoreManager : MonoBehaviour {
 		else if (f == 9 && t == 2 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "first");						// scale to first
 		else if (f == 9 && t == 3 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "hidden");						// scale to hidden
 		else if (f == 9 && t == 4 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "hidden");						// scale to hidden
-		else if (f == 9 && t == 5 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "first");						// scale to first
-		else if (f == 9 && t == 6 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "first");						// scale to first
+		else if (f == 9 && t == 5 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "third");						// scale to third
+		else if (f == 9 && t == 6 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "third");						// scale to third
 		else if (f == 9 && t == 7 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "seventh");						// scale to seventh
 		else if (f == 9 && t == 8 && !fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "seventh");						// scale to seventh
 			// to light circle
@@ -865,8 +914,8 @@ public class ParticleCoreManager : MonoBehaviour {
 		else if (f == 9 && t == 1 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "first");							// scale to first
 		else if (f == 9 && t == 2 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "first");							// scale to first
 		else if (f == 9 && t == 3 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "third");							// scale to third
-		else if (f == 9 && t == 5 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "first");							// scale to first
-		else if (f == 9 && t == 6 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "first");							// scale to first
+		else if (f == 9 && t == 5 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "third");							// scale to third
+		else if (f == 9 && t == 6 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "third");							// scale to third
 		else if (f == 9 && t == 7 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "seventh");						// scale to seventh
 		else if (f == 9 && t == 7 && !fl && tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "seventh");						// scale to seventh
 
@@ -877,8 +926,8 @@ public class ParticleCoreManager : MonoBehaviour {
 		if (f == 9 && t == 2 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "first");								// scale to first
 		if (f == 9 && t == 3 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "hidden");								// scale to hidden
 		if (f == 9 && t == 4 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "hidden");								// scale to hidden
-		if (f == 9 && t == 5 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "first");								// scale to first
-		if (f == 9 && t == 6 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "first");								// scale to first
+		if (f == 9 && t == 5 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "third");								// scale to third
+		if (f == 9 && t == 6 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "third");								// scale to third
 		if (f == 9 && t == 7 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "seventh");							// scale to seventh
 		if (f == 9 && t == 8 && fl && !tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "seventh");							// scale to seventh
 			// to light circle
@@ -887,8 +936,8 @@ public class ParticleCoreManager : MonoBehaviour {
 		else if (f == 9 && t == 2 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "first");							// scale to first
 		else if (f == 9 && t == 3 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "third");							// scale to hidden
 		else if (f == 9 && t == 4 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "third");							// scale to hidden
-		else if (f == 9 && t == 5 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "first");							// scale to first
-		else if (f == 9 && t == 6 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "first");							// scale to first
+		else if (f == 9 && t == 5 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "third");							// scale to third
+		else if (f == 9 && t == 6 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "third");							// scale to third
 		else if (f == 9 && t == 7 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "seventh");						// scale to seventh
 		else if (f == 9 && t == 8 && fl && tl && fs == 0 && ts == 0) ScaleTo (true, "ninth", "seventh");						// scale to seventh
 
@@ -1017,41 +1066,41 @@ public class ParticleCoreManager : MonoBehaviour {
 
 		// from dark triangle ninth
 			// to dark triangle
-		if (f == 9 && t == 6 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (true, "ninth", "first");								// scale to first
+		if (f == 9 && t == 6 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (true, "ninth", "third");								// scale to third
 		else if (f == 9 && t == 7 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (true, "ninth", "seventh");						// scale to seventh
 		else if (f == 9 && t == 8 && !fl && !tl && fs == 1 && ts == 1) ScaleTo (true, "ninth", "seventh");						// scale to seventh
 			// to light triangle
-		if (f == 9 && t == 5 && !fl && tl && fs == 1 && ts == 1) ScaleTo (true, "ninth", "first");								// scale to first
+		if (f == 9 && t == 5 && !fl && tl && fs == 1 && ts == 1) ScaleTo (true, "ninth", "third");								// scale to third
 		else if (f == 9 && t == 7 && !fl && tl && fs == 1 && ts == 1) ScaleTo (true, "ninth", "seventh");						// scale to seventh
 		else if (f == 9 && t == 8 && !fl && tl && fs == 1 && ts == 1) ScaleTo (true, "ninth", "seventh");						// scale to seventh
 
 		// from light triangle ninth
 			// to dark triangle
-		if (f == 9 && t == 6 && fl && !tl && fs == 1 && ts == 1) ScaleTo (true, "ninth", "first");								// scale to first
+		if (f == 9 && t == 6 && fl && !tl && fs == 1 && ts == 1) ScaleTo (true, "ninth", "third");								// scale to third
 		else if (f == 9 && t == 7 && fl && !tl && fs == 1 && ts == 1) ScaleTo (true, "ninth", "seventh");						// scale to seventh
 		else if (f == 9 && t == 8 && fl && !tl && fs == 1 && ts == 1) ScaleTo (true, "ninth", "seventh");						// scale to seventh
 			// to light triangle
-		if (f == 9 && t == 5 && fl && tl && fs == 1 && ts == 1) ScaleTo (true, "ninth", "first");								// scale to first
+		if (f == 9 && t == 5 && fl && tl && fs == 1 && ts == 1) ScaleTo (true, "ninth", "third");								// scale to third
 		else if (f == 9 && t == 7 && fl && tl && fs == 1 && ts == 1) ScaleTo (true, "ninth", "seventh");						// scale to seventh
 		else if (f == 9 && t == 8 && fl && tl && fs == 1 && ts == 1) ScaleTo (true, "ninth", "seventh");						// scale to seventh
 
 		// from dark square ninth
 			// to dark square
-		if (f == 9 && t == 6 && !fl && !tl && fs == 2 && ts == 2) ScaleTo (true, "ninth", "first");								// scale to first
+		if (f == 9 && t == 6 && !fl && !tl && fs == 2 && ts == 2) ScaleTo (true, "ninth", "third");								// scale to third
 		else if (f == 9 && t == 7 && !fl && !tl && fs == 2 && ts == 2) ScaleTo (true, "ninth", "seventh");						// scale to seventh
 		else if (f == 9 && t == 8 && !fl && !tl && fs == 2 && ts == 2) ScaleTo (true, "ninth", "seventh");						// scale to seventh
 			// to light square
-		if (f == 9 && t == 5 && !fl && tl && fs == 2 && ts == 2) ScaleTo (true, "ninth", "first");								// scale to first
+		if (f == 9 && t == 5 && !fl && tl && fs == 2 && ts == 2) ScaleTo (true, "ninth", "third");								// scale to third
 		else if (f == 9 && t == 7 && !fl && tl && fs == 2 && ts == 2) ScaleTo (true, "ninth", "seventh");						// scale to seventh
 		else if (f == 9 && t == 8 && !fl && tl && fs == 2 && ts == 2) ScaleTo (true, "ninth", "seventh");						// scale to seventh
 
 		// from light square ninth
 			// to dark square
-		if (f == 9 && t == 6 && fl && !tl && fs == 2 && ts == 2) ScaleTo (true, "ninth", "first");								// scale to first
+		if (f == 9 && t == 6 && fl && !tl && fs == 2 && ts == 2) ScaleTo (true, "ninth", "third");								// scale to third
 		else if (f == 9 && t == 7 && fl && !tl && fs == 2 && ts == 2) ScaleTo (true, "ninth", "seventh");						// scale to seventh
 		else if (f == 9 && t == 8 && fl && !tl && fs == 2 && ts == 2) ScaleTo (true, "ninth", "seventh");						// scale to seventh
 			// to light square
-		if (f == 9 && t == 5 && fl && tl && fs == 2 && ts == 2) ScaleTo (true, "ninth", "first");								// scale to first
+		if (f == 9 && t == 5 && fl && tl && fs == 2 && ts == 2) ScaleTo (true, "ninth", "third");								// scale to third
 		else if (f == 9 && t == 7 && fl && tl && fs == 2 && ts == 2) ScaleTo (true, "ninth", "seventh");						// scale to seventh
 		else if (f == 9 && t == 8 && fl && tl && fs == 2 && ts == 2) ScaleTo (true, "ninth", "seventh");						// scale to seventh
 
@@ -1069,9 +1118,9 @@ public class ParticleCoreManager : MonoBehaviour {
 		// from fourth
 		else if (f == 4 && t == 10 && fl) ScaleTo (true, "third", "hidden");										// scale to hidden
 		// from fifth
-		else if (f == 5 && t == 10) ScaleTo (true, "first", "hidden");												// scale to hidden
+		else if (f == 5 && t == 10) ScaleTo (true, "third", "hidden");												// scale to hidden
 		// from sixth
-		else if (f == 6 && t == 10) ScaleTo (true, "first", "hidden");												// scale to hidden
+		else if (f == 6 && t == 10) ScaleTo (true, "third", "hidden");												// scale to hidden
 		// from seventh
 		else if (f == 7 && t == 10) ScaleTo (true, "seventh", "hidden");											// scale to hidden
 		// from eighth
@@ -1117,17 +1166,12 @@ public class ParticleCoreManager : MonoBehaviour {
 	///</summary>
 	private void ScaleTo (bool devol, string resetState, string setState)
 	{
-		//Debug.Log("devol: " + devol);
-        if (devol) {
-			anim.ResetTrigger ("scaleup");																			// reset last stage
-			anim.SetTrigger ("scaledown");																			// enable scaledown
-		}
-		else if (!devol) {
-			anim.ResetTrigger ("scaledown");																		// reset last stage
-			anim.SetTrigger ("scaleup");																			// enable scaleup
-
-		}
-		anim.SetBool(resetState, false);																			// reset previously active state
-		anim.SetBool(setState, true);																				// set active state
+		anim.ResetTrigger ("scaleup");																			// reset last stage
+		anim.ResetTrigger ("scaledown");																		// reset last stage
+		anim.SetBool(resetState, false);																		// reset previously active state
+        
+		if (devol) anim.SetTrigger ("scaledown");																// enable scaledown
+		else if (!devol) anim.SetTrigger ("scaleup");															// enable scaleup
+		anim.SetBool(setState, true);																			// set active state
 	}
 }

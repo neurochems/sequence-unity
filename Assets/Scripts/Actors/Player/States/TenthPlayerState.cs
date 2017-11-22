@@ -11,7 +11,7 @@ public class TenthPlayerState : IParticleState
 	public float evol, deltaDark, deltaLight;											// evol tracking refs
 	private bool checkEvol;																// check evol flag
 
-	private bool canCollide = false;													// can collide flag (init false to begin stunned)
+	//private bool canCollide = false;													// can collide flag (init false to begin stunned)
 	private float collisionTimer;														// reset collision timer
 
 	public TenthPlayerState (PlayerStatePattern playerStatePattern)					// constructor

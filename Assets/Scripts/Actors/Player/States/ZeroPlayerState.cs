@@ -45,7 +45,7 @@ public class ZeroPlayerState : IParticleState
 		}
 		// take hit flag timer
 		if (takeHit) takeHitTimer += Time.deltaTime;									// start timer
-		if (takeHitTimer >= 0.2f) {														// if timer is up
+		if (takeHitTimer >= 0.4f) {														// if timer is up
 			psp.stunned = true;															// set stunned flag
 			takeHit = false;															// reset take hit trigger
 			takeHitTimer = 0f;															// reset take hit timer
@@ -55,22 +55,26 @@ public class ZeroPlayerState : IParticleState
 
 	public void OnTriggerEnter(Collider other)
 	{
-		if (!other.gameObject.CompareTag("World")) Debug.Log ("zero player collision with " + other.gameObject.name);
-		
-		if (canCollide && psp.canCollide) {												// if collision allowed and not in menu
+		if (canCollide) {																// if collision allowed and not in menu
+
 			if (other.gameObject.CompareTag ("Zero")) {										// if collide with zero
+
 				ParticleStatePattern pspOther 
 						= other.gameObject.GetComponent<ParticleStatePattern> ();				// ref other ParticleStatePattern
+
 				if (!pspOther.stunned && !pspOther.inLightworld) {								// if player and not stunned dark world particle
+
 					canCollide = false;																// reset has collided trigger
 					psp.sc [0].enabled = false;														// disable trigger collider
 					takeHit = true;																	// set stunned flag
+
 					if (pspOther.isLight) {															// if light
 						psp.AddLight (0.5f);															// add 0.5 light
 					}
 					else if (!pspOther.isLight) {													// if dark
 						psp.AddDark (0.5f);																// add 0.5 dark
 					}
+
 					checkEvol = true;																// set check evol flaG
 				}
 			}
@@ -83,20 +87,19 @@ public class ZeroPlayerState : IParticleState
 			    || other.gameObject.CompareTag ("Seventh")									// collide with seventh
 			    || other.gameObject.CompareTag ("Eighth")									// collide with eighth
 			    || other.gameObject.CompareTag ("Ninth")) {									// collide with ninth
+
 				ParticleStatePattern pspOther 
 					= other.gameObject.GetComponent<ParticleStatePattern> ();					// ref other ParticleStatePattern
+
 				if (!pspOther.stunned && !pspOther.inLightworld) {								// if player and not stunned dark world particle
+				
 					canCollide = false;																// reset has collided trigger
 					psp.sc[0].enabled = false;														// disable trigger collider
 					takeHit = true;																	// set stunned flag
-					if (pspOther.evolC > 0f) {														// other > 0
-						if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);					// sub other dark
-						if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);				// sub other light
-					}
-					else if (pspOther.evolC < 0f) {													// other < 0
-						if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC * -1);			// sub other negated dark
-						if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC * -1);			// sub other negated light
-					}
+
+					if (pspOther.darkEvolC != 0f) psp.SubDark (pspOther.darkEvolC);					// sub other dark
+					if (pspOther.lightEvolC != 0f) psp.SubLight (pspOther.lightEvolC);				// sub other light
+				
 					checkEvol = true;																// set check evol flag
 				}
 			}

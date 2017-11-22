@@ -42,16 +42,11 @@ public class PlayerStatePattern : MonoBehaviour {
 	private PlayerCoreManager pcm;																			// player core manager (for animations)
 	private PlayerShellManager psm;																			// player shell manager (for animations)
 	private PlayerNucleusManager pnm;																		// player nucleus manager (for animations)
-	private UIManager uim;																					// UI manager
+	//private UIManager uim;																					// UI manager
 	private Rigidbody rb;																					// player rigidbody
 	//private PlayerPhysicsManager ppm;																		// player physics manager
 	[HideInInspector] public SphereCollider[] sc;															// sphere colliders
 	private PlayerController pc, wc;																		// player, world player controller
-
-	private MeshRenderer rendWorld, rendCore, rendShell, rendNucleus;										// mesh renderers (for lightworld colour changes)
-
-	private Camera c;																						// camera
-	private OrthoSmoothFollow osf;																			// orthosmoothfollow
 
 	private Material skybox ;																				// skybox
 
@@ -62,24 +57,22 @@ public class PlayerStatePattern : MonoBehaviour {
 	private bool setShell, setNucleus;																		// set part flags
 	private float setShellTimer, setNucleusTimer;															// set part timers
 
-	private bool changeWorld = false, radiusUp = false;														// timer trigger for changing colour, tenth state collider radius up
+	private bool radiusUp = false;																			// timer trigger for tenth state collider radius increase
 	[HideInInspector] public bool resetScale = false;														// timer trigger for resetting scale after world switch (public for camera manager access)
-	private float changeWorldTimer, resetScaleTimer, changeParticlesTimer, radiusUpTimer;					// change shape timer, reset scale timer, change particles timer, tenth state collider radius up timer
+	private float toLightWorldTimer, toDarkWorldTimer, resetScaleTimer, 
+		changeParticlesTimer, radiusUpTimer;																// change shape timer, reset scale timer, change particles timer, tenth state collider radius up timer
 
 	// camera
-	private float prevFCP = 180.0f, firstFCP = 180.0f, secondFCP = 500.0f, thirdFCP = 1000.0f, fourthFCP = 2000.0f;		// far clip planes for lerping
-	public float clipPlaneLerpTime = 5.0f;																				// clip plane lerp time
-	//[HideInInspector] 
 	public bool camOrbit;																					// tenth state camera orbit flag
 
-	// timers & flags
+	// init
 	public bool isInit = true;																				// is init flag
 	private float initTimer = 0f;																			// init timer
+
+	// collision
 	private int die;																						// roll for collision conflicts
 	public bool stunned;																					// stunned?
 	public float stunDuration = 5f;																			// duration of post-hit invulnerability
-	private float stunTimer = 0f;																			// stun timer
-	[HideInInspector] public float shrinkTimer = 0f;														// shell deactivation timer
 
 	// UI
 	private StartOptions so;																				// start options ref
@@ -130,9 +123,6 @@ public class PlayerStatePattern : MonoBehaviour {
 		pnm = transform.FindChild ("Player Nucleus")
 			.gameObject.GetComponent<PlayerNucleusManager> ();				// initialize nucleus manager ref
 
-		c = transform.FindChild ("Follow Camera")
-			.GetComponent<Camera> ();										// init camera ref
-
 		sc = GetComponents<SphereCollider> ();								// init sphere collider ref
 
 		rb = GetComponent<Rigidbody> ();									// init rigidbody ref
@@ -141,20 +131,9 @@ public class PlayerStatePattern : MonoBehaviour {
 		wc = GameObject.Find("World")
 			.GetComponent<PlayerController>();								// init world player controller ref
 
-		rendWorld = GameObject.Find("World")
-			.GetComponent<MeshRenderer>();									// init world mesh renderer ref
-		rendCore = GameObject.Find("Player Core")
-			.gameObject.GetComponent<MeshRenderer> ();						// init core mesh renderer ref
-		rendShell = transform.FindChild ("Player Shell")
-			.gameObject.GetComponent<MeshRenderer> ();						// init shell mesh renderer ref
-		rendNucleus = transform.FindChild ("Player Nucleus")
-			.gameObject.GetComponent<MeshRenderer> ();						// init nucleus mesh renderer ref
-
-		osf = GetComponentInChildren<OrthoSmoothFollow> ();					// get orthosmoothfollow
-
 		so = GameObject.Find("UI Canvas").GetComponent<StartOptions> ();	// init start options
 
-		uim = GetComponent<UIManager> ();									// init ui manager ref
+		//uim = GetComponent<UIManager> ();									// init ui manager ref
 		Destroy(GameObject.FindGameObjectWithTag("Destroy"));				// destroy new UI
 
 		skybox = RenderSettings.skybox;										// set skybox
@@ -272,17 +251,17 @@ public class PlayerStatePattern : MonoBehaviour {
 
 		// change colour timer
 		if (toLightworld) {
-			changeWorldTimer += Time.deltaTime;												// start timer
-			if (changeWorldTimer >= 5.0f) {														// when timer >= 2 sec
+			toLightWorldTimer += Time.deltaTime;											// start timer
+			if (toLightWorldTimer >= 5.0f) {													// when timer >= 2 sec
 				toLightworld = false;															// reset change colour flag
-				changeWorldTimer = 0f;															// reset timer
+				toLightWorldTimer = 0f;															// reset timer
 			}
 		}
 		if (toDarkworld) {
-			changeWorldTimer += Time.deltaTime;												// start timer
-			if (changeWorldTimer >= 5.0f) {														// when timer >= 2 sec
+			toDarkWorldTimer += Time.deltaTime;												// start timer
+			if (toDarkWorldTimer >= 6.0f) {														// when timer >= 2 sec
 				toDarkworld = false;															// reset change colour flag
-				changeWorldTimer = 0f;															// reset timer
+				toDarkWorldTimer = 0f;															// reset timer
 			}
 		}
 
@@ -367,7 +346,7 @@ public class PlayerStatePattern : MonoBehaviour {
 
 	public void TransitionTo (int f, int t, bool fl, bool tl, int fs, int ts)
 	{
-		Debug.Log ("player transition to");
+		Debug.Log ("player transition to - toLW = " + toLightworld);
 
 		// early updates
 		fromState = f;																// store from state
@@ -417,10 +396,6 @@ public class PlayerStatePattern : MonoBehaviour {
 			sc[0].radius = 0.208f;														// update collision radius	
 			sc[1].radius = 0.205f;														// update collision radius
 
-			// camera
-			c.farClipPlane = Mathf.Lerp(prevFCP, firstFCP, clipPlaneLerpTime);			// set far clipping plane
-			prevFCP = firstFCP;															// set previous FCP
-
 			// audio
 				// music
 			if (evol == 0f) 
@@ -438,10 +413,6 @@ public class PlayerStatePattern : MonoBehaviour {
 			sc[0].radius = 0.54f;														// update collision radius
 			sc[1].radius = 0.52f;														// update collision radius
 
-			// camera
-			c.farClipPlane = Mathf.Lerp(prevFCP, firstFCP, clipPlaneLerpTime);			// set far clipping plane
-			prevFCP = firstFCP;															// set previous FCP
-
 			// audio
 				// music
 			musicSnapshots[2].TransitionTo(5.0f);										// AUDIO: transition to first state music snapshot
@@ -455,10 +426,6 @@ public class PlayerStatePattern : MonoBehaviour {
 			rb.mass = 2.5f;																// set mass
 			sc[0].radius = 0.54f;														// update collision radius
 			sc[1].radius = 0.52f;														// update collision radius
-
-			// camera
-			c.farClipPlane = Mathf.Lerp(prevFCP, firstFCP, clipPlaneLerpTime);			// set far clipping plane
-			prevFCP = firstFCP;															// set previous FCP
 
 			// audio
 				// music
@@ -480,10 +447,6 @@ public class PlayerStatePattern : MonoBehaviour {
 				sc[1].radius = 0.52f;														// update collision radius
 			}
 
-			// camera
-			c.farClipPlane = Mathf.Lerp(prevFCP, secondFCP, clipPlaneLerpTime);			// set far clipping plane
-			prevFCP = secondFCP;														// set previous FCP
-
 			// audio
 				// music
 			musicSnapshots[4].TransitionTo(5.0f);										// AUDIO: transition to third state music snapshot	
@@ -504,10 +467,6 @@ public class PlayerStatePattern : MonoBehaviour {
 				sc[1].radius = 0.52f;														// update collision radius
 			}
 
-			// camera
-			c.farClipPlane = Mathf.Lerp(prevFCP, secondFCP, clipPlaneLerpTime);			// set far clipping plane
-			prevFCP = secondFCP;														// set previous FCP
-
 			// audio
 				// music
 			musicSnapshots[5].TransitionTo(5.0f);										// AUDIO: transition to fourth state music snapshot	
@@ -527,10 +486,6 @@ public class PlayerStatePattern : MonoBehaviour {
 				sc[0].radius = 1.05f;														// update collision radius
 				sc[1].radius = 1.0f;														// update collision radius
 			}
-
-			// camera
-			c.farClipPlane = Mathf.Lerp(prevFCP, secondFCP, clipPlaneLerpTime);			// set far clipping plane
-			prevFCP = secondFCP;														// set previous FCP
 
 			// audio
 				// music
@@ -562,10 +517,6 @@ public class PlayerStatePattern : MonoBehaviour {
 				sc[0].radius = 1.05f;														// update collision radius
 				sc[1].radius = 1.0f;														// update collision radius
 			}
-
-			// camera
-			c.farClipPlane = Mathf.Lerp(prevFCP, secondFCP, clipPlaneLerpTime);			// set far clipping plane
-			prevFCP = secondFCP;														// set previous FCP
 
 			// audio
 				// music
@@ -603,10 +554,6 @@ public class PlayerStatePattern : MonoBehaviour {
 				sc[1].radius = 1.95f;														// update collision radius
 			}
 
-			// camera
-			c.farClipPlane = Mathf.Lerp(prevFCP, thirdFCP, clipPlaneLerpTime);			// set far clipping plane
-			prevFCP = thirdFCP;															// set previous FCP
-
 			// audio
 				// music
 			musicSnapshots[8].TransitionTo(5.0f);										// AUDIO: transition to seventh state music snapshot
@@ -642,10 +589,6 @@ public class PlayerStatePattern : MonoBehaviour {
 				sc[0].radius = 1.95f;														// update collision radius
 				sc[1].radius = 1.95f;														// update collision radius
 			}
-
-			// camera
-			c.farClipPlane = Mathf.Lerp(prevFCP, thirdFCP, clipPlaneLerpTime);			// set far clipping plane
-			prevFCP = thirdFCP;															// set previous FCP
 
 			// audio
 				// music
@@ -683,10 +626,6 @@ public class PlayerStatePattern : MonoBehaviour {
 				sc[1].radius = 2.25f;														// update collision radius
 			}
 
-			// camera
-			c.farClipPlane = Mathf.Lerp(prevFCP, thirdFCP, clipPlaneLerpTime);			// set far clipping plane
-			prevFCP = thirdFCP;															// set previous FCP
-
 			// audio
 				// music
 			musicSnapshots[10].TransitionTo(5.0f);										// AUDIO: transition to ninth state music snapshot
@@ -715,8 +654,6 @@ public class PlayerStatePattern : MonoBehaviour {
 			rb.mass = 10.0f;															// set mass
 			// camera
 			camOrbit = true;															// start orbit
-			c.farClipPlane = Mathf.Lerp(prevFCP, fourthFCP, clipPlaneLerpTime);			// set far clipping plane
-			prevFCP = fourthFCP;														// set previous FCP
 			// audio
 				// music
 			musicSnapshots[11].TransitionTo(30.0f);										// AUDIO: transition to tenth state music snapshot
