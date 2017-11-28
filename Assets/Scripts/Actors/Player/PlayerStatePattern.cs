@@ -133,9 +133,6 @@ public class PlayerStatePattern : MonoBehaviour {
 
 		so = GameObject.Find("UI Canvas").GetComponent<StartOptions> ();	// init start options
 
-		//uim = GetComponent<UIManager> ();									// init ui manager ref
-		Destroy(GameObject.FindGameObjectWithTag("Destroy"));				// destroy new UI
-
 		skybox = RenderSettings.skybox;										// set skybox
 		skybox.EnableKeyword ("Frequency");
 		if (skybox.HasProperty("Frequency")) {
@@ -166,12 +163,12 @@ public class PlayerStatePattern : MonoBehaviour {
 	// in-menu conditions \\ - audio and UI
 
 		if (so.inMainMenu) {																// if in menu	
-			canCollide = false;																	// no collision
+			sc [0].enabled = false;																// disable trigger collider
 			camOrbit = true;																	// orbit camera
 			effectsSnapshots[7].TransitionTo(6.0f);												// AUDIO: transition to menu effects snapshot
 		}
 		else if (!so.inMainMenu) {															// if not in menu
-			canCollide = true; 																	// collision
+			sc [0].enabled = true;																// ensable trigger collider
 			camOrbit = false;																	// reset cam to player
 			if (musicStart) {																	// if starting music
 				effectsSnapshots[0].TransitionTo(0.0f);												// AUDIO: transition to default/dark world effects snapshot

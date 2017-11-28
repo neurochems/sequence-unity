@@ -23,7 +23,7 @@ public class UIManager : MonoBehaviour {
 
 	private bool quickStart;																						// prevent start text from reappearing
 
-	public bool philosophyVisible = true, tipsVisible = true;														// menu toggles
+	public bool philosophyVisible = true, tipsVisible;																// menu toggles
 
 	// debug info
 	/*public UnityEngine.UI.Text numParticles;
@@ -536,7 +536,7 @@ public class UIManager : MonoBehaviour {
 	// reset tip \\
 
 		// tip reset
-		if ((psp.darkEvol <= -54) || (psp.lightEvol <= -54) || (GetPlaytimeElapsed() >= 420.0f)) {		// if dark or light evol <= -54 or playtime >= 7 mins
+		if (GetPlaytimeElapsed() >= 420.0f) {															// playtime >= 7 mins
 			if (!psp.lightworld)																			// if dark world
 				text [24].GetComponent<Text>().color = Color.white;											// set text colour 
 			else if (psp.lightworld)																		// if light world
@@ -546,7 +546,7 @@ public class UIManager : MonoBehaviour {
 			text [24].GetComponent<Animator> ().SetBool ("visible", true);									// trigger text fade
 		}
 
-		if ((text [24].activeInHierarchy) && (psp.state == 10)) {																// if text is inactive (do nothing if already active)
+		if ((text [24].activeInHierarchy) && (psp.state == 10)) {										// if active and tenth state
 			currentTip2 = 24;																				// set current text index
 			hideTip2 = true;																				// start hide text timer
 		}

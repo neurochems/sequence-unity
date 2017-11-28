@@ -173,9 +173,12 @@ public class ParticleStatePattern : MonoBehaviour {
 				inLightworld = true;													// set in lightworld flag sooner to avoid player collisions with particles just sent to light world
 			} 
 			else if ((inLightworldTimer >= 2.5f) && toLightworld) {					// if timer is 2.5 sec and going to light world
+
 				toLightworld = false;													// reset to light world flag
 				sc [0].enabled = true;													// enable trigger collider
+
 				isLight = toLight;														// set is light indicator
+
 				inLightworldTimer = 0f;													// reset timer
 			} 
 			else if ((inLightworldTimer >= 0.5f) && toDarkworld) {					// if timer is 0.5 sec and going to dark world

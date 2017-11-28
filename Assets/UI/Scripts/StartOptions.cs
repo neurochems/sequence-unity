@@ -15,18 +15,22 @@ public class StartOptions : MonoBehaviour {
 	public Animator animColorFade; 										//Reference to animator which will fade to and from black when starting game.
 	public Animator animStartFade; 										//Reference to animator which will fade to and from black when starting game.
 	public Animator animMenuAlpha;										//Reference to animator that will fade out alpha of MenuPanel canvas group
-	public AnimationClip fadeColorAnimationClip;						//Animation clip fading to color (black default) when changing scenes
-	public AnimationClip startFadeColorAnimationClip;					//Animation clip fading to color (black default) when changing scenes
+	public Animator animSettingsFade;									// settings panel anim
 	public AnimationClip fadeAlphaAnimationClip;						//Animation clip fading out UI elements alpha
 
 	private ShowPanels showPanels;										//Reference to ShowPanels script on UI GameObject, to show and hide panels
 
-	private GameObject pb;												// play button ref
-	private Button pbButton;											// play button Button ref
+	// fade interactables in late
+	private GameObject pb;												// play buttonref
+	private Button playButton;											// play button Button ref
+
+
 	private float disableInputTimer = 0.0f, resetInMenuTimer = 0.0f;	// disable input, reset in menu timers
 	
 	void Awake()
 	{
+		Destroy(GameObject.FindGameObjectWithTag("Destroy"));									// destroy new UI
+
 		Time.timeScale = 1.0f;
 
 		inMainMenu = true;
@@ -42,7 +46,7 @@ public class StartOptions : MonoBehaviour {
 		//animStartFade.SetBool("visible", true);
 
 		pb = GameObject.Find("Play Button");
-		pbButton = pb.GetComponent<Button>();
+		playButton = pb.GetComponent<Button>();
 	}
 
 	void Update() {
@@ -57,10 +61,15 @@ public class StartOptions : MonoBehaviour {
 
 		// disable input until fade in (4 sec+0.2s buffer) is complete
 		if (inMainMenu && disableInput) {														// if main menu and during fade in
-			pbButton.interactable = false;															// enable play button
+			playButton.interactable = false;														// disable play button
 			disableInputTimer += Time.deltaTime;													// start timer
-			if (disableInputTimer >= 4.20f) {														// if timer = 4.20 sec
-				pbButton.interactable = true;															// enable play button
+			if (disableInputTimer >= 3.0f) {														// if timer = 3 sec
+				animMenuAlpha.SetTrigger ("fade");													// fade menu to visible
+				animMenuAlpha.SetBool ("visible", true);											// fade menu to visible
+			}
+			if (disableInputTimer >= 6.0f) {														// if timer = 6 sec
+				playButton.interactable = true;															// enable play button
+				animSettingsFade.SetTrigger("fade");													// fade in settings panel 
 				EventSystem.current.SetSelectedGameObject(pb, null);									// give focus to play button
 				disableInput = false;																	// reset is init flag
 				disableInputTimer = 0f;																	// reset timer
